@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31;
+package it.polimi.ingsw.am31.am31.fx;
 
 import javafx.application.Application;
 
