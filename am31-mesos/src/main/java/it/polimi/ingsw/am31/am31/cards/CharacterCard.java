@@ -2,9 +2,9 @@ package it.polimi.ingsw.am31.am31.cards;
 
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
-public class CharacterCard extends Card {
+public abstract class CharacterCard extends Card {
 
-    public CharacterCard(int era) {
+    public void CharacterCard(int era) {
         super(era);
     }
     public void onPick() {
@@ -24,7 +24,7 @@ public class CharacterCard extends Card {
     }
     public boolean getMark() { return false; }
     public int getStars() { return 0; }
-    public int acceptVisit (TribeVisitor) {
+    public int acceptVisit (TribeVisitor tribeVisitor) {
         return 0;
     }
 }

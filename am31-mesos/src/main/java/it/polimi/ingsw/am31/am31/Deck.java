@@ -17,7 +17,7 @@ public class Deck <T extends Card>{
     public void nextEra() {
 
     }
-    void public Deck (int nplayers) {
+    public void Deck (int nplayers) {
 
     }
 }

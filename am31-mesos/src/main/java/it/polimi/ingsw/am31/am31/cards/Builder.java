@@ -8,10 +8,6 @@ public class Builder extends CharacterCard {
         this.prestigePoints = prestigePoints;
         this.discount = discount;
     }
-    @Override
-    public IconEnum getIcon() {
-        return super.getIcon();
-    }
 
     @Override
     public int getBuildingDiscount() {
@@ -24,21 +20,13 @@ public class Builder extends CharacterCard {
     }
 
     @Override
-    public int getSustainDiscount() {
-        return super.getSustainDiscount();
-    }
-
-    @Override
     public void onPick() {
         super.onPick();
     }
+
     @Override
     public int acceptVisit() {
         super.acceptVisit();
         return 0;
     }
-    @Override
-    public boolean getMark() { return super.getMark();}
-    @Override
-    public int getStars() {return super.getStars();}
 }

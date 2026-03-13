@@ -6,28 +6,7 @@ public class Hunter extends CharacterCard {
     public void Hunter (boolean mark) { this.mark = mark; }
 
     @Override
-    public IconEnum getIcon() {
-        return super.getIcon();
-    }
-
-    @Override
-    public int getBuildingDiscount() {
-        return super.getBuildingDiscount();
-    }
-
-    @Override
-    public int getPrestigePoints() {
-        return super.getPrestigePoints();
-    }
-
-    @Override
-    public int getSustainDiscount() {
-        return super.getSustainDiscount();
-    }
-    @Override
     public boolean getMark() { return mark; }
-    @Override
-    public int getStars() {return super.getStars();}
 
     @Override
     public void onPick() {

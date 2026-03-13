@@ -6,30 +6,6 @@ public class Artist extends CharacterCard {
     }
 
     @Override
-    public IconEnum getIcon() {
-        return super.getIcon();
-    }
-
-    @Override
-    public int getBuildingDiscount() {
-        return super.getBuildingDiscount();
-    }
-
-    @Override
-    public int getPrestigePoints() {
-        return super.getPrestigePoints();
-    }
-
-    @Override
-    public int getSustainDiscount() {
-        return super.getSustainDiscount();
-    }
-    @Override
-    public boolean getMark() { return super.getMark();}
-    @Override
-    public int getStars() {return super.getStars();}
-
-    @Override
     public void onPick() {
         super.onPick();
     }
