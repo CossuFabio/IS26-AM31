@@ -1,17 +1,14 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
+
 public class Artist extends CharacterCard {
     public Artist(int era) {
         super(era);
     }
 
-    @Override
-    public void onPick() {
-        super.onPick();
+    public void acceptVisit (TribeVisitor tribeVisitor) {
+        //return tribeVisitor.visit(this);
     }
-    @Override
-    public int acceptVisit() {
-        super.acceptVisit();
-        return 0;
-    }
+
 }

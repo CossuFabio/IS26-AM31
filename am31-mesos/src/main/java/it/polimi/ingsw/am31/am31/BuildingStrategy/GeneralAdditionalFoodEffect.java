@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.Player;
 public class GeneralAdditionalFoodEffect extends DrawBuildingEffect{
     @Override
     public void activateEffect(Player player) {
-        super.activateEffect(player);
+
+        //super.activateEffect(player);
     }
 }

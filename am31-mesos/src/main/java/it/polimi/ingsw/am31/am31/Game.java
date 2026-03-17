@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31;
 import it.polimi.ingsw.am31.am31.cards.BuildingCard;
 import it.polimi.ingsw.am31.am31.cards.Card;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -12,9 +13,16 @@ public class Game {
     private Deck<BuildingCard> buildingDeck;
     private Deck<Card> tribeDecks;
     private TurnOrder turnOrder;
-    private int nplayers;
     private int era;
-    //private GameController gameController;
+    //private Gamestate gameState;
+    public Game () {
+        roundNumber=0; //o 1
+        players=new ArrayList<Player>();
+        board=new Board();
+
+
+
+    }
 
     public void addPlayer(Player player){
     }

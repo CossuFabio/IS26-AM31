@@ -3,7 +3,8 @@ package it.polimi.ingsw.am31.am31.cards;
 public class Farmer extends CharacterCard {
     private int discount;
 
-    public void Farmer(int discount) {
+    public Farmer(int era, int discount) {
+        super(era);
         this.discount = discount;
     }
 
@@ -12,14 +13,11 @@ public class Farmer extends CharacterCard {
         return discount;
     }
 
-    @Override
-    public void onPick() {
-        super.onPick();
-    }
 
-    @Override
-    public int acceptVisit() {
-        super.acceptVisit();
-        return 0;
-    }
+
+//    @Override
+//    public int acceptVisit() {
+//        super.acceptVisit();
+//        return 0;
+//    }
 }

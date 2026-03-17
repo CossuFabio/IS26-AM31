@@ -4,7 +4,8 @@ public class Builder extends CharacterCard {
     private int prestigePoints;
     private int discount;
 
-    public void Builder(int prestigePoints, int discount) {
+    public Builder(int era, int prestigePoints, int discount) {
+        super(era);
         this.prestigePoints = prestigePoints;
         this.discount = discount;
     }
@@ -19,14 +20,9 @@ public class Builder extends CharacterCard {
         return prestigePoints;
     }
 
-    @Override
-    public void onPick() {
-        super.onPick();
-    }
-
-    @Override
-    public int acceptVisit() {
-        super.acceptVisit();
-        return 0;
-    }
+//    @Override
+//    public int acceptVisit() {
+//        super.acceptVisit();
+//        return 0;
+//    }
 }

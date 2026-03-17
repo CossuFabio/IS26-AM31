@@ -1,15 +1,16 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import it.polimi.ingsw.am31.am31.Player;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
-public abstract class CharacterCard extends Card {
+public abstract class CharacterCard extends Card implements IPickable {
 
-    public void CharacterCard(int era) {
+    protected CharacterCard(int era) {
         super(era);
     }
-    public void onPick() {
+    @Override
+    public void onPick(Player player) {}
 
-    }
     public int getBuildingDiscount () {
     return 0;
     }
@@ -24,7 +25,7 @@ public abstract class CharacterCard extends Card {
     }
     public boolean getMark() { return false; }
     public int getStars() { return 0; }
-    public int acceptVisit (TribeVisitor tribeVisitor) {
-        return 0;
-    }
+//    public int acceptVisit (TribeVisitor tribeVisitor) {
+//        return 0;
+//    }
 }
