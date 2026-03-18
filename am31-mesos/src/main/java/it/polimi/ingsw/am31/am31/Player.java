@@ -9,6 +9,7 @@ import it.polimi.ingsw.am31.am31.handlers.onDraw.IDrawHandler;
 import it.polimi.ingsw.am31.am31.handlers.paintEvent.IPaintHandler;
 import it.polimi.ingsw.am31.am31.handlers.ritualLose.IRitualLoseStrategy;
 import it.polimi.ingsw.am31.am31.handlers.ritualWin.IRitualWinStrategy;
+import it.polimi.ingsw.am31.am31.handlers.sustainEvent.ISustainHandler;
 
 
 import java.util.ArrayList;

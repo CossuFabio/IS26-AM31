@@ -1,23 +1,36 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.cards.Card;
+import it.polimi.ingsw.am31.am31.cards.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class Deck <T extends Card>{
-    private int currentEra;
-    private List<List<Card>> eraDecks;
-    public void isEmpty(){
+public abstract class Deck{
 
-    }
-    public void draw () {
+    protected final List<Card> eraDeck;
 
-        return;
+    public boolean isEmpty() {
+        return eraDeck.isEmpty();
     }
-    public void nextEra() {
 
+    protected Deck(){
+        eraDeck = new ArrayList<Card>();
     }
-    public void Deck (int nplayers) {
 
+
+    public Card draw() {
+        if (!eraDeck.isEmpty()) {
+            Card temp = eraDeck.getFirst();
+            eraDeck.removeFirst();
+            return temp;
+        }
+        //Drawing from an empty deck isn't an option, should it throw an exception?
+        throw new IllegalStateException("Mazzo vuoto");
     }
+
+
+
+
+
 }

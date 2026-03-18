@@ -10,24 +10,31 @@ public class Game {
     private int roundNumber;
     private List<Player> players;
     private Board board;
-    private Deck<BuildingCard> buildingDeck;
-    private Deck<Card> tribeDecks;
+    private Deck buildingDeck;
+    private Deck tribeDeck;
     private TurnOrder turnOrder;
     private int era;
-    //private Gamestate gameState;
-    public Game () {
+    //private GameState gameState;
+    int nPlayers;
+    //Setup
+    public Game (int nPlayers) {
         roundNumber=0; //o 1
         players=new ArrayList<Player>();
         board=new Board();
-
-
-
+        buildingDeck = new BuildingDeck(nPlayers);
+        tribeDeck = new TribeDeck(nPlayers);
+        era = 1;
+        this.nPlayers=nPlayers;
     }
 
     public void addPlayer(Player player){
+        if(players.size()<nPlayers){
+            players.add(player);
+        }
     }
 
     public void removePlayer(Player player){
+        players.remove(player);
     }
 
     public void gameStart(){}
@@ -38,9 +45,13 @@ public class Game {
 
     public void startRound(){}
 
-    public void endRound(){}
+    public void endRound(){
 
-    public void changeEra(){}
+    }
+
+    public void changeEra(){
+
+    }
 
     public void playerChoice(Player player){
     }
@@ -54,4 +65,7 @@ public class Game {
     public TurnOrder getTurnOrder(){
         return turnOrder;
     }
+
+
+
 }

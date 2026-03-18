@@ -1,5 +1,9 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import it.polimi.ingsw.am31.am31.Player;
+
+import java.util.List;
+
 public class PaintingEventCard extends EventCard {
     private int minArtist;
 
@@ -10,8 +14,7 @@ public class PaintingEventCard extends EventCard {
         this.prestigePointsMalus = prestigePointsMalus;
     }
 
-    @Override
-    public void resolve() {
-
+    public void resolve(List<Player> players) {
+        players.forEach((Player p) -> {p.resolvePainters(minArtist, prestigePointsMalus, prestigePointsBonus); });
     }
 }

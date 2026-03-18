@@ -33,4 +33,7 @@ public class Board {
     }
 
     //public List<Card> pickFromLine(int numberOfDraws){}
+
+    public static class TribeDeck {
+    }
 }

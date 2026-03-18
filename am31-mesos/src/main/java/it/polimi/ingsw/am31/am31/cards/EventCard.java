@@ -1,5 +1,9 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import it.polimi.ingsw.am31.am31.Player;
+
+import java.util.List;
+
 public abstract class EventCard extends Card {
     protected int prestigePointsBonus;
     protected int prestigePointsMalus;
@@ -10,8 +14,7 @@ public abstract class EventCard extends Card {
         this.prestigePointsMalus = prestigePointsMalus;
         this.priority = priority;
     }
-    public void resolve(){
-    }
+    public abstract void resolve(List<Player> players);
 
     public int getPriority() {
         return priority;
