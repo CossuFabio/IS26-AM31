@@ -1,19 +1,14 @@
 package it.polimi.ingsw.am31.am31.visitor;
-
-import it.polimi.ingsw.am31.am31.cards.Hunter;
+import it.polimi.ingsw.am31.am31.cards.*;
 
 public interface TribeVisitor {
 
-    public int visitHunter(Hunter hunter){
-        return 1;
-    }
-    public void visitFarmer();
+    void visit (Hunter hunter);
+    void visit (Shaman shaman);
+    void visit (Farmer farmer);
+    void visit (EventCard event);
+    void visit (Inventor inventor);
+    void visit (Builder builder);
+    void visit (Artist artist);
 
-    public void visitShaman();
-
-    public void visitBuilder();
-
-    public void visitArtist();
-
-    public void visitInventor();
 }

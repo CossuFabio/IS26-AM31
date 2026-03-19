@@ -25,7 +25,6 @@ public abstract class CharacterCard extends Card implements IPickable {
     }
     public boolean getMark() { return false; }
     public int getStars() { return 0; }
-//    public int acceptVisit (TribeVisitor tribeVisitor) {
-//        return 0;
-//    }
+    public void acceptVisit (TribeVisitor tribeVisitor) {
+    }
 }

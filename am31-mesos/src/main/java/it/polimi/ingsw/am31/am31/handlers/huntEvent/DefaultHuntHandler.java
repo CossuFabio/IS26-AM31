@@ -7,8 +7,8 @@ public class DefaultHuntHandler implements IHuntHandler{
     public DefaultHuntHandler(){}
 
     @Override
-    //TO-DO: implement this
-    public void handleHunt(Player player) {
+    //TODO: implement this
+    public void handleHunt(Player player, int food, int prestigePoints) {
 
     }
 }

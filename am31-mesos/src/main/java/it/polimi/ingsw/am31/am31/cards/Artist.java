@@ -7,8 +7,9 @@ public class Artist extends CharacterCard {
         super(era);
     }
 
-    public void acceptVisit (TribeVisitor tribeVisitor) {
-        //return tribeVisitor.visit(this);
+    @Override
+    public void acceptVisit(TribeVisitor visitor) {
+        visitor.visit(this);
     }
 
 }

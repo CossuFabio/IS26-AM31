@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.cards;
 
 import it.polimi.ingsw.am31.am31.Player;
-import it.polimi.ingsw.am31.am31.visitor.ShamanVisitor;
+import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 public class Shaman extends CharacterCard {
     private final int stars;
@@ -16,10 +16,10 @@ public class Shaman extends CharacterCard {
 
     @Override
     public void onPick(Player player){
-        //player.increaseStars(this.stars);
+        player.increaseStars(this.stars);
     }
-//    @Override
-//    public int acceptVisit(ShamanVisitor ShamanVisitor) {
-//        return 1;
-//    }
+    @Override
+    public void acceptVisit(TribeVisitor visitor) {
+        visitor.visit(this);
+    }
 }

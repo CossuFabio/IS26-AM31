@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
+
 public class Builder extends CharacterCard {
     private int prestigePoints;
     private int discount;
@@ -20,9 +22,8 @@ public class Builder extends CharacterCard {
         return prestigePoints;
     }
 
-//    @Override
-//    public int acceptVisit() {
-//        super.acceptVisit();
-//        return 0;
-//    }
+    @Override
+    public void acceptVisit(TribeVisitor visitor) {
+        visitor.visit(this);
+    }
 }

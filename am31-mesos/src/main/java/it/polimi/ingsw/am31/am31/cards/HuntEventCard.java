@@ -7,7 +7,7 @@ import java.util.List;
 public class HuntEventCard extends EventCard {
     private int foodBonus;
 
-    public void HuntEventCard(int foodBonus, int prestigePointsBonus){
+    public HuntEventCard( int foodBonus, int prestigePointsBonus){
         this.foodBonus = foodBonus;
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = 0;

@@ -8,6 +8,6 @@ public class DefaultWinRitualStrategy implements IRitualWinStrategy{
 
     @Override
     public void handleWinRitual(Player player, int bonus) {
-        //player.setPrestigePoints(player.getPrestigePoints() + bonus));
+        player.editPrestigePoints(bonus);
     }
 }

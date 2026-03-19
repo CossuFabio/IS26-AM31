@@ -10,13 +10,12 @@ import java.util.List;
 public class BuildingDeck extends Deck {
     public BuildingDeck(int nplayers) {
 
-        //TODO ADD BUILDINGS CONSTRUCTOR
         List<Card> list1 = new ArrayList<>();
-        list1.add(new BuildingCard());
+        list1.add(new BuildingCard(null, 2, 2));
         List<Card> list2 = new ArrayList<>();
-        list2.add(new BuildingCard());
+        list2.add(new BuildingCard(null, 2, 2));
         List<Card> list3 = new ArrayList<>();
-        list3.add(new BuildingCard());
+        list3.add(new BuildingCard(null, 2, 2));
 
         //lists are shuffled, then we add cards based on nplayers
         Collections.shuffle(list1);

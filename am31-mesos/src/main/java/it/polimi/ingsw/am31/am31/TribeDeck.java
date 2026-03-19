@@ -20,7 +20,7 @@ public class TribeDeck extends Deck{
         list1.add(new Farmer(3, 3));
         List<Card> list4 = new ArrayList<>();
         //TODO ADD EVENT CARDS CONSTRUCTOR
-        list4.add(new SustainEventCard());
+        list4.add(new SustainEventCard(3));
         list4.add(new RitualEventCard());
         if (nplayers >= 3) {
             list1.add(new Artist(1));

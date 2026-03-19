@@ -1,19 +1,16 @@
 package it.polimi.ingsw.am31.am31;
 
-
-
-
 public class OfferCard {
     private int food;
     private int drawFromUpper;
     private int drawFromUnder;
     private Player player;
 
-    public void OfferCard(int food, int drawFromUnder, int drawFromUpper){
+    public OfferCard(int food, int drawFromUnder, int drawFromUpper){
         this.food = food;
         this.drawFromUnder = drawFromUnder;
         this.drawFromUpper = drawFromUpper;
-        //this.player = NULL;
+        this.player = null;
     }
 
     public int getDrawFromUnder() {
@@ -28,7 +25,9 @@ public class OfferCard {
         return food;
     }
 
-    public boolean isFree() {return true;}
+    public boolean isFree() {
+        return this.player == null;
+    }
 
     public Player getPlayer(){
         return player;
@@ -38,6 +37,8 @@ public class OfferCard {
         this.player = player;
     }
 
-    public void free() {}
+    public void free() {
+        this.player = null;
+    }
 
 }

@@ -8,6 +8,6 @@ public class DefaultRitualLoseStrategy implements IRitualLoseStrategy{
 
     @Override
     public void handleLose(Player player, int malus) {
-        //player.setPrestigePoints(player.getPrestigePoints() - malus);
+       player.editPrestigePoints(-1* malus);
     }
 }

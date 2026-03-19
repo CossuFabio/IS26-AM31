@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
+
 public class Inventor extends CharacterCard {
     private final IconEnum icon;
 
@@ -14,9 +16,8 @@ public class Inventor extends CharacterCard {
     }
 
 
-//    @Override
-//    public int acceptVisit() {
-//        super.acceptVisit();
-//        return 0;
-//    }
+    @Override
+    public void acceptVisit(TribeVisitor visitor) {
+        visitor.visit(this);
+    }
 }

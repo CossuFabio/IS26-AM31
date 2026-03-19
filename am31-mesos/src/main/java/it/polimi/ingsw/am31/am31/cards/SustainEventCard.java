@@ -5,7 +5,8 @@ import it.polimi.ingsw.am31.am31.Player;
 import java.util.List;
 
 public class SustainEventCard extends EventCard{
-    public void SustainEventCard(int prestigePointsMalus){
+    public SustainEventCard(int prestigePointsMalus){
+        super();
         this.prestigePointsMalus = prestigePointsMalus;
         this.prestigePointsBonus = 0;
         this.priority = 2;

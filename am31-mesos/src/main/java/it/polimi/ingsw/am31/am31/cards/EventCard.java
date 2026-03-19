@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.cards;
 
 import it.polimi.ingsw.am31.am31.Player;
+import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 import java.util.List;
 
@@ -9,7 +10,8 @@ public abstract class EventCard extends Card {
     protected int prestigePointsMalus;
     protected int priority;
 
-    public void EventCard(int prestigePointsBonus, int prestigePointsMalus, int priority){
+    public EventCard(){
+        super();
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;
         this.priority = priority;
@@ -27,4 +29,9 @@ public abstract class EventCard extends Card {
     public int getPrestigePointsMalus() {
         return prestigePointsMalus;
     }
+
+    public void acceptVisit(TribeVisitor visitor){
+        visitor.visit(this);
+    }
+
 }

@@ -8,9 +8,9 @@ public class BonusHunterHandleDecorator extends HuntHandlerDecorator{
 
     @Override
     //TO-DO: implement this
-    public void handleHunt(Player player) {
+    public void handleHunt(Player player, int food, int prestigePoints) {
         //Code
 
-        wrappedHandler.handleHunt(player);
+        wrappedHandler.handleHunt( player,  food,  prestigePoints);
     }
 }

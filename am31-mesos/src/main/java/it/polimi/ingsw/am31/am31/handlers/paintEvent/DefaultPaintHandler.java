@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.handlers.paintEvent;
 
 import it.polimi.ingsw.am31.am31.Player;
+import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
 
 public class DefaultPaintHandler implements IPaintHandler{
 
@@ -9,6 +10,12 @@ public class DefaultPaintHandler implements IPaintHandler{
     @Override
     //TO-DO: implement this
     public void handlePaint(Player player, int minimumArtistsNumber, int prestigePointsBonus, int prestigePointsMalus) {
-        //Idea: count artist then decide if player gets malus or bonus
+        CountVisitor visitor = new CountVisitor();
+        player.getTribe().
+                forEach(card -> card.acceptVisit(visitor));
+        if(visitor.getArtists() >= minimumArtistsNumber ){
+            player.editPrestigePoints(prestigePointsBonus);
+        }
+        else{player.editPrestigePoints(-prestigePointsMalus);}
     }
 }

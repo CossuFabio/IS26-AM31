@@ -10,7 +10,7 @@ public class RitualLoseHandler {
         this.handleLoseStrategy = new DefaultRitualLoseStrategy();
     }
 
-    public void setHandleLoseStrategy(IRitualLoseStrategy handleLoseStrategy) {
+    public void setStrategy(IRitualLoseStrategy handleLoseStrategy) {
         this.handleLoseStrategy = handleLoseStrategy;
     }
 
