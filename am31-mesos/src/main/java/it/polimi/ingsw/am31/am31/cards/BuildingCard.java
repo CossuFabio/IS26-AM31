@@ -3,22 +3,18 @@ package it.polimi.ingsw.am31.am31.cards;
 import it.polimi.ingsw.am31.am31.BuildingStrategy.BuildingEffect;
 import it.polimi.ingsw.am31.am31.Player;
 
-public class BuildingCard extends Card {
+public abstract class BuildingCard extends Card implements IPickable{
     private final int cost;
     private final int prestigePointsGained;
     private Player player;
-    private BuildingEffect effect;
 
-    public BuildingCard (BuildingEffect effect, int cost, int prestigePointsGained){
+
+    protected BuildingCard (int era, int cost, int prestigePointsGained){
+        super(era);
         this.cost = cost;
         this.prestigePointsGained = prestigePointsGained;
-        this.effect = effect;
-
     }
 
-    public void setEffect(BuildingEffect effect) {
-        this.effect = effect;
-    }
 
     public int getPrestigePointsGained(){
         return prestigePointsGained;
@@ -28,11 +24,6 @@ public class BuildingCard extends Card {
         return cost;
     }
 
-    public void activateEffect() {
-        effect.activateEffect(player);
-    }
 
-    public BuildingEffect getEffect() {
-        return effect;
-    }
+
 }

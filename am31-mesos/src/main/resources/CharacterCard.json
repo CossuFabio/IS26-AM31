@@ -3,5 +3,15 @@
     "type" : "Hunter",
     "era" : 1,
     "mark" : true
+  },
+  {
+    "type" : "Hunter",
+    "era" : 1,
+    "mark" : false
+  },
+  {
+    "type" : "Shaman",
+    "era" : "1",
+    "mark" : false
   }
 ]
