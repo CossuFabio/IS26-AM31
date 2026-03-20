@@ -60,7 +60,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitEvent() {
-        EventCard event= new SustainEventCard(2);
+        EventCard event= new SustainEventCard(2,1);
         CountVisitor visitor = new CountVisitor();
         event.acceptVisit(visitor);
         assertEquals(1, visitor.getHunters());

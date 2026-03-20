@@ -10,11 +10,8 @@ public abstract class EventCard extends Card {
     protected int prestigePointsMalus;
     protected int priority;
 
-    public EventCard(){
-        super();
-        this.prestigePointsBonus = prestigePointsBonus;
-        this.prestigePointsMalus = prestigePointsMalus;
-        this.priority = priority;
+    protected EventCard(int era) {
+        super(era);
     }
     public abstract void resolve(List<Player> players);
 
@@ -31,7 +28,7 @@ public abstract class EventCard extends Card {
     }
 
     public void acceptVisit(TribeVisitor visitor){
-        visitor.visit(this);
+        return;
     }
 
 }

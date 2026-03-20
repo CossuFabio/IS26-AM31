@@ -5,12 +5,13 @@ import it.polimi.ingsw.am31.am31.Player;
 import java.util.List;
 
 public class RitualEventCard extends EventCard {
-    public void RitualEventCard(int prestigePointsMalus, int prestigePointsBonus){
+    public RitualEventCard(int era, int prestigePointsMalus, int prestigePointsBonus){
+        super(era);
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;
         this.priority = 1;
     }
-
+//TODO TESTING
     public void resolve(List<Player> players) {
         int minStars = players.getFirst().getRitualStars();
         int maxStars = minStars;
@@ -25,8 +26,9 @@ public class RitualEventCard extends EventCard {
 
         for(Player player : players){
             if(player.getRitualStars() == minStars) player.loseRitual(prestigePointsMalus);
-            if(player.getRitualStars() == maxStars) player.winRitual(prestigePointsMalus);
+            if(player.getRitualStars() == maxStars) player.winRitual(prestigePointsBonus);
         }
 
     }
+
 }

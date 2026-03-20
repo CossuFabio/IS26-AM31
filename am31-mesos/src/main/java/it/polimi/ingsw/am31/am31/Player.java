@@ -21,12 +21,12 @@ import java.util.List;
 import java.util.function.Function;
 
 public class Player {
-    private Color color;
+    private final Color color;
     private int food;
     private int prestigePoints;
     private final String nickname;
-    private List<BuildingCard> personalBuildingCards;
-    private List<CharacterCard> personalTribeCards;
+    private final List<BuildingCard> personalBuildingCards;
+    private final List<CharacterCard> personalTribeCards;
     private int ritualStars;
     private IDrawHandler drawHandler;
     private IEndTurnHandler endTurnHandler;
@@ -38,7 +38,7 @@ public class Player {
     private RitualWinHandler ritualWinHandler;
     private IEndRoundHandler endRoundHandler;
 
-    public Player(String nickname, Color color){
+    public Player(String nickname, Color color) {
         this.nickname = nickname;
         this.color = color;
         food = 0;
@@ -48,18 +48,25 @@ public class Player {
         ritualStars = 0;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
 
-    public void editFood(int valFood){
+    public Color getColor() {
+        return color;
+    }
+
+    public void editFood(int valFood) {
         int oldFood = getFood();
         int newFood = oldFood + valFood;
         this.food = newFood;
     }
 
-    public int getFood(){
+    public int getFood() {
         return food;
     }
 
-    public void editPrestigePoints(int valPP){
+    public void editPrestigePoints(int valPP) {
         int oldPP = getPrestigePoints();
         int newPP = oldPP + valPP;
         this.prestigePoints = newPP;
@@ -69,57 +76,68 @@ public class Player {
         return prestigePoints;
     }
 
-    public int finalScore(){
-        //TODO implement
-        return 0;
+    //Must be called only after the game has called player.resolveEndGame so that the prestigePoints are the correct number
+    public int finalScore() {
+        return prestigePoints;
     }
 
-    public List<CharacterCard> getTribe() {return personalTribeCards; }
-    public List<BuildingCard> getBuildings() {return personalBuildingCards; }
+    public List<CharacterCard> getTribe() {
+        return personalTribeCards;
+    }
+
+    public List<BuildingCard> getBuildings() {
+        return personalBuildingCards;
+    }
 
 
-    public int getRitualStars(){
+    public int getRitualStars() {
         return ritualStars;
     }
 
-    public void increaseStars(int starsToAdd){ritualStars += starsToAdd; }
-
-    public void addToTribe(CharacterCard card){
-        personalTribeCards.add(card);
-        this.drawHandler.handleDraw(this, card);
+    public void increaseStars(int starsToAdd) {
+        ritualStars += starsToAdd;
     }
 
-    public void winRitual(int prestigePoints){
-        ritualWinHandler.handleRitualWin(this, prestigePoints);
-    };
+    public void addToTribe(CharacterCard card) {
+        //Draw effects are triggered before the card is considered part of the tribe
+        this.drawHandler.handleDraw(this, card);
+        personalTribeCards.add(card);
+    }
 
-    public void loseRitual(int prestigePoints){
+    public void winRitual(int prestigePoints) {
+        ritualWinHandler.handleRitualWin(this, prestigePoints);
+    }
+
+    ;
+
+    public void loseRitual(int prestigePoints) {
         ritualLoseHandler.handleLose(this, prestigePoints);
     }
 
-    public void resolveHunt(int food, int prestigePoints){
+    public void resolveHunt(int food, int prestigePoints) {
         huntHandler.handleHunt(this, food, prestigePoints);
     }
 
-    public void resolveSustain(int malus){
+    public void resolveSustain(int malus) {
         sustainHandler.handleSustain(this, malus);
     }
 
-    public void resolvePainters(int threshold, int malusPrestigePoints, int bonusPrestigePoints){
+    public void resolvePainters(int threshold, int malusPrestigePoints, int bonusPrestigePoints) {
         paintHandler.handlePaint(this, threshold, bonusPrestigePoints, malusPrestigePoints);
     }
 
-    public void resolveEndTurn(){
+    public void resolveEndTurn() {
         endTurnHandler.handleEndTurn(this);
     }
 
-    public void resolveEndGame(){
+    public void resolveEndGame() {
         endGameHandler.handleEndGame(this);
     }
 
 
     // Each addEffect method takes as parameter the constructor of the decorator for the correct handler
     // and passes it the current handler that will be wrapped with the new decorator
+
     public void addEndTurnEffect(Function<IEndTurnHandler, IEndTurnHandler> decoratorFunc){
         this.endTurnHandler = decoratorFunc.apply(this.endTurnHandler);
     }
@@ -131,6 +149,7 @@ public class Player {
     public void addHuntEffect(Function<IHuntHandler, IHuntHandler> decoratorFunc){
         this.huntHandler = decoratorFunc.apply(this.huntHandler);
     }
+
     public void addDrawEffect(Function<IDrawHandler, IDrawHandler> decoratorFunc){
         this.drawHandler = decoratorFunc.apply(this.drawHandler);
     }

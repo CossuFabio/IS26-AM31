@@ -23,3 +23,4 @@ public class Shaman extends CharacterCard {
         visitor.visit(this);
     }
 }
+//TODO TESTING

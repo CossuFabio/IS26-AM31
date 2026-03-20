@@ -1,12 +1,13 @@
 package it.polimi.ingsw.am31.am31.cards;
 
 import it.polimi.ingsw.am31.am31.Player;
+import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 import java.util.List;
 
 public class SustainEventCard extends EventCard{
-    public SustainEventCard(int prestigePointsMalus){
-        super();
+    public SustainEventCard(int era, int prestigePointsMalus){
+        super(era);
         this.prestigePointsMalus = prestigePointsMalus;
         this.prestigePointsBonus = 0;
         this.priority = 2;
@@ -14,5 +15,9 @@ public class SustainEventCard extends EventCard{
 
     public void resolve(List<Player> players) {
         players.forEach((Player p) -> {p.resolveSustain(prestigePointsMalus);});
+    }
+    //TODO TESTING
+    public void acceptVisit(TribeVisitor visitor){
+        visitor.visit(this);
     }
 }

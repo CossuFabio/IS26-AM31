@@ -1,9 +1,9 @@
 package it.polimi.ingsw.am31.am31;
 
 public class OfferCard {
-    private int food;
-    private int drawFromUpper;
-    private int drawFromUnder;
+    private final int food;
+    private final int drawFromUpper;
+    private final int drawFromUnder;
     private Player player;
 
     public OfferCard(int food, int drawFromUnder, int drawFromUpper){
@@ -12,7 +12,7 @@ public class OfferCard {
         this.drawFromUpper = drawFromUpper;
         this.player = null;
     }
-
+ //TODO TESTING
     public int getDrawFromUnder() {
         return drawFromUnder;
     }

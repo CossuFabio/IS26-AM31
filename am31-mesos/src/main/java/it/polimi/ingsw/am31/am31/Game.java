@@ -40,7 +40,9 @@ public class Game {
 
     public void gameStart(){}
 
-    public void gameEnd(){}
+    public void gameEnd(){
+        players.forEach(player->{player.resolveEndGame();});
+    }
 
     public void resetGame(){}
 

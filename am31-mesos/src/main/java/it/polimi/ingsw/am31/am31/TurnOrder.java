@@ -37,7 +37,7 @@ public class TurnOrder {
         players.clear();
         currentPlayer = 0;
     }
-
+//TODO TESTING
     public void goToNextPlayer(){
         this.currentPlayer = getCurrentPlayer() + 1;
     }

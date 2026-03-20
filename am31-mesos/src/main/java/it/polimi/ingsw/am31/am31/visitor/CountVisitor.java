@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31.visitor;
 import it.polimi.ingsw.am31.am31.cards.*;
 
 public class CountVisitor implements TribeVisitor{
+
     private int Hcount;
     private int Fcount;
     private int Scount;
@@ -10,6 +11,7 @@ public class CountVisitor implements TribeVisitor{
     private int Acount;
     private int Icount;
     private int Sustain;
+
     public CountVisitor() {
         Hcount = 0;
         Fcount =0;
@@ -48,7 +50,7 @@ public class CountVisitor implements TribeVisitor{
         this.Icount++;
     }
 
-    public void visit(EventCard event) {
+    public void visit(SustainEventCard event) {
         this.Sustain++;
     }
 

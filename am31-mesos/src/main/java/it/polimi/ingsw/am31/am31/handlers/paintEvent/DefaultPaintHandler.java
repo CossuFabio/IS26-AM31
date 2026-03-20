@@ -6,9 +6,8 @@ import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
 public class DefaultPaintHandler implements IPaintHandler{
 
     public DefaultPaintHandler(){}
-
+    //TODO TESTING
     @Override
-    //TO-DO: implement this
     public void handlePaint(Player player, int minimumArtistsNumber, int prestigePointsBonus, int prestigePointsMalus) {
         CountVisitor visitor = new CountVisitor();
         player.getTribe().
