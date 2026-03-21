@@ -10,7 +10,7 @@ public class CountVisitor implements TribeVisitor{
     private int Bcount;
     private int Acount;
     private int Icount;
-    private int Sustain;
+    private int Event;
 
     public CountVisitor() {
         Hcount = 0;
@@ -19,7 +19,7 @@ public class CountVisitor implements TribeVisitor{
         Bcount = 0;
         Acount = 0;
         Icount = 0;
-        Sustain = 0;
+        Event = 0;
     }
 
 
@@ -50,8 +50,8 @@ public class CountVisitor implements TribeVisitor{
         this.Icount++;
     }
 
-    public void visit(SustainEventCard event) {
-        this.Sustain++;
+    public void visit(EventCard event) {
+        this.Event++;
     }
 
     public int getHunters(){return Hcount; }
@@ -60,5 +60,5 @@ public class CountVisitor implements TribeVisitor{
     public int getBuilders(){return Bcount; }
     public int getInventors(){return Icount; }
     public int getArtists(){return Acount;}
-    public int getSustain(){return Sustain;}
+    public int getEvent(){return Event;}
 }

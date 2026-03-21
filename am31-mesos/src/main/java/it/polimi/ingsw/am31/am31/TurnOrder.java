@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am31.am31;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TurnOrder {
     private ArrayList<Player> players;
@@ -12,10 +11,12 @@ public class TurnOrder {
         this.players = new ArrayList<Player>();
     }
 
-    public void setPlayer(Player player, int playerNumber) {
+    public void setPlayer(Player player, int playerNumber, int numPlayers) {
         int place = getCurrentPlayer();
         if (place < playerNumber) {
             players.add(place, player);
+            //end-turn effects get solved directly by player handler
+            player.resolveEndTurn(place, numPlayers);
             this.currentPlayer = place++;
         }
         if (place == playerNumber)

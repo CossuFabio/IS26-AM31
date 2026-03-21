@@ -12,7 +12,7 @@ public class HuntEventCard extends EventCard {
         this.foodBonus = foodBonus;
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = 0;
-        this.priority = 1;
+        this.priority = 1+era;
     }
 
 //TODO TESTING

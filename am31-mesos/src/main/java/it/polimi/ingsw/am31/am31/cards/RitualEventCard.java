@@ -9,7 +9,7 @@ public class RitualEventCard extends EventCard {
         super(era);
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;
-        this.priority = 1;
+        this.priority = 1+era;
     }
 //TODO TESTING
     public void resolve(List<Player> players) {

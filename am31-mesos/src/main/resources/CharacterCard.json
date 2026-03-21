@@ -2,16 +2,327 @@
   {
     "type" : "Hunter",
     "era" : 1,
-    "mark" : true
+    "mark" : true,
+    "minPlayers" : 2
   },
   {
     "type" : "Hunter",
     "era" : 1,
-    "mark" : false
+    "mark" : false,
+    "minPlayers" : 2
+  },
+
+  {
+    "type" : "Hunter",
+    "era" : 2,
+    "mark" : true,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Hunter",
+    "era" : 2,
+    "mark" : false,
+    "minPlayers" : 2
+  },
+
+  {
+    "type" : "Hunter",
+    "era" : 3,
+    "mark" : true,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Hunter",
+    "era" : 3,
+    "mark" : false,
+    "minPlayers" : 2
+  },
+
+
+
+  {
+    "type" : "Shaman",
+    "era" : 1,
+    "stars" : 1,
+    "minPlayers" : 2
   },
   {
     "type" : "Shaman",
-    "era" : "1",
-    "mark" : false
+    "era" : 1,
+    "stars" : 2,
+    "minPlayers" : 2
+  },
+
+  {
+    "type" : "Shaman",
+    "era" : 2,
+    "stars" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Shaman",
+    "era" : 2,
+    "stars" : 1,
+    "minPlayers" : 5
+  },
+
+  {
+    "type" : "Shaman",
+    "era" : 3,
+    "stars" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Shaman",
+    "era" : 3,
+    "stars" : 3,
+    "minPlayers" : 2
+  },
+
+
+
+  {
+    "type" : "Artist",
+    "era" : 1,
+    "minPlayers" : 2
+  },
+
+  {
+    "type" : "Artist",
+    "era" : 2,
+    "minPlayers" : 2
+  },
+
+  {
+    "type" : "Artist",
+    "era" : 3,
+    "minPlayers" : 2
+  },
+
+
+
+  {
+    "type" : "Builder",
+    "era" : 1,
+    "prestigePoints" : 3,
+    "discount" : 1,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 1,
+    "prestigePoints" : 0,
+    "discount" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 1,
+    "prestigePoints" : 2,
+    "discount" : 1,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 1,
+    "prestigePoints" : 1,
+    "discount" : 2,
+    "minPlayers" : 5
+  },
+
+  {
+    "type" : "Builder",
+    "era" : 2,
+    "prestigePoints" : 3,
+    "discount" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 2,
+    "prestigePoints" : 1,
+    "discount" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 2,
+    "prestigePoints" : 4,
+    "discount" : 1,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 2,
+    "prestigePoints" : 2,
+    "discount" : 1,
+    "minPlayers" : 3
+  },
+
+  {
+    "type" : "Builder",
+    "era" : 3,
+    "prestigePoints" : 2,
+    "discount" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 3,
+    "prestigePoints" : 5,
+    "discount" : 1,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 3,
+    "prestigePoints" : 3,
+    "discount" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Builder",
+    "era" : 3,
+    "prestigePoints" : 4,
+    "discount" : 1,
+    "minPlayers" : 5
+  },
+
+
+
+  {
+    "type" : "Farmer",
+    "era" : 1,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Farmer",
+    "era" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Farmer",
+    "era" : 3,
+    "minPlayers" : 2
+  },
+
+
+
+  {
+    "type" : "Inventor",
+    "era" : 1,
+    "icon" : "BREAD",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 1,
+    "icon" : "ARROW",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 1,
+    "icon" : "BOAT",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 1,
+    "icon" : "PELT",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 1,
+    "icon" : "ROPE",
+    "minPlayers" : 4
+  },
+  {
+    "type" : "Inventor",
+    "era" : 1,
+    "icon" : "POT",
+    "minPlayers" : 4
+  },
+  {
+    "type" : "Inventor",
+    "era" : 1,
+    "icon" : "STICK",
+    "minPlayers" : 4
+  },
+
+  {
+    "type" : "Inventor",
+    "era" : 2,
+    "icon" : "STICK",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 2,
+    "icon" : "ROPE",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 2,
+    "icon" : "PELT",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 2,
+    "icon" : "POT",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 2,
+    "icon" : "TOTEM",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 2,
+    "icon" : "BAIT",
+    "minPlayers" : 4
+  },
+
+  {
+    "type" : "Inventor",
+    "era" : 3,
+    "icon" : "BREAD",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 3,
+    "icon" : "NECKLACE",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 3,
+    "icon" : "TOTEM",
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Inventor",
+    "era" : 3,
+    "icon" : "BAIT",
+    "minPlayers" : 2
+  },
+
+  {
+    "type" : "Inventor",
+    "era" : 3,
+    "icon" : "BOAT",
+    "minPlayers" : 3
+  },
+  {
+    "type" : "Inventor",
+    "era" : 3,
+    "icon" : "ARROW",
+    "minPlayers" : 3
   }
 ]

@@ -10,14 +10,11 @@ public class SustainEventCard extends EventCard{
         super(era);
         this.prestigePointsMalus = prestigePointsMalus;
         this.prestigePointsBonus = 0;
-        this.priority = 2;
+        this.priority = 20+era;
     }
 
     public void resolve(List<Player> players) {
         players.forEach((Player p) -> {p.resolveSustain(prestigePointsMalus);});
     }
-    //TODO TESTING
-    public void acceptVisit(TribeVisitor visitor){
-        visitor.visit(this);
-    }
+
 }

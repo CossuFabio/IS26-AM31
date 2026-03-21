@@ -10,9 +10,7 @@ public class DefaultCardDrawHandler implements IDrawHandler{
 
 
     @Override
-    //TO-DO: implement this (
     public void handleDraw(Player player, Card card) {
-        // player.addToTribe(Card)
+        //Does nothing
     }
 }
-

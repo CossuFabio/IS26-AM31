@@ -25,50 +25,40 @@ public class Board {
         underBLine = new ArrayList<BuildingCard>();
     }
 
-    public void changeEraBoard(){
-        moveLowerBuildings();
-        moveLowerTribes();
-    }
-
-    //Private method: mustn't use from outside
-    private void moveLowerTribes(){
+    public void moveLowerTribes(){
         underLine.clear();
         underLine.addAll(upperLine);
         upperLine.clear();
     }
-
-    //Private method: mustn't use from outside
-    private void moveLowerBuildings(){
+    public void moveLowerBuildings(){
         underBLine.clear();
         underBLine.addAll(upperBLine);
         upperBLine.clear();
     }
-
+//ADDERS
     public void addUpper(Card card){
         upperLine.add(card);
     }
-
     public void addLower(Card card){
         underLine.add(card);
     }
-
     public void addBuildingUpper(BuildingCard card){
         upperBLine.add(card);
     }
-
     public void addBuildingLower(BuildingCard card){
         underBLine.add(card);
     }
-
+//GETTERS
+    public ArrayList<BuildingCard> getUnderBLine(){return underBLine;}
+    public ArrayList<Card> getUnderLine() {return underLine;}
     public ArrayList<Card> getUpperLine(){
         ArrayList<Card> result = new ArrayList<Card>();
         result.addAll(upperLine);
         result.addAll(upperBLine);
         return result;
     }
-
+//TODO TESTING
     public Card drawFromUpper(Card card){
-
         if(upperLine.contains(card)){
             upperLine.remove(card);
             return card;

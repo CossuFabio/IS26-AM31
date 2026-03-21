@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am31.am31;
 
 import it.polimi.ingsw.am31.am31.cards.BuildingCard;
-import it.polimi.ingsw.am31.am31.cards.Card;
 import it.polimi.ingsw.am31.am31.cards.CharacterCard;
 import it.polimi.ingsw.am31.am31.handlers.endGame.IEndGameHandler;
 import it.polimi.ingsw.am31.am31.handlers.endRound.IEndRoundHandler;
@@ -13,12 +12,15 @@ import it.polimi.ingsw.am31.am31.handlers.ritualLose.IRitualLoseStrategy;
 import it.polimi.ingsw.am31.am31.handlers.ritualLose.RitualLoseHandler;
 import it.polimi.ingsw.am31.am31.handlers.ritualWin.IRitualWinStrategy;
 import it.polimi.ingsw.am31.am31.handlers.ritualWin.RitualWinHandler;
-import it.polimi.ingsw.am31.am31.handlers.sustainEvent.ISustainHandler;
+import it.polimi.ingsw.am31.am31.handlers.sustainEvent.DefaultSustainHandler;
+import it.polimi.ingsw.am31.am31.handlers.sustainEvent.ISustainDiscountCharacter;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Player {
     private final Color color;
@@ -32,7 +34,7 @@ public class Player {
     private IEndTurnHandler endTurnHandler;
     private IEndGameHandler endGameHandler;
     private IHuntHandler huntHandler;
-    private ISustainHandler sustainHandler;
+    private DefaultSustainHandler sustainHandler;
     private IPaintHandler paintHandler;
     private RitualLoseHandler ritualLoseHandler;
     private RitualWinHandler ritualWinHandler;
@@ -108,8 +110,6 @@ public class Player {
         ritualWinHandler.handleRitualWin(this, prestigePoints);
     }
 
-    ;
-
     public void loseRitual(int prestigePoints) {
         ritualLoseHandler.handleLose(this, prestigePoints);
     }
@@ -126,14 +126,15 @@ public class Player {
         paintHandler.handlePaint(this, threshold, bonusPrestigePoints, malusPrestigePoints);
     }
 
-    public void resolveEndTurn() {
-        endTurnHandler.handleEndTurn(this);
+    public void resolveEndTurn(int turnOrder, int nPlayers) {
+        endTurnHandler.handleEndTurn(this, turnOrder, nPlayers);
     }
 
     public void resolveEndGame() {
         endGameHandler.handleEndGame(this);
     }
 
+    public void resolveEndRound(){endRoundHandler.handleEndRound(this);}
 
     // Each addEffect method takes as parameter the constructor of the decorator for the correct handler
     // and passes it the current handler that will be wrapped with the new decorator
@@ -154,8 +155,8 @@ public class Player {
         this.drawHandler = decoratorFunc.apply(this.drawHandler);
     }
 
-    public void addSustainEffect(Function<ISustainHandler, ISustainHandler> decoratorFunc){
-        this.sustainHandler = decoratorFunc.apply(this.sustainHandler);
+    public void addSustainBonus(Supplier<ISustainDiscountCharacter> newBonus){
+        this.sustainHandler.addSustainDiscountEffect(newBonus.get());
     }
 
     public void addPaintEffect(Function<IPaintHandler, IPaintHandler> decoratorFunc){
@@ -166,12 +167,12 @@ public class Player {
         this.endRoundHandler = decoratorFunc.apply(this.endRoundHandler);
     }
 
-    public void addRitualWinEffect(IRitualWinStrategy newStrategy){
-        this.ritualWinHandler.setStrategy(newStrategy);
+    public void addRitualWinEffect(Supplier<IRitualWinStrategy> newStrategy){
+        this.ritualWinHandler.setStrategy(newStrategy.get());
     }
     
-    public void addRitualLoseEffect(IRitualLoseStrategy newStrategy){
-        this.ritualLoseHandler.setStrategy(newStrategy);
+    public void addRitualLoseEffect(Supplier<IRitualLoseStrategy> newStrategy){
+        this.ritualLoseHandler.setStrategy(newStrategy.get());
     }
 
 
