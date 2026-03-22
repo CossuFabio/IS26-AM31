@@ -39,7 +39,9 @@ public class Game {
         players.remove(player);
     }
 
-    public void gameStart(){}
+    public void gameStart(){
+
+    }
 
     public void gameEnd(){
         players.forEach(player->{player.resolveEndGame();});
@@ -49,13 +51,15 @@ public class Game {
 
     public void startRound(){}
 
-    public void endRound(){
 
-        players.forEach(player -> player.resolveEndRound());
+    private void resolveEvents(){
 
+        PriorityQueue<EventCard> eventQueue = new PriorityQueue<>(
+                Comparator.comparingInt(EventCard::getPriority)
+        );
         CountVisitor visitor = new CountVisitor();
         ArrayList<Card> templine = board.getUnderLine();
-        PriorityQueue<EventCard> eventQueue = new PriorityQueue<EventCard>();
+
         int tempevent=0;
         while(!templine.isEmpty()) {
             templine.getFirst().acceptVisit(visitor);
@@ -65,17 +69,27 @@ public class Game {
                 tempevent=visitor.getEvent();
             }
 
-        templine.removeFirst();
+            templine.removeFirst();
         }
-        //TODO FIX THIS, and TEST
-        Collections.sort(eventQueue, new Comparator<EventCard>() {
-            public int compare(EventCard o1, EventCard o2) {
-                return o1.getPriority() - o2.getPriority()
-            }
-        });
 
-        eventQueue.forEach(eventCard -> eventCard.resolve(players));
+        //Cannot use foreach (See documentation)
+        while(!eventQueue.isEmpty()){
+            eventQueue.poll().resolve(players);
+        }
+    }
+
+
+
+    public void endRound(){
+
+        //Players handle the end of the round
+        players.forEach(player -> player.resolveEndRound());
+
+        resolveEvents();
+
+
         board.moveLowerTribes();
+
         for(int i=0;i<players.size()+4;i++)
             board.addUpper(drawTCard());
 

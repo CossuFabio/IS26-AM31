@@ -1,0 +1,98 @@
+package it.polimi.ingsw.am31.am31;
+
+import it.polimi.ingsw.am31.am31.cards.Hunter;
+import it.polimi.ingsw.am31.am31.cards.IconEnum;
+import it.polimi.ingsw.am31.am31.cards.Inventor;
+import it.polimi.ingsw.am31.am31.cards.Shaman;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class PlayerTest {
+
+    private Player player;
+    private final String nickname = "Test";
+    private final Color color = Color.BLUE;
+
+    @BeforeEach
+    //This test creates a player
+    void createPlayerAndTribe(){
+        this.player = new Player(nickname, color);
+        player.addToTribe(new Shaman(1, 3));
+        player.addToTribe(new Inventor(1, IconEnum.ARROW));
+
+    }
+
+    @Test
+    void testGetNickname() {
+        assert(player.getNickname().equals(nickname));
+    }
+
+    @Test
+    void testGetColor() {
+        assert(player.getColor() == color);
+    }
+
+    @Test
+    void testEditFood() {
+        int bonus = 10;
+        int malus = -20;
+        int starting = 0;
+        System.out.println("TEST");
+        // Controllo iniziale
+        assertEquals(starting, player.getFood(), "Initial value for food: 0");
+
+        // Aggiungo cibo
+        player.editFood(10);
+        assertEquals(bonus, player.getFood(), "Food increased by " + bonus);
+
+        // Tolgo cibo
+        player.editFood(malus);
+        assertEquals(0, player.getFood(), "Food decreased below 0, cannot be negative");
+
+        // Altre modifiche
+        player.editFood(50);
+        player.editFood(-20);
+        assertEquals(30, player.getFood(), "Final food must be 30 after increase of 50 and decrease of 20");
+    }
+
+    @Test
+    void getFood() {
+        player.editFood(10);
+        assertEquals(player.getFood(), 10);
+    }
+
+    @Test
+    void editPrestigePoints() {
+        int starting = player.getPrestigePoints();
+        player.editPrestigePoints(10);
+        assertEquals(player.getPrestigePoints(), 10);
+        player.editPrestigePoints(-20);
+        assertEquals(player.getPrestigePoints(), -10);
+    }
+
+
+
+    @Test
+    void getRitualStars() {
+        //The player has a 3 stars shaman
+        assertEquals(player.getRitualStars(), 3);
+    }
+
+    @Test
+    void increaseStars() {
+        int stars = player.getRitualStars();
+        player.increaseStars(1);
+        assertEquals(stars + 1, player.getRitualStars());
+    }
+
+    @Test
+    void addToTribe() {
+        Hunter h = new Hunter(1, false);
+        player.addToTribe(h);
+        assertEquals(player.getTribe().contains(h), true);
+    }
+
+
+}

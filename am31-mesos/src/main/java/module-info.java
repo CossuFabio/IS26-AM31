@@ -1,7 +1,7 @@
 module it.polimi.ingsw.am31.am31 {
     requires javafx.controls;
     requires javafx.fxml;
-    requires it.polimi.ingsw.am31.am31;
+    //requires it.polimi.ingsw.am31.am31;
 
 
     opens it.polimi.ingsw.am31.am31 to javafx.fxml;
@@ -12,6 +12,7 @@ module it.polimi.ingsw.am31.am31 {
     opens it.polimi.ingsw.am31.am31.cards to javafx.fxml;
     exports it.polimi.ingsw.am31.am31.visitor;
     opens it.polimi.ingsw.am31.am31.visitor to javafx.fxml;
-    exports it.polimi.ingsw.am31.am31.BuildingStrategy;
-    opens it.polimi.ingsw.am31.am31.BuildingStrategy to javafx.fxml;
+
+
+
 }

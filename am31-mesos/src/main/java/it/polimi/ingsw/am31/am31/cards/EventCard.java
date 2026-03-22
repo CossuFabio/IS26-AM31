@@ -13,6 +13,7 @@ public abstract class EventCard extends Card {
     protected EventCard(int era) {
         super(era);
     }
+
     public abstract void resolve(List<Player> players);
 
     public int getPriority() {
