@@ -11,6 +11,8 @@ public abstract class CharacterCard extends Card implements IPickable {
     @Override
     public void onPick(Player player) {}
 
+    public CharacterCard() {}
+
     public int getBuildingDiscount () {
     return 0;
     }
@@ -25,6 +27,10 @@ public abstract class CharacterCard extends Card implements IPickable {
     }
     public boolean getMark() { return false; }
     public int getStars() { return 0; }
-    public void acceptVisit (TribeVisitor tribeVisitor) {
+    public void acceptVisit (TribeVisitor tribeVisitor) {}
+
+    public void addToPlayer(Player player){
+        player.addCard(this);
     }
+
 }

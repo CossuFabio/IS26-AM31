@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.cards.BuildingCard;
-import it.polimi.ingsw.am31.am31.cards.Card;
+import it.polimi.ingsw.am31.am31.cards.*;
+//import it.polimi.ingsw.am31.am31.handlers.*;
 import it.polimi.ingsw.am31.am31.handlers.endGame.*;
 import it.polimi.ingsw.am31.am31.handlers.endRound.OneMoreCardDecorator;
 import it.polimi.ingsw.am31.am31.handlers.endTurn.FoodEndTurnDecorator;

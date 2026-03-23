@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31;
 
 import it.polimi.ingsw.am31.am31.cards.BuildingCard;
 import it.polimi.ingsw.am31.am31.cards.Card;
+import it.polimi.ingsw.am31.am31.cards.IPickable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class Board {
         return result;
     }
 //TODO TESTING
-    public Card drawFromUpper(Card card){
+    public IPickable drawFromUpper(IPickable card){
         if(upperLine.contains(card)){
             upperLine.remove(card);
             return card;
@@ -70,7 +71,7 @@ public class Board {
         return null;
     }
 
-    public Card drawFromLower(Card card){
+    public IPickable drawFromLower(IPickable card){
 
         if(underLine.contains(card)){
             underLine.remove(card);

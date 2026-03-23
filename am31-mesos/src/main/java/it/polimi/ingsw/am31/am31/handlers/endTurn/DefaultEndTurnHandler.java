@@ -9,7 +9,6 @@ public class DefaultEndTurnHandler implements IEndTurnHandler {
     }
 
     @Override
-    //TODO: Test this
     //By default, at the end of the turn the player gains/looses food based on which tile he is placed
     //All bonuses change based on number of players
     public void handleEndTurn(Player player, int playerOrder, int nPlayers) {

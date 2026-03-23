@@ -5,4 +5,5 @@ import it.polimi.ingsw.am31.am31.Player;
 public interface IPickable {
 
     void onPick(Player player);
+    void addToPlayer(Player player);
 }

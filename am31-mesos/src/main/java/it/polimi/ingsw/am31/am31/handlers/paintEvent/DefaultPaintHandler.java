@@ -13,7 +13,7 @@ public class DefaultPaintHandler implements IPaintHandler{
         player.getTribe().
                 forEach(card -> card.acceptVisit(visitor));
         if(visitor.getArtists() >= minimumArtistsNumber ){
-            player.editPrestigePoints(prestigePointsBonus);
+            player.editPrestigePoints(prestigePointsBonus*visitor.getArtists());
         }
         else{player.editPrestigePoints(-prestigePointsMalus);}
     }

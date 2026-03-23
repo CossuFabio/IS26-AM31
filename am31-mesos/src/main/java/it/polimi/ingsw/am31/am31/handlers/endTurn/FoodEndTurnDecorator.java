@@ -7,7 +7,6 @@ public class FoodEndTurnDecorator extends EndTurnHandlerDecorator{
     public FoodEndTurnDecorator(IEndTurnHandler wrappedHandler){super(wrappedHandler);}
 
     @Override
-    //TO-DO: implement this
     //gets +1 additional food if totem is on first places of Turn Order
     public void handleEndTurn(Player player, int turnOrder, int nPlayers) {
         if(nPlayers > 3 && ((turnOrder == 0)||(turnOrder == 1)))

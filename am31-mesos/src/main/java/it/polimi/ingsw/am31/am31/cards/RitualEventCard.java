@@ -11,7 +11,6 @@ public class RitualEventCard extends EventCard {
         this.prestigePointsMalus = prestigePointsMalus;
         this.priority = 1+era;
     }
-//TODO TESTING
     public void resolve(List<Player> players) {
         int minStars = players.getFirst().getRitualStars();
         int maxStars = minStars;

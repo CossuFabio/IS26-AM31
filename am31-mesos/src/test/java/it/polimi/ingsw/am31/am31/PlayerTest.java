@@ -1,9 +1,6 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.cards.Hunter;
-import it.polimi.ingsw.am31.am31.cards.IconEnum;
-import it.polimi.ingsw.am31.am31.cards.Inventor;
-import it.polimi.ingsw.am31.am31.cards.Shaman;
+import it.polimi.ingsw.am31.am31.cards.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +16,8 @@ class PlayerTest {
     //This test creates a player
     void createPlayerAndTribe(){
         this.player = new Player(nickname, color);
-        player.addToTribe(new Shaman(1, 3));
-        player.addToTribe(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Shaman(1, 3));
+        player.addCard(new Inventor(1, IconEnum.ARROW));
 
     }
 
@@ -39,7 +36,6 @@ class PlayerTest {
         int bonus = 10;
         int malus = -20;
         int starting = 0;
-        System.out.println("TEST");
         // Controllo iniziale
         assertEquals(starting, player.getFood(), "Initial value for food: 0");
 
@@ -88,11 +84,13 @@ class PlayerTest {
     }
 
     @Test
-    void addToTribe() {
+    void addCard() {
         Hunter h = new Hunter(1, false);
-        player.addToTribe(h);
+        player.addCard(h);
         assertEquals(player.getTribe().contains(h), true);
     }
+
+
 
 
 }

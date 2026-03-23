@@ -324,5 +324,83 @@
     "era" : 3,
     "icon" : "ARROW",
     "minPlayers" : 3
+  },
+
+
+
+  {
+    "type" : "HuntEventCard",
+    "prestigePointsBonus" : 1,
+    "foodBonus" : 1,
+    "era" : 1
+  },
+  {
+    "type" : "HuntEventCard",
+    "prestigePointsBonus" : 2,
+    "foodBonus" : 1,
+    "era" : 2
+  },
+  {
+    "type" : "HuntEventCard",
+    "prestigePointsBonus" : 3,
+    "foodBonus" : 1,
+    "era" : 3
+  },
+
+  {
+    "type" : "PaintingEventCard",
+    "prestigePointsBonus" : 1,
+    "prestigePointsMalus" : 2,
+    "minArtist" : 1,
+    "era" : 1
+  },
+  {
+    "type" : "PaintingEventCard",
+    "prestigePointsBonus" : 2,
+    "prestigePointsMalus" : 2,
+    "minArtist" : 2,
+    "era" : 2
+  },
+  {
+    "type" : "PaintingEventCard",
+    "prestigePointsBonus" : 3,
+    "prestigePointsMalus" : 2,
+    "minArtist" : 3,
+    "era" : 3
+  },
+
+  {
+    "type" : "RitualEventCard",
+    "prestigePointsBonus" : 5,
+    "prestigePointsMalus" : 3,
+    "era" : 1
+  },
+  {
+    "type" : "RitualEventCard",
+    "prestigePointsBonus" : 10,
+    "prestigePointsMalus" : 5,
+    "era" : 2
+  },
+  {
+    "type" : "RitualEventCard",
+    "prestigePointsBonus" : 15,
+    "prestigePointsMalus" : 7,
+    "era" : 3
+  },
+
+  {
+    "type" : "SustainEventCard",
+    "prestigePointsMalus" : 1,
+    "era" : 1
+  },
+  {
+    "type" : "SustainEventCard",
+    "prestigePointsMalus" : 2,
+    "era" : 2
+  },
+  {
+    "type" : "SustainEventCard",
+    "prestigePointsMalus" : 3,
+    "era" : 3
   }
 ]

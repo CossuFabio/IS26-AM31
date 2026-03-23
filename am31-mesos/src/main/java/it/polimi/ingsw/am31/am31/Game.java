@@ -3,9 +3,12 @@ package it.polimi.ingsw.am31.am31;
 import it.polimi.ingsw.am31.am31.cards.BuildingCard;
 import it.polimi.ingsw.am31.am31.cards.Card;
 import it.polimi.ingsw.am31.am31.cards.EventCard;
+import it.polimi.ingsw.am31.am31.cards.IPickable;
 import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
 
 import java.util.*;
+
+import static java.util.Comparator.*;
 
 public class Game {
     private int roundNumber;
@@ -39,23 +42,55 @@ public class Game {
         players.remove(player);
     }
 
+    //TODO: Implement This
     public void gameStart(){
 
     }
 
+    //TODO : Test This
     public void gameEnd(){
         players.forEach(player->{player.resolveEndGame();});
+        List<Player> scores = new  ArrayList<>();
+        for (Player player : players) {
+            scores.add(player);
+        }
+        scores.sort(comparingInt(Player::getPrestigePoints));
+        ArrayList<Player> winners = new ArrayList<>();
+        winners.add(scores.removeLast());
+        while(!scores.isEmpty()){
+            Player playerToCompare = scores.removeLast();
+            if(winners.getFirst().getPrestigePoints() == playerToCompare.getPrestigePoints()){
+                if(winners.getFirst().getFood() < playerToCompare.getFood()) {
+                    winners.removeFirst();
+                    winners.add(playerToCompare);
+                }
+                else if(winners.getFirst().getFood()==playerToCompare.getFood())
+                    winners.add(playerToCompare);
+            }
+        }
+        //method should then show winners
     }
 
-    public void resetGame(){}
+    //TODO: Test this
+    public void resetGame(){
+        players.forEach(player->{player.editFood(-player.getFood());});
+        players.forEach(player->{player.editPrestigePoints(-player.getPrestigePoints());});
+        board = new Board(nPlayers);
+        buildingDeck = new BuildingDeck(nPlayers);
+        tribeDeck = new TribeDeck(nPlayers);
+        gameStart();
+    }
 
-    public void startRound(){}
+    //TODO: Implement This
+    public void startRound(){
+
+    }
 
 
     private void resolveEvents(){
 
         PriorityQueue<EventCard> eventQueue = new PriorityQueue<>(
-                Comparator.comparingInt(EventCard::getPriority)
+                comparingInt(EventCard::getPriority)
         );
         CountVisitor visitor = new CountVisitor();
         ArrayList<Card> templine = board.getUnderLine();
@@ -78,26 +113,16 @@ public class Game {
         }
     }
 
-
-
     public void endRound(){
 
         //Players handle the end of the round
         players.forEach(player -> player.resolveEndRound());
-
         resolveEvents();
-
-
         board.moveLowerTribes();
-
         for(int i=0;i<players.size()+4;i++)
             board.addUpper(drawTCard());
 
-
     }
-
-
-
 
     private Card drawTCard () {
         Card temp = tribeDeck.draw();
@@ -123,19 +148,26 @@ public class Game {
         }
     }
 
-    public void playerChoice(Player player){
+    public void playerChoice(Player player, OfferCard offerCard){
+        offerCard.setPlayer(player);
     }
 
-    public void playerAction(){}
 
-    public void handleFood(){}
+    public void playerDrawFromUpper(Player player, IPickable card){
+        board.drawFromUpper(card);
+        card.addToPlayer(player);
+    }
 
-    public void handlePrestigePoints(){}
+    public void playerDrawFromTop(Player player, IPickable card){
+        board.drawFromUpper(card);
+        card.addToPlayer(player);
+    }
+
+
 
     public TurnOrder getTurnOrder(){
         return turnOrder;
     }
-
 
 
 }

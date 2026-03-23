@@ -11,7 +11,11 @@ public class Hunter extends CharacterCard {
         super(era);
         this.mark = mark;
     }
-
+    //for JSON use
+    public void setMark (boolean mark) {
+        this.mark = mark;
+    }
+    public Hunter () {}
     @Override
     public boolean getMark() { return mark; }
 
@@ -22,8 +26,6 @@ public class Hunter extends CharacterCard {
         player.getTribe().forEach(card -> card.acceptVisit(visitor));
         player.editFood(visitor.getHunters());
     }
-//  TODO ADD TESTING
-
     @Override
     public void acceptVisit(TribeVisitor visitor) {
         visitor.visit(this);

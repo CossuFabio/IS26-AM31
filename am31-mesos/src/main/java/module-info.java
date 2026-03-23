@@ -1,6 +1,7 @@
 module it.polimi.ingsw.am31.am31 {
     requires javafx.controls;
     requires javafx.fxml;
+    requires com.fasterxml.jackson.annotation;
     //requires it.polimi.ingsw.am31.am31;
 
 

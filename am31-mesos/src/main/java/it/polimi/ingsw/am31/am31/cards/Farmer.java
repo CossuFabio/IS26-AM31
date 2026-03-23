@@ -3,10 +3,16 @@ package it.polimi.ingsw.am31.am31.cards;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 public class Farmer extends CharacterCard {
-    private final int discount;
+    private int discount;
 
     public Farmer(int era, int discount) {
         super(era);
+        this.discount = discount;
+    }
+
+    public Farmer() {}
+
+    public void setDiscount(int discount) {
         this.discount = discount;
     }
 

@@ -38,4 +38,9 @@ public class BuildingCard extends Card implements IPickable{
         effect.accept(player);
     }
 
+    public void addToPlayer(Player player){
+        player.addCard(this);
+    }
+
+
 }
