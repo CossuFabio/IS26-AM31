@@ -11,6 +11,8 @@ public abstract class CharacterCard extends Card implements IPickable {
     @Override
     public void onPick(Player player) {}
 
+    public CharacterCard() {}
+
     public int getBuildingDiscount () {
     return 0;
     }

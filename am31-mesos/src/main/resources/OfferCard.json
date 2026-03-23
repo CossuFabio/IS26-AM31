@@ -1,0 +1,50 @@
+[
+  {
+    "food" : 3,
+    "drawFromUpper" : 0,
+    "drawFromUnder" : 0,
+    "minPlayers" : 5
+  },
+
+  {
+    "food" : 0,
+    "drawFromUpper" : 0,
+    "drawFromUnder" : 1,
+    "minPlayers" : 2
+  },
+
+  {
+    "food" : 0,
+    "drawFromUpper" : 1,
+    "drawFromUnder" : 0,
+    "minPlayers" : 2
+  },
+
+  {
+    "food" : 0,
+    "drawFromUpper" : 0,
+    "drawFromUnder" : 2,
+    "minPlayers" : 3
+  },
+
+  {
+    "food" : 0,
+    "drawFromUpper" : 1,
+    "drawFromUnder" : 1,
+    "minPlayers" : 2
+  },
+
+  {
+    "food" : 0,
+    "drawFromUpper" : 2,
+    "drawFromUnder" : 0,
+    "minPlayers" : 2
+  },
+
+  {
+    "food" : 0,
+    "drawFromUpper" : 2,
+    "drawFromUnder" : 1,
+    "minPlayers" : 4
+  }
+]

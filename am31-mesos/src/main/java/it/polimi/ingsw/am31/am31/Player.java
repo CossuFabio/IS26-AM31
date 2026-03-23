@@ -96,11 +96,6 @@ public class Player {
         return prestigePoints;
     }
 
-    //Must be called only after the game has called player.resolveEndGame so that the prestigePoints are the correct number
-    public int finalScore() {
-        return prestigePoints;
-    }
-
     public int getRitualStars() {
         return ritualStars;
     }
@@ -128,7 +123,13 @@ public class Player {
         this.drawHandler.handleDraw(this, newBuilding);
         personalBuildingCards.add(newBuilding);
     }
+    
+    //public void addCard(Character)
+    //Public void addCard(Building)
 
+    public int getBuildersDiscount(){
+        return this.personalTribeCards.stream().mapToInt(card -> card.getBuildingDiscount()).sum();
+    }
 
     public void winRitual(int prestigePoints) {
         ritualWinHandler.handleRitualWin(this, prestigePoints);

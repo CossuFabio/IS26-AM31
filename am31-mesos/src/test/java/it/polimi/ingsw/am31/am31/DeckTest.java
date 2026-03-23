@@ -1,22 +1,35 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.cards.Artist;
+import it.polimi.ingsw.am31.am31.cards.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DeckTest {
+    private Deck deck;
 
-    @Test
-    void TestisEmpty() {
-        BuildingDeck deck = new BuildingDeck(4);
-        assertEquals(deck.isEmpty(),deck.eraDeck.isEmpty());
+    @BeforeEach
+    void TestDeck () {
+        this.deck = new BuildingDeck(3);
     }
-// TODO TEST THE TEST, IF IT DOESNT WORK, CUT AND PASTE INTO CONCRETE CLASSES
     @Test
-    void TestShoulddraw() {
-        BuildingDeck deck= new BuildingDeck(4);
-        deck.eraDeck.add(new Artist(1));
-        assertEquals(new Artist(1),deck.draw());
+    void TestShouldBeEmpty() {
+        int temp = deck.eraDeck.size();
+        for(int i=0;i<temp;i++)
+            deck.draw();
+        assertTrue(deck.isEmpty());
+    }
+    @Test
+    void TestShouldDraw() {
+        BuildingCard temp = (BuildingCard) deck.draw();
+        //first card should be era 1
+        assertEquals(1,temp.getEra());
+        int size = deck.eraDeck.size();
+        for(int i=0; i<size; i++) {
+            deck.draw();
+        };
+        assertThrows(IllegalStateException.class, () -> deck.draw());
+
     }
 }

@@ -14,6 +14,8 @@ public abstract class EventCard extends Card {
         super(era);
     }
 
+    public EventCard() {}
+
     public abstract void resolve(List<Player> players);
 
     public int getPriority() {
@@ -27,8 +29,6 @@ public abstract class EventCard extends Card {
     public int getPrestigePointsMalus() {
         return prestigePointsMalus;
     }
-
-        //TODO TESTING
         public void acceptVisit(TribeVisitor visitor){
             visitor.visit(this);
         }

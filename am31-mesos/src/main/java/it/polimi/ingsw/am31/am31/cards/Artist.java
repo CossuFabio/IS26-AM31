@@ -6,6 +6,10 @@ public class Artist extends CharacterCard {
     public Artist(int era) {
         super(era);
     }
+    //for JSON use
+    public Artist(){}
+
+
 
     @Override
     public void acceptVisit(TribeVisitor visitor) {

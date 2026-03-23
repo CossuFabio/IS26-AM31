@@ -10,7 +10,7 @@ public class OneMoreCardDecorator extends EndRoundHandlerDecorator {
     @Override
     //During the end of the round, the player can draw one more card from the upper line of the board
     public void handleEndRound(Player player) {
-        //To-Do: implement this
+        //TODO: implement this, and test
         // player.drawFromUpper();
 
         wrappedHandler.handleEndRound(player);

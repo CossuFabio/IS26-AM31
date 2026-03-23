@@ -15,7 +15,6 @@ public class HuntEventCard extends EventCard {
         this.priority = 1+era;
     }
 
-//TODO TESTING
     public void resolve(List<Player> players) {
         players.forEach((Player p) -> {p.resolveHunt(foodBonus, prestigePointsBonus);});
     }

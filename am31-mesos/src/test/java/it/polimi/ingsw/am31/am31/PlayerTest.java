@@ -1,9 +1,8 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.cards.Hunter;
-import it.polimi.ingsw.am31.am31.cards.IconEnum;
-import it.polimi.ingsw.am31.am31.cards.Inventor;
-import it.polimi.ingsw.am31.am31.cards.Shaman;
+import it.polimi.ingsw.am31.am31.cards.*;
+import it.polimi.ingsw.am31.am31.handlers.huntEvent.BonusHunterHandleDecorator;
+import it.polimi.ingsw.am31.am31.handlers.paintEvent.BonusPaintHandlerDecorator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +38,6 @@ class PlayerTest {
         int bonus = 10;
         int malus = -20;
         int starting = 0;
-        System.out.println("TEST");
         // Controllo iniziale
         assertEquals(starting, player.getFood(), "Initial value for food: 0");
 
@@ -93,6 +91,8 @@ class PlayerTest {
         player.addToTribe(h);
         assertEquals(player.getTribe().contains(h), true);
     }
+
+
 
 
 }

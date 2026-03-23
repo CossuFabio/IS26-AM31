@@ -11,6 +11,16 @@ public class Builder extends CharacterCard {
         this.prestigePoints = prestigePoints;
         this.discount = discount;
     }
+    //for JSON use
+    public Builder() {}
+
+    public void setPrestigePoints(int prestigePoints) {
+        this.prestigePoints = prestigePoints;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
 
     @Override
     public int getBuildingDiscount() {
