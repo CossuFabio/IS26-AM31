@@ -8,7 +8,7 @@ public class DoubleWinRitualStrategy implements IRitualWinStrategy{
 
     @Override
     public void handleWinRitual(Player player, int bonus) {
+
         player.editPrestigePoints(2*bonus);
     }
-
 }

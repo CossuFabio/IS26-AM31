@@ -8,8 +8,8 @@ public class FlatPrestigePointsDecorator extends EndGameHandlerDecorator {
 
     @Override
     public void handleEndGame(Player player) {
-        //TO-DO: implement this
-        //player.getPrestigePoints(int bonus);
+        //25 bonus prestigePoints
+        player.editPrestigePoints(25);
 
         wrappedHandler.handleEndGame(player);
     }

@@ -1,0 +1,17 @@
+# Cartella di output di default di IntelliJ (dove finisce la build!)
+out/
+
+# File di configurazione di IntelliJ (non vanno condivisi)
+.idea/
+*.iml
+
+# File compilati di Java
+*.class
+*.log
+
+# Se per caso stai usando Maven
+target/
+
+# Se per caso stai usando Gradle
+build/
+.gradle/

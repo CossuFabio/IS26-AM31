@@ -1,24 +1,32 @@
 package it.polimi.ingsw.am31.am31;
 
 import it.polimi.ingsw.am31.am31.cards.BuildingCard;
-import it.polimi.ingsw.am31.am31.cards.Card;
 import it.polimi.ingsw.am31.am31.cards.CharacterCard;
+import it.polimi.ingsw.am31.am31.handlers.endGame.DefaultEndGameHandler;
 import it.polimi.ingsw.am31.am31.handlers.endGame.IEndGameHandler;
+import it.polimi.ingsw.am31.am31.handlers.endRound.DefaultEndRoundHandler;
 import it.polimi.ingsw.am31.am31.handlers.endRound.IEndRoundHandler;
+import it.polimi.ingsw.am31.am31.handlers.endTurn.DefaultEndTurnHandler;
 import it.polimi.ingsw.am31.am31.handlers.endTurn.IEndTurnHandler;
+import it.polimi.ingsw.am31.am31.handlers.huntEvent.DefaultHuntHandler;
 import it.polimi.ingsw.am31.am31.handlers.huntEvent.IHuntHandler;
+import it.polimi.ingsw.am31.am31.handlers.onDraw.DefaultCardDrawHandler;
 import it.polimi.ingsw.am31.am31.handlers.onDraw.IDrawHandler;
+import it.polimi.ingsw.am31.am31.handlers.paintEvent.DefaultPaintHandler;
 import it.polimi.ingsw.am31.am31.handlers.paintEvent.IPaintHandler;
 import it.polimi.ingsw.am31.am31.handlers.ritualLose.IRitualLoseStrategy;
 import it.polimi.ingsw.am31.am31.handlers.ritualLose.RitualLoseHandler;
 import it.polimi.ingsw.am31.am31.handlers.ritualWin.IRitualWinStrategy;
 import it.polimi.ingsw.am31.am31.handlers.ritualWin.RitualWinHandler;
-import it.polimi.ingsw.am31.am31.handlers.sustainEvent.ISustainHandler;
+import it.polimi.ingsw.am31.am31.handlers.sustainEvent.DefaultSustainHandler;
+import it.polimi.ingsw.am31.am31.handlers.sustainEvent.ISustainDiscountCharacter;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Player {
     private final Color color;
@@ -32,7 +40,7 @@ public class Player {
     private IEndTurnHandler endTurnHandler;
     private IEndGameHandler endGameHandler;
     private IHuntHandler huntHandler;
-    private ISustainHandler sustainHandler;
+    private DefaultSustainHandler sustainHandler;
     private IPaintHandler paintHandler;
     private RitualLoseHandler ritualLoseHandler;
     private RitualWinHandler ritualWinHandler;
@@ -46,6 +54,16 @@ public class Player {
         personalBuildingCards = new ArrayList<>();
         personalTribeCards = new ArrayList<>();
         ritualStars = 0;
+
+        this.drawHandler = new DefaultCardDrawHandler();
+        this.endTurnHandler = new DefaultEndTurnHandler();
+        this.endGameHandler = new DefaultEndGameHandler();
+        this.huntHandler = new DefaultHuntHandler();
+        this.sustainHandler = new DefaultSustainHandler();
+        this.paintHandler = new DefaultPaintHandler();
+        this.ritualLoseHandler = new RitualLoseHandler();
+        this.ritualWinHandler = new RitualWinHandler();
+        this.endRoundHandler = new DefaultEndRoundHandler();
     }
 
     public String getNickname() {
@@ -57,9 +75,11 @@ public class Player {
     }
 
     public void editFood(int valFood) {
-        int oldFood = getFood();
-        int newFood = oldFood + valFood;
-        this.food = newFood;
+
+        int newFood = this.food + valFood;
+        if(newFood < 0) this.food = 0;
+        else this.food = newFood;
+
     }
 
     public int getFood() {
@@ -81,6 +101,14 @@ public class Player {
         return prestigePoints;
     }
 
+    public int getRitualStars() {
+        return ritualStars;
+    }
+
+    public void increaseStars(int starsToAdd) {
+        ritualStars += starsToAdd;
+    }
+
     public List<CharacterCard> getTribe() {
         return personalTribeCards;
     }
@@ -90,25 +118,21 @@ public class Player {
     }
 
 
-    public int getRitualStars() {
-        return ritualStars;
-    }
-
-    public void increaseStars(int starsToAdd) {
-        ritualStars += starsToAdd;
-    }
-
     public void addToTribe(CharacterCard card) {
         //Draw effects are triggered before the card is considered part of the tribe
         this.drawHandler.handleDraw(this, card);
         personalTribeCards.add(card);
     }
 
+    public void addToBuildings(BuildingCard newBuilding){
+        this.drawHandler.handleDraw(this, newBuilding);
+        personalBuildingCards.add(newBuilding);
+    }
+
+
     public void winRitual(int prestigePoints) {
         ritualWinHandler.handleRitualWin(this, prestigePoints);
     }
-
-    ;
 
     public void loseRitual(int prestigePoints) {
         ritualLoseHandler.handleLose(this, prestigePoints);
@@ -126,14 +150,15 @@ public class Player {
         paintHandler.handlePaint(this, threshold, bonusPrestigePoints, malusPrestigePoints);
     }
 
-    public void resolveEndTurn() {
-        endTurnHandler.handleEndTurn(this);
+    public void resolveEndTurn(int turnOrder, int nPlayers) {
+        endTurnHandler.handleEndTurn(this, turnOrder, nPlayers);
     }
 
     public void resolveEndGame() {
         endGameHandler.handleEndGame(this);
     }
 
+    public void resolveEndRound(){endRoundHandler.handleEndRound(this);}
 
     // Each addEffect method takes as parameter the constructor of the decorator for the correct handler
     // and passes it the current handler that will be wrapped with the new decorator
@@ -154,8 +179,8 @@ public class Player {
         this.drawHandler = decoratorFunc.apply(this.drawHandler);
     }
 
-    public void addSustainEffect(Function<ISustainHandler, ISustainHandler> decoratorFunc){
-        this.sustainHandler = decoratorFunc.apply(this.sustainHandler);
+    public void addSustainBonus(Supplier<ISustainDiscountCharacter> newBonus){
+        this.sustainHandler.addSustainDiscountEffect(newBonus.get());
     }
 
     public void addPaintEffect(Function<IPaintHandler, IPaintHandler> decoratorFunc){
@@ -166,12 +191,12 @@ public class Player {
         this.endRoundHandler = decoratorFunc.apply(this.endRoundHandler);
     }
 
-    public void addRitualWinEffect(IRitualWinStrategy newStrategy){
-        this.ritualWinHandler.setStrategy(newStrategy);
+    public void addRitualWinEffect(Supplier<IRitualWinStrategy> newStrategy){
+        this.ritualWinHandler.setStrategy(newStrategy.get());
     }
     
-    public void addRitualLoseEffect(IRitualLoseStrategy newStrategy){
-        this.ritualLoseHandler.setStrategy(newStrategy);
+    public void addRitualLoseEffect(Supplier<IRitualLoseStrategy> newStrategy){
+        this.ritualLoseHandler.setStrategy(newStrategy.get());
     }
 
 

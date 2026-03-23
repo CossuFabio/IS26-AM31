@@ -13,7 +13,7 @@ public class PaintingEventCard extends EventCard {
     public  PaintingEventCard(int era, int minArtist, int prestigePointsMalus, int prestigePointsBonus){
         this.minArtist = minArtist;
         super(era);
-        this.priority = 1;
+        this.priority = 1+era;
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;
     }

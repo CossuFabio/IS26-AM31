@@ -10,9 +10,9 @@ public class DoubleBuilderEndGameDecorator extends EndGameHandlerDecorator {
 
     @Override
     public void handleEndGame(Player player) {
-        //TO-DO: implement this
-        //player.getPrestigePoints(int bonus);
-
+        //Gets bonus for builders a second time
+        int bonus = player.getTribe().stream().mapToInt(card -> card.getPrestigePoints()).sum();
+        player.editPrestigePoints(bonus);
         wrappedHandler.handleEndGame(player);
     }
 }

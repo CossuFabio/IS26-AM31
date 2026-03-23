@@ -8,6 +8,7 @@ class BuilderTest { //TODO ALL THE TESTING
 
     @Test
     void getBuildingDiscount() {
+
     }
 
     @Test

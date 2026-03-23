@@ -1,8 +1,38 @@
 package it.polimi.ingsw.am31.am31.handlers.endGame;
 
 import it.polimi.ingsw.am31.am31.Player;
+import it.polimi.ingsw.am31.am31.cards.IconEnum;
+import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
+
+import java.util.HashSet;
 
 public class DefaultEndGameHandler implements IEndGameHandler {
+
+    private int artistsBonus(Player player){
+
+        CountVisitor countVisitor = new CountVisitor();
+        player.getTribe().forEach(card -> card.acceptVisit(countVisitor));
+        return countVisitor.getArtists()/2;
+
+    }
+
+    private int inventorsBonus(Player player){
+        CountVisitor countVisitor = new CountVisitor();
+        HashSet<IconEnum> icons = new HashSet<IconEnum>();
+
+        player.getTribe().forEach(characterCard -> {
+
+            characterCard.acceptVisit(countVisitor);
+            //Creates the icons set
+            if(characterCard.getIcon() != IconEnum.EMPTY) icons.add(characterCard.getIcon());
+
+        });
+
+        return countVisitor.getInventors() * icons.size();
+
+    }
+
+
     public DefaultEndGameHandler() {
     }
 
@@ -18,7 +48,10 @@ public class DefaultEndGameHandler implements IEndGameHandler {
                 .mapToInt((card) -> card.getPrestigePointsGained())
                 .sum();
 
-        player.editPrestigePoints(bonusPointsCharacters + bonusPointsBuildings);
+        int bonusPointsInventors = inventorsBonus(player);
+        int bonusPointsArtists    = artistsBonus(player);
+
+        player.editPrestigePoints(bonusPointsCharacters + bonusPointsBuildings + bonusPointsInventors + bonusPointsArtists);
 
     }
 }

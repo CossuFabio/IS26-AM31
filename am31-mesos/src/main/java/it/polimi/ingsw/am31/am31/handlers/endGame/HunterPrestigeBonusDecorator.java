@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.handlers.endGame;
 
 import it.polimi.ingsw.am31.am31.Player;
+import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
 
 public class HunterPrestigeBonusDecorator extends EndGameHandlerDecorator {
 
@@ -8,8 +9,9 @@ public class HunterPrestigeBonusDecorator extends EndGameHandlerDecorator {
 
     @Override
     public void handleEndGame(Player player) {
-        //TO-DO: implement this
-        //player.editPrestigePoints(int bonus);
+        CountVisitor visitor = new CountVisitor();
+        player.getTribe().forEach(card -> card.acceptVisit(visitor));
+        player.editPrestigePoints(3*visitor.getHunters());
 
         wrappedHandler.handleEndGame(player);
     }
