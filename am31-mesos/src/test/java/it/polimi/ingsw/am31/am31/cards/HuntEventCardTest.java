@@ -18,8 +18,8 @@ class HuntEventCardTest {
         this.eventCard = new HuntEventCard(1,2,3);
         this.players = new ArrayList<>();
         players.add(new Player("BLUE", Color.BLUE));
-        players.getFirst().addToTribe(new Hunter(1,false));
-        players.getFirst().addToTribe(new Hunter(1,false));
+        players.getFirst().addCard(new Hunter(1,false));
+        players.getFirst().addCard(new Hunter(1,false));
     }
     @Test
     void TestShouldTestingResolve() {

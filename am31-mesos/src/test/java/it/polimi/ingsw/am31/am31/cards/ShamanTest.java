@@ -22,7 +22,7 @@ class ShamanTest {
         this.shaman = new Shaman(era, stars);
         this.players = new ArrayList<>();
         players.add(new Player("BLUE", Color.BLUE));
-        players.getFirst().addToTribe(shaman);
+        players.getFirst().addCard(shaman);
     }
     @Test
     void TestShouldGetStars() {
@@ -32,7 +32,7 @@ class ShamanTest {
     @Test
     void TestShouldDoOnPick() {
         assertEquals(0,players.getFirst().getRitualStars(),stars);
-        players.getFirst().addToTribe(shaman);
+        players.getFirst().addCard(shaman);
         assertEquals(0,players.getFirst().getRitualStars(),2*stars);
     }
 

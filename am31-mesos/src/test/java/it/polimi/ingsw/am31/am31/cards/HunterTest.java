@@ -28,12 +28,12 @@ class HunterTest {
         int startingFood = player.getFood();
         int startingPrestigePoints = player.getPrestigePoints();
 
-        player.addToTribe(hunterNoMark);
+        player.addCard(hunterNoMark);
 
         assertEquals(startingFood, player.getFood());
         assertEquals(startingPrestigePoints, player.getPrestigePoints());
 
-        player.addToTribe(hunterMark);
+        player.addCard(hunterMark);
         assertEquals(startingFood+1, player.getFood());
         assertEquals(startingPrestigePoints, player.getPrestigePoints());
 

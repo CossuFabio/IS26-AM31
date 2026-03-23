@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31;
 import it.polimi.ingsw.am31.am31.cards.BuildingCard;
 import it.polimi.ingsw.am31.am31.cards.Card;
 import it.polimi.ingsw.am31.am31.cards.EventCard;
+import it.polimi.ingsw.am31.am31.cards.IPickable;
 import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
 
 import java.util.*;
@@ -151,10 +152,17 @@ public class Game {
         offerCard.setPlayer(player);
     }
 
-    //TODO implement when making controller
-    public void playerDrawFromUpper(Player player, Card card){
 
+    public void playerDrawFromUpper(Player player, IPickable card){
+        board.drawFromUpper(card);
+        card.addToPlayer(player);
     }
+
+    public void playerDrawFromTop(Player player, IPickable card){
+        board.drawFromUpper(card);
+        card.addToPlayer(player);
+    }
+
 
 
     public TurnOrder getTurnOrder(){

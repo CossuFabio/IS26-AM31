@@ -23,11 +23,11 @@ class RitualEventCardTest {
         this.card= new RitualEventCard(1,2,3);
         this.players = new ArrayList<>();
         players.add(new Player("BLUE", Color.BLUE));
-        players.get(0).addToTribe(shaman);
-        players.get(0).addToTribe(shaman);
+        players.get(0).addCard(shaman);
+        players.get(0).addCard(shaman);
         //should have 4 stars and win and have 3pp
         players.add(new Player("RED", Color.RED));
-        players.get(1).addToTribe(shaman);
+        players.get(1).addCard(shaman);
         //should have 2 stars and keep them
         players.add(new Player("YELLOW", Color.YELLOW));
         players.add(new Player("WHITE", Color.WHITE));

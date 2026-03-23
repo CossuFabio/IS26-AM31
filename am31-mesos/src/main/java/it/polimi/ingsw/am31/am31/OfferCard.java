@@ -12,7 +12,7 @@ public class OfferCard {
         this.drawFromUpper = drawFromUpper;
         this.player = null;
     }
- //TODO TESTING
+
     public int getDrawFromUnder() {
         return drawFromUnder;
     }

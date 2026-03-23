@@ -1,8 +1,6 @@
 package it.polimi.ingsw.am31.am31;
 
 import it.polimi.ingsw.am31.am31.cards.*;
-import it.polimi.ingsw.am31.am31.handlers.huntEvent.BonusHunterHandleDecorator;
-import it.polimi.ingsw.am31.am31.handlers.paintEvent.BonusPaintHandlerDecorator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +16,8 @@ class PlayerTest {
     //This test creates a player
     void createPlayerAndTribe(){
         this.player = new Player(nickname, color);
-        player.addToTribe(new Shaman(1, 3));
-        player.addToTribe(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Shaman(1, 3));
+        player.addCard(new Inventor(1, IconEnum.ARROW));
 
     }
 
@@ -86,9 +84,9 @@ class PlayerTest {
     }
 
     @Test
-    void addToTribe() {
+    void addCard() {
         Hunter h = new Hunter(1, false);
-        player.addToTribe(h);
+        player.addCard(h);
         assertEquals(player.getTribe().contains(h), true);
     }
 

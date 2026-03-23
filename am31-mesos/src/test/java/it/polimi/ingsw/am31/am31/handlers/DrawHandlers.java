@@ -5,7 +5,6 @@ import it.polimi.ingsw.am31.am31.cards.*;
 import it.polimi.ingsw.am31.am31.handlers.onDraw.GeneralAdditionalFoodDecorator;
 import it.polimi.ingsw.am31.am31.handlers.onDraw.InventorAdditionalFoodDecorator;
 import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,12 +19,12 @@ public class DrawHandlers {
         int stars = 2;
         int initialStars = player.getRitualStars();
 
-        player.addToTribe(new Shaman(1, stars));
+        player.addCard(new Shaman(1, stars));
 
         assertEquals(player.getRitualStars(), initialStars + stars);
 
 
-        player.addToTribe(new Shaman(1, stars));
+        player.addCard(new Shaman(1, stars));
 
         assertEquals(player.getRitualStars(), initialStars + stars + stars);
 
@@ -38,11 +37,11 @@ public class DrawHandlers {
 
         int numHuntersNoMark = 3;
         for(int i = 0; i < numHuntersNoMark; i++){
-            player.addToTribe(new Hunter(1, false));
+            player.addCard(new Hunter(1, false));
         }
         //All hunters are unmarked => no food is added
         assertEquals(player.getFood(), initialFood);
-        player.addToTribe(new Hunter(1, true));
+        player.addCard(new Hunter(1, true));
 
         assertEquals(initialFood + numHuntersNoMark, player.getFood());
 
@@ -59,38 +58,38 @@ public class DrawHandlers {
         //Initialize the tribe - Farmer missing => incomplete set => no food bonus
 
         //Both hunters unmarked => no food bonus
-        player.addToTribe(new Hunter(1, false));
-        player.addToTribe(new Hunter(1, false));
+        player.addCard(new Hunter(1, false));
+        player.addCard(new Hunter(1, false));
 
-        player.addToTribe(new Artist(1));
-        player.addToTribe(new Inventor(1, IconEnum.ARROW));
-        player.addToTribe(new Builder(1,1,1));
-        player.addToTribe(new Shaman(1,1));
+        player.addCard(new Artist(1));
+        player.addCard(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Builder(1,1,1));
+        player.addCard(new Shaman(1,1));
 
-        player.addToTribe(new Artist(1));
-        player.addToTribe(new Inventor(1, IconEnum.ARROW));
-        player.addToTribe(new Builder(1,1,1));
-        player.addToTribe(new Shaman(1,1));
+        player.addCard(new Artist(1));
+        player.addCard(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Builder(1,1,1));
+        player.addCard(new Shaman(1,1));
 
-        player.addToTribe(new Artist(1));
-        player.addToTribe(new Inventor(1, IconEnum.ARROW));
-        player.addToTribe(new Builder(1,1,1));
-        player.addToTribe(new Shaman(1,1));
+        player.addCard(new Artist(1));
+        player.addCard(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Builder(1,1,1));
+        player.addCard(new Shaman(1,1));
 
         assertEquals(initialFood, player.getFood());
 
         //Adding farmers to complete two sets (one hunter missing for the bonus of the third set)
-        player.addToTribe(new Farmer(1, 1));
+        player.addCard(new Farmer(1, 1));
 
         assertEquals(initialFood + foodBonus, player.getFood());
         int currentFood = initialFood + foodBonus;
 
-        player.addToTribe(new Farmer(1, 1));
+        player.addCard(new Farmer(1, 1));
         assertEquals(currentFood + foodBonus, player.getFood());
         currentFood += foodBonus;
 
 
-        player.addToTribe(new Farmer(1, 1));
+        player.addCard(new Farmer(1, 1));
         assertEquals(currentFood, player.getFood());
 
         //Now adding a marked hunter: should add 2 foods for previous hunters + 5 by the decorator
@@ -99,7 +98,7 @@ public class DrawHandlers {
         //Expected value before adding the marked one
         currentFood += foodBonus + visitor.getHunters();
 
-        player.addToTribe(new Hunter(1, true));
+        player.addCard(new Hunter(1, true));
         assertEquals(currentFood, player.getFood());
 
 
@@ -113,26 +112,26 @@ public class DrawHandlers {
         int currentFood = player.getFood();
 
         //Shouldn't add food: the decorator hasn't been added yet
-        player.addToTribe(new Inventor(1, IconEnum.ARROW));
-        player.addToTribe(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Inventor(1, IconEnum.ARROW));
 
         assertEquals(currentFood, player.getFood());
 
         //Shouldn't be counter towards the bonus: the decorator hasn't been added yet
-        player.addToTribe(new Inventor(1, IconEnum.BAIT));
+        player.addCard(new Inventor(1, IconEnum.BAIT));
 
 
         player.addDrawEffect(InventorAdditionalFoodDecorator::new);
         int foodBonus = 3; //Bonus given by the decorator
 
         //Shouldn't add food: this icon has been added before the creation of the decorator
-        player.addToTribe(new Inventor(1, IconEnum.BAIT));
+        player.addCard(new Inventor(1, IconEnum.BAIT));
 
         assertEquals(currentFood, player.getFood());
 
         //Should add food: new couple
-        player.addToTribe(new Inventor(1, IconEnum.BREAD));
-        player.addToTribe(new Inventor(1, IconEnum.BREAD));
+        player.addCard(new Inventor(1, IconEnum.BREAD));
+        player.addCard(new Inventor(1, IconEnum.BREAD));
 
         assertEquals(currentFood + foodBonus, player.getFood());
 

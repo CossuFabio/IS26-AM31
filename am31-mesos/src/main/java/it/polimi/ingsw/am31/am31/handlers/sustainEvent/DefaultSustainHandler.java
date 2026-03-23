@@ -42,6 +42,8 @@ public class DefaultSustainHandler{
         }
         //se cibo sufficiente, edita al nuovo valore.
         else
+            if(fullDiscount>sizeTribe)
+                fullDiscount = sizeTribe;
             player.editFood(-(sizeTribe - fullDiscount));
     }
 }

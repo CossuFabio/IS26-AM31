@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31;
 
 import it.polimi.ingsw.am31.am31.cards.BuildingCard;
+import it.polimi.ingsw.am31.am31.cards.Card;
 import it.polimi.ingsw.am31.am31.cards.CharacterCard;
 import it.polimi.ingsw.am31.am31.handlers.endGame.DefaultEndGameHandler;
 import it.polimi.ingsw.am31.am31.handlers.endGame.IEndGameHandler;
@@ -24,7 +25,6 @@ import it.polimi.ingsw.am31.am31.handlers.sustainEvent.ISustainDiscountCharacter
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -112,20 +112,21 @@ public class Player {
         return personalBuildingCards;
     }
 
+    public void addCard(Card card){
+        //Nothing to do
+    }
 
-    public void addToTribe(CharacterCard card) {
-        //Draw effects are triggered before the card is considered part of the tribe
+    public void addCard(CharacterCard card) {
         this.drawHandler.handleDraw(this, card);
         personalTribeCards.add(card);
     }
 
-    public void addToBuildings(BuildingCard newBuilding){
-        this.drawHandler.handleDraw(this, newBuilding);
-        personalBuildingCards.add(newBuilding);
+
+    public void addCard(BuildingCard card)
+    {
+        this.drawHandler.handleDraw(this, card);
+        personalBuildingCards.add(card);
     }
-    
-    //public void addCard(Character)
-    //Public void addCard(Building)
 
     public int getBuildersDiscount(){
         return this.personalTribeCards.stream().mapToInt(card -> card.getBuildingDiscount()).sum();

@@ -21,16 +21,16 @@ class DefaultHuntHandlerTest {
         this.player = new Player("Test", Color.BLACK);
 
         for(int i = 0; i<hunterNumberBeforeMark; i++){
-            player.addToTribe(new Hunter(1, false));
+            player.addCard(new Hunter(1, false));
         }
 
-        player.addToTribe(new Hunter(1, true));
+        player.addCard(new Hunter(1, true));
         food = player.getFood();
 
         assertEquals(hunterNumberBeforeMark, food);
 
         for(int i = 0; i<hunterNumberAfterMark - hunterNumberBeforeMark - 1; i++){
-            player.addToTribe(new Hunter(1, false));
+            player.addCard(new Hunter(1, false));
         }
 
     }
@@ -45,7 +45,7 @@ class DefaultHuntHandlerTest {
 
     @Test
     void shouldHandleBonustHuntWithHunter() {
-        this.player.addToBuildings(new BuildingCard(1, 1, 1, (player) -> player.addHuntEffect(BonusHunterHandleDecorator::new)));
+        this.player.addCard(new BuildingCard(1, 1, 1, (player) -> player.addHuntEffect(BonusHunterHandleDecorator::new)));
         this.player.resolveHunt(1, 1);
 
         //Bonus handler => +x prestigePoints, +x food (x = number of hunters in tribe)
