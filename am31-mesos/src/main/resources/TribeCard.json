@@ -8,8 +8,26 @@
   {
     "type" : "Hunter",
     "era" : 1,
+    "mark" : true,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Hunter",
+    "era" : 1,
     "mark" : false,
     "minPlayers" : 2
+  },
+  {
+    "type" : "Hunter",
+    "era" : 1,
+    "mark" : false,
+    "minPlayers" : 3
+  },
+  {
+    "type" : "Hunter",
+    "era" : 1,
+    "mark" : false,
+    "minPlayers" : 3
   },
 
   {
@@ -24,6 +42,30 @@
     "mark" : false,
     "minPlayers" : 2
   },
+  {
+    "type" : "Hunter",
+    "era" : 2,
+    "mark" : false,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Hunter",
+    "era" : 2,
+    "mark" : true,
+    "minPlayers" : 3
+  },
+  {
+    "type" : "Hunter",
+    "era" : 2,
+    "mark" : true,
+    "minPlayers" : 4
+  },
+  {
+    "type" : "Hunter",
+    "era" : 2,
+    "mark" : false,
+    "minPlayers" : 5
+  },
 
   {
     "type" : "Hunter",
@@ -36,6 +78,18 @@
     "era" : 3,
     "mark" : false,
     "minPlayers" : 2
+  },
+  {
+    "type" : "Hunter",
+    "era" : 3,
+    "mark" : false,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Hunter",
+    "era" : 3,
+    "mark" : true,
+    "minPlayers" : 5
   },
 
 
@@ -52,6 +106,18 @@
     "stars" : 2,
     "minPlayers" : 2
   },
+  {
+    "type" : "Shaman",
+    "era" : 1,
+    "stars" : 1,
+    "minPlayers" : 4
+  },
+  {
+    "type" : "Shaman",
+    "era" : 1,
+    "stars" : 2,
+    "minPlayers" : 5
+  },
 
   {
     "type" : "Shaman",
@@ -62,7 +128,19 @@
   {
     "type" : "Shaman",
     "era" : 2,
+    "stars" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Shaman",
+    "era" : 2,
     "stars" : 1,
+    "minPlayers" : 5
+  },
+  {
+    "type" : "Shaman",
+    "era" : 2,
+    "stars" : 2,
     "minPlayers" : 5
   },
 
@@ -78,6 +156,24 @@
     "stars" : 3,
     "minPlayers" : 2
   },
+  {
+    "type" : "Shaman",
+    "era" : 3,
+    "stars" : 3,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Shaman",
+    "era" : 3,
+    "stars" : 2,
+    "minPlayers" : 3
+  },
+  {
+    "type" : "Shaman",
+    "era" : 3,
+    "stars" : 2,
+    "minPlayers" : 4
+  },
 
 
 
@@ -86,17 +182,72 @@
     "era" : 1,
     "minPlayers" : 2
   },
+  {
+    "type" : "Artist",
+    "era" : 1,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Artist",
+    "era" : 1,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Artist",
+    "era" : 1,
+    "minPlayers" : 3
+  },
+  {
+    "type" : "Artist",
+    "era" : 1,
+    "minPlayers" : 4
+  },
 
   {
     "type" : "Artist",
     "era" : 2,
     "minPlayers" : 2
   },
+  {
+    "type" : "Artist",
+    "era" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Artist",
+    "era" : 2,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Artist",
+    "era" : 2,
+    "minPlayers" : 3
+  },
 
   {
     "type" : "Artist",
     "era" : 3,
     "minPlayers" : 2
+  },
+  {
+    "type" : "Artist",
+    "era" : 3,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Artist",
+    "era" : 3,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Artist",
+    "era" : 3,
+    "minPlayers" : 3
+  },
+  {
+    "type" : "Artist",
+    "era" : 3,
+    "minPlayers" : 4
   },
 
 
@@ -197,13 +348,55 @@
   },
   {
     "type" : "Farmer",
+    "era" : 1,
+    "minPlayers" : 2
+  },
+  {
+    "type" : "Farmer",
+    "era" : 1,
+    "minPlayers" : 3
+  },
+  {
+    "type" : "Farmer",
+    "era" : 1,
+    "minPlayers" : 5
+  },
+
+  {
+    "type" : "Farmer",
     "era" : 2,
     "minPlayers" : 2
   },
   {
     "type" : "Farmer",
+    "era" : 2,
+    "minPlayers" : 3
+  },
+  {
+    "type" : "Farmer",
+    "era" : 2,
+    "minPlayers" : 4
+  },
+  {
+    "type" : "Farmer",
+    "era" : 2,
+    "minPlayers" : 5
+  },
+
+  {
+    "type" : "Farmer",
     "era" : 3,
     "minPlayers" : 2
+  },
+  {
+    "type" : "Farmer",
+    "era" : 3,
+    "minPlayers" : 4
+  },
+  {
+    "type" : "Farmer",
+    "era" : 3,
+    "minPlayers" : 5
   },
 
 
@@ -324,6 +517,12 @@
     "era" : 3,
     "icon" : "ARROW",
     "minPlayers" : 3
+  },
+  {
+    "type" : "Inventor",
+    "era" : 3,
+    "icon" : "NECKLACE",
+    "minPlayers" : 4
   },
 
 

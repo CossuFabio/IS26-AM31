@@ -5,7 +5,10 @@ import it.polimi.ingsw.am31.am31.Player;
 import java.util.List;
 
 public class HuntEventCard extends EventCard {
-    private final int foodBonus;
+    private int foodBonus;
+
+    //for JSON use
+    public HuntEventCard() {}
 
     public HuntEventCard(int era, int foodBonus, int prestigePointsBonus){
         super(era);

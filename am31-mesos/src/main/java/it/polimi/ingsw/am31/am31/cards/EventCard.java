@@ -14,6 +14,7 @@ public abstract class EventCard extends Card {
         super(era);
     }
 
+    //for JSON use
     public EventCard() {}
 
     public abstract void resolve(List<Player> players);

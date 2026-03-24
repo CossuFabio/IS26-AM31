@@ -14,6 +14,9 @@ public class PaintingEventCard extends EventCard {
         this.prestigePointsMalus = prestigePointsMalus;
     }
 
+    //for JSON use
+    public PaintingEventCard() {}
+
     public void resolve(List<Player> players) {
         players.forEach((Player p) -> {p.resolvePainters(minArtist, prestigePointsMalus, prestigePointsBonus); });
     }
