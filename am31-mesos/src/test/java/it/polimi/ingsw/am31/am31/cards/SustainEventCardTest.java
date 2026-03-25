@@ -20,16 +20,16 @@ class SustainEventCardTest {
         players = new ArrayList<>();
         card = new SustainEventCard(era, malus);
         players.add(new Player("BLUE", Color.BLUE));
-        players.get(0).addCard(new Artist(1));
-        players.get(0).addCard(new Artist(1));
+        players.get(0).addCard(new Artist(1,2));
+        players.get(0).addCard(new Artist(1,2));
         players.get(0).editFood(2);
         //player 0 has 2 food, 2 cost to feed them -> goes to 0
         players.add(new Player("RED", Color.RED));
-        players.get(1).addCard(new Artist(1));
+        players.get(1).addCard(new Artist(1,2));
         //player 1 has no food, should lose 2pp go to -2pp
         players.add(new Player("WHITE", Color.WHITE));
-        players.get(2).addCard(new Artist(1));
-        players.get(2).addCard(new Farmer(1,3));
+        players.get(2).addCard(new Artist(1,2));
+        players.get(2).addCard(new Farmer(1,2,3));
         players.get(2).editFood(5);
         //player 2 has discount, should pay 0 food and have 5
     }

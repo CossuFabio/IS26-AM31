@@ -31,6 +31,7 @@ public class Game {
         tribeDeck = new TribeDeck(nPlayers);
         era = 1;
         this.nPlayers= nPlayers;
+        this.turnOrder = new TurnOrder(nPlayers);
     }
 
     public void addPlayer(Player player){
@@ -43,32 +44,70 @@ public class Game {
         players.remove(player);
     }
 
-    //TODO: Implement This
-    public void gameStart(){
+    //TODO: Test This
+    public void gameStart() {
+
+        //Assigning random order for the first turn
+        Collections.shuffle(players);
+
+        //Giving the correct amount of food
+        int[] startingFood = {2, 3, 3, 4, 4};
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).editFood(startingFood[i]);
+        }
+
+        //Setting the players in TurnOrder
+        players.forEach(p -> turnOrder.setPlayer(p));
+
+        //Setup the underLine
+        CountVisitor eventCounter = new CountVisitor();
+        int numberEvents = eventCounter.getEvent();
+        Card card;
+        for(int i = 0; i<(nPlayers + 1 + numberEvents); i++){
+
+            card = tribeDeck.draw();
+            card.acceptVisit(eventCounter);
+
+            //Event => addUpper, not event => addLower
+            if(eventCounter.getEvent() > numberEvents) board.addUpper(card);
+            else board.addLower(card);
+
+            numberEvents = eventCounter.getEvent();
+        }
+
+        //Fills the upper trail of cards
+        for(int i = 0; i<(nPlayers + 4 - numberEvents); i++){
+            board.addUpper(tribeDeck.draw());
+        }
+
+        //Set up buildings trail (only upper)
+        board.addUpper((BuildingCard)buildingDeck.draw());
+        if(nPlayers > 2)
+            board.addUpper((BuildingCard)buildingDeck.draw());
 
     }
+    
 
     //TODO : Test This
-    public void gameEnd(){
+    public List<Player> gameEnd(){
         players.forEach(player->{player.resolveEndGame();});
         List<Player> scores = new  ArrayList<>();
         for (Player player : players) {
             scores.add(player);
         }
-        scores.sort(comparingInt(Player::getPrestigePoints));
+        scores.sort(Comparator.comparing(Player::getPrestigePoints).thenComparing(Player::getFood));
         ArrayList<Player> winners = new ArrayList<>();
         winners.add(scores.removeLast());
         while(!scores.isEmpty()){
             Player playerToCompare = scores.removeLast();
             if(winners.getFirst().getPrestigePoints() == playerToCompare.getPrestigePoints()){
-                if(winners.getFirst().getFood() < playerToCompare.getFood()) {
-                    winners.removeFirst();
+                if(winners.getFirst().getFood() == playerToCompare.getFood()) {
                     winners.add(playerToCompare);
                 }
-                else if(winners.getFirst().getFood()==playerToCompare.getFood())
-                    winners.add(playerToCompare);
+                else return winners;
             }
         }
+        return winners;
         //method should then show winners
     }
 
@@ -79,11 +118,14 @@ public class Game {
         board = new Board(nPlayers);
         buildingDeck = new BuildingDeck(nPlayers);
         tribeDeck = new TribeDeck(nPlayers);
+        turnOrder = new TurnOrder(nPlayers);
+        era = 1;
         gameStart();
     }
 
     //TODO: Implement This
     public void startRound(){
+        roundNumber++;
 
     }
 
@@ -144,7 +186,7 @@ public class Game {
         //we increase the era, then check if the next card in building deck is the new era -> add it to upperbline.
         era++;
         while(temp.getFirst().getEra()==era) {
-            board.addBuildingUpper((BuildingCard) buildingDeck.draw()); //explicit Cast to buildingcard
+            board.addUpper((BuildingCard) buildingDeck.draw()); //explicit Cast to buildingcard
             temp.removeFirst();
         }
     }

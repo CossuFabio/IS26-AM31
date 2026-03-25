@@ -16,8 +16,8 @@ class PlayerTest {
     //This test creates a player
     void createPlayerAndTribe(){
         this.player = new Player(nickname, color);
-        player.addCard(new Shaman(1, 3));
-        player.addCard(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Shaman(1, 2,3));
+        player.addCard(new Inventor(1, 2,IconEnum.ARROW));
 
     }
 
@@ -85,7 +85,7 @@ class PlayerTest {
 
     @Test
     void addCard() {
-        Hunter h = new Hunter(1, false);
+        Hunter h = new Hunter(1, 2,false);
         player.addCard(h);
         assertEquals(player.getTribe().contains(h), true);
     }

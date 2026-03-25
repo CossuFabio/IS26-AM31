@@ -505,7 +505,6 @@
     "icon" : "BAIT",
     "minPlayers" : 2
   },
-
   {
     "type" : "Inventor",
     "era" : 3,
@@ -580,12 +579,7 @@
     "prestigePointsMalus" : 5,
     "era" : 2
   },
-  {
-    "type" : "RitualEventCard",
-    "prestigePointsBonus" : 15,
-    "prestigePointsMalus" : 7,
-    "era" : 4
-  },
+
 
   {
     "type" : "SustainEventCard",
@@ -596,10 +590,5 @@
     "type" : "SustainEventCard",
     "prestigePointsMalus" : 2,
     "era" : 2
-  },
-  {
-    "type" : "SustainEventCard",
-    "prestigePointsMalus" : 3,
-    "era" : 4
   }
 ]

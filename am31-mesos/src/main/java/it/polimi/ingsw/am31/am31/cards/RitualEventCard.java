@@ -1,19 +1,24 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.Player;
 
 import java.util.List;
 
 public class RitualEventCard extends EventCard {
-    public RitualEventCard(int era, int prestigePointsMalus, int prestigePointsBonus){
+
+    @JsonCreator
+    public RitualEventCard(
+            @JsonProperty("era") int era,
+            @JsonProperty("prestigePointsMalus") int prestigePointsMalus,
+            @JsonProperty("prestigePointsBonus") int prestigePointsBonus){
         super(era);
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;
         this.priority = 1+era;
     }
 
-    //for JSON use
-    public RitualEventCard() {}
 
     public void resolve(List<Player> players) {
         int minStars = players.getFirst().getRitualStars();

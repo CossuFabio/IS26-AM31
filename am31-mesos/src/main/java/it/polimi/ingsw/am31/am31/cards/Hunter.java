@@ -1,21 +1,23 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.Player;
 import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 public class Hunter extends CharacterCard {
-    private boolean mark;
+    private final boolean mark;
 
-    public Hunter(int era, boolean mark) {
-        super(era);
+    @JsonCreator
+    public Hunter(
+            @JsonProperty("era") int era,
+            @JsonProperty("minPlayers") int minPlayers,
+            @JsonProperty("mark") boolean mark){
+        super(era, minPlayers);
         this.mark = mark;
     }
-    //for JSON use
-    public void setMark (boolean mark) {
-        this.mark = mark;
-    }
-    public Hunter () {}
+
     @Override
     public boolean getMark() { return mark; }
 

@@ -1,16 +1,19 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.Player;
 
 import java.util.List;
 
 public class HuntEventCard extends EventCard {
-    private int foodBonus;
+    private final int foodBonus;
 
-    //for JSON use
-    public HuntEventCard() {}
-
-    public HuntEventCard(int era, int foodBonus, int prestigePointsBonus){
+    @JsonCreator
+    public HuntEventCard(
+            @JsonProperty("era") int era,
+            @JsonProperty("foodBonus") int foodBonus,
+            @JsonProperty("prestigePointsBonus") int prestigePointsBonus){
         super(era);
         this.foodBonus = foodBonus;
         this.prestigePointsBonus = prestigePointsBonus;
@@ -21,7 +24,5 @@ public class HuntEventCard extends EventCard {
     public void resolve(List<Player> players) {
         players.forEach((Player p) -> {p.resolveHunt(foodBonus, prestigePointsBonus);});
     }
-
-
 
 }

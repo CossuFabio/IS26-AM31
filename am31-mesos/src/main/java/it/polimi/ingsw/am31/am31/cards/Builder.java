@@ -1,24 +1,19 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 public class Builder extends CharacterCard {
-    private int prestigePoints;
-    private int discount;
-
-    public Builder(int era, int prestigePoints, int discount) {
-        super(era);
+    private final int prestigePoints;
+    private final int discount;
+    @JsonCreator
+    public Builder(@JsonProperty("era")int era,
+                   @JsonProperty("minPlayers") int minPlayers,
+                   @JsonProperty("prestigePoints")int prestigePoints,
+                   @JsonProperty("discount")int discount) {
+        super(era, minPlayers);
         this.prestigePoints = prestigePoints;
-        this.discount = discount;
-    }
-    //for JSON use
-    public Builder() {}
-
-    public void setPrestigePoints(int prestigePoints) {
-        this.prestigePoints = prestigePoints;
-    }
-
-    public void setDiscount(int discount) {
         this.discount = discount;
     }
 

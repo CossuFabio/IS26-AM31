@@ -19,12 +19,12 @@ public class DrawHandlers {
         int stars = 2;
         int initialStars = player.getRitualStars();
 
-        player.addCard(new Shaman(1, stars));
+        player.addCard(new Shaman(1, 2,stars));
 
         assertEquals(player.getRitualStars(), initialStars + stars);
 
 
-        player.addCard(new Shaman(1, stars));
+        player.addCard(new Shaman(1,2, stars));
 
         assertEquals(player.getRitualStars(), initialStars + stars + stars);
 
@@ -37,11 +37,11 @@ public class DrawHandlers {
 
         int numHuntersNoMark = 3;
         for(int i = 0; i < numHuntersNoMark; i++){
-            player.addCard(new Hunter(1, false));
+            player.addCard(new Hunter(1,2, false));
         }
         //All hunters are unmarked => no food is added
         assertEquals(player.getFood(), initialFood);
-        player.addCard(new Hunter(1, true));
+        player.addCard(new Hunter(1,2,true));
 
         assertEquals(initialFood + numHuntersNoMark, player.getFood());
 
@@ -58,38 +58,38 @@ public class DrawHandlers {
         //Initialize the tribe - Farmer missing => incomplete set => no food bonus
 
         //Both hunters unmarked => no food bonus
-        player.addCard(new Hunter(1, false));
-        player.addCard(new Hunter(1, false));
+        player.addCard(new Hunter(1, 2,false));
+        player.addCard(new Hunter(1, 2,false));
 
-        player.addCard(new Artist(1));
-        player.addCard(new Inventor(1, IconEnum.ARROW));
-        player.addCard(new Builder(1,1,1));
-        player.addCard(new Shaman(1,1));
+        player.addCard(new Artist(1,2));
+        player.addCard(new Inventor(1, 2,IconEnum.ARROW));
+        player.addCard(new Builder(1,2,1,1));
+        player.addCard(new Shaman(1,2,1));
 
-        player.addCard(new Artist(1));
-        player.addCard(new Inventor(1, IconEnum.ARROW));
-        player.addCard(new Builder(1,1,1));
-        player.addCard(new Shaman(1,1));
+        player.addCard(new Artist(1,2));
+        player.addCard(new Inventor(1, 2,IconEnum.ARROW));
+        player.addCard(new Builder(1,2,1,1));
+        player.addCard(new Shaman(1,2,1));
 
-        player.addCard(new Artist(1));
-        player.addCard(new Inventor(1, IconEnum.ARROW));
-        player.addCard(new Builder(1,1,1));
-        player.addCard(new Shaman(1,1));
+        player.addCard(new Artist(1,2));
+        player.addCard(new Inventor(1, 2,IconEnum.ARROW));
+        player.addCard(new Builder(1,2,1,1));
+        player.addCard(new Shaman(1,2,1));
 
         assertEquals(initialFood, player.getFood());
 
         //Adding farmers to complete two sets (one hunter missing for the bonus of the third set)
-        player.addCard(new Farmer(1, 1));
+        player.addCard(new Farmer(1, 1,2));
 
         assertEquals(initialFood + foodBonus, player.getFood());
         int currentFood = initialFood + foodBonus;
 
-        player.addCard(new Farmer(1, 1));
+        player.addCard(new Farmer(1, 1,2));
         assertEquals(currentFood + foodBonus, player.getFood());
         currentFood += foodBonus;
 
 
-        player.addCard(new Farmer(1, 1));
+        player.addCard(new Farmer(1, 1,2));
         assertEquals(currentFood, player.getFood());
 
         //Now adding a marked hunter: should add 2 foods for previous hunters + 5 by the decorator
@@ -98,7 +98,7 @@ public class DrawHandlers {
         //Expected value before adding the marked one
         currentFood += foodBonus + visitor.getHunters();
 
-        player.addCard(new Hunter(1, true));
+        player.addCard(new Hunter(1, 2,true));
         assertEquals(currentFood, player.getFood());
 
 
@@ -112,26 +112,26 @@ public class DrawHandlers {
         int currentFood = player.getFood();
 
         //Shouldn't add food: the decorator hasn't been added yet
-        player.addCard(new Inventor(1, IconEnum.ARROW));
-        player.addCard(new Inventor(1, IconEnum.ARROW));
+        player.addCard(new Inventor(1, 2,IconEnum.ARROW));
+        player.addCard(new Inventor(1, 2,IconEnum.ARROW));
 
         assertEquals(currentFood, player.getFood());
 
         //Shouldn't be counter towards the bonus: the decorator hasn't been added yet
-        player.addCard(new Inventor(1, IconEnum.BAIT));
+        player.addCard(new Inventor(1,2, IconEnum.BAIT));
 
 
         player.addDrawEffect(InventorAdditionalFoodDecorator::new);
         int foodBonus = 3; //Bonus given by the decorator
 
         //Shouldn't add food: this icon has been added before the creation of the decorator
-        player.addCard(new Inventor(1, IconEnum.BAIT));
+        player.addCard(new Inventor(1,2, IconEnum.BAIT));
 
         assertEquals(currentFood, player.getFood());
 
         //Should add food: new couple
-        player.addCard(new Inventor(1, IconEnum.BREAD));
-        player.addCard(new Inventor(1, IconEnum.BREAD));
+        player.addCard(new Inventor(1, 2,IconEnum.BREAD));
+        player.addCard(new Inventor(1,2, IconEnum.BREAD));
 
         assertEquals(currentFood + foodBonus, player.getFood());
 

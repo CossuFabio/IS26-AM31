@@ -9,13 +9,13 @@ class OfferCardTest {
     private OfferCard offerCard;
 
     @BeforeEach
-    void setUp() {this.offerCard = new OfferCard(0, 2, 0);}
+    void setUp() {this.offerCard = new OfferCard(0, 2, 0, 2);}
 
     @Test
     void shouldNotBeFree() {
         Player player = new Player("BLUE", Color.BLUE);
         this.offerCard.setPlayer(player);
-        assertEquals(false, this.offerCard.isFree());
+        assertFalse(this.offerCard.isFree());
     }
 
     @Test
@@ -30,12 +30,12 @@ class OfferCardTest {
         Player player = new Player("BLUE", Color.BLUE);
         this.offerCard.setPlayer(player);
         this.offerCard.free();
-        assertEquals( true, this.offerCard.isFree());
+        assertTrue(this.offerCard.isFree());
     }
 
     @Test
     void shouldStillBeFree(){
         this.offerCard.setPlayer(null);
-        assertEquals( true, this.offerCard.isFree());
+        assertTrue(this.offerCard.isFree());
     }
 }

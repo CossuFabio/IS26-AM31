@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am31.am31.cards;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
@@ -19,28 +18,21 @@ import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 })
 
 public abstract class Card {
-    protected int era;
-    protected int minPlayers;
+
+   @JsonIgnore
+    protected final int era;
 
     protected Card(int era) {
      this.era = era;
     }
 
-    protected Card() {
-    }
-
-    public int getMinPlayers() {
-        return minPlayers;
-    }
-
-    public void setMinPlayers(int minPlayers) {
-        this.minPlayers = minPlayers;
-    }
-
     public int getEra () {
         return era;
     }
-    public void acceptVisit(TribeVisitor visitor){
+    public void acceptVisit(TribeVisitor visitor){}
 
+
+    public int getMinPlayers() {
+        return 2;
     }
 }

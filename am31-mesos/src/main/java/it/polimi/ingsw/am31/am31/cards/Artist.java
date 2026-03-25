@@ -1,15 +1,17 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 public class Artist extends CharacterCard {
-    public Artist(int era) {
-        super(era);
+
+    @JsonCreator
+    public Artist(
+            @JsonProperty("era")  int era,
+            @JsonProperty("minPlayers") int minPlayers) {
+        super(era, minPlayers);
     }
-    //for JSON use
-    public Artist(){}
-
-
 
     @Override
     public void acceptVisit(TribeVisitor visitor) {

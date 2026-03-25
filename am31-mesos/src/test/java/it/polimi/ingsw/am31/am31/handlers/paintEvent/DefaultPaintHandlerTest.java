@@ -22,7 +22,7 @@ class DefaultPaintHandlerTest {
         int malus = 3;
 
         for(int i = 0; i < minArtist-1; i++){
-            player.addCard(new Artist(1));
+            player.addCard(new Artist(1, 2));
         }
         player.resolvePainters(minArtist, malus, bonus);
         assertEquals(startingPrestige-malus, player.getPrestigePoints());
@@ -38,7 +38,7 @@ class DefaultPaintHandlerTest {
         int malus = 3;
 
         for(int i = 0; i < minArtist; i++){
-            player.addCard(new Artist(1));
+            player.addCard(new Artist(1, 2));
         }
 
         CountVisitor countVisitor = new CountVisitor();
@@ -59,7 +59,7 @@ class DefaultPaintHandlerTest {
         int malus = 3;
 
         for(int i = 0; i < minArtist; i++){
-            player.addCard(new Artist(1));
+            player.addCard(new Artist(1, 2));
         }
 
         CountVisitor countVisitor = new CountVisitor();

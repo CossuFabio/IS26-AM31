@@ -1,15 +1,25 @@
 package it.polimi.ingsw.am31.am31;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class OfferCard {
     private final int food;
     private final int drawFromUpper;
     private final int drawFromUnder;
-    private Player player;
+    private final int minPlayers;
 
-    public OfferCard(int food, int drawFromUnder, int drawFromUpper){
+    private Player player;
+    @JsonCreator
+    public OfferCard(
+            @JsonProperty("food") int food,
+            @JsonProperty("drawFromUnder")int drawFromUnder,
+            @JsonProperty("drawFromUpper") int drawFromUpper,
+            @JsonProperty("minPlayers")int minPlayers){
         this.food = food;
         this.drawFromUnder = drawFromUnder;
         this.drawFromUpper = drawFromUpper;
+        this.minPlayers= minPlayers;
         this.player = null;
     }
 
@@ -32,6 +42,8 @@ public class OfferCard {
     public Player getPlayer(){
         return player;
     }
+
+    public int getMinPlayers() {return minPlayers;}
 
     public void setPlayer(Player player) {
         this.player = player;

@@ -21,16 +21,17 @@ class CardTest {
     void TestShiouldacceptVisit() {
         return;
     }
-    @Test
-    void TestShouldSetMinPlayers() {
-        card.setMinPlayers(2);
-        assertEquals(2,card.getMinPlayers());
-    }
-    @Test
-    void TestShouldGetMinPlayers() {
-        card.setMinPlayers(2);
-        assertEquals(2,card.getMinPlayers());
-    }
+
+    //@Test
+   // void TestShouldSetMinPlayers() {
+   //     card.setMinPlayers(2);
+    //assertEquals(2,card.getMinPlayers());
+    //}
+   // @Test
+   // void TestShouldGetMinPlayers() {
+    //    card.setMinPlayers(2);
+   //     assertEquals(2,card.getMinPlayers());
+  //  }
 
 
 

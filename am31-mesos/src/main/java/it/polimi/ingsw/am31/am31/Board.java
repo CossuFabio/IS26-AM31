@@ -1,11 +1,11 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.cards.BuildingCard;
-import it.polimi.ingsw.am31.am31.cards.Card;
-import it.polimi.ingsw.am31.am31.cards.IPickable;
+import it.polimi.ingsw.am31.am31.cards.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Board {
 
@@ -16,8 +16,12 @@ public class Board {
     private final ArrayList<BuildingCard> underBLine;
 
 
-    public Board(int numPlayers) {
-        offerTrack = new ArrayList<OfferCard>();
+    public Board(int numPlayers) throws IOException {
+        super();
+        CardLoader loader = new CardLoader();
+        List<OfferCard> catalog = loader.offerCardLoader();
+        this.offerTrack = (ArrayList<OfferCard>) catalog.stream().filter(c -> c.getMinPlayers() <= numPlayers)
+                .collect(Collectors.toList());
 
         upperLine = new ArrayList<Card>();
         underLine = new ArrayList<Card>();
@@ -37,19 +41,18 @@ public class Board {
         upperBLine.clear();
     }
 //ADDERS
+    public void addUpper(BuildingCard card){
+        upperBLine.add(card);
+    }
     public void addUpper(Card card){
         upperLine.add(card);
     }
+    public void addLower(BuildingCard card) { underBLine.add(card);}
     public void addLower(Card card){
         underLine.add(card);
     }
-    public void addBuildingUpper(BuildingCard card){
-        upperBLine.add(card);
-    }
-    public void addBuildingLower(BuildingCard card){
-        underBLine.add(card);
-    }
 //GETTERS
+public ArrayList<BuildingCard> getUpperBLine(){return upperBLine;}
     public ArrayList<BuildingCard> getUnderBLine(){return underBLine;}
     public ArrayList<Card> getUnderLine() {return underLine;}
     public ArrayList<Card> getUpperLine(){

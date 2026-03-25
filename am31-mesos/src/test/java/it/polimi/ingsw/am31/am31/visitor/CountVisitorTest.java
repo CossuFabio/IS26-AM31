@@ -11,7 +11,7 @@ class CountVisitorTest {
 
     @Test
     void TestVisitHunter() {
-        Hunter hunter = new Hunter(1, true);
+        Hunter hunter = new Hunter(1, 2, true);
         CountVisitor visitor = new CountVisitor();
         hunter.acceptVisit(visitor);
         assertEquals(1, visitor.getHunters());
@@ -19,7 +19,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitFarmer() {
-        Farmer farmer = new Farmer(1, 3);
+        Farmer farmer = new Farmer(1, 2,3);
         CountVisitor visitor = new CountVisitor();
         farmer.acceptVisit(visitor);
         assertEquals(1, visitor.getHunters());
@@ -28,7 +28,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitShaman() {
-        Shaman shaman = new Shaman(1, 3);
+        Shaman shaman = new Shaman(1, 2, 3);
         CountVisitor visitor = new CountVisitor();
         shaman.acceptVisit(visitor);
         assertEquals(1, visitor.getHunters());
@@ -36,7 +36,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitArtist() {
-        Artist artist = new Artist(1);
+        Artist artist = new Artist(1, 2);
         CountVisitor visitor = new CountVisitor();
         artist.acceptVisit(visitor);
         assertEquals(1, visitor.getHunters());
@@ -44,7 +44,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitInventor() {
-        Inventor inventor = new Inventor(1, BOAT);
+        Inventor inventor = new Inventor(1,2, BOAT);
         CountVisitor visitor = new CountVisitor();
         inventor.acceptVisit(visitor);
         assertEquals(1, visitor.getHunters());
@@ -52,7 +52,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitBuilder() {
-        Builder builder = new Builder(1, 3, 3);
+        Builder builder = new Builder(1, 2,3, 3);
         CountVisitor visitor = new CountVisitor();
         builder.acceptVisit(visitor);
         assertEquals(1, visitor.getHunters());

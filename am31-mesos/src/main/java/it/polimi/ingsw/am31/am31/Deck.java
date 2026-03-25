@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class Deck{
 
-    protected final List<Card> eraDeck;
+    protected List<Card> eraDeck;
 
     public boolean isEmpty() {
         return eraDeck.isEmpty();
@@ -27,6 +27,9 @@ public abstract class Deck{
         }
         //Drawing from an empty deck isn't an option, should it throw an exception?
         throw new IllegalStateException("Mazzo vuoto");
+    }
+    public int getSize () {
+        return eraDeck.size();
     }
 
 

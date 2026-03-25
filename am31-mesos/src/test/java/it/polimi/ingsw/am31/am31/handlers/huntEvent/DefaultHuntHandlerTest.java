@@ -21,16 +21,16 @@ class DefaultHuntHandlerTest {
         this.player = new Player("Test", Color.BLACK);
 
         for(int i = 0; i<hunterNumberBeforeMark; i++){
-            player.addCard(new Hunter(1, false));
+            player.addCard(new Hunter(1,2, false));
         }
 
-        player.addCard(new Hunter(1, true));
+        player.addCard(new Hunter(1,2,  true));
         food = player.getFood();
 
         assertEquals(hunterNumberBeforeMark, food);
 
         for(int i = 0; i<hunterNumberAfterMark - hunterNumberBeforeMark - 1; i++){
-            player.addCard(new Hunter(1, false));
+            player.addCard(new Hunter(1, 2, false));
         }
 
     }

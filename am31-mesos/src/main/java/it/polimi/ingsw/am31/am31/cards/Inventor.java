@@ -1,22 +1,18 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 public class Inventor extends CharacterCard {
-    private IconEnum icon;
-
-    public Inventor(int era, IconEnum icon) {
-        super(era);
+    private final IconEnum icon;
+    @JsonCreator
+    public Inventor(@JsonProperty("era")int era,
+                    @JsonProperty("minPlayers") int minPlayers,
+                    @JsonProperty("icon")IconEnum icon) {
+        super(era, minPlayers);
         this.icon = icon;
     }
-
-    public void setIcon (IconEnum icon) {
-        this.icon = icon;
-    }
-
-    public Inventor() {}
-
-
     @Override
     public IconEnum getIcon() {
         return icon;

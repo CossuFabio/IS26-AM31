@@ -1,12 +1,18 @@
 package it.polimi.ingsw.am31.am31.cards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.Player;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 import java.util.List;
 
 public class SustainEventCard extends EventCard{
-    public SustainEventCard(int era, int prestigePointsMalus){
+
+    @JsonCreator
+    public SustainEventCard(
+            @JsonProperty("era") int era,
+            @JsonProperty("prestigePointsMalus") int prestigePointsMalus){
         super(era);
         this.prestigePointsMalus = prestigePointsMalus;
         this.prestigePointsBonus = 0;
