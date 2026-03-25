@@ -584,7 +584,7 @@
     "type" : "RitualEventCard",
     "prestigePointsBonus" : 15,
     "prestigePointsMalus" : 7,
-    "era" : 3
+    "era" : 4
   },
 
   {
@@ -600,6 +600,6 @@
   {
     "type" : "SustainEventCard",
     "prestigePointsMalus" : 3,
-    "era" : 3
+    "era" : 4
   }
 ]

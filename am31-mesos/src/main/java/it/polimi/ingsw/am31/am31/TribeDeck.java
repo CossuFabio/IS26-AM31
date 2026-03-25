@@ -2,13 +2,16 @@ package it.polimi.ingsw.am31.am31;
 
 import it.polimi.ingsw.am31.am31.cards.*;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TribeDeck extends Deck{
 
-    public TribeDeck(int nplayers) {
+    public TribeDeck(int nPlayers) throws IOException {
+
+    /*
         List<Card> list1 = new ArrayList<>();
         for (int i = 0; i < 3; i++) list1.add(new Artist(1));
         for (int i = 0; i < 2; i++) list1.add(new Farmer(1, 3));
@@ -57,10 +60,36 @@ public class TribeDeck extends Deck{
 //            for (int i = 0; i < 3; i++) list3.add(new Artist(3));
 //            for (int i = 0; i < 3; i++) list3.add(new Farmer(3, 3));
 //        }
+
+     */
+
+        super();
+        CardLoader loader = new CardLoader();
+        List<Card> catalog = loader.tribeCardLoader();
+
+        //Make the lists of cards
+        List<Card> list1 = catalog.stream()
+                .filter(c -> c.getEra() == 1 && c.getMinPlayers() <= nPlayers)
+                .collect(Collectors.toList());
+
+        List<Card> list2 = catalog.stream()
+                .filter(c -> c.getEra() == 2 && c.getMinPlayers() <= nPlayers)
+                .collect(Collectors.toList());
+
+        List<Card> list3 = catalog.stream()
+                .filter(c -> c.getEra() == 3 && c.getMinPlayers() <= nPlayers)
+                .collect(Collectors.toList());
+
+        List<Card> list4 = catalog.stream()
+                .filter(c -> c.getEra() == 4)
+                .collect(Collectors.toList());
+
+
         //After making the lists, shuffle and compose in eraDeck.
         Collections.shuffle(list1);
         Collections.shuffle(list2);
         Collections.shuffle(list3);
+        Collections.shuffle(list4);
 
         this.eraDeck.addAll(list1);
         this.eraDeck.addAll(list2);

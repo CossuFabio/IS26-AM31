@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.cards.EventCard;
 import it.polimi.ingsw.am31.am31.cards.IPickable;
 import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
 
+import java.io.IOException;
 import java.util.*;
 
 import static java.util.Comparator.*;
@@ -22,7 +23,7 @@ public class Game {
     int nPlayers;
 
     //Setup
-    public Game (int nPlayers) {
+    public Game (int nPlayers) throws IOException {
         roundNumber=0; //o 1
         players= new ArrayList<Player>();
         board= new Board(nPlayers);
@@ -72,7 +73,7 @@ public class Game {
     }
 
     //TODO: Test this
-    public void resetGame(){
+    public void resetGame() throws IOException {
         players.forEach(player->{player.editFood(-player.getFood());});
         players.forEach(player->{player.editPrestigePoints(-player.getPrestigePoints());});
         board = new Board(nPlayers);
