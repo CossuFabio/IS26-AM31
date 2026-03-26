@@ -1,10 +1,10 @@
 package it.polimi.ingsw.am31.am31.handlers;
 
-import it.polimi.ingsw.am31.am31.Player;
-import it.polimi.ingsw.am31.am31.cards.*;
-import it.polimi.ingsw.am31.am31.handlers.onDraw.GeneralAdditionalFoodDecorator;
-import it.polimi.ingsw.am31.am31.handlers.onDraw.InventorAdditionalFoodDecorator;
-import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.onDraw.GeneralAdditionalFoodDecorator;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.onDraw.InventorAdditionalFoodDecorator;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,7 +62,7 @@ public class DrawHandlers {
         player.addCard(new Hunter(1, 2,false));
 
         player.addCard(new Artist(1,2));
-        player.addCard(new Inventor(1, 2,IconEnum.ARROW));
+        player.addCard(new Inventor(1, 2, IconEnum.ARROW));
         player.addCard(new Builder(1,2,1,1));
         player.addCard(new Shaman(1,2,1));
 

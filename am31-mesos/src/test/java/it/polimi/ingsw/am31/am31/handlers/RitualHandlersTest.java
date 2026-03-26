@@ -1,10 +1,9 @@
 package it.polimi.ingsw.am31.am31.handlers;
 
-import it.polimi.ingsw.am31.am31.Color;
-import it.polimi.ingsw.am31.am31.Player;
-import it.polimi.ingsw.am31.am31.cards.Hunter;
-import it.polimi.ingsw.am31.am31.handlers.ritualLose.NoMalusRitualLoseStrategy;
-import it.polimi.ingsw.am31.am31.handlers.ritualWin.DoubleWinRitualStrategy;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.ritualLose.NoMalusRitualLoseStrategy;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.ritualWin.DoubleWinRitualStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

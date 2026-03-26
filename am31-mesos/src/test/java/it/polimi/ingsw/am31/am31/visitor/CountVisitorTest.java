@@ -1,9 +1,13 @@
 package it.polimi.ingsw.am31.am31.visitor;
 
-import it.polimi.ingsw.am31.am31.cards.*;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.SustainEventCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.am31.am31.cards.IconEnum.*;
+import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum.BOAT;
+import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CountVisitorTest {

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.am31.am31.handlers.endTurn;
 
-import it.polimi.ingsw.am31.am31.Color;
-import it.polimi.ingsw.am31.am31.Player;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endTurn.FoodEndTurnDecorator;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endTurn.IEndTurnHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +24,7 @@ class FoodEndTurnDecoratorTest {
     void shouldHandleEndTurnAdditionalFood() {
         int playerOrder = 0;
         int nPlayers = 3;
-        this.player.addEndTurnEffect(FoodEndTurnDecorator::new);
+        this.player.addEndTurnEffect(it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endTurn.FoodEndTurnDecorator::new);
         this.player.resolveEndTurn(playerOrder, nPlayers);
         assertEquals(3, player.getFood());
     }

@@ -1,9 +1,10 @@
 package it.polimi.ingsw.am31.am31.handlers.paintEvent;
 
-import it.polimi.ingsw.am31.am31.Player;
-import it.polimi.ingsw.am31.am31.cards.Artist;
-import it.polimi.ingsw.am31.am31.cards.BuildingCard;
-import it.polimi.ingsw.am31.am31.visitor.CountVisitor;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Artist;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.paintEvent.BonusPaintHandlerDecorator;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

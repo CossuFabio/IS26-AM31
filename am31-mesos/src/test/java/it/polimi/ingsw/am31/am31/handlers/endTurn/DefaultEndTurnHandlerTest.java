@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.handlers.endTurn;
 
-import it.polimi.ingsw.am31.am31.Color;
-import it.polimi.ingsw.am31.am31.Player;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,10 +1,9 @@
 package it.polimi.ingsw.am31.am31.cards;
 
 
-import it.polimi.ingsw.am31.am31.BuildingDeck;
-import it.polimi.ingsw.am31.am31.Color;
-import it.polimi.ingsw.am31.am31.Player;
-import it.polimi.ingsw.am31.am31.handlers.onDraw.GeneralAdditionalFoodDecorator;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

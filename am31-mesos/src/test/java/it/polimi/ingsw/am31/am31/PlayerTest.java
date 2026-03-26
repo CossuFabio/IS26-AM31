@@ -1,6 +1,11 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.cards.*;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Hunter;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Inventor;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Shaman;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +22,7 @@ class PlayerTest {
     void createPlayerAndTribe(){
         this.player = new Player(nickname, color);
         player.addCard(new Shaman(1, 2,3));
-        player.addCard(new Inventor(1, 2,IconEnum.ARROW));
+        player.addCard(new Inventor(1, 2, IconEnum.ARROW));
 
     }
 

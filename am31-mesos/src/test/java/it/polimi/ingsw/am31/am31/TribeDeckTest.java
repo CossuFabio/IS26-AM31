@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.cards.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
 import org.junit.jupiter.api.Test;
 
 public class TribeDeckTest {

@@ -1,12 +1,12 @@
 package it.polimi.ingsw.am31.am31;
-import it.polimi.ingsw.am31.am31.cards.*;
-import it.polimi.ingsw.am31.am31.cards.Artist;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Artist;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.smartcardio.Card;
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

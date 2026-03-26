@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am31.am31;
 
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
