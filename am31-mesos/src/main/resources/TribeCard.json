@@ -242,12 +242,7 @@
   {
     "type" : "Artist",
     "era" : 3,
-    "minPlayers" : 3
-  },
-  {
-    "type" : "Artist",
-    "era" : 3,
-    "minPlayers" : 4
+    "minPlayers" : 5
   },
 
 

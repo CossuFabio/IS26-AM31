@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.cards;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.am31.am31.Player;
+import it.polimi.ingsw.am31.am31.cards.IPickable;
 import it.polimi.ingsw.am31.am31.visitor.TribeVisitor;
 
 public abstract class CharacterCard extends Card implements IPickable {
@@ -40,5 +41,6 @@ public abstract class CharacterCard extends Card implements IPickable {
     public void addToPlayer(Player player){
         player.addCard(this);
     }
+
 
 }

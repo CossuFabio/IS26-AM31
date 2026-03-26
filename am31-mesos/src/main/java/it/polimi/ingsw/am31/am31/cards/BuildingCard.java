@@ -42,5 +42,12 @@ public class BuildingCard extends Card implements IPickable{
         player.addCard(this);
     }
 
+    //Maybe remove the effect string and add an identifier field in the constructor
+    @Override
+    public String toString(){
+        return "BuildingCard - Era: " + era + " - Prestige points: " + prestigePointsGained + " - Cost: " + cost
+                + " - Effect: " + effect;
+    }
+
 
 }

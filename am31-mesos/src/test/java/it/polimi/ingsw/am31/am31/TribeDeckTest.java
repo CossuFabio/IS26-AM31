@@ -8,13 +8,13 @@ public class TribeDeckTest {
     @Test
     void shouldCreateTribeDeck(){
 
-        int nPlayers =4;
+        int nPlayers = 5;
         try{
             TribeDeck deck = new TribeDeck(nPlayers);
             System.out.println(deck.getSize());
             Card card = deck.draw();
             while(card != null){
-                System.out.println(card.getEra());
+                System.out.println(card);
                 card = deck.draw();
             }
 

@@ -18,4 +18,9 @@ public class Artist extends CharacterCard {
         visitor.visit(this);
     }
 
+    @Override
+    public String toString(){
+        return "CharacterCard type: Artist - Era: " + era + " - Minimum Players: " + minPlayers;
+    }
+
 }

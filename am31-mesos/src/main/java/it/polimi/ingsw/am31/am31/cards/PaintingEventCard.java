@@ -30,4 +30,11 @@ public class PaintingEventCard extends EventCard {
     public int getMinArtist() {
         return minArtist;
     }
+
+    @Override
+    public String toString(){
+        return "EventCard type: PaintEvent - Era: " + era +
+                " - Minimum number of artists: " + minArtist +
+                " - Prestige points bonus: " + prestigePointsBonus + " - Prestige points malus : " + prestigePointsMalus;
+    }
 }

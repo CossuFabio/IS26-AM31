@@ -31,4 +31,11 @@ public class Builder extends CharacterCard {
     public void acceptVisit(TribeVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public String toString(){
+        return "CharacterCard type: Builder - Era: " + era + " - Minimum Players: " + minPlayers + " - Prestige points gained: " +
+                prestigePoints + " - Buildings cost discount: "+ discount;
+    }
+
 }

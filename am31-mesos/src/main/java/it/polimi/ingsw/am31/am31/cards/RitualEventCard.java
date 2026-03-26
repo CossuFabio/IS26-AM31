@@ -39,4 +39,11 @@ public class RitualEventCard extends EventCard {
 
     }
 
+    @Override
+    public String toString(){
+        return "EventCard type: RitualEvent - Era: " + era +
+                " - Prestige points for win: " + prestigePointsBonus +
+                " - Prestige points for lose: " + prestigePointsMalus;
+    }
+
 }

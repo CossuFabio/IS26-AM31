@@ -26,4 +26,9 @@ public class Farmer extends CharacterCard {
     public void acceptVisit(TribeVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public String toString(){
+        return "CharacterCard type: Farmer - Era: " + era + " - Minimum Players: " + minPlayers + " - Sustain discount: " + discount;
+    }
 }

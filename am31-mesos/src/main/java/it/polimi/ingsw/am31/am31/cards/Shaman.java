@@ -28,4 +28,9 @@ public class Shaman extends CharacterCard {
     public void acceptVisit(TribeVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public String toString(){
+        return "CharacterCard type: Shaman - Era: " + era + " - Minimum Players: " + minPlayers + " - Ritual stars given: " + stars;
+    }
 }

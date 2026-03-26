@@ -25,4 +25,9 @@ public class HuntEventCard extends EventCard {
         players.forEach((Player p) -> {p.resolveHunt(foodBonus, prestigePointsBonus);});
     }
 
+    @Override
+    public String toString(){
+        return "EventCard type: HuntEvent - Era: " + era + " - Food bonus per hunter: " + foodBonus + " - Prestige points per hunter: " + prestigePointsBonus;
+    }
+
 }

@@ -126,7 +126,7 @@ public class Game {
     //TODO: Implement This
     public void startRound(){
         roundNumber++;
-
+        //every player decides where to put their totems on the OfferTrack
     }
 
 

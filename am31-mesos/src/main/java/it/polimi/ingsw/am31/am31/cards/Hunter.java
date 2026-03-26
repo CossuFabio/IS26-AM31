@@ -32,4 +32,11 @@ public class Hunter extends CharacterCard {
     public void acceptVisit(TribeVisitor visitor) {
         visitor.visit(this);
    }
+
+    @Override
+    public String toString(){
+        String markedString = mark ? " Marked " : "Unmarked";
+        return "CharacterCard type: Hunter - Era: " + era + " - Minimum Players: " + minPlayers + " - " + markedString;
+    }
+
 }

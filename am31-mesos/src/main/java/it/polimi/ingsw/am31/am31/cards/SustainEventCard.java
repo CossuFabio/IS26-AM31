@@ -23,4 +23,9 @@ public class SustainEventCard extends EventCard{
         players.forEach((Player p) -> {p.resolveSustain(prestigePointsMalus);});
     }
 
+    @Override
+    public String toString(){
+        return "EventCard type: SustainEvent - Era: " + era + " - Prestige points malus: " + prestigePointsMalus;
+    }
+
 }

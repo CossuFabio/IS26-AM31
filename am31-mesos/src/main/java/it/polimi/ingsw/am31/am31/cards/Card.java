@@ -35,4 +35,7 @@ public abstract class Card {
     public int getMinPlayers() {
         return 2;
     }
+
+    public abstract String toString();
+
 }

@@ -26,7 +26,7 @@ public abstract class Deck{
             return temp;
         }
         //Drawing from an empty deck isn't an option, should it throw an exception?
-        throw new IllegalStateException("Mazzo vuoto");
+        throw new IllegalStateException("Empty deck!");
     }
     public int getSize () {
         return eraDeck.size();
