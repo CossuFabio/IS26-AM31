@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31;
 
+import it.polimi.ingsw.am31.am31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.Deck;
@@ -16,14 +17,14 @@ class DeckTest {
         this.deck = new BuildingDeck(3);
     }
     @Test
-    void TestShouldBeEmpty() {
+    void TestShouldBeEmpty() throws EmptyDeckException {
         int temp = deck.getSize();
         for(int i=0;i<temp;i++)
             deck.draw();
         assertTrue(deck.isEmpty());
     }
     @Test
-    void TestShouldDraw() {
+    void TestShouldDraw() throws EmptyDeckException {
         BuildingCard temp = (BuildingCard) deck.draw();
         //first card should be era 1
         assertEquals(1,temp.getEra());

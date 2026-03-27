@@ -51,5 +51,9 @@ public class BuildingCard extends Card implements IPickable {
                 + " - Effect: " + effect;
     }
 
+    @Override
+    public boolean canPick(Player player){
+        return (player.getFood() + player.getBuildersDiscount() < this.cost);
+    }
 
 }

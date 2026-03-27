@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.boardFolder;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.exceptions.OfferTrackTileAlreadyTakenException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 public class OfferCard {
@@ -36,8 +37,7 @@ public class OfferCard {
         return food;
     }
 
-    public boolean isFree() {
-        return this.player == null;
+    public boolean isFree() {return this.player == null;
     }
 
     public Player getPlayer(){

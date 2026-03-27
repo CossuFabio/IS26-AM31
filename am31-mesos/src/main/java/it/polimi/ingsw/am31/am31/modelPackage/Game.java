@@ -1,9 +1,11 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
+import it.polimi.ingsw.am31.am31.exceptions.*;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
@@ -18,7 +20,7 @@ import static java.util.Comparator.*;
 
 public class Game {
     private int roundNumber;
-    private List<Player> players;
+    private final List<Player> players;
     private Board board;
     private BuildingDeck buildingDeck;
     private TribeDeck tribeDeck;
@@ -39,10 +41,11 @@ public class Game {
         this.turnOrder = new TurnOrder(nPlayers);
     }
 
-    public void addPlayer(Player player){
+    public void addPlayer(Player player) throws TooManyPlayersException {
         if(players.size()<nPlayers){
             players.add(player);
         }
+        else throw new TooManyPlayersException();
     }
 
     public void removePlayer(Player player){
@@ -50,7 +53,11 @@ public class Game {
     }
 
     //TODO: Test This
-    public void gameStart() {
+    public void gameStart() throws InsufficientPlayersNumberException, EmptyDeckException {
+
+        if(players.size()<nPlayers){
+            throw new InsufficientPlayersNumberException();
+        }
 
         //Assigning random order for the first turn
         Collections.shuffle(players);
@@ -117,7 +124,7 @@ public class Game {
     }
 
     //TODO: Test this
-    public void resetGame() throws IOException {
+    public void resetGame() throws IOException, EmptyDeckException{
         players.forEach(player->{player.editFood(-player.getFood());});
         players.forEach(player->{player.editPrestigePoints(-player.getPrestigePoints());});
         board = new Board(nPlayers);
@@ -125,14 +132,57 @@ public class Game {
         tribeDeck = new TribeDeck(nPlayers);
         turnOrder = new TurnOrder(nPlayers);
         era = 1;
-        gameStart();
+        try{
+            gameStart();
+        }
+        catch(InsufficientPlayersNumberException e){
+            System.err.println(e.getMessage());
+        }
     }
 
-    //TODO: Implement This
+    //TODO: Put this in Controller
     public void startRound(){
         roundNumber++;
-        //every player decides where to put their totems on the OfferTrack
-        //
+//        every player decides where to put their totems on the OfferTrack
+//        for(int i = 0; i < nPlayers; i++){
+//          Player playerActing = turnOrder.getPlayerActing();
+//          Controller reads action from player and gets OfferCard wanted
+//            if(board.OfferCard.isFree()){
+//            OfferCard.setPlayer(player);
+//            TurnOrder.goToNextPlayer();
+//          }else
+//            catch(OfferTrackTileAlreadyTaken e){
+//              System.err.println(e.getMessage());
+//          }
+//        }
+//        turnOrder.reset();
+//        int CurrentOfferCard = 0;
+//        while(CurrentOfferCard < board.getOfferTrackSize()){
+//          OfferCard offerCardInUse = board.getOfferCards().get(CurrentOfferCard);
+//          Player playerActing = offerCardInUse.getPlayer();
+//          int foodToGive = offerCardInUse.getFood();
+//          if(foodToGive != 0){
+//            playerActing.editFood(foodToGive);
+//            turnOrder.setPlayer(playerActing);
+//            offerCardInUse.free();
+//          }
+//          else{
+//             int numberOfDrawsFromUpper = offerCardInUse.getDrawFromUpper();
+//             int numberOfDrawsFromUnder = offerCardInUse.getDrawFromUnder();
+//             int i;
+//             for( i = 0; i < numberOfDrawsFromUnder; i++){
+//                 gets player's choice from Controller
+//                  playerDrawFromLower(playerActing, cardToDraw);
+//             }
+//             for( i = 0; i < numberOfDrawsFromUpper; i++){
+//                gets player's choice from Controller
+//                playerDrawFromUpper(playerActing, cardToDraw);
+//             }
+//             turnOrder.setPlayer(playerActing);
+//             offerCardInUse.free();
+//          }
+//          CurrentOfferCard++;
+//        }
     }
 
 
@@ -168,32 +218,39 @@ public class Game {
         players.forEach(player -> player.resolveEndRound());
         resolveEvents();
         board.moveLowerTribes();
-        for(int i=0;i<players.size()+4;i++)
-            board.addUpper(drawTCard());
-
+        try{
+            for(int i=0;i<players.size()+4;i++) {
+                board.addUpper(drawTCard());
+            }
+        }
+        catch (EmptyDeckException e) { System.err.println(e.getMessage()); }
     }
 
-    private Card drawTCard () {
+    private Card drawTCard () throws EmptyDeckException {
         Card temp = tribeDeck.draw();
         if (temp.getEra()>this.era)
             changeEra();
         return temp;
     }
-    private Card drawBCard () {
+    private Card drawBCard () throws EmptyDeckException{
         Card temp = buildingDeck.draw();
         if (temp.getEra()>this.era)
             changeEra();
         return temp;
     }
 
+    //TODO: TEST THIS
     public void changeEra(){
         board.moveLowerBuildings();
-        ArrayList<BuildingCard> temp = board.getUnderBLine();
         //we increase the era, then check if the next card in building deck is the new era -> add it to upperbline.
-        era++;
-        while(temp.getFirst().getEra()==era) {
-            board.addUpper((BuildingCard) buildingDeck.draw()); //explicit Cast to buildingcard
-            temp.removeFirst();
+        this.era++;
+        try{
+            while(buildingDeck.getNextCardEra()==era) {
+                board.addUpper( buildingDeck.draw());
+            }
+        }
+        catch(EmptyDeckException e){
+            System.err.println();
         }
     }
 
@@ -202,20 +259,51 @@ public class Game {
         offerCard.setPlayer(player);
     }
 
-
-    public void playerDrawFromUpper(Player player, IPickable card){
+    //TODO: BAD - MUST REDO
+    public void playerDrawFromUpper(Player player, CharacterCard card) throws CardNotFoundException{
         board.drawFromUpper(card);
-        card.addToPlayer(player);
+        player.addCard(card);
     }
 
-    public void playerDrawFromTop(Player player, IPickable card){
-        board.drawFromUpper(card);
-        card.addToPlayer(player);
+    public void playerDrawFromLower(Player player, CharacterCard card) throws CardNotFoundException{
+        board.drawFromLower(card);
+        player.addCard(card);
     }
+
+    public void playerDrawFromUpper(Player player, BuildingCard card) throws CardNotFoundException, InsufficientFoodException{
+
+        if(player.getFood() + player.getBuildersDiscount() < card.getCost()) throw new InsufficientFoodException(player.getFood(), player.getBuildersDiscount(), card.getCost());
+        board.drawFromUpper(card);
+
+        int finalFoodCost =  card.getCost() - player.getBuildersDiscount();
+        //finalFoodCost<0 means that player's discount is greater than food cost, so player shouldn't pay
+        //any food
+        player.editFood(-Math.max(0, finalFoodCost));
+
+        player.addCard(card);
+
+    }
+
+    public void playerDrawFromLower(Player player, BuildingCard card) throws CardNotFoundException, InsufficientFoodException{
+
+        if(player.getFood() + player.getBuildersDiscount() < card.getCost()) throw new InsufficientFoodException(player.getFood(), player.getBuildersDiscount(), card.getCost());
+        board.drawFromLower(card);
+
+        int finalFoodCost =  card.getCost() - player.getBuildersDiscount();
+        //finalFoodCost<0 means that player's discount is greater than food cost, so player shouldn't pay
+        //any food
+        player.editFood(-Math.max(0, finalFoodCost));
+
+        player.addCard(card);
+
+    }
+
+
 
     public TurnOrder getTurnOrder(){
         return turnOrder;
     }
 
+    public Board getBoard(){return board;}
 
 }

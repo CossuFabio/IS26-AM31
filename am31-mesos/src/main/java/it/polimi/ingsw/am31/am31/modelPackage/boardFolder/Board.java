@@ -1,7 +1,10 @@
 package it.polimi.ingsw.am31.am31.modelPackage.boardFolder;
 
+import it.polimi.ingsw.am31.am31.exceptions.CardNotFoundException;
+import it.polimi.ingsw.am31.am31.exceptions.InsufficientFoodException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.CardLoader;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 
@@ -64,37 +67,37 @@ public ArrayList<BuildingCard> getUpperBLine(){return upperBLine;}
         result.addAll(upperBLine);
         return result;
     }
+
 //TODO TESTING
-    public IPickable drawFromUpper(IPickable card){
-        if(upperLine.contains(card)){
+    //TODO: BAD - MUST REDO
+    public void drawFromUpper(CharacterCard card) throws CardNotFoundException{
+        if(upperLine.contains(card))
             upperLine.remove(card);
-            return card;
-        }
-        else if(upperBLine.contains(card)){
-            upperBLine.remove(card);
-            return card;
-        }
-        return null;
+        else throw new CardNotFoundException();
+
     }
 
-    public IPickable drawFromLower(IPickable card){
-
-        if(underLine.contains(card)){
+    public void drawFromLower(CharacterCard card) throws CardNotFoundException{
+        if(underLine.contains(card))
             underLine.remove(card);
-            return card;
-        }
-        else if(underBLine.contains(card)){
+        else
+            throw new CardNotFoundException();
+    }
+
+    public void drawFromUpper(BuildingCard card) throws CardNotFoundException{
+        if(upperBLine.contains(card))
+            upperBLine.remove(card);
+        else throw new CardNotFoundException();
+
+    }
+
+    public void drawFromLower(BuildingCard card) throws CardNotFoundException{
+        if(underBLine.contains(card))
             underBLine.remove(card);
-            return card;
-        }
-        return null;
+        else
+            throw new CardNotFoundException();
     }
 
-
-    //TODO implement
-    public void showBoardState() {
-
-    }
 
     public List<OfferCard> getOfferCards(){
         return offerTrack;
