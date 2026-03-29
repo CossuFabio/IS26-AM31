@@ -7,7 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CardSetDecorator extends EndGameHandlerDecorator {
+
+    private final static int PRESTIGE_POINTS_BONUS = 6;
+
     public CardSetDecorator(IEndGameHandler handler) { super(handler);}
+
 
     @Override
     public void handleEndGame(Player player) {
@@ -26,7 +30,7 @@ public class CardSetDecorator extends EndGameHandlerDecorator {
         }
 
         if(minimum != 0){ //Unnecessary but makes more readable
-            player.editPrestigePoints(6 * minimum);
+            player.editPrestigePoints(PRESTIGE_POINTS_BONUS * minimum);
         }
 
         wrappedHandler.handleEndGame(player);

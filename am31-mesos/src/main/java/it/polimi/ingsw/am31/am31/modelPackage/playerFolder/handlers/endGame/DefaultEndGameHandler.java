@@ -8,11 +8,14 @@ import java.util.HashSet;
 
 public class DefaultEndGameHandler implements IEndGameHandler {
 
+    private static int PRESTIGE_POINTS_ARTISTS_PAIR = 10;
+    private static int PRESTIGE_POINTS_INVENTORS = 10;
+
     private int artistsBonus(Player player){
 
         CountVisitor countVisitor = new CountVisitor();
         player.getTribe().forEach(card -> card.acceptVisit(countVisitor));
-        return countVisitor.getArtists()/2;
+        return PRESTIGE_POINTS_ARTISTS_PAIR * countVisitor.getArtists()/2;
 
     }
 
@@ -28,7 +31,7 @@ public class DefaultEndGameHandler implements IEndGameHandler {
 
         });
 
-        return countVisitor.getInventors() * icons.size();
+        return PRESTIGE_POINTS_INVENTORS * countVisitor.getInventors() * icons.size();
 
     }
 

@@ -34,6 +34,8 @@ class DefaultHuntHandlerTest {
             player.addCard(new Hunter(1, 2, false));
         }
 
+
+
     }
 
 
@@ -45,12 +47,14 @@ class DefaultHuntHandlerTest {
     }
 
     @Test
-    void shouldHandleBonustHuntWithHunter() {
+    void shouldHandleBonusHuntWithHunter() {
+
         this.player.addCard(new BuildingCard(1, 1, 1, (player) -> player.addHuntEffect(BonusHunterHandleDecorator::new)));
         this.player.resolveHunt(1, 1);
 
         //Bonus handler => +x prestigePoints, +x food (x = number of hunters in tribe)
-        assertEquals(food+hunterNumberAfterMark+hunterNumberAfterMark, player.getFood());
+        //Expected food is food - 1 (marked hunter isn't counted in his effect) + 2*hunterNumberAfterMark (the total number of hunters)
+        assertEquals(player.getFood(), food - 1 +hunterNumberAfterMark +hunterNumberAfterMark);
         assertEquals(hunterNumberAfterMark+hunterNumberAfterMark, player.getPrestigePoints());
 
     }

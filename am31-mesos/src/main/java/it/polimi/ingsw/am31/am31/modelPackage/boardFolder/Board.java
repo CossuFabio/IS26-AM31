@@ -46,7 +46,8 @@ public class Board {
         underBLine.addAll(upperBLine);
         upperBLine.clear();
     }
-//ADDERS
+
+    //ADDERS
     public void addUpper(BuildingCard card){
         upperBLine.add(card);
     }
@@ -57,9 +58,10 @@ public class Board {
     public void addLower(Card card){
         underLine.add(card);
     }
-//GETTERS
-public ArrayList<BuildingCard> getUpperBLine(){return upperBLine;}
+    //GETTERS
+    public ArrayList<BuildingCard> getUpperBLine(){return upperBLine;}
     public ArrayList<BuildingCard> getUnderBLine(){return underBLine;}
+
     public ArrayList<Card> getUnderLine() {return underLine;}
     public ArrayList<Card> getUpperLine(){
         ArrayList<Card> result = new ArrayList<Card>();
@@ -68,34 +70,17 @@ public ArrayList<BuildingCard> getUpperBLine(){return upperBLine;}
         return result;
     }
 
-//TODO TESTING
-    //TODO: BAD - MUST REDO
-    public void drawFromUpper(CharacterCard card) throws CardNotFoundException{
-        if(upperLine.contains(card))
-            upperLine.remove(card);
-        else throw new CardNotFoundException();
 
+
+    //TODO TESTING
+    //remove method returns true if the array contains the argument and then it gets removed.
+    //The !(buildings.remove || tribe.remove) checks if the card was present, if it wasn't the method throws the exception
+    public void drawFromUpper(IPickable card) throws CardNotFoundException{
+        if(!(upperBLine.remove(card) || upperLine.remove(card))) throw new CardNotFoundException();
     }
 
-    public void drawFromLower(CharacterCard card) throws CardNotFoundException{
-        if(underLine.contains(card))
-            underLine.remove(card);
-        else
-            throw new CardNotFoundException();
-    }
-
-    public void drawFromUpper(BuildingCard card) throws CardNotFoundException{
-        if(upperBLine.contains(card))
-            upperBLine.remove(card);
-        else throw new CardNotFoundException();
-
-    }
-
-    public void drawFromLower(BuildingCard card) throws CardNotFoundException{
-        if(underBLine.contains(card))
-            underBLine.remove(card);
-        else
-            throw new CardNotFoundException();
+    public void drawFromLower(IPickable card) throws CardNotFoundException{
+        if(!(underBLine.remove(card) || underLine.remove(card))) throw new CardNotFoundException();
     }
 
 

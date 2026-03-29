@@ -38,9 +38,11 @@ public abstract class CharacterCard extends Card implements IPickable {
 
     public void acceptVisit (TribeVisitor tribeVisitor) {}
 
+    @Override
     public void addToPlayer(Player player){
         player.addCard(this);
     }
+
 
 
 }

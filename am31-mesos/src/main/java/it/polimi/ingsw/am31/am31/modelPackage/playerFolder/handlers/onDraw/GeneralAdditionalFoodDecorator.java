@@ -14,7 +14,7 @@ public class GeneralAdditionalFoodDecorator extends CardDrawHandlerDecorator{
     private int shamansSet;
     private int huntersSet;
 
-
+    private static final int FOOD_BONUS = 5;
 
     public GeneralAdditionalFoodDecorator(IDrawHandler wrappedHandler){
 
@@ -51,7 +51,7 @@ public class GeneralAdditionalFoodDecorator extends CardDrawHandlerDecorator{
 
         //A set has been completed => bonus food reward
         if(farmersSet > 0 && buildersSet >0 && inventorsSet >0 && artistsSet >0 && shamansSet > 0 && huntersSet >0){
-            player.editFood(5);
+            player.editFood(FOOD_BONUS);
             farmersSet--;
             buildersSet--;
             inventorsSet--;

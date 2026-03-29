@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards;
 
 
+import it.polimi.ingsw.am31.am31.exceptions.InsufficientFoodException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
@@ -37,6 +38,11 @@ public class BuildingCard extends Card implements IPickable {
     }
 
     public void onPick(Player player){
+
+        //If player.getDiscount() is greater than this.cost then the players pays zero
+        player.editFood(
+                -Math.max(0, this.cost - player.getBuildersDiscount())
+        );
         effect.accept(player);
     }
 
@@ -52,8 +58,8 @@ public class BuildingCard extends Card implements IPickable {
     }
 
     @Override
-    public boolean canPick(Player player){
-        return (player.getFood() + player.getBuildersDiscount() < this.cost);
+    public void canPick(Player player) throws InsufficientFoodException {
+        if(! (player.getFood() + player.getBuildersDiscount() <= this.cost)) throw new InsufficientFoodException(player.getFood(), player.getBuildersDiscount(), this.cost);
     }
 
 }

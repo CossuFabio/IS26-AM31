@@ -4,6 +4,9 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 public class DefaultEndTurnHandler implements IEndTurnHandler {
 
+
+    //TODO REMOVE MAGIC NUMBERS
+
     public DefaultEndTurnHandler() {
     }
 

@@ -32,7 +32,7 @@ class DeckTest {
         for(int i=0; i<size; i++) {
             deck.draw();
         };
-        assertThrows(IllegalStateException.class, () -> deck.draw());
+        assertThrows(EmptyDeckException.class, () -> deck.draw());
 
     }
 }

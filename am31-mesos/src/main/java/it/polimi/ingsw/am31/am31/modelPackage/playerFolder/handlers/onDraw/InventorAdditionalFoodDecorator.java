@@ -12,6 +12,7 @@ import java.util.HashSet;
 public class InventorAdditionalFoodDecorator extends CardDrawHandlerDecorator{
 
     private final HashSet<IconEnum> icons;
+    private static final int FOOD_BONUS = 3;
 
     public InventorAdditionalFoodDecorator(IDrawHandler wrappedHandler){
         super(wrappedHandler);
@@ -24,7 +25,7 @@ public class InventorAdditionalFoodDecorator extends CardDrawHandlerDecorator{
         try{
             IconEnum currentIcon = ((CharacterCard) card).getIcon();
             if(currentIcon != IconEnum.EMPTY){
-                if(icons.contains(currentIcon)) player.editFood(3);
+                if(icons.contains(currentIcon)) player.editFood(FOOD_BONUS);
                 else icons.add(currentIcon);
             }
         }catch(Exception e){

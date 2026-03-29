@@ -20,20 +20,22 @@ public class DefaultSustainHandler{
     }
 
 
-
-
     public void handleSustain(Player player, int malus) {
         int food = player.getFood();
-        //sconto base dei farmer
+
+        //Base discount given by farmers
         int baseDiscount = player.getTribe().stream().mapToInt(CharacterCard::getSustainDiscount).sum();
-        //sconti aggiuntivi da edifici
+        //Discount given by bonus effects
         int bonusDiscount = bonusDiscountEffects.stream().
                     mapToInt(bonus -> bonus.getBonus(player))
                     .sum();
-        //calcolo sconto completo
+
+        //Compute full discount
         int fullDiscount = baseDiscount + bonusDiscount;
-        //se cibo insufficiente, sottrae il malus e manda cibo a 0
+
+        //If insufficient, food is set to zero and player loses prestige points
         int sizeTribe = player.getTribe().size();
+
         if(food < (sizeTribe - fullDiscount)){
             int cannotPay = food - (sizeTribe - fullDiscount);
             player.editPrestigePoints(cannotPay*malus);

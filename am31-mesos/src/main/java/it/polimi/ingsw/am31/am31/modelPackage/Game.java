@@ -186,8 +186,10 @@ public class Game {
     }
 
 
+    //TODO: fix this (Discuss together)
     private void resolveEvents(){
 
+        //TODO Fix usage of priority queue
         PriorityQueue<EventCard> eventQueue = new PriorityQueue<>(
                 comparingInt(EventCard::getPriority)
         );
@@ -202,7 +204,7 @@ public class Game {
                 eventQueue.add((EventCard) templine.getFirst());  //Safe explicit cast to EventCard
                 tempevent=visitor.getEvent();
             }
-
+            //TODO this is the bug. This removes from the actual board (templine gets the reference to the underline of the board, must use a copy or something similar)
             templine.removeFirst();
         }
 
@@ -259,46 +261,32 @@ public class Game {
         offerCard.setPlayer(player);
     }
 
-    //TODO: BAD - MUST REDO
-    public void playerDrawFromUpper(Player player, CharacterCard card) throws CardNotFoundException{
-        board.drawFromUpper(card);
-        player.addCard(card);
-    }
 
-    public void playerDrawFromLower(Player player, CharacterCard card) throws CardNotFoundException{
-        board.drawFromLower(card);
-        player.addCard(card);
-    }
+    public void playerDrawFromUpper(Player player, IPickable card) throws CardNotFoundException, InvalidPickException{
 
-    public void playerDrawFromUpper(Player player, BuildingCard card) throws CardNotFoundException, InsufficientFoodException{
+        //Throws invalid pick exception
+        card.canPick(player);
 
-        if(player.getFood() + player.getBuildersDiscount() < card.getCost()) throw new InsufficientFoodException(player.getFood(), player.getBuildersDiscount(), card.getCost());
+        //Throws not found exception
         board.drawFromUpper(card);
 
-        int finalFoodCost =  card.getCost() - player.getBuildersDiscount();
-        //finalFoodCost<0 means that player's discount is greater than food cost, so player shouldn't pay
-        //any food
-        player.editFood(-Math.max(0, finalFoodCost));
-
-        player.addCard(card);
+        //This method handles the dispatch of which deck will the card be added (TribeDeck or BuildingDeck)
+        card.addToPlayer(player);
 
     }
 
-    public void playerDrawFromLower(Player player, BuildingCard card) throws CardNotFoundException, InsufficientFoodException{
+    public void playerDrawFromLower(Player player, IPickable card) throws CardNotFoundException, InvalidPickException{
 
-        if(player.getFood() + player.getBuildersDiscount() < card.getCost()) throw new InsufficientFoodException(player.getFood(), player.getBuildersDiscount(), card.getCost());
+        //Throws invalid pick exception
+        card.canPick(player);
+
+        //Throws not found exception
         board.drawFromLower(card);
 
-        int finalFoodCost =  card.getCost() - player.getBuildersDiscount();
-        //finalFoodCost<0 means that player's discount is greater than food cost, so player shouldn't pay
-        //any food
-        player.editFood(-Math.max(0, finalFoodCost));
-
-        player.addCard(card);
+        //This method handles the dispatch of which deck will the card be added (TribeDeck or BuildingDeck)
+        card.addToPlayer(player);
 
     }
-
-
 
     public TurnOrder getTurnOrder(){
         return turnOrder;

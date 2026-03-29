@@ -26,7 +26,7 @@ class CountVisitorTest {
         Farmer farmer = new Farmer(1, 2,3);
         CountVisitor visitor = new CountVisitor();
         farmer.acceptVisit(visitor);
-        assertEquals(1, visitor.getHunters());
+        assertEquals(1, visitor.getFarmers());
 
     }
 
@@ -35,7 +35,7 @@ class CountVisitorTest {
         Shaman shaman = new Shaman(1, 2, 3);
         CountVisitor visitor = new CountVisitor();
         shaman.acceptVisit(visitor);
-        assertEquals(1, visitor.getHunters());
+        assertEquals(1, visitor.getShamans());
     }
 
     @Test
@@ -43,7 +43,7 @@ class CountVisitorTest {
         Artist artist = new Artist(1, 2);
         CountVisitor visitor = new CountVisitor();
         artist.acceptVisit(visitor);
-        assertEquals(1, visitor.getHunters());
+        assertEquals(1, visitor.getArtists());
     }
 
     @Test
@@ -51,7 +51,7 @@ class CountVisitorTest {
         Inventor inventor = new Inventor(1,2, BOAT);
         CountVisitor visitor = new CountVisitor();
         inventor.acceptVisit(visitor);
-        assertEquals(1, visitor.getHunters());
+        assertEquals(1, visitor.getInventors());
     }
 
     @Test
@@ -59,7 +59,7 @@ class CountVisitorTest {
         Builder builder = new Builder(1, 2,3, 3);
         CountVisitor visitor = new CountVisitor();
         builder.acceptVisit(visitor);
-        assertEquals(1, visitor.getHunters());
+        assertEquals(1, visitor.getBuilders());
     }
 
     @Test
@@ -67,7 +67,7 @@ class CountVisitorTest {
         EventCard event= new SustainEventCard(2,1);
         CountVisitor visitor = new CountVisitor();
         event.acceptVisit(visitor);
-        assertEquals(1, visitor.getHunters());
+        assertEquals(1, visitor.getEvent());
     }
 
     //We skipped testing the getters methods
