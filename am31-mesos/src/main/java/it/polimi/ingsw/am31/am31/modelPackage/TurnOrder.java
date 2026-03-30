@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
+import it.polimi.ingsw.am31.am31.exceptions.EverybodyPlayedException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class TurnOrder {
     }
 
     public void setPlayer(Player player) {
-        int place = getCurrentPlayer();
+        int place = currentPlayer;
         players.add(place, player);
         //end-turn effects get solved directly by player handler
         player.resolveEndTurn(place, numPlayers);
@@ -29,12 +30,12 @@ public class TurnOrder {
     //every time a player finishes their move on the OfferTrack to set the new order for next turn.
 
 
-    public int getCurrentPlayer(){
-        return currentPlayer;
-    }
+//    public int getCurrentPlayer(){
+//        return currentPlayer;
+//    }
 
     public Player getPlayerActing(){
-        return players.get(getCurrentPlayer());
+        return players.get(currentPlayer);
     }
 
     public void reset(){
@@ -42,9 +43,14 @@ public class TurnOrder {
         currentPlayer = 0;
     }
 
-//TODO TESTING
-    public void goToNextPlayer()
-    {
-        this.currentPlayer = getCurrentPlayer() + 1;
+    //TODO TESTING
+    public void goToNextPlayer() throws EverybodyPlayedException{
+        if(currentPlayer == numPlayers) throw new EverybodyPlayedException();
+        players.set(currentPlayer, null);
+        this.currentPlayer = currentPlayer + 1;
     }
+
+
+    public boolean everybodyPlayed(){ return players.size() == numPlayers; }
+
 }

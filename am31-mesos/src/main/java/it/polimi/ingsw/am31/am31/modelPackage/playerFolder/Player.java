@@ -105,16 +105,12 @@ public class Player {
         ritualStars += starsToAdd;
     }
 
-    public List<CharacterCard> getTribe() {
-        return personalTribeCards;
+    public ArrayList<CharacterCard> getTribe() {
+        return new ArrayList<CharacterCard>(personalTribeCards);
     }
 
-    public List<BuildingCard> getBuildings() {
-        return personalBuildingCards;
-    }
-
-    public void addCard(Card card){
-        //Nothing to do
+    public ArrayList<BuildingCard> getBuildings() {
+        return new ArrayList<BuildingCard>(personalBuildingCards);
     }
 
     public void addCard(CharacterCard card) {

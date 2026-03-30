@@ -10,6 +10,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
+import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
@@ -29,6 +30,8 @@ public class Game {
     //private GameState gameState;
     int nPlayers;
 
+    RoundPhasesEnum currentRoundPhase;
+
     //Setup
     public Game (int nPlayers) throws IOException {
         roundNumber=0; //o 1
@@ -39,6 +42,7 @@ public class Game {
         era = 1;
         this.nPlayers= nPlayers;
         this.turnOrder = new TurnOrder(nPlayers);
+        this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
     }
 
     public void addPlayer(Player player) throws TooManyPlayersException {
@@ -63,9 +67,8 @@ public class Game {
         Collections.shuffle(players);
 
         //Giving the correct amount of food
-        int[] startingFood = {2, 3, 3, 4, 4};
         for (int i = 0; i < players.size(); i++) {
-            players.get(i).editFood(startingFood[i]);
+            players.get(i).editFood(GameConstants.STARTING_FOOD[i]);
         }
 
         //Setting the players in TurnOrder
@@ -75,7 +78,7 @@ public class Game {
         CountVisitor eventCounter = new CountVisitor();
         int numberEvents = eventCounter.getEvent();
         Card card;
-        for(int i = 0; i<(nPlayers + 1 + numberEvents); i++){
+        for(int i = 0; i<(nPlayers + GameConstants.LOWER_LINE_EXTRA_CARDS + numberEvents); i++){
 
             card = tribeDeck.draw();
             card.acceptVisit(eventCounter);
@@ -88,15 +91,13 @@ public class Game {
         }
 
         //Fills the upper trail of cards
-        for(int i = 0; i<(nPlayers + 4 - numberEvents); i++){
+        for(int i = 0; i<(nPlayers + GameConstants.UPPER_LINE_EXTRA_CARDS - numberEvents); i++){
             board.addUpper(tribeDeck.draw());
         }
 
         //Set up buildings trail (only upper)
-        board.addUpper((BuildingCard)buildingDeck.draw());
-        if(nPlayers > 2)
+        for(int i = 0; i <GameConstants.getEraOneBuildings(nPlayers); i++)
             board.addUpper((BuildingCard)buildingDeck.draw());
-
     }
     
 
@@ -144,6 +145,7 @@ public class Game {
     public void startRound(){
         roundNumber++;
 //        every player decides where to put their totems on the OfferTrack
+        //OFFER_PHASE
 //        for(int i = 0; i < nPlayers; i++){
 //          Player playerActing = turnOrder.getPlayerActing();
 //          Controller reads action from player and gets OfferCard wanted
@@ -156,6 +158,7 @@ public class Game {
 //          }
 //        }
 //        turnOrder.reset();
+//        this.game.setCurrentRoundPhase(ACTION_PHASE);
 //        int CurrentOfferCard = 0;
 //        while(CurrentOfferCard < board.getOfferTrackSize()){
 //          OfferCard offerCardInUse = board.getOfferCards().get(CurrentOfferCard);
@@ -204,7 +207,6 @@ public class Game {
                 eventQueue.add((EventCard) templine.getFirst());  //Safe explicit cast to EventCard
                 tempevent=visitor.getEvent();
             }
-            //TODO this is the bug. This removes from the actual board (templine gets the reference to the underline of the board, must use a copy or something similar)
             templine.removeFirst();
         }
 
@@ -221,7 +223,7 @@ public class Game {
         resolveEvents();
         board.moveLowerTribes();
         try{
-            for(int i=0;i<players.size()+4;i++) {
+            for(int i=0;i<players.size()+ GameConstants.UPPER_LINE_EXTRA_CARDS ;i++) {
                 board.addUpper(drawTCard());
             }
         }
@@ -293,5 +295,19 @@ public class Game {
     }
 
     public Board getBoard(){return board;}
+
+    public Player getPlayerActing(){
+        return turnOrder.getPlayerActing();
+    }
+
+    public RoundPhasesEnum getCurrentRoundPhase(){return this.currentRoundPhase;}
+    public void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){this.currentRoundPhase = currentRoundPhase;}
+
+    public boolean gameFinished(){
+        //false values are placeholder
+        return (
+                roundNumber == GameConstants.ROUNDS_NUMBER || false //Check PHASE
+                );
+    }
 
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.modelPackage.deckFolder;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 //import it.polimi.ingsw.am31.am31.handlers.*;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
@@ -63,31 +64,47 @@ public class BuildingDeck extends Deck {
         Collections.shuffle(list2);
         Collections.shuffle(list3);
         //ERA 1
-        this.eraDeck.add(list1.getFirst());
-        list1.removeFirst();
-        if(nplayers>2)
+        for (int i = 0; i < GameConstants.getEraOneBuildings(nplayers); i++) {
             this.eraDeck.add(list1.getFirst());
-        //ERA 2
-        for (int i = 0; i < 2; i++) {
-            this.eraDeck.add(list2.getFirst());
-            list2.removeFirst();
-            }
-        if(nplayers>3)
-            this.eraDeck.add(list2.getFirst());
-        //ERA 3
-        for(int i=0; i<3;i++) {
-            this.eraDeck.add(list3.getFirst());
-            list3.removeFirst();
+            list1.removeFirst();
         }
-        if(nplayers>2)
-        {
-            this.eraDeck.add(list3.getFirst());
-            list3.removeFirst();
+
+        for (int i = 0; i < GameConstants.getEraTwoBuildings(nplayers); i++) {
+            this.eraDeck.add(list2.getFirst());
+            list1.removeFirst();
         }
-        if(nplayers==5)
-        {
+
+        for (int i = 0; i < GameConstants.getEraThreeBuildings(nplayers); i++) {
             this.eraDeck.add(list3.getFirst());
-            list3.removeFirst();
+            list1.removeFirst();
         }
     }
 }
+
+//        this.eraDeck.add(list1.getFirst());
+//        list1.removeFirst();
+//        if(nplayers>2)
+//            this.eraDeck.add(list1.getFirst());
+//        //ERA 2
+//        for (int i = 0; i < 2; i++) {
+//            this.eraDeck.add(list2.getFirst());
+//            list2.removeFirst();
+//            }
+//        if(nplayers>3)
+//            this.eraDeck.add(list2.getFirst());
+        //ERA 3
+//        for(int i=0; i<3;i++) {
+//            this.eraDeck.add(list3.getFirst());
+//            list3.removeFirst();
+//        }
+//        if(nplayers>2)
+//        {
+//            this.eraDeck.add(list3.getFirst());
+//            list3.removeFirst();
+//        }
+//        if(nplayers==5)
+//        {
+//            this.eraDeck.add(list3.getFirst());
+//            list3.removeFirst();
+//        }
+

@@ -62,7 +62,12 @@ public class Board {
     public ArrayList<BuildingCard> getUpperBLine(){return upperBLine;}
     public ArrayList<BuildingCard> getUnderBLine(){return underBLine;}
 
-    public ArrayList<Card> getUnderLine() {return underLine;}
+    public ArrayList<Card> getUnderLine() {
+        ArrayList<Card> result = new ArrayList<Card>();
+        result.addAll(underLine);
+        result.addAll(underBLine);
+        return result;
+    }
     public ArrayList<Card> getUpperLine(){
         ArrayList<Card> result = new ArrayList<Card>();
         result.addAll(upperLine);
@@ -85,7 +90,9 @@ public class Board {
 
 
     public List<OfferCard> getOfferCards(){
-        return offerTrack;
+        ArrayList<OfferCard> trackCopy = new ArrayList<OfferCard>();
+        trackCopy.addAll(offerTrack);
+        return trackCopy;
     }
 
     public OfferCard getNextCard(int currentCard) {

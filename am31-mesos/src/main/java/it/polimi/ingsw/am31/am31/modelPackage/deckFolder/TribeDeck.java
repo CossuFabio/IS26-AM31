@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.CardLoader;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.RitualEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.SustainEventCard;
+import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -41,8 +42,8 @@ public class TribeDeck extends Deck {
     this.eraDeck.addAll(list1);
     this.eraDeck.addAll(list2);
     this.eraDeck.addAll(list3);
-    this.eraDeck.add(new SustainEventCard(3,3));
-    this.eraDeck.add(new RitualEventCard( 3,7,15));
+    this.eraDeck.add(new SustainEventCard(GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_SUSTAIN_MALUS));
+    this.eraDeck.add(new RitualEventCard( GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_RITUAL_MALUS,GameConstants.FINAL_RITUAL_BONUS));
     }
 
 
