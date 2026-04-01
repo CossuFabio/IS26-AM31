@@ -28,9 +28,10 @@ public class Game {
     private TurnOrder turnOrder;
     private int era;
     //private GameState gameState;
-    int nPlayers;
-
-    RoundPhasesEnum currentRoundPhase;
+    private final int nPlayers;
+    private RoundPhasesEnum currentRoundPhase;
+    private final TurnDrawManager drawManager;
+    private Player playerActing;
 
     //Setup
     public Game (int nPlayers) throws IOException {
@@ -43,6 +44,7 @@ public class Game {
         this.nPlayers= nPlayers;
         this.turnOrder = new TurnOrder(nPlayers);
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
+        this.drawManager = new TurnDrawManager();
     }
 
     public void addPlayer(Player player) throws TooManyPlayersException {
@@ -124,6 +126,7 @@ public class Game {
         //method should then show winners
     }
 
+
     //TODO: Test this
     public void resetGame() throws IOException, EmptyDeckException{
         players.forEach(player->{player.editFood(-player.getFood());});
@@ -141,52 +144,21 @@ public class Game {
         }
     }
 
-    //TODO: Put this in Controller
-    public void startRound(){
-        roundNumber++;
-//        every player decides where to put their totems on the OfferTrack
-        //OFFER_PHASE
-//        for(int i = 0; i < nPlayers; i++){
-//          Player playerActing = turnOrder.getPlayerActing();
-//          Controller reads action from player and gets OfferCard wanted
-//            if(board.OfferCard.isFree()){
-//            OfferCard.setPlayer(player);
-//            TurnOrder.goToNextPlayer();
-//          }else
-//            catch(OfferTrackTileAlreadyTaken e){
-//              System.err.println(e.getMessage());
-//          }
-//        }
-//        turnOrder.reset();
-//        this.game.setCurrentRoundPhase(ACTION_PHASE);
-//        int CurrentOfferCard = 0;
-//        while(CurrentOfferCard < board.getOfferTrackSize()){
-//          OfferCard offerCardInUse = board.getOfferCards().get(CurrentOfferCard);
-//          Player playerActing = offerCardInUse.getPlayer();
-//          int foodToGive = offerCardInUse.getFood();
-//          if(foodToGive != 0){
-//            playerActing.editFood(foodToGive);
-//            turnOrder.setPlayer(playerActing);
-//            offerCardInUse.free();
-//          }
-//          else{
-//             int numberOfDrawsFromUpper = offerCardInUse.getDrawFromUpper();
-//             int numberOfDrawsFromUnder = offerCardInUse.getDrawFromUnder();
-//             int i;
-//             for( i = 0; i < numberOfDrawsFromUnder; i++){
-//                 gets player's choice from Controller
-//                  playerDrawFromLower(playerActing, cardToDraw);
-//             }
-//             for( i = 0; i < numberOfDrawsFromUpper; i++){
-//                gets player's choice from Controller
-//                playerDrawFromUpper(playerActing, cardToDraw);
-//             }
-//             turnOrder.setPlayer(playerActing);
-//             offerCardInUse.free();
-//          }
-//          CurrentOfferCard++;
-//        }
-    }
+
+
+
+
+
+//    public void DrawChoiceAction(Player, Card)
+    //turn draw manager, gestisce le carte da pescare e se può pescare.
+    //se al player spetta pescata, legge la carta e pesca. drawfrom* controlla se la carta c'è e tt cose.
+    //dopo la action,aggiorna le cardremaining, controlla se il player sta apposto
+    //(controller) in tal caso, passa alla tessera dopo, HandleEndTurn e setup con il giocatore nuovo. -> se finito
+    //(controller) cambio di fase a END_TURN
+    //FINE
+
+
+
 
 
     //TODO: fix this (Discuss together)
@@ -228,6 +200,9 @@ public class Game {
             }
         }
         catch (EmptyDeckException e) { System.err.println(e.getMessage()); }
+
+        //setPhase TOTEM_PLACING
+
     }
 
     private Card drawTCard () throws EmptyDeckException {
@@ -259,12 +234,28 @@ public class Game {
     }
 
     //TODO: THINK
-    public void playerChoice(Player player, OfferCard offerCard){
-        offerCard.setPlayer(player);
+
+    //prende la scelta, controlla se fattibile, la fa, rimette il player in ordine.
+    //se non fattibile, lancia eccezione o del player o tessera già presa
+    //se finito, turnorder lancia exception, catchata da controller
+    //(controller)in tal caso fa setup della TurnDrawManager e assegna cibo della tessera (caso tessera n1).
+    public void totemChoiceAction(Player player, OfferCard offerCard) throws WrongPlayerTurnException, EverybodyPlayedException, OfferTrackTileAlreadyTakenException {
+        if(!(player == getPlayerActingTotemPhase())) throw new WrongPlayerTurnException();
+        if(offerCard.isFree())
+            offerCard.setPlayer(player);
+        else
+            throw new OfferTrackTileAlreadyTakenException();
+        turnOrder.goToNextPlayer();
     }
 
 
-    public void playerDrawFromUpper(Player player, IPickable card) throws CardNotFoundException, InvalidPickException{
+    public void playerDrawFromUpper(Player player, IPickable card) throws WrongPlayerTurnException, CardNotFoundException, InvalidPickException, InvalidDrawException{
+
+        //Check if the draw comes from the correct player
+        if(!player.equals(playerActing)) throw new WrongPlayerTurnException();
+
+        //Check if player can draw from top
+        if(!drawManager.canDrawFromUpper()) throw new InvalidDrawException();
 
         //Throws invalid pick exception
         card.canPick(player);
@@ -273,11 +264,18 @@ public class Game {
         board.drawFromUpper(card);
 
         //This method handles the dispatch of which deck will the card be added (TribeDeck or BuildingDeck)
+        drawManager.drawUpper();
         card.addToPlayer(player);
 
     }
 
-    public void playerDrawFromLower(Player player, IPickable card) throws CardNotFoundException, InvalidPickException{
+    public void playerDrawFromLower(Player player, IPickable card) throws WrongPlayerTurnException, CardNotFoundException, InvalidPickException, InvalidDrawException{
+
+        //Check if the draw comes from the correct player
+        if(!player.equals(playerActing)) throw new WrongPlayerTurnException();
+
+        //Check if player can draw from top
+        if(!drawManager.canDrawFromLower()) throw new InvalidDrawException();
 
         //Throws invalid pick exception
         card.canPick(player);
@@ -286,9 +284,17 @@ public class Game {
         board.drawFromLower(card);
 
         //This method handles the dispatch of which deck will the card be added (TribeDeck or BuildingDeck)
+        drawManager.drawLower();
         card.addToPlayer(player);
 
     }
+
+    //game.getOfferTrack()
+    //foreach track
+    //se non vuota => prende giocatore e fa setupplayeracting(player, offertrack)
+    //quando deve aggiornare => va al prossimo
+    //Quando finiscoono => fase = fineturno
+
 
     public TurnOrder getTurnOrder(){
         return turnOrder;
@@ -296,14 +302,29 @@ public class Game {
 
     public Board getBoard(){return board;}
 
-    public Player getPlayerActing(){
+    //Sets up the next player and how many cards should it draw
+    public void setUpPlayerActing(Player nextPlayerActing, OfferCard offerCardChosen){
+        this.playerActing = nextPlayerActing;
+        drawManager.setUp(offerCardChosen.getDrawFromUpper(), offerCardChosen.getDrawFromUnder());
+
+        //If zero nothing changes, else adds food
+        playerActing.editFood(offerCardChosen.getFood());
+
+    }
+
+    public Player getPlayerActingDrawPhase(){
+        return this.playerActing;
+    }
+
+    public Player getPlayerActingTotemPhase(){
         return turnOrder.getPlayerActing();
     }
 
     public RoundPhasesEnum getCurrentRoundPhase(){return this.currentRoundPhase;}
+
     public void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){this.currentRoundPhase = currentRoundPhase;}
 
-    public boolean gameFinished(){
+    public boolean isGameFinished(){
         //false values are placeholder
         return (
                 roundNumber == GameConstants.ROUNDS_NUMBER || false //Check PHASE

@@ -16,8 +16,8 @@ public class PaintingEventCard extends EventCard {
             @JsonProperty("minArtist")int minArtist,
             @JsonProperty("prestigePointsMalus") int prestigePointsMalus,
             @JsonProperty("prestigePointsBonus") int prestigePointsBonus){
-        this.minArtist = minArtist;
         super(era);
+        this.minArtist = minArtist;
         this.priority = 1+era;
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;

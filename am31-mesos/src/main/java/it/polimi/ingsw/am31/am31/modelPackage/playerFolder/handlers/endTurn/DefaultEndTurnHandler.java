@@ -11,7 +11,7 @@ public class DefaultEndTurnHandler implements IEndTurnHandler {
     }
 
     @Override
-    //By default, at the end of the turn the player gains/looses food based on which tile he is placed
+    //By default, at the end of the turn the player gains/loses food based on which tile he is placed
     //All bonuses change based on number of players
     public void handleEndTurn(Player player, int playerOrder, int nPlayers) {
         if(playerOrder == 0){
@@ -25,7 +25,7 @@ public class DefaultEndTurnHandler implements IEndTurnHandler {
             player.editFood(1);
 
         if(playerOrder == (nPlayers-1)){
-            if (player.getFood() > 1)
+            if (player.getFood() >= 1)
                 player.editFood(-1);
             else
                 player.editPrestigePoints(-2);

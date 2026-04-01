@@ -6,12 +6,16 @@ import it.polimi.ingsw.am31.am31.exceptions.OfferTrackTileAlreadyTakenException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 public class OfferCard {
+
     private final int food;
     private final int drawFromUpper;
     private final int drawFromUnder;
     private final int minPlayers;
-
     private Player player;
+
+    //private int drawFromUpperThisTurn = 0
+    //private int drawFromLowerThisTurn = 0
+
     @JsonCreator
     public OfferCard(
             @JsonProperty("food") int food,
@@ -37,8 +41,7 @@ public class OfferCard {
         return food;
     }
 
-    public boolean isFree() {return this.player == null;
-    }
+    public boolean isFree() {return this.player == null;}
 
     public Player getPlayer(){
         return player;
@@ -53,5 +56,6 @@ public class OfferCard {
     public void free() {
         this.player = null;
     }
+
 
 }

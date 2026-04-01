@@ -23,9 +23,9 @@ public class Board {
 
 
     public Board(int numPlayers) throws IOException {
-        super();
         CardLoader loader = new CardLoader();
         List<OfferCard> catalog = loader.offerCardLoader();
+
         this.offerTrack = (ArrayList<OfferCard>) catalog.stream().filter(c -> c.getMinPlayers() <= numPlayers)
                 .collect(Collectors.toList());
 
@@ -58,6 +58,7 @@ public class Board {
     public void addLower(Card card){
         underLine.add(card);
     }
+
     //GETTERS
     public ArrayList<BuildingCard> getUpperBLine(){return upperBLine;}
     public ArrayList<BuildingCard> getUnderBLine(){return underBLine;}
@@ -82,12 +83,12 @@ public class Board {
     //The !(buildings.remove || tribe.remove) checks if the card was present, if it wasn't the method throws the exception
     public void drawFromUpper(IPickable card) throws CardNotFoundException{
         if(!(upperBLine.remove(card) || upperLine.remove(card))) throw new CardNotFoundException();
+
     }
 
     public void drawFromLower(IPickable card) throws CardNotFoundException{
         if(!(underBLine.remove(card) || underLine.remove(card))) throw new CardNotFoundException();
     }
-
 
     public List<OfferCard> getOfferCards(){
         ArrayList<OfferCard> trackCopy = new ArrayList<OfferCard>();
@@ -104,6 +105,7 @@ public class Board {
     }
 
     public int getOfferTrackSize(){return offerTrack.size();}
+
 
 
 

@@ -197,5 +197,9 @@ public class Player {
         this.ritualLoseHandler.setStrategy(newStrategy.get());
     }
 
+    public boolean equals(Player player){
+        return this == player || this.nickname.equals(player.nickname);
+    }
+
 
 }

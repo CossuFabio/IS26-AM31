@@ -59,11 +59,12 @@ public class BuildingDeck extends Deck {
         list3.add(new BuildingCard(3, 9, 3, (Player player) -> player.addEndRoundEffect(OneMoreCardDecorator::new)));
         list3.add(new BuildingCard(3, 10, 0, (Player player) -> player.addEndGameEffect(FlatPrestigePointsDecorator::new)));
 
+
         //lists are shuffled, then we add cards based on nplayers
         Collections.shuffle(list1);
         Collections.shuffle(list2);
         Collections.shuffle(list3);
-        //ERA 1
+
         for (int i = 0; i < GameConstants.getEraOneBuildings(nplayers); i++) {
             this.eraDeck.add(list1.getFirst());
             list1.removeFirst();
@@ -71,13 +72,16 @@ public class BuildingDeck extends Deck {
 
         for (int i = 0; i < GameConstants.getEraTwoBuildings(nplayers); i++) {
             this.eraDeck.add(list2.getFirst());
-            list1.removeFirst();
+            list2.removeFirst();
         }
 
         for (int i = 0; i < GameConstants.getEraThreeBuildings(nplayers); i++) {
             this.eraDeck.add(list3.getFirst());
-            list1.removeFirst();
+            list3.removeFirst();
         }
+
+
+
     }
 }
 
