@@ -21,12 +21,17 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.sustainEvent
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BuildingDeck extends Deck {
 
 
 
-    public BuildingDeck(int nplayers) {
+    public BuildingDeck(int nplayers, List<BuildingCard> catalog) {
+
+        //List<BuildingCard> list1 = catalog.stream().filter(c -> c.getEra() == 1).collect(Collectors.toList());
+        //List<BuildingCard> list2 = catalog.stream().filter(c -> c.getEra() == 2).collect(Collectors.toList());
+        //List<BuildingCard> list3 = catalog.stream().filter(c -> c.getEra() == 3).collect(Collectors.toList());
 
         //Setup for era 1 buildings
         List<Card> list1 = new ArrayList<>();
@@ -58,7 +63,7 @@ public class BuildingDeck extends Deck {
         list3.add(new BuildingCard(3, 6, 6, (Player player) -> player.addEndGameEffect(InventorPrestigeBonusDecorator::new)));
         list3.add(new BuildingCard(3, 9, 3, (Player player) -> player.addEndRoundEffect(OneMoreCardDecorator::new)));
         list3.add(new BuildingCard(3, 10, 0, (Player player) -> player.addEndGameEffect(FlatPrestigePointsDecorator::new)));
-
+//
 
         //lists are shuffled, then we add cards based on nplayers
         Collections.shuffle(list1);

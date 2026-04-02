@@ -3,6 +3,10 @@ package it.polimi.ingsw.am31.am31.modelPackage;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonTribeCardsSupplier;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -41,7 +45,9 @@ class GameTest {
     //TODO RUN this
     @Test
     void TestShouldChangeEra() throws IOException {
-        Game game = new Game(3);
+        Game game = new Game(3, new GameResources(
+                new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()
+        ));
 
         game.getBoard().addUpper(new BuildingCard(1,1,1,null));
         game.getBoard().addLower(new BuildingCard(2,2,2,null));

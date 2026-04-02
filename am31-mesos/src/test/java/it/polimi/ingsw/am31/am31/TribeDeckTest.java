@@ -11,7 +11,7 @@ public class TribeDeckTest {
 
         int nPlayers = 5;
         try{
-            TribeDeck deck = new TribeDeck(nPlayers);
+            TribeDeck deck = new TribeDeck(nPlayers, TestUtilities.getJSONGameResources().getTribeCards());
             System.out.println(deck.getSize());
             Card card = deck.draw();
             while(card != null){

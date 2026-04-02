@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 public class TribeDeck extends Deck {
 
-    public TribeDeck(int nPlayers) throws IOException {
+    public TribeDeck(int nPlayers, List<Card> catalog) throws IOException {
 
     super();
-    CardLoader loader = new CardLoader();
-    List<Card> catalog = loader.tribeCardLoader();
+    //CardLoader loader = new CardLoader();
+    //List<Card> catalog = loader.tribeCardLoader();
 
     //Make the lists of cards
     List<Card> list1 = catalog.stream()

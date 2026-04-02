@@ -13,6 +13,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,18 +34,23 @@ public class Game {
     private final TurnDrawManager drawManager;
     private Player playerActing;
 
+    private final GameResources gameResources;
+
     //Setup
-    public Game (int nPlayers) throws IOException {
+    public Game (int nPlayers, GameResources gameResources) throws IOException {
         roundNumber=0; //o 1
         players= new ArrayList<Player>();
-        board= new Board(nPlayers);
-        buildingDeck = new BuildingDeck(nPlayers);
-        tribeDeck = new TribeDeck(nPlayers);
+
         era = 1;
         this.nPlayers= nPlayers;
         this.turnOrder = new TurnOrder(nPlayers);
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
         this.drawManager = new TurnDrawManager();
+
+        this.gameResources = gameResources;
+        tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
+        buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
+        board= new Board(nPlayers);
     }
 
     public void addPlayer(Player player) throws TooManyPlayersException {
@@ -132,8 +138,8 @@ public class Game {
         players.forEach(player->{player.editFood(-player.getFood());});
         players.forEach(player->{player.editPrestigePoints(-player.getPrestigePoints());});
         board = new Board(nPlayers);
-        buildingDeck = new BuildingDeck(nPlayers);
-        tribeDeck = new TribeDeck(nPlayers);
+        buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
+        tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
         turnOrder = new TurnOrder(nPlayers);
         era = 1;
         try{

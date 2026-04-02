@@ -110,3 +110,10 @@ public class Board {
 
 
 }
+//SERVER
+
+//New game(numGIoc, GameResources(SupplierCarte, SupplierOffer, SupplierBuildings))
+//New controller(game);
+
+//arriva richiesta pescata
+//Card cardRequested = game.gameResources.getTribeCards().searchBYId(requestid)
