@@ -10,8 +10,8 @@ public abstract class CharacterCard extends Card implements IPickable {
 
     protected final int minPlayers;
 
-    protected CharacterCard(int era, int minPlayers) {
-        super(era);
+    protected CharacterCard(String cardID, int era, int minPlayers) {
+        super(cardID, era);
         this.minPlayers = minPlayers;
     }
 

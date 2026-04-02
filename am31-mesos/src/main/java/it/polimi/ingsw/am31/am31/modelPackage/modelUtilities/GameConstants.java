@@ -18,6 +18,9 @@ public class GameConstants {
     public static final int FINAL_RITUAL_MALUS = 7;
     public static final int FINAL_RITUAL_BONUS = 15;
 
+    public static final String FINAL_SUSTAIN_ID = "se3";
+    public static final String FINAL_RITUAL_ID = "re3";
+
     public static int getEraOneBuildings(int nPlayers){
         if(nPlayers == 2)
             return 1;

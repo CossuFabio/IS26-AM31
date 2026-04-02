@@ -1,29 +1,34 @@
 [
   {
+    "cardId" : "h1",
     "type" : "Hunter",
     "era" : 1,
     "mark" : true,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h2",
     "type" : "Hunter",
     "era" : 1,
     "mark" : true,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h3",
     "type" : "Hunter",
     "era" : 1,
     "mark" : false,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h4",
     "type" : "Hunter",
     "era" : 1,
     "mark" : false,
     "minPlayers" : 3
   },
   {
+    "cardId" : "h5",
     "type" : "Hunter",
     "era" : 1,
     "mark" : false,
@@ -31,36 +36,42 @@
   },
 
   {
+    "cardId" : "h6",
     "type" : "Hunter",
     "era" : 2,
     "mark" : true,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h7",
     "type" : "Hunter",
     "era" : 2,
     "mark" : false,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h8",
     "type" : "Hunter",
     "era" : 2,
     "mark" : false,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h9",
     "type" : "Hunter",
     "era" : 2,
     "mark" : true,
     "minPlayers" : 3
   },
   {
+    "cardId" : "h10",
     "type" : "Hunter",
     "era" : 2,
     "mark" : true,
     "minPlayers" : 4
   },
   {
+    "cardId" : "h11",
     "type" : "Hunter",
     "era" : 2,
     "mark" : false,
@@ -68,24 +79,28 @@
   },
 
   {
+    "cardId" : "h12",
     "type" : "Hunter",
     "era" : 3,
     "mark" : true,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h13",
     "type" : "Hunter",
     "era" : 3,
     "mark" : false,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h14",
     "type" : "Hunter",
     "era" : 3,
     "mark" : false,
     "minPlayers" : 2
   },
   {
+    "cardId" : "h15",
     "type" : "Hunter",
     "era" : 3,
     "mark" : true,
@@ -95,24 +110,28 @@
 
 
   {
+    "cardId" : "s1",
     "type" : "Shaman",
     "era" : 1,
     "stars" : 1,
     "minPlayers" : 2
   },
   {
+    "cardId" : "s2",
     "type" : "Shaman",
     "era" : 1,
     "stars" : 2,
     "minPlayers" : 2
   },
   {
+    "cardId" : "s3",
     "type" : "Shaman",
     "era" : 1,
     "stars" : 1,
     "minPlayers" : 4
   },
   {
+    "cardId" : "s4",
     "type" : "Shaman",
     "era" : 1,
     "stars" : 2,
@@ -120,24 +139,28 @@
   },
 
   {
+    "cardId" : "s5",
     "type" : "Shaman",
     "era" : 2,
     "stars" : 2,
     "minPlayers" : 2
   },
   {
+    "cardId" : "s6",
     "type" : "Shaman",
     "era" : 2,
     "stars" : 2,
     "minPlayers" : 2
   },
   {
+    "cardId" : "s7",
     "type" : "Shaman",
     "era" : 2,
     "stars" : 1,
     "minPlayers" : 5
   },
   {
+    "cardId" : "s8",
     "type" : "Shaman",
     "era" : 2,
     "stars" : 2,
@@ -145,30 +168,35 @@
   },
 
   {
+    "cardId" : "s9",
     "type" : "Shaman",
     "era" : 3,
     "stars" : 2,
     "minPlayers" : 2
   },
   {
+    "cardId" : "s10",
     "type" : "Shaman",
     "era" : 3,
     "stars" : 3,
     "minPlayers" : 2
   },
   {
+    "cardId" : "s11",
     "type" : "Shaman",
     "era" : 3,
     "stars" : 3,
     "minPlayers" : 2
   },
   {
+    "cardId" : "s12",
     "type" : "Shaman",
     "era" : 3,
     "stars" : 2,
     "minPlayers" : 3
   },
   {
+    "cardId" : "s13",
     "type" : "Shaman",
     "era" : 3,
     "stars" : 2,
@@ -178,68 +206,81 @@
 
 
   {
+    "cardId" : "a1",
     "type" : "Artist",
     "era" : 1,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a2",
     "type" : "Artist",
     "era" : 1,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a3",
     "type" : "Artist",
     "era" : 1,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a4",
     "type" : "Artist",
     "era" : 1,
     "minPlayers" : 3
   },
   {
+    "cardId" : "a5",
     "type" : "Artist",
     "era" : 1,
     "minPlayers" : 4
   },
 
   {
+    "cardId" : "a6",
     "type" : "Artist",
     "era" : 2,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a7",
     "type" : "Artist",
     "era" : 2,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a8",
     "type" : "Artist",
     "era" : 2,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a9",
     "type" : "Artist",
     "era" : 2,
     "minPlayers" : 3
   },
 
   {
+    "cardId" : "a10",
     "type" : "Artist",
     "era" : 3,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a11",
     "type" : "Artist",
     "era" : 3,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a12",
     "type" : "Artist",
     "era" : 3,
     "minPlayers" : 2
   },
   {
+    "cardId" : "a13",
     "type" : "Artist",
     "era" : 3,
     "minPlayers" : 5
@@ -248,6 +289,7 @@
 
 
   {
+    "cardId" : "b1",
     "type" : "Builder",
     "era" : 1,
     "prestigePoints" : 3,
@@ -255,6 +297,7 @@
     "minPlayers" : 2
   },
   {
+    "cardId" : "b2",
     "type" : "Builder",
     "era" : 1,
     "prestigePoints" : 0,
@@ -262,6 +305,7 @@
     "minPlayers" : 2
   },
   {
+    "cardId" : "b3",
     "type" : "Builder",
     "era" : 1,
     "prestigePoints" : 2,
@@ -269,6 +313,7 @@
     "minPlayers" : 2
   },
   {
+    "cardId" : "b4",
     "type" : "Builder",
     "era" : 1,
     "prestigePoints" : 1,
@@ -277,6 +322,7 @@
   },
 
   {
+    "cardId" : "b5",
     "type" : "Builder",
     "era" : 2,
     "prestigePoints" : 3,
@@ -284,6 +330,7 @@
     "minPlayers" : 2
   },
   {
+    "cardId" : "b6",
     "type" : "Builder",
     "era" : 2,
     "prestigePoints" : 1,
@@ -291,6 +338,7 @@
     "minPlayers" : 2
   },
   {
+    "cardId" : "b7",
     "type" : "Builder",
     "era" : 2,
     "prestigePoints" : 4,
@@ -298,6 +346,7 @@
     "minPlayers" : 2
   },
   {
+    "cardId" : "b8",
     "type" : "Builder",
     "era" : 2,
     "prestigePoints" : 2,
@@ -306,6 +355,7 @@
   },
 
   {
+    "cardId" : "b9",
     "type" : "Builder",
     "era" : 3,
     "prestigePoints" : 2,
@@ -313,6 +363,7 @@
     "minPlayers" : 2
   },
   {
+    "cardId" : "b10",
     "type" : "Builder",
     "era" : 3,
     "prestigePoints" : 5,
@@ -320,13 +371,14 @@
     "minPlayers" : 2
   },
   {
+    "cardId" : "b11",
     "type" : "Builder",
     "era" : 3,
     "prestigePoints" : 3,
     "discount" : 2,
     "minPlayers" : 2
   },
-  {
+  {"cardId" : "b12",
     "type" : "Builder",
     "era" : 3,
     "prestigePoints" : 4,
@@ -337,58 +389,68 @@
 
 
   {
+    "cardId" : "f1",
     "type" : "Farmer",
     "era" : 1,
     "minPlayers" : 2
   },
   {
+    "cardId" : "f2",
     "type" : "Farmer",
     "era" : 1,
     "minPlayers" : 2
   },
   {
+    "cardId" : "f3",
     "type" : "Farmer",
     "era" : 1,
     "minPlayers" : 3
   },
   {
+    "cardId" : "f4",
     "type" : "Farmer",
     "era" : 1,
     "minPlayers" : 5
   },
 
   {
+    "cardId" : "f5",
     "type" : "Farmer",
     "era" : 2,
     "minPlayers" : 2
   },
   {
+    "cardId" : "f6",
     "type" : "Farmer",
     "era" : 2,
     "minPlayers" : 3
   },
   {
+    "cardId" : "f7",
     "type" : "Farmer",
     "era" : 2,
     "minPlayers" : 4
   },
   {
+    "cardId" : "f8",
     "type" : "Farmer",
     "era" : 2,
     "minPlayers" : 5
   },
 
-  {
+  {"cardId" : "f9",
     "type" : "Farmer",
     "era" : 3,
     "minPlayers" : 2
   },
   {
+    "cardId" : "f10",
     "type" : "Farmer",
     "era" : 3,
     "minPlayers" : 4
   },
   {
+    "cardId" : "f11",
     "type" : "Farmer",
     "era" : 3,
     "minPlayers" : 5
@@ -397,42 +459,49 @@
 
 
   {
+    "cardId" : "i1",
     "type" : "Inventor",
     "era" : 1,
     "icon" : "BREAD",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i2",
     "type" : "Inventor",
     "era" : 1,
     "icon" : "ARROW",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i3",
     "type" : "Inventor",
     "era" : 1,
     "icon" : "BOAT",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i4",
     "type" : "Inventor",
     "era" : 1,
     "icon" : "PELT",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i5",
     "type" : "Inventor",
     "era" : 1,
     "icon" : "ROPE",
     "minPlayers" : 4
   },
   {
+    "cardId" : "i6",
     "type" : "Inventor",
     "era" : 1,
     "icon" : "POT",
     "minPlayers" : 4
   },
   {
+    "cardId" : "i7",
     "type" : "Inventor",
     "era" : 1,
     "icon" : "STICK",
@@ -440,36 +509,42 @@
   },
 
   {
+    "cardId" : "i8",
     "type" : "Inventor",
     "era" : 2,
     "icon" : "STICK",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i9",
     "type" : "Inventor",
     "era" : 2,
     "icon" : "ROPE",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i10",
     "type" : "Inventor",
     "era" : 2,
     "icon" : "PELT",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i11",
     "type" : "Inventor",
     "era" : 2,
     "icon" : "POT",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i12",
     "type" : "Inventor",
     "era" : 2,
     "icon" : "TOTEM",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i13",
     "type" : "Inventor",
     "era" : 2,
     "icon" : "BAIT",
@@ -477,42 +552,49 @@
   },
 
   {
+    "cardId" : "i14",
     "type" : "Inventor",
     "era" : 3,
     "icon" : "BREAD",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i15",
     "type" : "Inventor",
     "era" : 3,
     "icon" : "NECKLACE",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i16",
     "type" : "Inventor",
     "era" : 3,
     "icon" : "TOTEM",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i17",
     "type" : "Inventor",
     "era" : 3,
     "icon" : "BAIT",
     "minPlayers" : 2
   },
   {
+    "cardId" : "i18",
     "type" : "Inventor",
     "era" : 3,
     "icon" : "BOAT",
     "minPlayers" : 3
   },
   {
+    "cardId" : "i19",
     "type" : "Inventor",
     "era" : 3,
     "icon" : "ARROW",
     "minPlayers" : 3
   },
   {
+    "cardId" : "i20",
     "type" : "Inventor",
     "era" : 3,
     "icon" : "NECKLACE",
@@ -522,18 +604,21 @@
 
 
   {
+    "cardId" : "he1",
     "type" : "HuntEventCard",
     "prestigePointsBonus" : 1,
     "foodBonus" : 1,
     "era" : 1
   },
   {
+    "cardId" : "he2",
     "type" : "HuntEventCard",
     "prestigePointsBonus" : 2,
     "foodBonus" : 1,
     "era" : 2
   },
   {
+    "cardId" : "he3",
     "type" : "HuntEventCard",
     "prestigePointsBonus" : 3,
     "foodBonus" : 1,
@@ -541,6 +626,7 @@
   },
 
   {
+    "cardId" : "pe1",
     "type" : "PaintingEventCard",
     "prestigePointsBonus" : 1,
     "prestigePointsMalus" : 2,
@@ -548,6 +634,7 @@
     "era" : 1
   },
   {
+    "cardId" : "pe2",
     "type" : "PaintingEventCard",
     "prestigePointsBonus" : 2,
     "prestigePointsMalus" : 2,
@@ -555,6 +642,7 @@
     "era" : 2
   },
   {
+    "cardId" : "pe3",
     "type" : "PaintingEventCard",
     "prestigePointsBonus" : 3,
     "prestigePointsMalus" : 2,
@@ -563,12 +651,14 @@
   },
 
   {
+    "cardId" : "re1",
     "type" : "RitualEventCard",
     "prestigePointsBonus" : 5,
     "prestigePointsMalus" : 3,
     "era" : 1
   },
   {
+    "cardId" : "re2",
     "type" : "RitualEventCard",
     "prestigePointsBonus" : 10,
     "prestigePointsMalus" : 5,
@@ -577,11 +667,13 @@
 
 
   {
+    "cardId" : "se1",
     "type" : "SustainEventCard",
     "prestigePointsMalus" : 1,
     "era" : 1
   },
   {
+    "cardId" : "se2",
     "type" : "SustainEventCard",
     "prestigePointsMalus" : 2,
     "era" : 2

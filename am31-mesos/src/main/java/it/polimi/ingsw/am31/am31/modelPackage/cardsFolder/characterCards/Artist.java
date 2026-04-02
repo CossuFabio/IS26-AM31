@@ -8,9 +8,10 @@ public class Artist extends CharacterCard {
 
     @JsonCreator
     public Artist(
+            @JsonProperty("cardId") String cardId,
             @JsonProperty("era")  int era,
             @JsonProperty("minPlayers") int minPlayers) {
-        super(era, minPlayers);
+        super(cardId, era, minPlayers);
     }
 
     @Override

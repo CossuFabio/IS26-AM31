@@ -11,8 +11,8 @@ public abstract class EventCard extends Card {
     protected int prestigePointsMalus;
     protected int priority;
 
-    protected EventCard(int era) {
-        super(era);
+    protected EventCard(String cardID, int era) {
+        super(cardID, era);
     }
 
     public abstract void resolve(List<Player> players);

@@ -8,11 +8,13 @@ public class Builder extends CharacterCard {
     private final int prestigePoints;
     private final int discount;
     @JsonCreator
-    public Builder(@JsonProperty("era")int era,
-                   @JsonProperty("minPlayers") int minPlayers,
-                   @JsonProperty("prestigePoints")int prestigePoints,
-                   @JsonProperty("discount")int discount) {
-        super(era, minPlayers);
+    public Builder(
+            @JsonProperty("cardId") String cardId,
+            @JsonProperty("era")int era,
+            @JsonProperty("minPlayers") int minPlayers,
+            @JsonProperty("prestigePoints")int prestigePoints,
+            @JsonProperty("discount")int discount) {
+        super(cardId, era, minPlayers);
         this.prestigePoints = prestigePoints;
         this.discount = discount;
     }

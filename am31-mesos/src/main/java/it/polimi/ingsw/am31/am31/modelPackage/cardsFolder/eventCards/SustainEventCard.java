@@ -10,9 +10,10 @@ public class SustainEventCard extends EventCard {
 
     @JsonCreator
     public SustainEventCard(
+            @JsonProperty("cardId") String cardId,
             @JsonProperty("era") int era,
             @JsonProperty("prestigePointsMalus") int prestigePointsMalus){
-        super(era);
+        super(cardId, era);
         this.prestigePointsMalus = prestigePointsMalus;
         this.prestigePointsBonus = 0;
         this.priority = 20+era;

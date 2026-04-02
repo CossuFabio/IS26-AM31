@@ -11,10 +11,11 @@ public class Hunter extends CharacterCard {
 
     @JsonCreator
     public Hunter(
+            @JsonProperty("cardId") String cardId,
             @JsonProperty("era") int era,
             @JsonProperty("minPlayers") int minPlayers,
             @JsonProperty("mark") boolean mark){
-        super(era, minPlayers);
+        super(cardId, era, minPlayers);
         this.mark = mark;
     }
 

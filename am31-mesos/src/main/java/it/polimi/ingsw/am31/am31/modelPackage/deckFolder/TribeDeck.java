@@ -42,8 +42,8 @@ public class TribeDeck extends Deck {
     this.eraDeck.addAll(list1);
     this.eraDeck.addAll(list2);
     this.eraDeck.addAll(list3);
-    this.eraDeck.add(new SustainEventCard(GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_SUSTAIN_MALUS));
-    this.eraDeck.add(new RitualEventCard( GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_RITUAL_MALUS,GameConstants.FINAL_RITUAL_BONUS));
+    this.eraDeck.add(new SustainEventCard(GameConstants.FINAL_SUSTAIN_ID, GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_SUSTAIN_MALUS));
+    this.eraDeck.add(new RitualEventCard( GameConstants.FINAL_RITUAL_ID, GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_RITUAL_MALUS,GameConstants.FINAL_RITUAL_BONUS));
     }
 
 

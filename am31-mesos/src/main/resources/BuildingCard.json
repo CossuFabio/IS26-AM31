@@ -1,0 +1,134 @@
+[
+  {
+    "cardId" : "b1",
+    "era" : 1,
+    "cost" : 4,
+    "prestigePointsGained" : 3
+  },
+  {
+    "cardId" : "b2",
+    "era" : 1,
+    "cost" : 4,
+    "prestigePointsGained" : 4
+  },
+  {
+    "cardId" : "b3",
+    "era" : 1,
+    "cost" : 5,
+    "prestigePointsGained" : 3
+  },
+  {
+    "cardId" : "b4",
+    "era" : 1,
+    "cost" : 5,
+    "prestigePointsGained" : 2
+  },
+  {
+    "cardId" : "b5",
+    "era" : 1,
+    "cost" : 3,
+    "prestigePointsGained" : 3
+  },
+  {
+    "cardId" : "b6",
+    "era" : 1,
+    "cost" : 3,
+    "prestigePointsGained" : 4
+  },
+
+
+
+  {
+    "cardId" : "b7",
+    "era" : 2,
+    "cost" : 7,
+    "prestigePointsGained" : 0
+  },
+  {
+    "cardId" : "b8",
+    "era" : 2,
+    "cost" : 6,
+    "prestigePointsGained" : 4
+  },
+  {
+    "cardId" : "b9",
+    "era" : 2,
+    "cost" : 7,
+    "prestigePointsGained" : 4
+  },
+  {
+    "cardId" : "b10",
+    "era" : 2,
+    "cost" : 7,
+    "prestigePointsGained" : 2
+  },
+  {
+    "cardId" : "b11",
+    "era" : 2,
+    "cost" : 6,
+    "prestigePointsGained" : 4
+  },
+  {
+    "cardId" : "b12",
+    "era" : 2,
+    "cost" : 5,
+    "prestigePointsGained" : 6
+  },
+  {
+    "cardId" : "b13",
+    "era" : 2,
+    "cost" : 5,
+    "prestigePointsGained" : 6
+  },
+
+
+
+  {
+    "cardId" : "b14",
+    "era" : 3,
+    "cost" : 8,
+    "prestigePointsGained" : 8
+  },
+  {
+    "cardId" : "b15",
+    "era" : 3,
+    "cost" : 7,
+    "prestigePointsGained" : 6
+  },
+  {
+    "cardId" : "b16",
+    "era" : 3,
+    "cost" : 7,
+    "prestigePointsGained" : 4
+  },
+  {
+    "cardId" : "b17",
+    "era" : 3,
+    "cost" : 6,
+    "prestigePointsGained" : 3
+  },
+  {
+    "cardId" : "b18",
+    "era" : 3,
+    "cost" : 7,
+    "prestigePointsGained" : 4
+  },
+  {
+    "cardId" : "b19",
+    "era" : 3,
+    "cost" : 6,
+    "prestigePointsGained" : 6
+  },
+  {
+    "cardId" : "b20",
+    "era" : 3,
+    "cost" : 9,
+    "prestigePointsGained" : 3
+  },
+  {
+    "cardId" : "b21",
+    "era" : 3,
+    "cost" : 10,
+    "prestigePointsGained" : 25
+  }
+]

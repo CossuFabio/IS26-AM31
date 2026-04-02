@@ -12,11 +12,12 @@ public class PaintingEventCard extends EventCard {
 
     @JsonCreator
     public PaintingEventCard(
+            @JsonProperty("cardId") String cardId,
             @JsonProperty("era") int era,
             @JsonProperty("minArtist")int minArtist,
             @JsonProperty("prestigePointsMalus") int prestigePointsMalus,
             @JsonProperty("prestigePointsBonus") int prestigePointsBonus){
-        super(era);
+        super(cardId, era);
         this.minArtist = minArtist;
         this.priority = 1+era;
         this.prestigePointsBonus = prestigePointsBonus;

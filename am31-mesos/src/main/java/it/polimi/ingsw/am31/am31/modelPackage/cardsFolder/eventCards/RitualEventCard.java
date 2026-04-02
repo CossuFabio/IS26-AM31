@@ -10,10 +10,11 @@ public class RitualEventCard extends EventCard {
 
     @JsonCreator
     public RitualEventCard(
+            @JsonProperty("cardId") String cardId,
             @JsonProperty("era") int era,
             @JsonProperty("prestigePointsMalus") int prestigePointsMalus,
             @JsonProperty("prestigePointsBonus") int prestigePointsBonus){
-        super(era);
+        super(cardId, era);
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;
         this.priority = 1+era;

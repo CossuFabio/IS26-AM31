@@ -11,10 +11,11 @@ public class HuntEventCard extends EventCard {
 
     @JsonCreator
     public HuntEventCard(
+            @JsonProperty("cardId") String cardId,
             @JsonProperty("era") int era,
             @JsonProperty("foodBonus") int foodBonus,
             @JsonProperty("prestigePointsBonus") int prestigePointsBonus){
-        super(era);
+        super(cardId, era);
         this.foodBonus = foodBonus;
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = 0;

@@ -27,9 +27,10 @@ public abstract class Card {
 
    @JsonIgnore
     protected final int era;
-
-    protected Card(int era) {
-     this.era = era;
+    protected final String cardId;
+    protected Card(String cardId, int era) {
+        this.era = era;
+        this.cardId = cardId;
     }
 
     public int getEra () {
@@ -41,7 +42,12 @@ public abstract class Card {
     public int getMinPlayers() {
         return 2;
     }
+    public String getCardId(){return this.cardId; }
+
+    public boolean equals(Card card){return this.cardId.equals(card.cardId);  }
 
     public abstract String toString();
+
+
 
 }

@@ -145,10 +145,6 @@ public class Game {
     }
 
 
-
-
-
-
 //    public void DrawChoiceAction(Player, Card)
     //turn draw manager, gestisce le carte da pescare e se può pescare.
     //se al player spetta pescata, legge la carta e pesca. drawfrom* controlla se la carta c'è e tt cose.

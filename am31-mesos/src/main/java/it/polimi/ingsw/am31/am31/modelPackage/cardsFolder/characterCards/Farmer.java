@@ -8,10 +8,11 @@ public class Farmer extends CharacterCard {
     private final int discount;
     @JsonCreator
     public Farmer(
+            @JsonProperty("cardId") String cardId,
             @JsonProperty("era")int era,
             @JsonProperty("minPlayers")int minPlayers,
             @JsonProperty("discount") int discount){
-        super(era,minPlayers);
+        super(cardId, era,minPlayers);
         this.discount = discount;
     }
 

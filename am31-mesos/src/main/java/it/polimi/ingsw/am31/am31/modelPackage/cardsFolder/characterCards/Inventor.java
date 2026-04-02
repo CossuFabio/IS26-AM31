@@ -7,10 +7,12 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 public class Inventor extends CharacterCard {
     private final IconEnum icon;
     @JsonCreator
-    public Inventor(@JsonProperty("era")int era,
-                    @JsonProperty("minPlayers") int minPlayers,
-                    @JsonProperty("icon") IconEnum icon) {
-        super(era, minPlayers);
+    public Inventor(
+            @JsonProperty("cardId") String cardId,
+            @JsonProperty("era")int era,
+            @JsonProperty("minPlayers") int minPlayers,
+            @JsonProperty("icon") IconEnum icon) {
+        super(cardId, era, minPlayers);
         this.icon = icon;
     }
     @Override
