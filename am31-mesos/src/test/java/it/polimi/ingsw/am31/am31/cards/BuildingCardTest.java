@@ -14,7 +14,7 @@ class BuildingCardTest {
     private Player player;
     @BeforeEach
     void setUp() {
-        this.card = new BuildingCard (1, 2, 5, (Player player) -> player.increaseStars(3));
+        this.card = new BuildingCard ("dummy", 1, 2, 5, (Player player) -> player.increaseStars(3));
         this.player = new Player("BLUE", Color.BLUE);
     }
     @Test

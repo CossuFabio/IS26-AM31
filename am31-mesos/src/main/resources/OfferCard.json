@@ -3,48 +3,55 @@
     "food" : 3,
     "drawFromUpper" : 0,
     "drawFromUnder" : 0,
-    "minPlayers" : 5
+    "minPlayers" : 5,
+    "offerCardId" : "A"
   },
 
   {
     "food" : 0,
     "drawFromUpper" : 0,
     "drawFromUnder" : 1,
-    "minPlayers" : 2
+    "minPlayers" : 2,
+    "offerCardId" : "B"
   },
 
   {
     "food" : 0,
     "drawFromUpper" : 1,
     "drawFromUnder" : 0,
-    "minPlayers" : 2
+    "minPlayers" : 2,
+    "offerCardId" : "C"
   },
 
   {
     "food" : 0,
     "drawFromUpper" : 0,
     "drawFromUnder" : 2,
-    "minPlayers" : 3
+    "minPlayers" : 3,
+    "offerCardId" : "D"
   },
 
   {
     "food" : 0,
     "drawFromUpper" : 1,
     "drawFromUnder" : 1,
-    "minPlayers" : 2
+    "minPlayers" : 2,
+    "offerCardId" : "E"
   },
 
   {
     "food" : 0,
     "drawFromUpper" : 2,
     "drawFromUnder" : 0,
-    "minPlayers" : 2
+    "minPlayers" : 2,
+    "offerCardId" : "F"
   },
 
   {
     "food" : 0,
     "drawFromUpper" : 2,
     "drawFromUnder" : 1,
-    "minPlayers" : 4
+    "minPlayers" : 4,
+    "offerCardId" : "G"
   }
 ]

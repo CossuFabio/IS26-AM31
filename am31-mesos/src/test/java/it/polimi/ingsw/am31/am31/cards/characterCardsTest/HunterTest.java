@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HunterTest {
 
-    Hunter hunterNoMark = new Hunter(1 ,2,false);
-    Hunter hunterMark = new Hunter(2,2,true);
+    Hunter hunterNoMark = new Hunter("dummy", 1 ,2,false);
+    Hunter hunterMark = new Hunter("dummy", 2,2,true);
 
 
 

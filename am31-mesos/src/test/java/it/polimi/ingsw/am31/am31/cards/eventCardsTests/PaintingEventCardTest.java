@@ -18,11 +18,11 @@ class PaintingEventCardTest {
 
     @BeforeEach
     void setUp() {
-        this.eventCard = new PaintingEventCard(1, 2, 3, 3);
+        this.eventCard = new PaintingEventCard("dummy", 1, 2, 3, 3);
         this.players = new ArrayList<>();
         players.add(new Player("BLUE", Color.BLUE));
-        players.getFirst().addCard(new Artist(1,2));
-        players.getFirst().addCard(new Artist(1, 2));
+        players.getFirst().addCard(new Artist("dummy", 1,2));
+        players.getFirst().addCard(new Artist("dummy", 1, 2));
         players.add(new Player("RED", Color.RED));
     }
         @Test

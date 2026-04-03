@@ -22,11 +22,11 @@ public class Board {
     private final ArrayList<BuildingCard> underBLine;
 
 
-    public Board(int numPlayers) throws IOException {
+    public Board(int numPlayers, List<OfferCard> offerCardsCatalog) throws IOException {
         CardLoader loader = new CardLoader();
-        List<OfferCard> catalog = loader.offerCardLoader();
 
-        this.offerTrack = (ArrayList<OfferCard>) catalog.stream().filter(c -> c.getMinPlayers() <= numPlayers)
+
+        this.offerTrack = (ArrayList<OfferCard>) offerCardsCatalog.stream().filter(c -> c.getMinPlayers() <= numPlayers)
                 .collect(Collectors.toList());
 
         upperLine = new ArrayList<Card>();

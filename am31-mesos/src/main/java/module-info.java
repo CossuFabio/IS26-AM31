@@ -3,6 +3,7 @@ module it.polimi.ingsw.am31.am31 {
     requires javafx.fxml;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
+    requires java.rmi;
     //requires it.polimi.ingsw.am31.am31;
 
 
@@ -30,5 +31,7 @@ module it.polimi.ingsw.am31.am31 {
     opens it.polimi.ingsw.am31.am31.modelPackage.playerFolder to javafx.fxml;
     exports it.polimi.ingsw.am31.am31.modelPackage;
     opens it.polimi.ingsw.am31.am31.modelPackage to javafx.fxml;
+    exports it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers;
+    opens it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers to javafx.fxml;
 
 }

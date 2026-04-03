@@ -12,7 +12,7 @@ class EventCardTest {
     private EventCard eventCard;
     @BeforeEach
     void  setUp() {
-        this.eventCard = new SustainEventCard(1, 2);
+        this.eventCard = new SustainEventCard("dummy", 1, 2);
     }
 
     @Test

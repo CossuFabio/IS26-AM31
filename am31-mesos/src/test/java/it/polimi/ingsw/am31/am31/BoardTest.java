@@ -17,9 +17,9 @@ public class BoardTest {
 
     @BeforeEach
     void setup () throws IOException {
-        this.board = new Board(2);
-        this.ccard = new Artist(1,2);
-        this.bcard = new BuildingCard (1,1,1,null);
+        this.board = new Board(2, TestUtilities.getJSONGameResources().getOfferCards());
+        this.ccard = new Artist("dummy", 1,2);
+        this.bcard = new BuildingCard ("dummy", 1,1,1,null);
     }
     @Test
     void TestShouldAddUpper () {

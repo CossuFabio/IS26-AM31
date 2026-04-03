@@ -21,8 +21,8 @@ class RitualEventCardTest {
     void setUp() {
         int stars = 2;
         int era = 1;
-        this.shaman = new Shaman(era,2, stars);
-        this.card= new RitualEventCard(1,2,3);
+        this.shaman = new Shaman("dummy", era,2, stars);
+        this.card= new RitualEventCard("dummy", 1,2,3);
         this.players = new ArrayList<>();
         players.add(new Player("BLUE", Color.BLUE));
         players.get(0).addCard(shaman);

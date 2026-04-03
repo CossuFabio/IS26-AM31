@@ -13,9 +13,10 @@ import java.util.List;
 
 public class JsonTribeCardsSupplier implements IResourceSupplier<List<Card>> {
 
-
-
     private final List<Card> resources;
+
+
+
 
     public JsonTribeCardsSupplier() throws IOException{
 
@@ -27,8 +28,8 @@ public class JsonTribeCardsSupplier implements IResourceSupplier<List<Card>> {
     }
 
     @Override
-    public List<Card> getResources() throws IOException {
-        return resources;
+    public List<Card> getResources(){
+        return resources.stream().toList();
     }
 
 }

@@ -46,6 +46,7 @@ public abstract class Card {
 
     public boolean equals(Card card){return this.cardId.equals(card.cardId);  }
 
+
     public abstract String toString();
 
 

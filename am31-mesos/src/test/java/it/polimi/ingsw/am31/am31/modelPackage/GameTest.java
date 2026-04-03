@@ -49,8 +49,8 @@ class GameTest {
                 new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()
         ));
 
-        game.getBoard().addUpper(new BuildingCard(1,1,1,null));
-        game.getBoard().addLower(new BuildingCard(2,2,2,null));
+        game.getBoard().addUpper(new BuildingCard("dummy", 1,1,1,null));
+        game.getBoard().addLower(new BuildingCard("dummy", 2,2,2,null));
         assertEquals(2, game.getBoard().getUnderBLine().getFirst().getEra());
         assertEquals(1, game.getBoard().getUpperBLine().getFirst().getEra()); //we check if the cards were added
         //change era should move the lower and delete the lower card

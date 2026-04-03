@@ -17,10 +17,10 @@ class ShamanTest {
     private List<Player> players;
     private final int era = 1;
     private final int stars = 2;
-
+    private String id = "dummy";
     @BeforeEach
     void setUp() {
-        this.shaman = new Shaman(era, 2,stars);
+        this.shaman = new Shaman(id, era, 2,stars);
         this.players = new ArrayList<>();
         players.add(new Player("BLUE", Color.BLUE));
         players.getFirst().addCard(shaman);

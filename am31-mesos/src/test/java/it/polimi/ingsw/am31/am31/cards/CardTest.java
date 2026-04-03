@@ -11,7 +11,7 @@ class CardTest {
     private Card card;
     @BeforeEach
     void setUp() {
-        this.card= new SustainEventCard(1,2);
+        this.card= new SustainEventCard("dummy", 1,2);
     }
     @Test
     void TestShiouldgetEra() {

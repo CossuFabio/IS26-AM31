@@ -12,7 +12,7 @@ class OfferCardTest {
     private OfferCard offerCard;
 
     @BeforeEach
-    void setUp() {this.offerCard = new OfferCard(0, 2, 0, 2);}
+    void setUp() {this.offerCard = new OfferCard("dummy", 0, 2, 0, 2);}
 
     @Test
     void shouldNotBeFree() {

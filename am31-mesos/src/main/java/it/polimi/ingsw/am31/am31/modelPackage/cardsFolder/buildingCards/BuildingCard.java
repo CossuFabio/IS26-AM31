@@ -21,8 +21,8 @@ public class BuildingCard extends Card implements IPickable {
     //  new Building(era, cost, pp, (player) -> player.editPP(25));
 
     //TODO : ADD IDS TO BUILDINGS WHEN DOING JSON
-    public BuildingCard (int era, int cost, int prestigePointsGained, Consumer<Player> effect){
-        super("IdProvv", era);
+    public BuildingCard (String cardId, int era, int cost, int prestigePointsGained, Consumer<Player> effect){
+        super(cardId, era);
         this.cost = cost;
         this.prestigePointsGained = prestigePointsGained;
         this.effect = effect;

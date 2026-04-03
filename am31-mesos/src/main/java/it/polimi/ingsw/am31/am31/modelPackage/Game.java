@@ -38,6 +38,7 @@ public class Game {
 
     //Setup
     public Game (int nPlayers, GameResources gameResources) throws IOException {
+
         roundNumber=0; //o 1
         players= new ArrayList<Player>();
 
@@ -50,7 +51,7 @@ public class Game {
         this.gameResources = gameResources;
         tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
         buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
-        board= new Board(nPlayers);
+        board= new Board(nPlayers, gameResources.getOfferCards());
     }
 
     public void addPlayer(Player player) throws TooManyPlayersException {
@@ -137,7 +138,7 @@ public class Game {
     public void resetGame() throws IOException, EmptyDeckException{
         players.forEach(player->{player.editFood(-player.getFood());});
         players.forEach(player->{player.editPrestigePoints(-player.getPrestigePoints());});
-        board = new Board(nPlayers);
+        board = new Board(nPlayers, gameResources.getOfferCards());
         buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
         tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
         turnOrder = new TurnOrder(nPlayers);
@@ -332,5 +333,9 @@ public class Game {
                 roundNumber == GameConstants.ROUNDS_NUMBER || false //Check PHASE
                 );
     }
+
+    public GameResources getGameResources(){return this.gameResources; }
+    public List<Player> getPlayersList(){return players.stream().toList();}
+    public int getNumPlayers(){return this.nPlayers;}
 
 }

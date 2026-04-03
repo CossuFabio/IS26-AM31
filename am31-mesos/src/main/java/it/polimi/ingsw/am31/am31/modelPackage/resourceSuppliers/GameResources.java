@@ -21,15 +21,15 @@ public class GameResources {
         this.offerCardsSupplier = offerCardsSupplier;
     }
 
-    public List<Card> getTribeCards() throws IOException {
+    public List<Card> getTribeCards(){
         return tribeCardsSupplier.getResources();
     }
 
-    public List<BuildingCard> getBuildingCards() throws IOException {
+    public List<BuildingCard> getBuildingCards(){
         return buildingsSupplier.getResources();
     }
 
-    public List<OfferCard> getOfferCards() throws IOException {
+    public List<OfferCard> getOfferCards(){
         return offerCardsSupplier.getResources();
     }
 }

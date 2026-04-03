@@ -11,6 +11,7 @@ public class OfferCard {
     private final int drawFromUpper;
     private final int drawFromUnder;
     private final int minPlayers;
+    private final String offerCardId;
     private Player player;
 
     //private int drawFromUpperThisTurn = 0
@@ -18,10 +19,12 @@ public class OfferCard {
 
     @JsonCreator
     public OfferCard(
+            @JsonProperty("offerCardId") String offerCardId,
             @JsonProperty("food") int food,
             @JsonProperty("drawFromUnder")int drawFromUnder,
             @JsonProperty("drawFromUpper") int drawFromUpper,
             @JsonProperty("minPlayers")int minPlayers){
+        this.offerCardId = offerCardId;
         this.food = food;
         this.drawFromUnder = drawFromUnder;
         this.drawFromUpper = drawFromUpper;
@@ -57,5 +60,6 @@ public class OfferCard {
         this.player = null;
     }
 
+    public String getOfferCardId(){return this.offerCardId;}
 
 }
