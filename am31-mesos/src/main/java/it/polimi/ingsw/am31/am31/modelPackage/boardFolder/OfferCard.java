@@ -62,4 +62,5 @@ public class OfferCard {
 
     public String getOfferCardId(){return this.offerCardId;}
 
+
 }

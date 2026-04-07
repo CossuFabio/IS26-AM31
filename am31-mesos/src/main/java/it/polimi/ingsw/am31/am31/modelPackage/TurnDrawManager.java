@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+
 public class TurnDrawManager {
 
     private int drawFromUpper = 0;
@@ -8,7 +10,11 @@ public class TurnDrawManager {
     private int drawFromUpperThisTurn = 0;
     private int drawFromLowerThisTurn = 0;
 
-    public TurnDrawManager(){}
+    private final Board gameBoard;
+
+    public TurnDrawManager(Board board){
+        this.gameBoard = board;
+    }
 
     public void setUp(int drawFromUpper, int drawFromLower){
 
@@ -39,7 +45,10 @@ public class TurnDrawManager {
     }
 
     public boolean hasFinishedDrawing(){
-        return (drawFromUpper == drawFromUpperThisTurn && drawFromLower == drawFromLowerThisTurn);
+        boolean hasFinishedUpper = (drawFromUpperThisTurn == drawFromUpper) || (gameBoard.getUpperLine().isEmpty());
+        boolean hasFinishedLower = (drawFromLowerThisTurn == drawFromLower) || (gameBoard.getUnderLine().isEmpty());
+
+        return hasFinishedUpper && hasFinishedLower;
     }
 
 }

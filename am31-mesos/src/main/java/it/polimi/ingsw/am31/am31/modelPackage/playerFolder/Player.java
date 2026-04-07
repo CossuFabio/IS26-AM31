@@ -46,6 +46,9 @@ public class Player {
     private RitualWinHandler ritualWinHandler;
     private IEndRoundHandler endRoundHandler;
 
+    private int bonusDrawFromUpper;
+    private int bonusDrawFromLower;
+
     public Player(String nickname, Color color) {
         this.nickname = nickname;
         this.color = color;
@@ -64,6 +67,9 @@ public class Player {
         this.ritualLoseHandler = new RitualLoseHandler();
         this.ritualWinHandler = new RitualWinHandler();
         this.endRoundHandler = new DefaultEndRoundHandler();
+
+        bonusDrawFromLower = 0;
+        bonusDrawFromUpper = 0;
     }
 
     public String getNickname() {
@@ -197,9 +203,20 @@ public class Player {
         this.ritualLoseHandler.setStrategy(newStrategy.get());
     }
 
+    public boolean hasBonusDraw(){return bonusDrawFromLower > 0 || bonusDrawFromUpper > 0 ; }
+
+    public void addBonusDrawFromUpper(int drawBonus){ this.bonusDrawFromUpper += drawBonus; }
+
+    public void addBonusDrawFromLower(int drawBonus){ this.bonusDrawFromLower += drawBonus; }
+
+    public int getBonusDrawFromUpper(){ return this.bonusDrawFromUpper; }
+    public int getBonusDrawFromLower(){ return this.bonusDrawFromLower; }
+
+
     public boolean equals(Player player){
         return this == player || this.nickname.equals(player.nickname);
     }
+
 
 
 }

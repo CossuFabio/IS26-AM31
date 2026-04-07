@@ -23,7 +23,7 @@ public class ResourceFinder {
     private final Game game;
 
     //We use hashmaps here since the resources of the game never change.
-    //Cards and offer track not used during the game are saved, but the model will throw error when trying to access non valid resource
+    //Cards and offer track not used during the game are saved, but the model will throw error when trying to access non-valid resource
     private final Map<String, OfferCard> offerCardsRegistry;
     private final Map<String, Card> cardsRegistry;
 

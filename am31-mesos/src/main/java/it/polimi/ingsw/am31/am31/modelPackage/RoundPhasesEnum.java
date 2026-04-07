@@ -1,9 +1,13 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
+
 public enum RoundPhasesEnum {
 
     TOTEM_PLACING,
     ACTION_PHASE,
-    END_TURN
+    BONUS_DRAWING_PHASE,
+    END_TURN;
+
 
 }

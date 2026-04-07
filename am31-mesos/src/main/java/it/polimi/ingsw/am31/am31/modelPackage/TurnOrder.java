@@ -29,10 +29,15 @@ public class TurnOrder {
     //when every player is on the OfferTrack, TurnOrder resets. It is then rebuilt with setPlayer which is called
     //every time a player finishes their move on the OfferTrack to set the new order for next turn.
 
+    //For the first round they must not resolve their end turn effect!
+    public void setPlayerFirstRound(Player player){
+        int place = currentPlayer;
+        players.add(place, player);
+        this.currentPlayer++;
+        if(currentPlayer == numPlayers) //index gets reset for next round
+            currentPlayer = 0;
 
-//    public int getCurrentPlayer(){
-//        return currentPlayer;
-//    }
+    }
 
     public Player getPlayerActing(){
         return players.get(currentPlayer);

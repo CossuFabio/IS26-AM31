@@ -21,19 +21,28 @@ import java.util.*;
 import static java.util.Comparator.*;
 
 public class Game {
+
+    //Game attributes
     private int roundNumber;
     private final List<Player> players;
+    private final int nPlayers;
+
+    //Game objects
     private Board board;
     private BuildingDeck buildingDeck;
     private TribeDeck tribeDeck;
     private TurnOrder turnOrder;
+
+    //Game state attributes
     private int era;
     //private GameState gameState;
-    private final int nPlayers;
     private RoundPhasesEnum currentRoundPhase;
-    private final TurnDrawManager drawManager;
     private Player playerActing;
 
+    //Game flow helper
+    private final TurnDrawManager drawManager;
+
+    //Utilities
     private final GameResources gameResources;
 
     //Setup
@@ -46,12 +55,14 @@ public class Game {
         this.nPlayers= nPlayers;
         this.turnOrder = new TurnOrder(nPlayers);
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
-        this.drawManager = new TurnDrawManager();
+
 
         this.gameResources = gameResources;
         tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
         buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
         board= new Board(nPlayers, gameResources.getOfferCards());
+
+        this.drawManager = new TurnDrawManager(board);
     }
 
     public void addPlayer(Player player) throws TooManyPlayersException {
@@ -72,6 +83,11 @@ public class Game {
             throw new InsufficientPlayersNumberException();
         }
 
+        //Just a placeholder, otherwise this would be null and risk a NullPointerException. It will be ignored because the first phase
+        //Is TOTEM_PLACING
+        playerActing = players.getFirst();
+
+
         //Assigning random order for the first turn
         Collections.shuffle(players);
 
@@ -80,8 +96,8 @@ public class Game {
             players.get(i).editFood(GameConstants.STARTING_FOOD[i]);
         }
 
-        //Setting the players in TurnOrder
-        players.forEach(p -> turnOrder.setPlayer(p));
+        //Setting the players in TurnOrder (using the first round function!)
+        players.forEach(p -> turnOrder.setPlayerFirstRound(p));
 
         //Setup the underLine
         CountVisitor eventCounter = new CountVisitor();
@@ -150,18 +166,6 @@ public class Game {
             System.err.println(e.getMessage());
         }
     }
-
-
-//    public void DrawChoiceAction(Player, Card)
-    //turn draw manager, gestisce le carte da pescare e se può pescare.
-    //se al player spetta pescata, legge la carta e pesca. drawfrom* controlla se la carta c'è e tt cose.
-    //dopo la action,aggiorna le cardremaining, controlla se il player sta apposto
-    //(controller) in tal caso, passa alla tessera dopo, HandleEndTurn e setup con il giocatore nuovo. -> se finito
-    //(controller) cambio di fase a END_TURN
-    //FINE
-
-
-
 
 
     //TODO: fix this (Discuss together)
@@ -242,23 +246,28 @@ public class Game {
     //se non fattibile, lancia eccezione o del player o tessera già presa
     //se finito, turnorder lancia exception, catchata da controller
     //(controller)in tal caso fa setup della TurnDrawManager e assegna cibo della tessera (caso tessera n1).
-    public void totemChoiceAction(Player player, OfferCard offerCard) throws WrongPlayerTurnException, EverybodyPlayedException, OfferTrackTileAlreadyTakenException {
-        if(!(player == getPlayerActingTotemPhase())) throw new WrongPlayerTurnException();
-        if(offerCard.isFree())
+    public void totemChoiceAction(Player player, OfferCard offerCard) throws WrongPlayerTurnException, EverybodyPlayedException, OfferTrackTileAlreadyTakenException, WrongRoundPhaseException {
+        if(currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) {
+            throw new WrongRoundPhaseException();
+        }
+        if (!(player == getPlayerActingTotemPhase())) throw new WrongPlayerTurnException();
+        if (offerCard.isFree())
             offerCard.setPlayer(player);
         else
             throw new OfferTrackTileAlreadyTakenException();
         turnOrder.goToNextPlayer();
     }
 
+    public void playerDrawFromUpper(Player player, IPickable card) throws WrongPlayerTurnException, CardNotFoundException, InvalidPickException, InvalidDrawException, WrongRoundPhaseException{
 
-    public void playerDrawFromUpper(Player player, IPickable card) throws WrongPlayerTurnException, CardNotFoundException, InvalidPickException, InvalidDrawException{
+        //Check if the phase is correct
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) {throw new WrongRoundPhaseException();}
 
         //Check if the draw comes from the correct player
-        if(!player.equals(playerActing)) throw new WrongPlayerTurnException();
+        if (!player.equals(playerActing)) throw new WrongPlayerTurnException();
 
         //Check if player can draw from top
-        if(!drawManager.canDrawFromUpper()) throw new InvalidDrawException();
+        if (!drawManager.canDrawFromUpper()) throw new InvalidDrawException();
 
         //Throws invalid pick exception
         card.canPick(player);
@@ -272,7 +281,9 @@ public class Game {
 
     }
 
-    public void playerDrawFromLower(Player player, IPickable card) throws WrongPlayerTurnException, CardNotFoundException, InvalidPickException, InvalidDrawException{
+    public void playerDrawFromLower(Player player, IPickable card) throws WrongPlayerTurnException, CardNotFoundException, InvalidPickException, InvalidDrawException, WrongRoundPhaseException{
+
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) {throw new WrongRoundPhaseException();}
 
         //Check if the draw comes from the correct player
         if(!player.equals(playerActing)) throw new WrongPlayerTurnException();
@@ -286,26 +297,46 @@ public class Game {
         //Throws not found exception
         board.drawFromLower(card);
 
-        //This method handles the dispatch of which deck will the card be added (TribeDeck or BuildingDeck)
+
         drawManager.drawLower();
+
+        //This method handles the dispatch of which deck will the card be added (TribeDeck or BuildingDeck)
         card.addToPlayer(player);
 
     }
 
-    //game.getOfferTrack()
-    //foreach track
-    //se non vuota => prende giocatore e fa setupplayeracting(player, offertrack)
-    //quando deve aggiornare => va al prossimo
-    //Quando finiscoono => fase = fineturno
+    public boolean isGameFinished(){
+        //false values are placeholder
+        return (roundNumber == GameConstants.ROUNDS_NUMBER && currentRoundPhase == RoundPhasesEnum.END_TURN);
+    }
 
 
+    //---Getters---
     public TurnOrder getTurnOrder(){
         return turnOrder;
     }
-
     public Board getBoard(){return board;}
+    public GameResources getGameResources(){return this.gameResources; }
+    public List<Player> getPlayersList(){return players.stream().toList();}
 
+        //May differ from players.size() in case of disconnections!
+    public int getNumPlayers(){return this.nPlayers;}
+
+
+    public Player getPlayerActingDrawPhase(){
+        return this.playerActing;
+    }
+    public Player getPlayerActingTotemPhase(){
+        return turnOrder.getPlayerActing();
+    }
+    public RoundPhasesEnum getCurrentRoundPhase(){return this.currentRoundPhase;}
+    public boolean hasCurrentPlayerFinishedDrawing(){return this.drawManager.hasFinishedDrawing();}
+
+
+    //---Setters---
     //Sets up the next player and how many cards should it draw
+
+
     public void setUpPlayerActing(Player nextPlayerActing, OfferCard offerCardChosen){
         this.playerActing = nextPlayerActing;
         drawManager.setUp(offerCardChosen.getDrawFromUpper(), offerCardChosen.getDrawFromUnder());
@@ -315,27 +346,40 @@ public class Game {
 
     }
 
-    public Player getPlayerActingDrawPhase(){
-        return this.playerActing;
-    }
-
-    public Player getPlayerActingTotemPhase(){
-        return turnOrder.getPlayerActing();
-    }
-
-    public RoundPhasesEnum getCurrentRoundPhase(){return this.currentRoundPhase;}
-
     public void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){this.currentRoundPhase = currentRoundPhase;}
 
-    public boolean isGameFinished(){
-        //false values are placeholder
-        return (
-                roundNumber == GameConstants.ROUNDS_NUMBER || false //Check PHASE
-                );
-    }
 
-    public GameResources getGameResources(){return this.gameResources; }
-    public List<Player> getPlayersList(){return players.stream().toList();}
-    public int getNumPlayers(){return this.nPlayers;}
+    public void setNextPlayerDrawing() throws IllegalStateException, WrongPlayerTurnException{
+
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new WrongPlayerTurnException();
+        if(!drawManager.hasFinishedDrawing()) throw new IllegalStateException("Wrong usage of method setNextPlayerDrawing()! Previous player must finish drawing");
+
+        //Must free the Offer Card of the previous player
+        Optional<OfferCard> previousPlayerOfferCard = board.getOfferCards().stream().filter(card -> !card.isFree()).findFirst();
+
+        //This check should never fail but it is better to check
+        if(!previousPlayerOfferCard.isPresent()) throw new IllegalStateException("Something went wrong in setNextPlayerDrawing()");
+
+        //Frees the offerCard
+        turnOrder.setPlayer(previousPlayerOfferCard.get().getPlayer());
+        previousPlayerOfferCard.get().free();
+
+
+        Optional<OfferCard> nextOfferCard = board.getOfferCards().stream().filter(card -> !card.isFree()).findFirst();
+
+        //If no player is found, the ACTION_PHASE has ended (no one is on the offer track)
+        if(!nextOfferCard.isPresent()){
+            currentRoundPhase = RoundPhasesEnum.BONUS_DRAWING_PHASE;
+            return;
+        }
+
+        OfferCard offerCard = nextOfferCard.get();
+        Player nextPlayer = offerCard.getPlayer();
+
+
+        setUpPlayerActing(nextPlayer, offerCard);
+
+
+    }
 
 }
