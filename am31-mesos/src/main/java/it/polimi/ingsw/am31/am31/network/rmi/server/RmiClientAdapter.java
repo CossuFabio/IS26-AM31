@@ -1,17 +1,21 @@
 package it.polimi.ingsw.am31.am31.network.rmi.server;
 
 import it.polimi.ingsw.am31.am31.network.ClientConnection;
-import it.polimi.ingsw.am31.am31.network.rmi.client.VirtualViewRmi;
+
+import java.rmi.RemoteException;
 
 public class RmiClientAdapter implements ClientConnection {
-    private final VirtualViewRmi client;
+    private final VirtualViewRmi clientStub;
     public RmiClientAdapter (VirtualViewRmi client) {
-        this.client = client;
+        this.clientStub = client;
     }
 
     @Override
-    public void sendUpdate(Object data) {
-
+    public void sendUpdate(Object data){
+        try{
+        clientStub.receiveUpdate(data);
+    }catch (RemoteException e){
+        System.err.println("RmiClientAdapter.sendUpdate error");
+        }
     }
-
 }

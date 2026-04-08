@@ -16,6 +16,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 
 import java.io.IOException;
+import java.lang.invoke.WrongMethodTypeException;
 import java.util.*;
 
 import static java.util.Comparator.*;
@@ -275,8 +276,9 @@ public class Game {
         //Throws not found exception
         board.drawFromUpper(card);
 
-        //This method handles the dispatch of which deck will the card be added (TribeDeck or BuildingDeck)
         drawManager.drawUpper();
+        //This method handles the dispatch of which deck will the card be added (TribeDeck or BuildingDeck)
+
         card.addToPlayer(player);
 
     }
@@ -305,10 +307,36 @@ public class Game {
 
     }
 
+
+
+    //Flags for controller
     public boolean isGameFinished(){
         //false values are placeholder
         return (roundNumber == GameConstants.ROUNDS_NUMBER && currentRoundPhase == RoundPhasesEnum.END_TURN);
     }
+    public boolean isTotemPlacingPhaseFinished() throws WrongRoundPhaseException{
+        if(currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) {throw new WrongRoundPhaseException();}
+        return turnOrder.everybodyPlayed();
+    }
+    public boolean isDrawPhaseFinished() throws WrongRoundPhaseException{
+
+        //Phase must be ACTION_PHASE
+        if (this.currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) {
+            throw new WrongRoundPhaseException();
+        }
+
+        //If no offer card is occupied, everybody has drawed
+        return board.getOfferCards().stream()
+                .noneMatch(offerCard -> !offerCard.isFree());
+    }
+
+    //TODO NOT SURE IF CORRECT - REVIEW
+    public boolean isBonusDrawPhaseFinished() throws WrongRoundPhaseException{
+        if (this.currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) {throw new WrongRoundPhaseException();}
+        if(players.stream().noneMatch(player -> player.hasBonusDraw())) return true;
+        return drawManager.hasFinishedDrawing();
+    }
+
 
 
     //---Getters---
@@ -337,7 +365,9 @@ public class Game {
     //Sets up the next player and how many cards should it draw
 
 
+
     public void setUpPlayerActing(Player nextPlayerActing, OfferCard offerCardChosen){
+
         this.playerActing = nextPlayerActing;
         drawManager.setUp(offerCardChosen.getDrawFromUpper(), offerCardChosen.getDrawFromUnder());
 
@@ -346,12 +376,32 @@ public class Game {
 
     }
 
+    public void setUpDrawingPhase() throws WrongRoundPhaseException, IllegalAccessException {
+
+        //Must check if still in TOTEM_PLACING_PHASE
+        if(this.currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) throw new WrongRoundPhaseException();
+
+        //Checks if TOTEM_PLACING_PHASE is finished - IllegalAccessException is still a placeholder
+        if(!turnOrder.everybodyPlayed()) throw new IllegalAccessException();
+
+        this.currentRoundPhase  = RoundPhasesEnum.ACTION_PHASE;
+
+        Optional<OfferCard> firstPlayer = board.getOfferCards().stream()
+                    .filter(offerCard -> !offerCard.isFree()).findFirst();
+
+        //Shouldn't happen but better checking
+        if(!firstPlayer.isPresent()) throw new IllegalStateException();
+
+        OfferCard offerCard = firstPlayer.get();
+        setUpPlayerActing(offerCard.getPlayer(), offerCard);
+
+    }
+
     public void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){this.currentRoundPhase = currentRoundPhase;}
 
+    public void setNextPlayerDrawing() throws IllegalStateException, WrongRoundPhaseException{
 
-    public void setNextPlayerDrawing() throws IllegalStateException, WrongPlayerTurnException{
-
-        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new WrongPlayerTurnException();
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new WrongRoundPhaseException();
         if(!drawManager.hasFinishedDrawing()) throw new IllegalStateException("Wrong usage of method setNextPlayerDrawing()! Previous player must finish drawing");
 
         //Must free the Offer Card of the previous player
@@ -369,7 +419,6 @@ public class Game {
 
         //If no player is found, the ACTION_PHASE has ended (no one is on the offer track)
         if(!nextOfferCard.isPresent()){
-            currentRoundPhase = RoundPhasesEnum.BONUS_DRAWING_PHASE;
             return;
         }
 
@@ -381,5 +430,7 @@ public class Game {
 
 
     }
+
+
 
 }
