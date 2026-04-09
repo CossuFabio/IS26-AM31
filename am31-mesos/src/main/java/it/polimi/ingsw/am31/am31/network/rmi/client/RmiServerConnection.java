@@ -11,12 +11,12 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
-public class RmiClient extends UnicastRemoteObject implements VirtualViewRmi, ServerConnection {
+public class RmiServerConnection extends UnicastRemoteObject implements VirtualViewRmi, ServerConnection {
 
     private final VirtualServerRmi serverStub;
     private final String identifier;
 
-    public RmiClient(String ip, int port, String identifier) throws RemoteException, NotBoundException {
+    public RmiServerConnection(String ip, int port, String identifier) throws RemoteException, NotBoundException {
         //vecchia versione: super()
 
         //modifica: porta fissa per il callback

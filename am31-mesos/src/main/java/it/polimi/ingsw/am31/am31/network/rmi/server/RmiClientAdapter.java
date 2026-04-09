@@ -9,7 +9,8 @@ public class RmiClientAdapter implements ClientConnection {
     public RmiClientAdapter (VirtualViewRmi client) {
         this.clientStub = client;
     }
-
+    //adapter contains the clients callback in clientStub, calls methods on the stub.
+    //adapter implements ClintConnection methods, callable by server on its clients
     @Override
     public void sendUpdate(Object data){
         try{

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.network;
 
-import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
+import it.polimi.ingsw.am31.am31.network.rmi.client.RmiServerConnection;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -24,10 +24,10 @@ public class Client {
         switch (type) {
             //ip is localhost
             //case 1 starts
-            case 1: connection = new RmiClient(ip,1100,nickname);
-                    ((RmiClient) connection).runCli();
+            case 1: connection = new RmiServerConnection(ip,1100,nickname);
+                    ((RmiServerConnection) connection).runCli();
                     break;
-            case 2://connection = new SocketClient
+            case 2://connection = new SocketServerConnection
                 break;
             default:
                 break;

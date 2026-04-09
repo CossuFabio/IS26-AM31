@@ -37,6 +37,7 @@ public class Server {
             client.sendUpdate(data);
         }
     }
+
     //old main put into start method
     public void start() {
             final String serverName = "MesosServer";
