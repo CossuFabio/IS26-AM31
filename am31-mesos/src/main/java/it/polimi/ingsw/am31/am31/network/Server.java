@@ -3,6 +3,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
 
 
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class Server {
     public void addClient(String identifier, ClientConnection clientConnection) {
         clients.put(identifier, clientConnection);
         System.out.println("Client " + identifier + " has been added");
+        //TODO add listener threads when accepting connection
     }
 
     //sends update to all clients
@@ -45,17 +47,21 @@ public class Server {
                     new RmiServer(serverName, 1100, this).start();
                 } catch (RemoteException e) {
                     System.out.println("RmiServer Fail");
+
+                //modifica: aggiunto un altro catch per la nuova eccezione
+                } catch (UnknownHostException e) {
+                    throw new RuntimeException(e);
                 }
             });
             rmiThread.start();
-            System.out.println("RmiServer on");
+            System.out.println("RmiServer on"); //Viene stampato immediatamente senza aspettare che sia effettivamente partito
 
             //SocketServer launch
             //TODO Thread socketThread = new Thread(() -> { new SocketServer(serverName,1100).start();});
     }
 
 
-    static void main (String[] args) throws RemoteException {
+    public static void main (String[] args) throws RemoteException {
         Server server = new Server();
         server.start();
     }

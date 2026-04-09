@@ -17,7 +17,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualViewRmi, Se
     private final String identifier;
 
     public RmiClient(String ip, int port, String identifier) throws RemoteException, NotBoundException {
-        super();
+        //vecchia versione: super()
+
+        //modifica: porta fissa per il callback
+        super(port+1);
+
         this.identifier = identifier;
         //connects to registry
         Registry registry = LocateRegistry.getRegistry(ip,port);
@@ -25,11 +29,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualViewRmi, Se
         //sends himself to server
         this.serverStub.connect(this.identifier,this);
     }
-//    private void run() throws RemoteException {
-//        //connects to the rmi server on server
-//        this.serverStub.connect("", this);
-//        this.runCli();
-//    }
+
    public void runCli() throws RemoteException {
         Scanner scan = new Scanner(System.in);
         while(true) {

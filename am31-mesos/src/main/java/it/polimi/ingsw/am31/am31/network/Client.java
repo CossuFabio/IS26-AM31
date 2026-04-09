@@ -13,15 +13,22 @@ public class Client {
 
         System.out.println("Enter Nickname: ");
         String nickname = scanner.nextLine();
+
+        //modifica:
+        System.out.println("Enter server IP: ");
+        String ip = scanner.nextLine(); // aggiunto
+
         System.out.println("Enter 1 for RMI, 2 for Socket: ");
         int type = scanner.nextInt();
         ServerConnection connection = null;
         switch (type) {
             //ip is localhost
-            case 1: connection = new RmiClient("127.0.0.1",1100,nickname);
+            //case 1 starts
+            case 1: connection = new RmiClient(ip,1100,nickname);
                     ((RmiClient) connection).runCli();
+                    break;
             case 2://connection = new SocketClient
-                ;
+                break;
             default:
                 break;
         }

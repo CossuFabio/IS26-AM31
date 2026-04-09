@@ -19,7 +19,7 @@ public class TurnOrder {
 
     public void setPlayer(Player player) {
         int place = currentPlayer;
-        players.add(place, player);
+        players.set(place, player);
         //end-turn effects get solved directly by player handler
         player.resolveEndTurn(place, numPlayers);
         this.currentPlayer++;
@@ -56,6 +56,7 @@ public class TurnOrder {
     }
 
 
-    public boolean everybodyPlayed(){ return players.size() == numPlayers; }
+    public boolean everybodyPlayed(){ return currentPlayer == numPlayers; }
 
 }
+

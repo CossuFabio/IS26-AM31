@@ -33,5 +33,7 @@ module it.polimi.ingsw.am31.am31 {
     opens it.polimi.ingsw.am31.am31.modelPackage to javafx.fxml;
     exports it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers;
     opens it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers to javafx.fxml;
-
+    exports it.polimi.ingsw.am31.am31.network;
+    exports it.polimi.ingsw.am31.am31.network.rmi.server;
+    exports it.polimi.ingsw.am31.am31.network.rmi.client;
 }

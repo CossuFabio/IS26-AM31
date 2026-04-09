@@ -55,8 +55,7 @@ public class Game {
         era = 1;
         this.nPlayers= nPlayers;
         this.turnOrder = new TurnOrder(nPlayers);
-        this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
-
+        this.currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
 
         this.gameResources = gameResources;
         tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
@@ -78,7 +77,9 @@ public class Game {
     }
 
     //TODO: Test This
-    public void gameStart() throws InsufficientPlayersNumberException, EmptyDeckException {
+    public void gameStart() throws WrongRoundPhaseException, InsufficientPlayersNumberException, EmptyDeckException {
+        
+        if(currentRoundPhase != RoundPhasesEnum.GAME_STARTING) throw new WrongRoundPhaseException();
 
         if(players.size()<nPlayers){
             throw new InsufficientPlayersNumberException();
@@ -124,11 +125,18 @@ public class Game {
         //Set up buildings trail (only upper)
         for(int i = 0; i <GameConstants.getEraOneBuildings(nPlayers); i++)
             board.addUpper((BuildingCard)buildingDeck.draw());
+
+        this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
     }
     
 
     //TODO : Test This
-    public List<Player> gameEnd(){
+    public List<Player> gameEnd() throws WrongRoundPhaseException{
+
+        if(!isGameFinished()) throw new WrongRoundPhaseException();
+
+        currentRoundPhase = RoundPhasesEnum.END_TURN;
+
         players.forEach(player->{player.resolveEndGame();});
         List<Player> scores = new  ArrayList<>();
         for (Player player : players) {
@@ -196,8 +204,11 @@ public class Game {
         }
     }
 
-    public void endRound(){
+    public void endRound() throws WrongRoundPhaseException{
 
+        if(!(this.currentRoundPhase == RoundPhasesEnum.BONUS_DRAWING_PHASE && isBonusDrawPhaseFinished())) throw new WrongRoundPhaseException();
+
+        this.currentRoundPhase = RoundPhasesEnum.END_TURN;
         //Players handle the end of the round
         players.forEach(player -> player.resolveEndRound());
         resolveEvents();
@@ -209,7 +220,6 @@ public class Game {
         }
         catch (EmptyDeckException e) { System.err.println(e.getMessage()); }
 
-        //setPhase TOTEM_PLACING
 
     }
 
@@ -347,7 +357,7 @@ public class Game {
     public GameResources getGameResources(){return this.gameResources; }
     public List<Player> getPlayersList(){return players.stream().toList();}
 
-        //May differ from players.size() in case of disconnections!
+    //May differ from players.size() in case of disconnections!
     public int getNumPlayers(){return this.nPlayers;}
 
 
@@ -363,8 +373,6 @@ public class Game {
 
     //---Setters---
     //Sets up the next player and how many cards should it draw
-
-
 
     public void setUpPlayerActing(Player nextPlayerActing, OfferCard offerCardChosen){
 
@@ -431,6 +439,24 @@ public class Game {
 
     }
 
+    public void setUpBonusDrawingPhase(){
 
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new WrongRoundPhaseException();
+
+        this.currentRoundPhase = RoundPhasesEnum.BONUS_DRAWING_PHASE;
+
+        Player playerWithBonus = players.stream().filter(player -> player.hasBonusDraw()).findFirst().orElse(null);
+
+        if(playerWithBonus == null) drawManager.setUp(0, 0);
+        else drawManager.setUp(playerWithBonus.getBonusDrawFromUpper(), playerWithBonus.getBonusDrawFromLower());
+
+
+    }
+
+    public void setUpTotemPlacingPhase(){
+        if(currentRoundPhase != RoundPhasesEnum.END_TURN) throw new WrongRoundPhaseException();
+        this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
+        roundNumber++;
+    }
 
 }
