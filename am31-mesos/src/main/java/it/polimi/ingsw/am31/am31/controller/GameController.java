@@ -25,6 +25,13 @@ public class GameController {
     }
 
 
+    public boolean isPlayerInGame(String nickname){
+        for(Player p: game.getPlayersList())
+            if(p.getNickname().equals(nickname))
+                return true;
+        return false;
+    }
+
     //-----Requests handling-----
     //TODO: Implement this, determine messages player needs to send to join
     public void handleAddPlayerMessage(NetworkRequest request){
@@ -154,6 +161,12 @@ public class GameController {
         }catch(WrongRoundPhaseException e){System.out.println(e.getMessage());}
 
     }
-
+    @Override
+    public String toString () {
+        return "N. of active players" + game.getPlayersList().size() + "\n N. needed players" + game.getNumPlayers();
+    }
+    public Game getGame () {
+        return this.game;
+    }
 
 }

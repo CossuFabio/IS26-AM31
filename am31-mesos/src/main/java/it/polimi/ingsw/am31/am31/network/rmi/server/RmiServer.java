@@ -1,10 +1,13 @@
 package it.polimi.ingsw.am31.am31.network.rmi.server;
 
+import it.polimi.ingsw.am31.am31.exceptions.TooManyPlayersException;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientConnection;
 import it.polimi.ingsw.am31.am31.network.Server;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.rmi.client.VirtualServerRmi;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -19,9 +22,6 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
     private String serverName;
 
     public RmiServer(String serverName,int port, Server mainServer) throws RemoteException {
-        //vecchia versione: super();
-
-        //modifica:
         super(port); //RMI usa una porta dinamica per l'oggetto remoto --> problema con i firewall
 
         this.port=port;
@@ -41,10 +41,23 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
             System.out.println("Connected "+identifier);
     }
 
-    public void start () throws RemoteException, UnknownHostException {
+    @Override
+    public void showLobbies(){
+        mainServer.showLobbies();
+    }
+    @Override
+    public void createGame(int nplayers) throws IOException {
+        mainServer.createNewLobby(nplayers);
+    }
 
-        //modifica: di default java usa l'hostname locale che non è raggiungibile esternamente
-        //aggiunta anche l'eccezione UnknownHostException
+    @Override
+    public void joinGameLobby (String nickname, Color color, int i) throws TooManyPlayersException {
+        mainServer.joinGameLobby(nickname,color,i);
+    }
+
+    public void start () throws RemoteException, UnknownHostException {
+        //java uses local hostname by default, not reachable by other machines
+        //added UnknownHostException
         System.setProperty("java.rmi.server.hostname", InetAddress.getLocalHost().getHostAddress());
 
         Registry registry = LocateRegistry.createRegistry(port);
