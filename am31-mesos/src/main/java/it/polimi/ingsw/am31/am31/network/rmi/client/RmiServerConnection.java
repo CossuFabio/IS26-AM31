@@ -36,7 +36,7 @@ public class RmiServerConnection extends UnicastRemoteObject implements  Virtual
 
    public void runCli() throws IOException, TooManyPlayersException {
         Scanner scan = new Scanner(System.in);
-       System.out.print("Commands:\ncreateGame [nplayer]\nshowLobbies\njoinLobby [number of lobby] [totem's color]");
+       System.out.print("Commands:\ncreateGame [nplayer]\nshowLobbies\njoinLobby [number of lobby] [totem's color]\n");
         while(true) {
             System.out.print("> ");
             // commands request
