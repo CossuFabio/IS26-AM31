@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.network;
 import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.exceptions.TooManyPlayersException;
+import it.polimi.ingsw.am31.am31.exceptions.UsernameAlreadyTakenException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
@@ -52,7 +53,7 @@ public class Server {
             try {
                 new RmiServer(serverName, 1100, this).start();
             } catch (RemoteException e) {
-                System.out.println("RmiServer Fail");
+                System.out.println("RmiServer Fail" + e.getMessage());
 
                 //modifica: aggiunto un altro catch per la nuova eccezione
             } catch (UnknownHostException e) {
@@ -74,7 +75,7 @@ public class Server {
 
     //TODO methods for; creating a new game (on player request), showing active games (on player request)
 
-    //this methods creates a new gameController -> a new game, with 0 players in.
+    //these methods creates a new gameController -> a new game, with 0 players in.
     public void createNewLobby(int nplayers) throws IOException {
         try {
             gamesManager.createGame(nplayers);
@@ -83,8 +84,10 @@ public class Server {
         }
     }
 
-    public void showLobbies() {
-        gamesManager.showActiveGames();
+    public void showLobbies() throws RemoteException {
+        for(ClientConnection c: clients.values()) {
+            c.receiveMessage(gamesManager.showActiveGames());
+        }
     }
 
     //Method for joining a game.
@@ -93,12 +96,11 @@ public class Server {
         if (controller != null && !controller.isPlayerInGame(nickname)) {
             try{
                 controller.getGame().addPlayer(new Player(nickname, color));
-            }catch (TooManyPlayersException e)
+            }catch (TooManyPlayersException | UsernameAlreadyTakenException e) {}
             ClientConnection connection = clients.get(nickname);
             //to implement direct controller acces
             if (connection != null)
                 connection.setGameController(controller);
-
         }
     }
 }

@@ -4,6 +4,9 @@ import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.exceptions.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
+import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonTribeCardsSupplier;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +21,7 @@ public class GamesManager {
 
     //TODO: method for creating new game, calls for GameController constructor
     public void createGame(int nplayers) throws IOException {
-        GameResources gameResources = new GameResources(); //fede plz come si crea un game
+        GameResources gameResources = new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier());
         Game gameinstance = new Game (nplayers, gameResources);
         activeGames.add(new GameController(gameinstance));
     }
@@ -31,12 +34,14 @@ public class GamesManager {
             throw new PlayerNotFoundException(nickname);
     }
 
-    public void showActiveGames () {
+    public List<String> showActiveGames () {
         int i=1;
+        List<String> lobbies=new ArrayList();
         for (GameController g : activeGames) {
-            System.out.println("Game" + i + g);
+            lobbies.add("Game" + i + g);
             i++;
         }
+        return lobbies;
     }
 
     public void joinGame (String nickname, int i) {
@@ -46,5 +51,6 @@ public class GamesManager {
     public GameController getControllerI(int i) {
         return this.activeGames.get(i);
     }
+
     //TODO: method for deleting active game
 }

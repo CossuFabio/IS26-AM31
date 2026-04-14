@@ -1,14 +1,16 @@
 package it.polimi.ingsw.am31.am31.network;
 
+import it.polimi.ingsw.am31.am31.exceptions.TooManyPlayersException;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiServerConnection;
 
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class Client {
     //main client class
-    public static void main(String[] args) throws RemoteException, NotBoundException {
+    public static void main(String[] args) throws IOException, NotBoundException, TooManyPlayersException {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter Nickname: ");

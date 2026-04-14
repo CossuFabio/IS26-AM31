@@ -61,7 +61,7 @@ public class ResourceFinder {
         Card card = cardsRegistry.get(cardId);
 
         if(card == null) throw new CardNotFoundException();
-        if(card.getMinPlayers() < game.getNumPlayers()) throw new InvalidResourceException("Card");
+        if(card.getMinPlayers() > game.getNumPlayers()) throw new InvalidResourceException("Card");
 
 
         return card;

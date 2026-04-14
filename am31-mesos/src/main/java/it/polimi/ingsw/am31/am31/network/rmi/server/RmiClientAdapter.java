@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.network.ClientConnection;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 public class RmiClientAdapter implements ClientConnection {
     private final VirtualViewRmi clientStub;
@@ -26,4 +27,9 @@ public class RmiClientAdapter implements ClientConnection {
     public void setGameController (GameController controller) {
         this.controller = controller;
     }
+
+    @Override
+    public void receiveMessage(List<String> data) throws RemoteException {
+     clientStub.receiveMessage(data);
+    };
 }

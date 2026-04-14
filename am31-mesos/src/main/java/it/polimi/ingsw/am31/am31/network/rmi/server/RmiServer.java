@@ -41,9 +41,9 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
             System.out.println("Connected "+identifier);
     }
 
-    @Override
-    public void showLobbies(){
-        mainServer.showLobbies();
+  @Override
+    public void showLobbies() throws RemoteException {
+      mainServer.showLobbies();
     }
     @Override
     public void createGame(int nplayers) throws IOException {

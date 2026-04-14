@@ -8,6 +8,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.requests.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.JoinNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.TotemNetworkRequest;
 
@@ -33,8 +34,19 @@ public class GameController {
     }
 
     //-----Requests handling-----
-    //TODO: Implement this, determine messages player needs to send to join
-    public void handleAddPlayerMessage(NetworkRequest request){
+    public void handleAddPlayerMessage(JoinNetworkRequest request){
+
+        Player newPlayer = new Player(request.getPlayerID(), request.getColor());
+
+        try{
+            game.addPlayer(newPlayer);
+
+            if(game.getPlayersList().size() == game.getNumPlayers())
+                game.gameStart();
+
+        }catch(Exception e){
+            //Client.sendError(e.getMessage());
+        }
 
     }
 
@@ -163,7 +175,7 @@ public class GameController {
     }
     @Override
     public String toString () {
-        return "N. of active players" + game.getPlayersList().size() + "\n N. needed players" + game.getNumPlayers();
+        return "N. of active players " + game.getPlayersList().size() + "\n N. needed players " + game.getNumPlayers();
     }
     public Game getGame () {
         return this.game;

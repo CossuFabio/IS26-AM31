@@ -5,7 +5,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
@@ -16,7 +15,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 
 import java.io.IOException;
-import java.lang.invoke.WrongMethodTypeException;
 import java.util.*;
 
 import static java.util.Comparator.*;
@@ -49,7 +47,7 @@ public class Game {
     //Setup
     public Game (int nPlayers, GameResources gameResources) throws IOException {
 
-        roundNumber=0; //o 1
+        roundNumber=0; //set to 1 in gameStart
         players= new ArrayList<Player>();
 
         era = 1;
@@ -65,7 +63,10 @@ public class Game {
         this.drawManager = new TurnDrawManager(board);
     }
 
-    public void addPlayer(Player player) throws TooManyPlayersException {
+    public void addPlayer(Player player) throws TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {
+        if(players.stream().anyMatch(inGamePlayer -> inGamePlayer.getNickname().equals(player.getNickname()))) throw new UsernameAlreadyTakenException();
+        if(players.stream().map(p -> p.getColor()).anyMatch(c -> c == player.getColor())) throw new PlayerColorAlreadyTakenException(player.getColor());
+
         if(players.size()<nPlayers){
             players.add(player);
         }
@@ -126,6 +127,7 @@ public class Game {
         for(int i = 0; i <GameConstants.getEraOneBuildings(nPlayers); i++)
             board.addUpper((BuildingCard)buildingDeck.draw());
 
+        this.roundNumber = 1;
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
     }
     
@@ -367,8 +369,10 @@ public class Game {
     public Player getPlayerActingTotemPhase(){
         return turnOrder.getPlayerActing();
     }
+
     public RoundPhasesEnum getCurrentRoundPhase(){return this.currentRoundPhase;}
     public boolean hasCurrentPlayerFinishedDrawing(){return this.drawManager.hasFinishedDrawing();}
+
 
 
     //---Setters---
