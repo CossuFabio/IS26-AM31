@@ -24,9 +24,5 @@ public class DrawNetworkRequest extends NetworkRequest{
     public String getPlayerID(){return playerID;}
     public String getCardID(){return cardID;}
     public BoardRows getBoardRows(){return boardRow;}
-
-    public void acceptVisit(IRequestVisitor visitor){
-        visitor.accept(this);
-    }
-
+    
 }

@@ -40,10 +40,10 @@ public class Client {
         }
         Scanner scan = new Scanner(System.in);
 
-        System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby");
         while(true){
             NetworkRequest request = null;
-            System.out.println("> ");
+            System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby");
+            System.out.print("> ");
             String input = scan.next();
 
             switch (input) {
