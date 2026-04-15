@@ -44,10 +44,6 @@ public class GamesManager {
         return lobbies;
     }
 
-    public void joinGame (String nickname, int i) {
-
-    }
-
     public GameController getControllerI(int i) {
         return this.activeGames.get(i);
     }

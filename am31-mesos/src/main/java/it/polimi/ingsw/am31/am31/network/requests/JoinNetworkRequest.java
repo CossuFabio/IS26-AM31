@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am31.am31.network.requests;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 
 public class JoinNetworkRequest extends NetworkRequest {
@@ -9,11 +11,15 @@ public class JoinNetworkRequest extends NetworkRequest {
 
 
     //TODO: Finish this
-    public JoinNetworkRequest(String playerNickname, Color color, int id) {
-        super("JoinNetworkRequest");
-        this.playerID =  playerNickname;
+    @JsonCreator
+    public JoinNetworkRequest(
+            @JsonProperty("playerID")String playerID,
+            @JsonProperty("color")Color color,
+            @JsonProperty("gameID")int gameID) {
+        super(RequestMethodsConstants.METHOD_JOIN_GAME);
+        this.playerID =  playerID;
         this.color = color;
-        this.gameID = id;
+        this.gameID = gameID;
     }
 
     public String getPlayerID() {return playerID;}
