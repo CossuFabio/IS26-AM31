@@ -24,7 +24,6 @@ public class RequestsMapper {
 
     public static NetworkRequest deserialize(String request){
         try{
-            System.out.println("request");
             NetworkRequest result = mapper.readValue(request, new TypeReference<NetworkRequest>() {});
             return result;
         }catch(JsonProcessingException e){

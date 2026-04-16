@@ -5,13 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ShowLobbyNetworkRequest extends NetworkRequest{
 
-    private final String identifier;
+
     @JsonCreator
-    public ShowLobbyNetworkRequest( @JsonProperty("identifier")String identifier){
+    public ShowLobbyNetworkRequest(){
         super(RequestMethodsConstants.METHOD_SHOW_LOBBIES);
-        this.identifier = identifier;
     }
 
-    public String getIdentifier(){return identifier;}
+
 
 }

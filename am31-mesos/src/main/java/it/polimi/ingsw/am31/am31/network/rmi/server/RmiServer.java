@@ -35,10 +35,9 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
     @Override
     public void sendRequest(String request) throws RemoteException {
         try {
-            System.out.println("ADESSO LEGGOU UNA RICHIESTA");
             NetworkRequest req = RequestsMapper.deserialize(request);
-            System.out.println("RICHIESTA DI " + req.getType());
-            mainServer.handleNetworkRequest(RequestsMapper.deserialize(request));
+            System.out.println("Received: " + request);
+            mainServer.handleNetworkRequest(req);
         } catch (Exception e) {
             System.err.println(e);
         }

@@ -16,10 +16,17 @@ public abstract class NetworkRequest{
 
 
     private final String type;
+    private String playerID;
+
     protected NetworkRequest(String type){this.type = type;}
 
     @JsonIgnore
     public String getType(){return type;}
 
 
+    public String getPlayerID(){return playerID;}
+
+    //Will be called by the connection right before the invocation of the method that
+    //sends the message to the server in the transport layer
+    public void setPlayerID(String playerID){this.playerID = playerID; }
 }

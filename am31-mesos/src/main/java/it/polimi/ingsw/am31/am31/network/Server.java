@@ -30,32 +30,36 @@ public class Server {
             System.out.println("Stringa vuota!");
             return;
         }
+
+
         if(request.getType().equals(RequestMethodsConstants.METHOD_JOIN_GAME)) {
 
             JoinNetworkRequest req = (JoinNetworkRequest) request;
             System.out.println(req.getPlayerID() + " sta provando ad entrare nel tubo " + req.getGameID() + " col colore: " + req.getColor());
             joinGameLobby(req);
-            return;
+
         }
-        if(request.getType().equals(RequestMethodsConstants.METHOD_SHOW_LOBBIES)) {
+        else if(request.getType().equals(RequestMethodsConstants.METHOD_SHOW_LOBBIES)) {
             ShowLobbyNetworkRequest req = (ShowLobbyNetworkRequest) request;
             showLobbies(req);
-            return;
+
         }
-        if(request.getType().equals(RequestMethodsConstants.METHOD_NEW_GAME)) {
+        else if(request.getType().equals(RequestMethodsConstants.METHOD_NEW_GAME)) {
             NewGameNetworkRequest req = (NewGameNetworkRequest) request;
             createNewLobby(req);
         }
-        if(request.getType().equals(RequestMethodsConstants.METHOD_DRAW)) {
+        else if(request.getType().equals(RequestMethodsConstants.METHOD_DRAW)) {
 
         }
-        if(request.getType().equals(RequestMethodsConstants.METHOD_PLACE_TOTEM)) {
+        else if(request.getType().equals(RequestMethodsConstants.METHOD_PLACE_TOTEM)) {
 
         }
-        if(request.getType().equals("")) {
+
+        else if(request.getType().equals("")) {
 
         }
-        if(request.getType().equals("")) {
+
+        else if(request.getType().equals("")) {
 
         }
 
@@ -72,7 +76,7 @@ public class Server {
 
     //old main put into start method
     public void start() {
-        final String serverName = "MesosServer";
+        final String serverName = ServerConfig.SERVER_NAME;
 
         //Rmi server  launch
         Thread rmiThread = new Thread(() -> {
@@ -111,7 +115,7 @@ public class Server {
     }
 
     public void showLobbies(ShowLobbyNetworkRequest request) throws Exception {
-        VirtualView requester = clients.get(request.getIdentifier());
+        VirtualView requester = clients.get(request.getPlayerID());
         if(requester!= null) {
             requester.receiveMessage(gamesManager.showActiveGames());
         }
@@ -125,8 +129,8 @@ public class Server {
             controller.handleAddPlayerMessage(request); //(request, connection)
             VirtualView connection = clients.get(request.getPlayerID());
             //to implement direct controller access
-            if (connection != null)
-                connection.setGameController(controller);
+            //if (connection != null)
+                //connection.setGameController(controller);
         }
     }
 

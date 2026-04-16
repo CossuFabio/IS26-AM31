@@ -19,14 +19,17 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         ClientController controller = new ClientController();
         System.out.println("Enter Nickname: ");
-        String nickname = scanner.nextLine();
+        String nickname = "aicocsu";//scanner.nextLine();
 
         //modifica:
         System.out.println("Enter server IP: ");
-        String ip = scanner.nextLine(); // aggiunto
+        //String ip = scanner.nextLine(); // aggiunto
+
+        //FOR TESTING: uncomment this to use a fixed ip.
+        String ip = "127.0.0.1";
 
         System.out.println("Enter 1 for RMI, 2 for Socket: ");
-        int type = scanner.nextInt();
+        int type = 1;  //scanner.nextInt();
         VirtualServer connection = null;
         switch (type) {
             //ip is localhost
@@ -38,29 +41,29 @@ public class Client {
             default:
                 break;
         }
-        Scanner scan = new Scanner(System.in);
+
 
         while(true){
             NetworkRequest request = null;
             System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby");
             System.out.print("> ");
-            String input = scan.next();
+            String input = scanner.next();
 
             switch (input) {
                 case "1" :
                     System.out.println("Enter the number of players");
-                    int nplayers = scan.nextInt();
+                    int nplayers = scanner.nextInt();
                     request = new NewGameNetworkRequest(nplayers);
                     break;
                 case "2" :
-                    request = new ShowLobbyNetworkRequest(nickname);
+                    request = new ShowLobbyNetworkRequest();
                     break;
                 case "3" :
                     System.out.println("Enter the number of the lobby");
-                    int i = scan.nextInt();
+                    int i = scanner.nextInt();
                     System.out.println("Enter the color of the totem");
-                    Color color = Color.valueOf(scan.next());
-                    request = new JoinNetworkRequest(nickname, color, i);
+                    Color color = Color.valueOf(scanner.next());
+                    request = new JoinNetworkRequest(color, i);
                     break;
             }
             ((VirtualServer) connection).sendRequest(request);

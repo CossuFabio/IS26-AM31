@@ -11,7 +11,10 @@ public interface VirtualViewRmi extends Remote, VirtualView {
     //should have methods the server calls on its rmi clients
     void receiveUpdate(Object data) throws RemoteException;
     void receiveMessage(List<String> data) throws RemoteException;
-    void setGameController(GameController controller) throws RemoteException;
+
+
+    //Tolto anche qua, vedi motivazioni su VirtualView se serve
+    //void setGameController(GameController controller) throws RemoteException;
 
 
 }

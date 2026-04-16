@@ -13,7 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GamesManager {
+
     private List<GameController> activeGames;
+
+
 
     public GamesManager() {
         activeGames = new ArrayList<GameController>();

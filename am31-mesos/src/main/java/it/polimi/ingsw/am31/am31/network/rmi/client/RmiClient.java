@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.network.rmi.client;
 import it.polimi.ingsw.am31.am31.controller.GameController;
+import it.polimi.ingsw.am31.am31.network.ServerConfig;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
@@ -19,14 +20,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     private final String identifier;
     private VirtualViewRmi clientStub;
 
-
     public RmiClient(String ip, int port, String identifier) throws RemoteException, NotBoundException {
        super(port+1);
 
         this.identifier = identifier;
         //connects to registry
         Registry registry = LocateRegistry.getRegistry(ip,port);
-        this.serverStub = (VirtualServerRmi) registry.lookup("MesosServer");
+        this.serverStub = (VirtualServerRmi) registry.lookup(ServerConfig.SERVER_NAME);
         //sends himself to server
         this.serverStub.connect(this.identifier,this);
 
@@ -34,6 +34,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     }
     @Override
     public void sendRequest(NetworkRequest request) throws RemoteException {
+        request.setPlayerID(this.identifier);
         serverStub.sendRequest(RequestsMapper.serialize(request));//
     }
 
@@ -46,16 +47,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     public void receiveUpdate (Object data) {
 
     }
-    @Override
-    public void setGameController(GameController controller) {
-
-    }
-
 
     public void connect(String identifier, VirtualViewRmi clientStub) throws RemoteException{
-
-
+        //Connect viene gia fatta nel costruttore, volendo potremmo rimuovere. Se volessimo lasciare, magari servirebbe in caso
+        //di perdita di connessione per riconnettersi, ma a quel punto la specifica dice che se qualcuno si disconnette
+        //bisogna spegnere il game quindi penso sia il caso di togliere
     }
+
     @Override
     public void disconnect() throws RemoteException{
 
