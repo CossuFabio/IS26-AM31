@@ -37,11 +37,11 @@ public class DefaultSustainHandler{
         int sizeTribe = player.getTribe().size();
 
         if(food < (sizeTribe - fullDiscount)){
-            int cannotPay = food - (sizeTribe - fullDiscount);
-            player.editPrestigePoints(cannotPay*malus);
+            int cannotPay = food - (sizeTribe - fullDiscount); //Negative value
+            player.editPrestigePoints(cannotPay*Math.abs(malus)); //Put malus as positive
             player.editFood(-food);
         }
-        //se cibo sufficiente, edita al nuovo valore.
+        //if sufficient, edit to new value
         else
             if(fullDiscount>sizeTribe)
                 fullDiscount = sizeTribe;

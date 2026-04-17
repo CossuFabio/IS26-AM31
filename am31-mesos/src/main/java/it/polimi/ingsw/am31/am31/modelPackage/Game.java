@@ -253,7 +253,7 @@ public class Game {
         }
     }
 
-    //TODO: THINK
+
 
     //prende la scelta, controlla se fattibile, la fa, rimette il player in ordine.
     //se non fattibile, lancia eccezione o del player o tessera già presa
@@ -358,6 +358,7 @@ public class Game {
     public Board getBoard(){return board;}
     public GameResources getGameResources(){return this.gameResources; }
     public List<Player> getPlayersList(){return players.stream().toList();}
+    public int getRoundNumber(){return this.roundNumber;}
 
     //May differ from players.size() in case of disconnections!
     public int getNumPlayers(){return this.nPlayers;}
@@ -393,7 +394,7 @@ public class Game {
         //Must check if still in TOTEM_PLACING_PHASE
         if(this.currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) throw new WrongRoundPhaseException();
 
-        //Checks if TOTEM_PLACING_PHASE is finished - IllegalAccessException is still a placeholder
+        //Checks if TOTEM_PLACING_PHASE is finished
         if(!turnOrder.everybodyPlayed()) throw new IllegalAccessException();
 
         this.currentRoundPhase  = RoundPhasesEnum.ACTION_PHASE;
@@ -443,7 +444,7 @@ public class Game {
 
     }
 
-    public void setUpBonusDrawingPhase(){
+    public void setUpBonusDrawingPhase() throws WrongRoundPhaseException{
 
         if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new WrongRoundPhaseException();
 

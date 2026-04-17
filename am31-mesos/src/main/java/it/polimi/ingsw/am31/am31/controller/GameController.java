@@ -43,9 +43,11 @@ public class GameController {
 
             if(game.getPlayersList().size() == game.getNumPlayers())
                 game.gameStart();
-
-        }catch(Exception e){
-            //Client.sendError(e.getMessage());
+            //Must notify clients after game starts!
+        }catch(UsernameAlreadyTakenException | PlayerColorAlreadyTakenException | TooManyPlayersException e){
+            //Client.sendError(e.getMessage()); //Client side exception
+        }catch(EmptyDeckException | WrongRoundPhaseException | InsufficientPlayersNumberException e){
+            System.err.println(e.getMessage()); //Server side error
         }
 
     }
@@ -105,13 +107,15 @@ public class GameController {
             Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
             OfferCard offerCard = resourceFinder.getOfferCard(request.getOfferTrackID());
 
-            if(!game.isTotemPlacingPhaseFinished()) {
-                game.totemChoiceAction(player, offerCard);
-            }
+            game.totemChoiceAction(player, offerCard);
+
             if(game.getTurnOrder().everybodyPlayed())
                 startDrawPhase();
-        } catch (Exception e) {
+
+        } catch (PlayerNotFoundException | WrongRoundPhaseException | OfferTrackTileAlreadyTakenException | WrongPlayerTurnException | OfferCardNotFoundException | InvalidPickException e) {
             //client.notify(message);
+        } catch(EverybodyPlayedException e){
+            System.err.println(e.getMessage());
         }
 
     }
@@ -139,8 +143,8 @@ public class GameController {
 
         }
         //These exceptions are caused by programmer, they should be notified inside server
-        catch (WrongRoundPhaseException e) {System.out.println(e.getMessage());}
-        catch(IllegalStateException | IllegalAccessException e) {System.out.println(e.getMessage());}
+        catch (WrongRoundPhaseException | IllegalStateException | IllegalAccessException e  ) {System.err.println(e.getMessage());}
+
     }
 
     public void startBonusDrawPhase(){

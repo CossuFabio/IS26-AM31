@@ -212,9 +212,10 @@ public class Player {
     public int getBonusDrawFromUpper(){ return this.bonusDrawFromUpper; }
     public int getBonusDrawFromLower(){ return this.bonusDrawFromLower; }
 
-
-    public boolean equals(Player player){
-        return this == player || this.nickname.equals(player.nickname);
+    @Override
+    public boolean equals(Object player){
+        if(player == null || player.getClass() != Player.class) return false;
+        return this == player || this.nickname.equals(((Player) player).getNickname());
     }
 
 

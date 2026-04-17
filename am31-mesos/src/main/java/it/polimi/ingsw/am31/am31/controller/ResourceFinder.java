@@ -1,10 +1,7 @@
 package it.polimi.ingsw.am31.am31.controller;
 
 
-import it.polimi.ingsw.am31.am31.exceptions.CardNotFoundException;
-import it.polimi.ingsw.am31.am31.exceptions.InvalidResourceException;
-import it.polimi.ingsw.am31.am31.exceptions.OfferCardNotFoundException;
-import it.polimi.ingsw.am31.am31.exceptions.PlayerNotFoundException;
+import it.polimi.ingsw.am31.am31.exceptions.*;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
@@ -69,12 +66,12 @@ public class ResourceFinder {
 
     }
 
-    public OfferCard getOfferCard(String offerCardId){
+    public OfferCard getOfferCard(String offerCardId) throws OfferCardNotFoundException, InvalidPickException {
 
         OfferCard offerCard = offerCardsRegistry.get(offerCardId);
 
         if(offerCard == null) throw new OfferCardNotFoundException();
-        if(offerCard.getMinPlayers() < game.getNumPlayers()) throw new InvalidResourceException("OfferCard");
+        if(offerCard.getMinPlayers() > game.getNumPlayers()) throw new InvalidResourceException("OfferCard");
 
         return offerCard;
     }

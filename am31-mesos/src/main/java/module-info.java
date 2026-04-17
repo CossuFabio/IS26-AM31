@@ -39,4 +39,5 @@ module it.polimi.ingsw.am31.am31 {
     exports it.polimi.ingsw.am31.am31.network.rmi.client;
     exports it.polimi.ingsw.am31.am31.network.requests;
     opens it.polimi.ingsw.am31.am31.network.requests to javafx.fxml;
+    exports it.polimi.ingsw.am31.am31.network.updateMessages;
 }

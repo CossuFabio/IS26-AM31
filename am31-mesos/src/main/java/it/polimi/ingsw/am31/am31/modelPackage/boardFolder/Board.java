@@ -10,6 +10,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.Building
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,8 +61,8 @@ public class Board {
     }
 
     //GETTERS
-    public ArrayList<BuildingCard> getUpperBLine(){return upperBLine;}
-    public ArrayList<BuildingCard> getUnderBLine(){return underBLine;}
+    public List<BuildingCard> getUpperBLine(){return upperBLine.stream().toList();}
+    public List<BuildingCard> getUnderBLine(){return underBLine.stream().toList();}
 
     public ArrayList<Card> getUnderLine() {
         ArrayList<Card> result = new ArrayList<Card>();

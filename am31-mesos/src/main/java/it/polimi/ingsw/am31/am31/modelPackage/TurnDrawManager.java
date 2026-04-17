@@ -45,8 +45,8 @@ public class TurnDrawManager {
     }
 
     public boolean hasFinishedDrawing(){
-        boolean hasFinishedUpper = (drawFromUpperThisTurn == drawFromUpper) || (gameBoard.getUpperLine().isEmpty());
-        boolean hasFinishedLower = (drawFromLowerThisTurn == drawFromLower) || (gameBoard.getUnderLine().isEmpty());
+        boolean hasFinishedUpper = (drawFromUpperThisTurn >= drawFromUpper) || (gameBoard.getUpperLine().isEmpty());
+        boolean hasFinishedLower = (drawFromLowerThisTurn >= drawFromLower) || (gameBoard.getUnderLine().isEmpty());
 
         return hasFinishedUpper && hasFinishedLower;
     }
