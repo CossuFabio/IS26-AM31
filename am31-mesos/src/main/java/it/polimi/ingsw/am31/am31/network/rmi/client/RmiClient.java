@@ -5,6 +5,12 @@ import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.rmi.server.VirtualViewRmi;
+import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
+import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMethodsConstants;
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.LobbyDescriptor;
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -35,17 +41,23 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     @Override
     public void sendRequest(NetworkRequest request) throws RemoteException {
         request.setPlayerID(this.identifier);
-        serverStub.sendRequest(RequestsMapper.serialize(request));//
+        serverStub.sendRequest(RequestsMapper.serialize(request));
     }
 
     @Override
-    public void receiveMessage (List<String> data) throws RemoteException {
-        for(String s: data)
-            System.out.println(s);
+    public void receiveMessage (String data) throws RemoteException {
+        System.out.println(data);
     }
     @Override
-    public void receiveUpdate (Object data) {
-
+    public void receiveUpdate (String updateMessage) {
+        UpdateMessage message = UpdateMapper.deserialize(updateMessage);
+        if(message == null || message.getUpdateType() == null) return;
+        if(message.getUpdateType().equals(UpdateMethodsConstants.GAME_SHOW_LOBBY_UPDATE_METHOD)){
+            ShowLobbyUpdate lobbyUpdate = (ShowLobbyUpdate) message;
+            for(LobbyDescriptor l : lobbyUpdate.getLobbies()){
+                System.out.println("Partita: " + l.getId() + ", richiede: " + l.getnPlayers() + " giocatori. Giocatori in lobby: " + l.getFreeSlots());
+            }
+         }
     }
 
     public void connect(String identifier, VirtualViewRmi clientStub) throws RemoteException{

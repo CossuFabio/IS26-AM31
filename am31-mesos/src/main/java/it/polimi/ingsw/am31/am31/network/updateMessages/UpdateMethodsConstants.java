@@ -5,6 +5,7 @@ public class UpdateMethodsConstants {
     //Game methods
     public final static String GAME_PLAYERS_LIST_UPDATE_METHOD = "GameUpdatePlayers";
     public final static String GAME_ROUND_UPDATE_METHOD = "GameUpdateRound"; //Updates both the round number and the phase
+    public final static String GAME_SHOW_LOBBY_UPDATE_METHOD = "GameShowLobby";
 
 
     //Player methods

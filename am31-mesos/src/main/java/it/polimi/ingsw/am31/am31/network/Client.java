@@ -34,9 +34,9 @@ public class Client {
         switch (type) {
             //ip is localhost
             //case 1 starts
-            case 1: connection = new RmiClient(ip,ServerConfig.SERVER_PORT,nickname);
+            case 1: connection = new RmiClient(ip,ServerConfig.SERVER_PORT_RMI,nickname);
                     break;
-            case 2: connection = new RmiClient(ip,ServerConfig.SERVER_PORT,nickname); //temporary
+            case 2: connection = new RmiClient(ip,ServerConfig.SERVER_PORT_SOCKET,nickname); //temporary
                 break;
             default:
                 break;

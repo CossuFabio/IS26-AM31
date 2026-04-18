@@ -38,6 +38,17 @@ module it.polimi.ingsw.am31.am31 {
     exports it.polimi.ingsw.am31.am31.network.rmi.server;
     exports it.polimi.ingsw.am31.am31.network.rmi.client;
     exports it.polimi.ingsw.am31.am31.network.requests;
-    opens it.polimi.ingsw.am31.am31.network.requests to javafx.fxml;
+    opens it.polimi.ingsw.am31.am31.network.requests to javafx.fxml, com.fasterxml.jackson.databind;
+
     exports it.polimi.ingsw.am31.am31.network.updateMessages;
+    opens it.polimi.ingsw.am31.am31.network.updateMessages to javafx.fxml, com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage;
+    opens it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage;
+    opens it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates;
+    opens it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.modelPackage.observerPattern;
+    opens it.polimi.ingsw.am31.am31.modelPackage.observerPattern to javafx.fxml;
+
 }

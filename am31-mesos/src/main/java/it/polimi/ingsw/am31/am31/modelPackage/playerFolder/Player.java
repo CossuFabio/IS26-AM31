@@ -40,10 +40,10 @@ public class Player {
     private IEndTurnHandler endTurnHandler;
     private IEndGameHandler endGameHandler;
     private IHuntHandler huntHandler;
-    private DefaultSustainHandler sustainHandler;
+    private final DefaultSustainHandler sustainHandler;
     private IPaintHandler paintHandler;
-    private RitualLoseHandler ritualLoseHandler;
-    private RitualWinHandler ritualWinHandler;
+    private final RitualLoseHandler ritualLoseHandler;
+    private final RitualWinHandler ritualWinHandler;
     private IEndRoundHandler endRoundHandler;
 
     private int bonusDrawFromUpper;

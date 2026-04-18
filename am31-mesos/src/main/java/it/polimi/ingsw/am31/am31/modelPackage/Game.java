@@ -10,6 +10,8 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
@@ -43,6 +45,7 @@ public class Game {
 
     //Utilities
     private final GameResources gameResources;
+    private final GameObserver observers;
 
     //Setup
     public Game (int nPlayers, GameResources gameResources) throws IOException {
@@ -61,6 +64,7 @@ public class Game {
         board= new Board(nPlayers, gameResources.getOfferCards());
 
         this.drawManager = new TurnDrawManager(board);
+        this.observers = new GameObserversSet();
     }
 
     public void addPlayer(Player player) throws TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {

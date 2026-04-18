@@ -177,12 +177,8 @@ public class GameController {
         }catch(WrongRoundPhaseException e){System.out.println(e.getMessage());}
 
     }
-    @Override
-    public String toString () {
-        return "N. of active players " + game.getPlayersList().size() + "\n N. needed players " + game.getNumPlayers();
-    }
-    public Game getGame () {
-        return this.game;
-    }
+
+    public int getNumActivePlayers(){return game.getPlayersList().size(); }
+    public int getNumPlayers(){return game.getNumPlayers();}
 
 }

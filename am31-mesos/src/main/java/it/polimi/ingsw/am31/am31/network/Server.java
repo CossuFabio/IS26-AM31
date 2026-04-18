@@ -3,6 +3,8 @@ import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.exceptions.PlayerAlreadyInGameException;
 import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
+import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateFactory;
+import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
 
 
 import java.io.IOException;
@@ -68,6 +70,7 @@ public class Server {
 
     //method to add a generic connection to map
     public void addClient(String identifier, VirtualView virtualView) {
+
         clients.put(identifier, virtualView);
         System.out.println("Client " + identifier + " has been added");
         //TODO add listener threads when accepting socket connection
@@ -81,7 +84,7 @@ public class Server {
         //Rmi server  launch
         Thread rmiThread = new Thread(() -> {
             try {
-                new RmiServer(serverName, ServerConfig.SERVER_PORT, this).start();
+                new RmiServer(serverName, ServerConfig.SERVER_PORT_RMI, this).start();
             } catch (RemoteException e) {
                 System.out.println("RmiServer Fail" + e.getMessage());
 
@@ -117,7 +120,7 @@ public class Server {
     public void showLobbies(ShowLobbyNetworkRequest request) throws Exception {
         VirtualView requester = clients.get(request.getPlayerID());
         if(requester!= null) {
-            requester.receiveMessage(gamesManager.showActiveGames());
+            requester.receiveUpdate(UpdateFactory.createShowLobbyUpdate(gamesManager));
         }
     }
 

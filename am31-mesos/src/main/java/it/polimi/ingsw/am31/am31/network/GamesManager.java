@@ -16,8 +16,6 @@ public class GamesManager {
 
     private List<GameController> activeGames;
 
-
-
     public GamesManager() {
         activeGames = new ArrayList<GameController>();
     }
@@ -37,15 +35,8 @@ public class GamesManager {
             throw new PlayerNotFoundException(nickname);
     }
 
-    public List<String> showActiveGames () {
-        int i=1;
-        List<String> lobbies=new ArrayList();
-        for (GameController g : activeGames) {
-            lobbies.add("Game" + i + g);
-            i++;
-        }
-        return lobbies;
-    }
+    //returns immutable lists
+    public List<GameController> getActiveGames(){return this.activeGames.stream().toList();}
 
     public GameController getControllerI(int i) {
         return this.activeGames.get(i);
