@@ -1,15 +1,19 @@
 package it.polimi.ingsw.am31.am31.controller;
 
 import it.polimi.ingsw.am31.am31.exceptions.*;
+import it.polimi.ingsw.am31.am31.exceptions.InvalidDrawException;
+import it.polimi.ingsw.am31.am31.exceptions.InvalidPickException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.requests.DrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.JoinNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.TotemNetworkRequest;
 
 import java.io.IOException;
@@ -19,10 +23,13 @@ public class GameController {
 
     private ResourceFinder resourceFinder;
     private Game game;
+    private final ObserverHandler observerHandler;
 
     public GameController(Game gameInstance) throws IOException{
         this.game = gameInstance;
         this.resourceFinder = new ResourceFinder(game);
+        observerHandler = new GameObserversSet();
+        game.addObserver(observerHandler);
     }
 
 
@@ -34,13 +41,13 @@ public class GameController {
     }
 
     //-----Requests handling-----
-    public void handleAddPlayerMessage(JoinNetworkRequest request){
+    public void handleAddPlayerMessage(JoinNetworkRequest request, GameObserver obs){
 
         Player newPlayer = new Player(request.getPlayerID(), request.getColor());
 
         try{
             game.addPlayer(newPlayer);
-
+            observerHandler.addObserver(obs);
             if(game.getPlayersList().size() == game.getNumPlayers())
                 game.gameStart();
             //Must notify clients after game starts!
@@ -98,8 +105,6 @@ public class GameController {
         }
     }
 
-
-
     //-----TOTEM PHASE-----
     //TODO: Test this
     public void handleTotemAction(TotemNetworkRequest request) {
@@ -112,7 +117,8 @@ public class GameController {
             if(game.getTurnOrder().everybodyPlayed())
                 startDrawPhase();
 
-        } catch (PlayerNotFoundException | WrongRoundPhaseException | OfferTrackTileAlreadyTakenException | WrongPlayerTurnException | OfferCardNotFoundException | InvalidPickException e) {
+        } catch (PlayerNotFoundException | WrongRoundPhaseException | OfferTrackTileAlreadyTakenException | WrongPlayerTurnException | OfferCardNotFoundException |
+                 InvalidPickException e) {
             //client.notify(message);
         } catch(EverybodyPlayedException e){
             System.err.println(e.getMessage());

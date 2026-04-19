@@ -19,4 +19,5 @@ public class ShowLobbyUpdate extends UpdateMessage {
 
     public List<LobbyDescriptor> getLobbies(){return this.lobbies.stream().toList(); }
 
+
 }

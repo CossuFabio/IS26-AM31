@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
 import it.polimi.ingsw.am31.am31.exceptions.*;
+import it.polimi.ingsw.am31.am31.exceptions.InvalidDrawException;
+import it.polimi.ingsw.am31.am31.exceptions.InvalidPickException;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
@@ -10,8 +12,9 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
-import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
@@ -21,7 +24,7 @@ import java.util.*;
 
 import static java.util.Comparator.*;
 
-public class Game {
+public class Game implements GameObservable {
 
     //Game attributes
     private int roundNumber;
@@ -45,7 +48,7 @@ public class Game {
 
     //Utilities
     private final GameResources gameResources;
-    private final GameObserver observers;
+    private ObserverHandler observers;
 
     //Setup
     public Game (int nPlayers, GameResources gameResources) throws IOException {
@@ -67,6 +70,12 @@ public class Game {
         this.observers = new GameObserversSet();
     }
 
+    //Must be called when creating game
+    @Override
+    public void addObserver(ObserverHandler gameObserver) {
+        this.observers = gameObserver;
+    }
+
     public void addPlayer(Player player) throws TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {
         if(players.stream().anyMatch(inGamePlayer -> inGamePlayer.getNickname().equals(player.getNickname()))) throw new UsernameAlreadyTakenException();
         if(players.stream().map(p -> p.getColor()).anyMatch(c -> c == player.getColor())) throw new PlayerColorAlreadyTakenException(player.getColor());
@@ -76,7 +85,6 @@ public class Game {
         }
         else throw new TooManyPlayersException();
     }
-
     public void removePlayer(Player player){
         players.remove(player);
     }
@@ -89,7 +97,7 @@ public class Game {
         if(players.size()<nPlayers){
             throw new InsufficientPlayersNumberException();
         }
-
+        observers.onGameRoundStatusUpdate(this);
         //Just a placeholder, otherwise this would be null and risk a NullPointerException. It will be ignored because the first phase
         //Is TOTEM_PLACING
         playerActing = players.getFirst();
@@ -148,7 +156,7 @@ public class Game {
         for (Player player : players) {
             scores.add(player);
         }
-        scores.sort(Comparator.comparing(Player::getPrestigePoints).thenComparing(Player::getFood));
+        scores.sort(comparing(Player::getPrestigePoints).thenComparing(Player::getFood));
         ArrayList<Player> winners = new ArrayList<>();
         winners.add(scores.removeLast());
         while(!scores.isEmpty()){

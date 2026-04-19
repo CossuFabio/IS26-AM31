@@ -1,17 +1,19 @@
 package it.polimi.ingsw.am31.am31.network;
 import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.exceptions.PlayerAlreadyInGameException;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateFactory;
-import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
 
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 
 public class Server {
@@ -21,9 +23,50 @@ public class Server {
     //gamesManager, contains games and controllers
     private final GamesManager gamesManager;
 
+    //map that associates each string-type with the method to call
+    private final Map<String, Consumer<NetworkRequest>> commands = new HashMap<>();
+
     public Server() {
         this.gamesManager = new GamesManager();
         this.clients = new ConcurrentHashMap<>();
+
+        commands.put(RequestMethodsConstants.METHOD_JOIN_GAME, r -> {
+            try {
+                joinGameLobby((JoinNetworkRequest) r);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        commands.put(RequestMethodsConstants.METHOD_SHOW_LOBBIES, r -> {
+            try {
+                showLobbies((ShowLobbyNetworkRequest)r);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        commands.put(RequestMethodsConstants.METHOD_NEW_GAME, r -> {
+            try {
+                createNewLobby((NewGameNetworkRequest) r);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        commands.put(RequestMethodsConstants.METHOD_DRAW, r-> {
+            try{
+
+
+            }
+            catch (Exception e) {
+
+            }
+        });
+        commands.put(RequestMethodsConstants.METHOD_PLACE_TOTEM, r->{
+            try {
+
+            } catch (Exception e) {
+
+            }
+        });
     }
 
 
@@ -34,36 +77,40 @@ public class Server {
         }
 
 
-        if(request.getType().equals(RequestMethodsConstants.METHOD_JOIN_GAME)) {
+//        if(request.getType().equals(RequestMethodsConstants.METHOD_JOIN_GAME)) {
+//            JoinNetworkRequest req = (JoinNetworkRequest) request;
+//            System.out.println(req.getPlayerID() + " sta provando ad entrare nel tubo " + req.getGameID() + " col colore: " + req.getColor());
+//            joinGameLobby(req);
+//
+//        }
+//        else if(request.getType().equals(RequestMethodsConstants.METHOD_SHOW_LOBBIES)) {
+//            ShowLobbyNetworkRequest req = (ShowLobbyNetworkRequest) request;
+//            showLobbies(req);
+//
+//        }
+//        else if(request.getType().equals(RequestMethodsConstants.METHOD_NEW_GAME)) {
+//            NewGameNetworkRequest req = (NewGameNetworkRequest) request;
+//            createNewLobby(req);
+//        }
+//        else if(request.getType().equals(RequestMethodsConstants.METHOD_DRAW)) {
+//
+//        }
+//        else if(request.getType().equals(RequestMethodsConstants.METHOD_PLACE_TOTEM)) {
+//
+//        }
+//
+//        else if(request.getType().equals("")) {
+//
+//        }
+//
+//        else if(request.getType().equals("")) {
+//
+//        }
 
-            JoinNetworkRequest req = (JoinNetworkRequest) request;
-            System.out.println(req.getPlayerID() + " sta provando ad entrare nel tubo " + req.getGameID() + " col colore: " + req.getColor());
-            joinGameLobby(req);
-
+        if(commands.containsKey(request.getType())){
+            commands.get(request.getType()).accept(request);
         }
-        else if(request.getType().equals(RequestMethodsConstants.METHOD_SHOW_LOBBIES)) {
-            ShowLobbyNetworkRequest req = (ShowLobbyNetworkRequest) request;
-            showLobbies(req);
 
-        }
-        else if(request.getType().equals(RequestMethodsConstants.METHOD_NEW_GAME)) {
-            NewGameNetworkRequest req = (NewGameNetworkRequest) request;
-            createNewLobby(req);
-        }
-        else if(request.getType().equals(RequestMethodsConstants.METHOD_DRAW)) {
-
-        }
-        else if(request.getType().equals(RequestMethodsConstants.METHOD_PLACE_TOTEM)) {
-
-        }
-
-        else if(request.getType().equals("")) {
-
-        }
-
-        else if(request.getType().equals("")) {
-
-        }
 
     }
 
@@ -85,6 +132,7 @@ public class Server {
         Thread rmiThread = new Thread(() -> {
             try {
                 new RmiServer(serverName, ServerConfig.SERVER_PORT_RMI, this).start();
+                System.out.println("RmiServer on");
             } catch (RemoteException e) {
                 System.out.println("RmiServer Fail" + e.getMessage());
 
@@ -94,7 +142,7 @@ public class Server {
             }
         });
         rmiThread.start();
-        System.out.println("RmiServer on"); //Viene stampato immediatamente senza aspettare che sia effettivamente partito
+
 
         //SocketServer launch
         //TODO Thread socketThread = new Thread(() -> { new SocketServer(serverName,1100).start();});
@@ -129,11 +177,8 @@ public class Server {
         if(controller!=null) {
         //checks if player is already in game
             if(controller.isPlayerInGame(request.getPlayerID())) {throw new PlayerAlreadyInGameException(request.getPlayerID());}
-            controller.handleAddPlayerMessage(request); //(request, connection)
-            VirtualView connection = clients.get(request.getPlayerID());
-            //to implement direct controller access
-            //if (connection != null)
-                //connection.setGameController(controller);
+            GameObserver obs = new NetworkObserver(clients.get(request.getPlayerID()));
+            controller.handleAddPlayerMessage(request,obs); //(request, connection)
         }
     }
 

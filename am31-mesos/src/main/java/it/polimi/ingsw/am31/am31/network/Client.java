@@ -19,7 +19,7 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         ClientController controller = new ClientController();
         System.out.println("Enter Nickname: ");
-        String nickname = "aicocsu";//scanner.nextLine();
+        String nickname = args[1];//scanner.nextLine();
 
         //modifica:
         System.out.println("Enter server IP: ");
@@ -30,12 +30,14 @@ public class Client {
 
         System.out.println("Enter 1 for RMI, 2 for Socket: ");
         int type = 1;  //scanner.nextInt();
+        int newport = Integer.parseInt(args[0]);
         VirtualServer connection = null;
         switch (type) {
             //ip is localhost
             //case 1 starts
-            case 1: connection = new RmiClient(ip,ServerConfig.SERVER_PORT_RMI,nickname);
-                    break;
+            case 1:
+                connection = new RmiClient(ip,newport,nickname);
+                break;
             case 2: connection = new RmiClient(ip,ServerConfig.SERVER_PORT_SOCKET,nickname); //temporary
                 break;
             default:
@@ -66,38 +68,7 @@ public class Client {
                     request = new JoinNetworkRequest(color, i);
                     break;
             }
-            ((VirtualServer) connection).sendRequest(request);
+            connection.sendRequest(request);
         }
-
-        /*System.out.print("Commands:\ncreateGame [nplayer]\nshowLobbies\njoinLobby [number of lobby] [totem's color]\n");
-        while(true) {
-            NetworkRequest request = null;
-            System.out.print("> ");
-            // Receives input commands, create request and sends it to server
-            String command = scan.next();
-            if(command.equals("createGame") )
-            {
-                int nplayers = scan.nextInt();
-                request = new NewGameNetworkRequest(nplayers);
-            }
-            else if(command.equals("showLobbies"))
-            {
-                request = new ShowLobbyNetworkRequest(nickname);
-            }
-            else if(command.equals("joinLobby"))
-            {
-                int i = scan.nextInt();
-                Color color = Color.valueOf(scan.next());
-                request = new JoinNetworkRequest(nickname, color, i);
-            }
-            else {
-                System.out.println("Comando non riconosciuto: " + command);
-            }
-
-            if(request != null) {
-                ((VirtualServer) connection).sendRequest(request);
-            }
-        }*/
-
     }
 }

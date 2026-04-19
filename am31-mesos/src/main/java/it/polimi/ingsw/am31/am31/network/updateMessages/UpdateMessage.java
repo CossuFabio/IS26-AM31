@@ -1,9 +1,7 @@
 package it.polimi.ingsw.am31.am31.network.updateMessages;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.CardLineUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.TurnOrderUpdate;
@@ -39,5 +37,6 @@ public abstract class UpdateMessage {
 
     @JsonIgnore
     public String getUpdateType(){return updateType; }
+
 
 }

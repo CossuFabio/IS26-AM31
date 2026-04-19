@@ -6,7 +6,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
-public class Hunter extends CharacterCard {
+public class    Hunter extends CharacterCard {
     private final boolean mark;
 
     @JsonCreator

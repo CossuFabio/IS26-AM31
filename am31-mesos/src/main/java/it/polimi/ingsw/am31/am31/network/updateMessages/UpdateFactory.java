@@ -50,7 +50,6 @@ public class UpdateFactory {
         );
     }
 
-
     public static PlayersListUpdate createPlayersListUpdate(Game game){
         return new PlayersListUpdate(game.getPlayersList().stream().map(Player::getNickname).toList());
     }
@@ -68,7 +67,6 @@ public class UpdateFactory {
         }
         return new ShowLobbyUpdate(lobbies);
     }
-
 
     public static OfferTrackUpdate createOfferTrackUpdate(Board board){
         List<OfferCard> offerTrack = board.getOfferCards();
