@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class SocketServer implements VirtualServerSocket{
+public class SocketServer extends Thread implements VirtualServerSocket{
 
     private final ServerSocket listenSocket;
     private final Server mainServer;
@@ -16,9 +16,10 @@ public class SocketServer implements VirtualServerSocket{
         this.mainServer = mainServer;
     }
 
-
-    public void start(){
+    @Override
+    public void run(){
         Socket client = null;
+        System.out.println("SocketServer on");
         try {
             while ((client = listenSocket.accept())!= null) {
                 InputStreamReader socketRx = new InputStreamReader(client.getInputStream());
@@ -32,7 +33,7 @@ public class SocketServer implements VirtualServerSocket{
                         System.err.println(e.getMessage());
                     }
 
-                });
+                }).start();
 
 
             }

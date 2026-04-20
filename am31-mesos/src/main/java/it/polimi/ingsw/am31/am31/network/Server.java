@@ -91,10 +91,7 @@ public class Server {
             System.out.println("Stringa vuota!");
             return;
         }
-        if(!clients.containsKey(request.getPlayerID()))
-        {
-            throw new IllegalAccessException("illegal request received");
-        }
+
         ClientsLastSeen.put(request.getPlayerID(), System.currentTimeMillis());
         if(commands.containsKey(request.getType())){
             commands.get(request.getType()).accept(request);
@@ -150,8 +147,8 @@ public class Server {
         //SocketServer launch
         Thread socketThread = new Thread(() -> {
             try {
-                new SocketServer(new ServerSocket(ServerConfig.SERVER_PORT_SOCKET), this).start();
-                System.out.println("SocketServer on");
+                new SocketServer(new ServerSocket(ServerConfig.SERVER_PORT_SOCKET), this).run();
+
 
             } catch (IOException e) {
                 System.out.println("Failed to start socket server!");
@@ -161,10 +158,10 @@ public class Server {
         Thread pingThread = new Thread(() -> {
             while(true) {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(ServerConfig.HEARTBEAT_SERVER_INTERVAL);
                     long time = System.currentTimeMillis();
                     for(String id : ClientsLastSeen.keySet()) {
-                        if(time - ClientsLastSeen.get(id) > 11000)
+                        if(time - ClientsLastSeen.get(id) > ServerConfig.HEARTBEAT_TIMOUT)
                         {
                             disconnect(id); //removes him form last seen, form clients list, sends message to everyone else
                         }

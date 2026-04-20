@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooMany
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
+import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
 
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class Client {
         String ip = "127.0.0.1";
 
         System.out.println("Enter 1 for RMI, 2 for Socket: ");
-        int type = 1;  //scanner.nextInt();
+        int type = 2;  //scanner.nextInt();
         int newport = Integer.parseInt(args[0]);
         VirtualServer connection = null;
         switch (type) {
@@ -35,7 +36,7 @@ public class Client {
             case 1:
                 connection = new RmiClient(ip,newport,nickname);
                 break;
-            case 2: connection = new RmiClient(ip,ServerConfig.SERVER_PORT_SOCKET,nickname); //temporary
+            case 2: connection = new SocketClient(ip,ServerConfig.SERVER_PORT_SOCKET,nickname); //temporary
                 break;
             default:
                 break;
@@ -72,7 +73,7 @@ public class Client {
         Thread pingThread = new Thread (() -> {
             while(true) {
                 try{
-                    Thread.sleep(5000);
+                    Thread.sleep(ClientConfig.CLIENT_HEARTBEAT_INTERVAL);
                     NetworkRequest ping = new PingNetworkRequest();
                     connection.sendRequest(ping);
                 } catch (InterruptedException e) {

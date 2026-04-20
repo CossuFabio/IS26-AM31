@@ -33,6 +33,7 @@ public class SocketClientHandler implements VirtualView {
         String jsonReq;
         try{
             while((jsonReq = input.readLine()) != null){
+                System.out.println(jsonReq);
                 NetworkRequest req = RequestsMapper.deserialize(jsonReq);
                 mainServer.handleNetworkRequest(req);
             }
