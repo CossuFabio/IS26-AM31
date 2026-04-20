@@ -1,8 +1,12 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
-import it.polimi.ingsw.am31.am31.exceptions.*;
-import it.polimi.ingsw.am31.am31.exceptions.InvalidDrawException;
-import it.polimi.ingsw.am31.am31.exceptions.InvalidPickException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerColorAlreadyTakenException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.UsernameAlreadyTakenException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EverybodyPlayedException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientPlayersNumberException;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
@@ -185,7 +189,7 @@ public class Game implements GameObservable {
         try{
             gameStart();
         }
-        catch(InsufficientPlayersNumberException e){
+        catch(InsufficientPlayersNumberException | WrongRoundPhaseException e){
             System.err.println(e.getMessage());
         }
     }
@@ -470,7 +474,7 @@ public class Game implements GameObservable {
 
     }
 
-    public void setUpTotemPlacingPhase(){
+    public void setUpTotemPlacingPhase() throws WrongRoundPhaseException {
         if(currentRoundPhase != RoundPhasesEnum.END_TURN) throw new WrongRoundPhaseException();
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
         roundNumber++;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
-import it.polimi.ingsw.am31.am31.exceptions.EverybodyPlayedException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EverybodyPlayedException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards;
 
 
-import it.polimi.ingsw.am31.am31.exceptions.InsufficientFoodException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InsufficientFoodException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;

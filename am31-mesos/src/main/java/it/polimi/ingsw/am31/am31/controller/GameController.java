@@ -1,8 +1,13 @@
 package it.polimi.ingsw.am31.am31.controller;
 
-import it.polimi.ingsw.am31.am31.exceptions.*;
-import it.polimi.ingsw.am31.am31.exceptions.InvalidDrawException;
-import it.polimi.ingsw.am31.am31.exceptions.InvalidPickException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerColorAlreadyTakenException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.UsernameAlreadyTakenException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EverybodyPlayedException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientPlayersNumberException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
@@ -117,8 +122,8 @@ public class GameController {
             if(game.getTurnOrder().everybodyPlayed())
                 startDrawPhase();
 
-        } catch (PlayerNotFoundException | WrongRoundPhaseException | OfferTrackTileAlreadyTakenException | WrongPlayerTurnException | OfferCardNotFoundException |
-                 InvalidPickException e) {
+        } catch (PlayerNotFoundException | WrongRoundPhaseException | OfferTrackTileAlreadyTakenException |
+                 WrongPlayerTurnException | OfferCardNotFoundException | InvalidPickException | InvalidResourceException e) {
             //client.notify(message);
         } catch(EverybodyPlayedException e){
             System.err.println(e.getMessage());

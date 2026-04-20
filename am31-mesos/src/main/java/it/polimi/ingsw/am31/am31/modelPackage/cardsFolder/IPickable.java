@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder;
 
-import it.polimi.ingsw.am31.am31.exceptions.InvalidPickException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InvalidPickException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 public interface IPickable {

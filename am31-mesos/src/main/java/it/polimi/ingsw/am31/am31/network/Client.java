@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.network;
 
-import it.polimi.ingsw.am31.am31.exceptions.TooManyPlayersException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.requests.JoinNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;

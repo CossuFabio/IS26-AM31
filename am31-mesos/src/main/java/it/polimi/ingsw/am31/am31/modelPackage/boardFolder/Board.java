@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage.boardFolder;
 
-import it.polimi.ingsw.am31.am31.exceptions.CardNotFoundException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.CardNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.CardLoader;
