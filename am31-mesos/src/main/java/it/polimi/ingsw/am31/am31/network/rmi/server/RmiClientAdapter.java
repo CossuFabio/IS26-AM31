@@ -2,6 +2,8 @@ package it.polimi.ingsw.am31.am31.network.rmi.server;
 
 import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.network.VirtualView;
+import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessageMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
 
@@ -35,5 +37,16 @@ public class RmiClientAdapter implements VirtualView {
         }catch(RemoteException e){
             System.err.println("RmiClientAdapter.receiveMessage error");
         }
-    };
+    }
+
+    @Override
+    public void receiveErrorMessage(ErrorMessage error) {
+        try{
+            clientStub.receiveErrorMessage(ErrorMessageMapper.serialize(error));
+        }catch (RemoteException e){
+            System.err.println("RmiClientAdapter.receiveUpdate error");
+        }
+    }
+
+    ;
 }

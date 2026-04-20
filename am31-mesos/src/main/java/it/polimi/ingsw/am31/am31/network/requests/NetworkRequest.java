@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.*;
         @JsonSubTypes.Type(value = NewGameNetworkRequest.class, name =  RequestMethodsConstants.METHOD_NEW_GAME),
         @JsonSubTypes.Type(value = ShowLobbyNetworkRequest.class, name = RequestMethodsConstants.METHOD_SHOW_LOBBIES),
         @JsonSubTypes.Type(value = PingNetworkRequest.class, name = RequestMethodsConstants.PING)
-
 })
 public abstract class NetworkRequest{
 

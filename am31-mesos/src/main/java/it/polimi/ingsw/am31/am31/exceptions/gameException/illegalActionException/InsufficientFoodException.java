@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.exceptions;
+package it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException;
 
 public class InsufficientFoodException extends InvalidPickException {
     public InsufficientFoodException(int food, int discount, int cost) {

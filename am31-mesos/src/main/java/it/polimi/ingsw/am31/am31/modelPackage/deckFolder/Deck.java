@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.modelPackage.deckFolder;
 
 
-import it.polimi.ingsw.am31.am31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 
 import java.util.ArrayList;

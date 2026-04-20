@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMethodsConstants;
 
@@ -8,8 +10,11 @@ public class PlayerScoresUpdate extends UpdateMessage {
     private final String playerId;
     private final int newPrestigePoints;
     private final int newFood;
-
-    public PlayerScoresUpdate(String playerId, int newPrestigePoints, int newFood){
+    @JsonCreator
+    public PlayerScoresUpdate(
+            @JsonProperty String playerId,
+            @JsonProperty int newPrestigePoints,
+            @JsonProperty int newFood){
         super(UpdateMethodsConstants.PLAYER_SCORES_UPDATE_METHOD);
         this.playerId = playerId;
         this.newPrestigePoints = newPrestigePoints;

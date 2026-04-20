@@ -1,10 +1,9 @@
 package it.polimi.ingsw.am31.am31;
 
-import it.polimi.ingsw.am31.am31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.Deck;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

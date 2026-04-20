@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.controller.GameController;
-import it.polimi.ingsw.am31.am31.exceptions.PlayerNotFoundException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;

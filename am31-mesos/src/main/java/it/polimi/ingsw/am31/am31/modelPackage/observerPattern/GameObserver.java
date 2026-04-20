@@ -17,5 +17,4 @@ public interface GameObserver {
     void onOfferTrackUpdate(Board board);
     void onTurnOrderUpdate(Board board);
 
-
 }

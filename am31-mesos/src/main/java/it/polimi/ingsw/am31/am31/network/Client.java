@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.network;
 
-import it.polimi.ingsw.am31.am31.exceptions.TooManyPlayersException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
@@ -16,7 +16,7 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         ClientController controller = new ClientController();
         System.out.println("Enter Nickname: ");
-        String nickname = args[0];//scanner.nextLine();
+        String nickname = args[1];//scanner.nextLine();
 
         //modifica:
         System.out.println("Enter server IP: ");
@@ -27,20 +27,21 @@ public class Client {
 
         System.out.println("Enter 1 for RMI, 2 for Socket: ");
         int type = 1;  //scanner.nextInt();
-        int newport = Integer.parseInt(args[1]);
+        int newport = Integer.parseInt(args[0]);
         VirtualServer connection = null;
         switch (type) {
             //ip is localhost
             //case 1 starts
-            case 1: connection = new RmiClient(ip,newport,nickname);
-                    break;
+            case 1:
+                connection = new RmiClient(ip,newport,nickname);
+                break;
             case 2: connection = new RmiClient(ip,ServerConfig.SERVER_PORT_SOCKET,nickname); //temporary
                 break;
             default:
                 break;
         }
-        //starts pinging every 5 seconds
         Ping(connection);
+
         while(true){
             NetworkRequest request = null;
             System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby");
@@ -64,7 +65,7 @@ public class Client {
                     request = new JoinNetworkRequest(color, i);
                     break;
             }
-            ((VirtualServer) connection).sendRequest(request);
+            connection.sendRequest(request);
         }
     }
     public static void Ping (VirtualServer connection) {
@@ -85,7 +86,7 @@ public class Client {
                     }
                     break;
                 }
-                }
+            }
 
         });
         pingThread.setDaemon(true);

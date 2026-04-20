@@ -1,79 +1,108 @@
 package it.polimi.ingsw.am31.am31.network;
 import it.polimi.ingsw.am31.am31.controller.GameController;
-import it.polimi.ingsw.am31.am31.exceptions.PlayerAlreadyInGameException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerAlreadyInGameException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
+import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateFactory;
-import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
-import org.w3c.dom.html.HTMLImageElement;
 
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 
 public class Server {
 
     //map of all connected players with their id
     private final Map<String, VirtualView> clients;
-    //map of connected players with their last seen time
-    private final Map<String, Long> ClientsLastSeen;
     //gamesManager, contains games and controllers
     private final GamesManager gamesManager;
+    //map that associates each string-type with the method to call
+    private final Map<String, Consumer<NetworkRequest>> commands = new HashMap<>();
+    //map of connected players with their last seen time
+    private final Map<String, Long> ClientsLastSeen;
 
     public Server() {
         this.gamesManager = new GamesManager();
         this.clients = new ConcurrentHashMap<>();
         this.ClientsLastSeen = new ConcurrentHashMap<>();
+
+        commands.put(RequestMethodsConstants.METHOD_JOIN_GAME, r -> {
+            try {
+                joinGameLobby((JoinNetworkRequest) r);
+            } catch (Exception e) {
+                //throw new RuntimeException(e);
+                System.err.println("Error to join the game: " + e.getMessage());
+            }
+        });
+        commands.put(RequestMethodsConstants.METHOD_SHOW_LOBBIES, r -> {
+            try {
+                showLobbies((ShowLobbyNetworkRequest)r);
+            } catch (Exception e) {
+               //throw new RuntimeException(e);
+                System.err.println("Error to show the lobbies: " + e.getMessage());
+            }
+        });
+        commands.put(RequestMethodsConstants.METHOD_NEW_GAME, r -> {
+            try {
+                createNewLobby((NewGameNetworkRequest) r);
+            } catch (IOException e) {
+                //throw new RuntimeException(e);
+                System.err.println("Error to create a lobby: " + e.getMessage());
+            }
+        });
+        commands.put(RequestMethodsConstants.METHOD_DRAW, r-> {
+            try {
+                DrawNetworkRequest req = (DrawNetworkRequest) r;
+                GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
+                ctrl.handleDraw(req);
+            } catch (PlayerNotFoundException e) {
+                //throw new RuntimeException(e);
+                System.err.println("Player not found: " + e.getMessage());
+            }
+        });
+        commands.put(RequestMethodsConstants.METHOD_PLACE_TOTEM, r-> {
+            try {
+                TotemNetworkRequest req = (TotemNetworkRequest) r;
+                GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
+                ctrl.handleTotemAction(req);
+            } catch (PlayerNotFoundException e) {
+                //throw new RuntimeException(e);
+                System.err.println("Error to place the totem: " + e.getMessage());
+            }
+        });
+        commands.put(RequestMethodsConstants.PING, r -> {
+                PingNetworkRequest req = (PingNetworkRequest) r;
+
+        });
     }
 
 
     public void handleNetworkRequest (NetworkRequest request) throws Exception {
-
-        if(request == null){
+        if(request == null || request.getType() == null){
             System.out.println("Stringa vuota!");
             return;
         }
         if(!clients.containsKey(request.getPlayerID()))
         {
-         //   System.out.println("illegal request received");
             throw new IllegalAccessException("illegal request received");
         }
         ClientsLastSeen.put(request.getPlayerID(), System.currentTimeMillis());
-        if(request.getType().equals(RequestMethodsConstants.PING)) {return;}
-
-        if(request.getType().equals(RequestMethodsConstants.METHOD_JOIN_GAME)) {
-
-            JoinNetworkRequest req = (JoinNetworkRequest) request;
-            System.out.println(req.getPlayerID() + " sta provando ad entrare nel tubo " + req.getGameID() + " col colore: " + req.getColor());
-            joinGameLobby(req);
+        if(commands.containsKey(request.getType())){
+            commands.get(request.getType()).accept(request);
         }
-        else if(request.getType().equals(RequestMethodsConstants.METHOD_SHOW_LOBBIES)) {
-            ShowLobbyNetworkRequest req = (ShowLobbyNetworkRequest) request;
-            showLobbies(req);
-
-        }
-        else if(request.getType().equals(RequestMethodsConstants.METHOD_NEW_GAME)) {
-            NewGameNetworkRequest req = (NewGameNetworkRequest) request;
-            createNewLobby(req);
-        }
-        else if(request.getType().equals(RequestMethodsConstants.METHOD_DRAW)) {
-
-        }
-        else if(request.getType().equals(RequestMethodsConstants.METHOD_PLACE_TOTEM)) {
-
+        else {
+            System.err.println("Unknow request type: " + request.getType());
         }
 
-        else if(request.getType().equals("")) {
-
-        }
-
-        else if(request.getType().equals("")) {
-
-        }
 
     }
 
@@ -86,6 +115,16 @@ public class Server {
         System.out.println("Client " + identifier + " has been added");
         //TODO add listener threads when accepting socket connection
     }
+    public void disconnect(String id) throws Exception {
+        clients.remove(id);
+        ClientsLastSeen.remove(id);
+        System.out.println("Client " + id + " has been disconnected");
+        //TODO closes the game aswell
+        for(VirtualView v : clients.values()) {
+            v.receiveMessage("User "+id+" Has left");
+        }
+
+    }
 
 
     //old main put into start method
@@ -96,20 +135,29 @@ public class Server {
         Thread rmiThread = new Thread(() -> {
             try {
                 new RmiServer(serverName, ServerConfig.SERVER_PORT_RMI, this).start();
-                System.out.println("RMI server started");
+                System.out.println("RmiServer on");
             } catch (RemoteException e) {
                 System.out.println("RmiServer Fail" + e.getMessage());
 
                 //modifica: aggiunto un altro catch per la nuova eccezione
             } catch (UnknownHostException e) {
-                throw new RuntimeException(e);
+                System.out.println("Failed to start RMI server!");
             }
         });
-        rmiThread.setDaemon(true);
         rmiThread.start();
 
+
         //SocketServer launch
-        //TODO Thread socketThread = new Thread(() -> { new SocketServer(serverName,1100).start();});
+        Thread socketThread = new Thread(() -> {
+            try {
+                new SocketServer(new ServerSocket(ServerConfig.SERVER_PORT_SOCKET), this).start();
+                System.out.println("SocketServer on");
+
+            } catch (IOException e) {
+                System.out.println("Failed to start socket server!");
+            }
+        });
+        socketThread.start();
         Thread pingThread = new Thread(() -> {
             while(true) {
                 try {
@@ -119,31 +167,21 @@ public class Server {
                         if(time - ClientsLastSeen.get(id) > 11000)
                         {
                             disconnect(id); //removes him form last seen, form clients list, sends message to everyone else
+                        }
                     }
-                }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
         });
+        pingThread.setDaemon(true);
         pingThread.start();
     }
-    public void disconnect(String id) throws Exception {
-        clients.remove(id);
-        ClientsLastSeen.remove(id);
-        System.out.println("Client " + id + " has been disconnected");
-        for(VirtualView v : clients.values()) {
-            v.receiveMessage("User "+id+" Has left");
-        }
 
-    }
 
     public static void main(String[] args) throws RemoteException {
         Server server = new Server();
         server.start();
-
-
-
     }
 
     //methods for creating a new game (on player request), showing active games (on player request)
@@ -169,10 +207,10 @@ public class Server {
         if(controller!=null) {
         //checks if player is already in game
             if(controller.isPlayerInGame(request.getPlayerID())) {throw new PlayerAlreadyInGameException(request.getPlayerID());}
-            controller.handleAddPlayerMessage(request); //(request, connection)
-            VirtualView connection = clients.get(request.getPlayerID());
-
+            GameObserver obs = new NetworkObserver(clients.get(request.getPlayerID()));
+            controller.handleAddPlayerMessage(request,obs); //(request, connection)
         }
+        //TODO: notificare il client se la lobby non esiste
     }
 
 }
