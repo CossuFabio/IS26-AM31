@@ -2,10 +2,7 @@ package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.exceptions.TooManyPlayersException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
-import it.polimi.ingsw.am31.am31.network.requests.JoinNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.NewGameNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 
 
@@ -19,7 +16,7 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         ClientController controller = new ClientController();
         System.out.println("Enter Nickname: ");
-        String nickname = "aicocsu";//scanner.nextLine();
+        String nickname = args[0];//scanner.nextLine();
 
         //modifica:
         System.out.println("Enter server IP: ");
@@ -30,19 +27,20 @@ public class Client {
 
         System.out.println("Enter 1 for RMI, 2 for Socket: ");
         int type = 1;  //scanner.nextInt();
+        int newport = Integer.parseInt(args[1]);
         VirtualServer connection = null;
         switch (type) {
             //ip is localhost
             //case 1 starts
-            case 1: connection = new RmiClient(ip,ServerConfig.SERVER_PORT_RMI,nickname);
+            case 1: connection = new RmiClient(ip,newport,nickname);
                     break;
             case 2: connection = new RmiClient(ip,ServerConfig.SERVER_PORT_SOCKET,nickname); //temporary
                 break;
             default:
                 break;
         }
-
-
+        //starts pinging every 5 seconds
+        Ping(connection);
         while(true){
             NetworkRequest request = null;
             System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby");
@@ -68,36 +66,29 @@ public class Client {
             }
             ((VirtualServer) connection).sendRequest(request);
         }
+    }
+    public static void Ping (VirtualServer connection) {
+        Thread pingThread = new Thread (() -> {
+            while(true) {
+                try{
+                    Thread.sleep(5000);
+                    NetworkRequest ping = new PingNetworkRequest();
+                    connection.sendRequest(ping);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    System.out.println("Server Error");
+                    try {
+                        connection.disconnect();
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                }
+                }
 
-        /*System.out.print("Commands:\ncreateGame [nplayer]\nshowLobbies\njoinLobby [number of lobby] [totem's color]\n");
-        while(true) {
-            NetworkRequest request = null;
-            System.out.print("> ");
-            // Receives input commands, create request and sends it to server
-            String command = scan.next();
-            if(command.equals("createGame") )
-            {
-                int nplayers = scan.nextInt();
-                request = new NewGameNetworkRequest(nplayers);
-            }
-            else if(command.equals("showLobbies"))
-            {
-                request = new ShowLobbyNetworkRequest(nickname);
-            }
-            else if(command.equals("joinLobby"))
-            {
-                int i = scan.nextInt();
-                Color color = Color.valueOf(scan.next());
-                request = new JoinNetworkRequest(nickname, color, i);
-            }
-            else {
-                System.out.println("Comando non riconosciuto: " + command);
-            }
-
-            if(request != null) {
-                ((VirtualServer) connection).sendRequest(request);
-            }
-        }*/
-
+        });
+        pingThread.setDaemon(true);
+        pingThread.start();
     }
 }

@@ -40,4 +40,6 @@ public abstract class UpdateMessage {
     @JsonIgnore
     public String getUpdateType(){return updateType; }
 
+    public void acceptVisit (UpdateVisitor updateVisitor) { return; }
+    public void ShowUpdate () {System.out.println("SUcA");}
 }
