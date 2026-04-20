@@ -5,10 +5,12 @@ import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoun
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
+import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateFactory;
 
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -79,41 +81,10 @@ public class Server {
 
 
     public void handleNetworkRequest (NetworkRequest request) {
-        if(request == null){
+        if(request == null || request.getType() == null){
             System.out.println("Stringa vuota!");
             return;
         }
-
-
-//        if(request.getType().equals(RequestMethodsConstants.METHOD_JOIN_GAME)) {
-//            JoinNetworkRequest req = (JoinNetworkRequest) request;
-//            System.out.println(req.getPlayerID() + " sta provando ad entrare nel tubo " + req.getGameID() + " col colore: " + req.getColor());
-//            joinGameLobby(req);
-//
-//        }
-//        else if(request.getType().equals(RequestMethodsConstants.METHOD_SHOW_LOBBIES)) {
-//            ShowLobbyNetworkRequest req = (ShowLobbyNetworkRequest) request;
-//            showLobbies(req);
-//
-//        }
-//        else if(request.getType().equals(RequestMethodsConstants.METHOD_NEW_GAME)) {
-//            NewGameNetworkRequest req = (NewGameNetworkRequest) request;
-//            createNewLobby(req);
-//        }
-//        else if(request.getType().equals(RequestMethodsConstants.METHOD_DRAW)) {
-//
-//        }
-//        else if(request.getType().equals(RequestMethodsConstants.METHOD_PLACE_TOTEM)) {
-//
-//        }
-//
-//        else if(request.getType().equals("")) {
-//
-//        }
-//
-//        else if(request.getType().equals("")) {
-//
-//        }
 
         if(commands.containsKey(request.getType())){
             commands.get(request.getType()).accept(request);
@@ -149,14 +120,23 @@ public class Server {
 
                 //modifica: aggiunto un altro catch per la nuova eccezione
             } catch (UnknownHostException e) {
-                throw new RuntimeException(e);
+                System.out.println("Failed to start RMI server!");
             }
         });
         rmiThread.start();
 
 
         //SocketServer launch
-        //TODO Thread socketThread = new Thread(() -> { new SocketServer(serverName,1100).start();});
+        Thread socketThread = new Thread(() -> {
+            try {
+                new SocketServer(new ServerSocket(ServerConfig.SERVER_PORT_SOCKET), this).start();
+                System.out.println("SocketServer on");
+
+            } catch (IOException e) {
+                System.out.println("Failed to start socket server!");
+            }
+        });
+        socketThread.start();
     }
 
 
