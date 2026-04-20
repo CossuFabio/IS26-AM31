@@ -1,7 +1,8 @@
 package it.polimi.ingsw.am31.am31.network.socket.server;
 
-public interface VirtualServerSocket {
+import java.rmi.Remote;
 
+public interface VirtualServerSocket extends Remote {
 
 
 }

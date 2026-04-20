@@ -2,10 +2,7 @@ package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
-import it.polimi.ingsw.am31.am31.network.requests.JoinNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.NewGameNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 
 
@@ -43,7 +40,7 @@ public class Client {
             default:
                 break;
         }
-
+        Ping(connection);
 
         while(true){
             NetworkRequest request = null;
@@ -70,5 +67,29 @@ public class Client {
             }
             connection.sendRequest(request);
         }
+    }
+    public static void Ping (VirtualServer connection) {
+        Thread pingThread = new Thread (() -> {
+            while(true) {
+                try{
+                    Thread.sleep(5000);
+                    NetworkRequest ping = new PingNetworkRequest();
+                    connection.sendRequest(ping);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    System.out.println("Server Error");
+                    try {
+                        connection.disconnect();
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                }
+            }
+
+        });
+        pingThread.setDaemon(true);
+        pingThread.start();
     }
 }

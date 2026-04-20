@@ -25,13 +25,15 @@ public class Server {
     private final Map<String, VirtualView> clients;
     //gamesManager, contains games and controllers
     private final GamesManager gamesManager;
-
     //map that associates each string-type with the method to call
     private final Map<String, Consumer<NetworkRequest>> commands = new HashMap<>();
+    //map of connected players with their last seen time
+    private final Map<String, Long> ClientsLastSeen;
 
     public Server() {
         this.gamesManager = new GamesManager();
         this.clients = new ConcurrentHashMap<>();
+        this.ClientsLastSeen = new ConcurrentHashMap<>();
 
         commands.put(RequestMethodsConstants.METHOD_JOIN_GAME, r -> {
             try {
@@ -77,15 +79,23 @@ public class Server {
                 System.err.println("Error to place the totem: " + e.getMessage());
             }
         });
+        commands.put(RequestMethodsConstants.PING, r -> {
+                PingNetworkRequest req = (PingNetworkRequest) r;
+
+        });
     }
 
 
-    public void handleNetworkRequest (NetworkRequest request) {
+    public void handleNetworkRequest (NetworkRequest request) throws Exception {
         if(request == null || request.getType() == null){
             System.out.println("Stringa vuota!");
             return;
         }
-
+        if(!clients.containsKey(request.getPlayerID()))
+        {
+            throw new IllegalAccessException("illegal request received");
+        }
+        ClientsLastSeen.put(request.getPlayerID(), System.currentTimeMillis());
         if(commands.containsKey(request.getType())){
             commands.get(request.getType()).accept(request);
         }
@@ -101,8 +111,19 @@ public class Server {
     public void addClient(String identifier, VirtualView virtualView) {
 
         clients.put(identifier, virtualView);
+        ClientsLastSeen.put(identifier, System.currentTimeMillis());
         System.out.println("Client " + identifier + " has been added");
         //TODO add listener threads when accepting socket connection
+    }
+    public void disconnect(String id) throws Exception {
+        clients.remove(id);
+        ClientsLastSeen.remove(id);
+        System.out.println("Client " + id + " has been disconnected");
+        //TODO closes the game aswell
+        for(VirtualView v : clients.values()) {
+            v.receiveMessage("User "+id+" Has left");
+        }
+
     }
 
 
@@ -137,6 +158,24 @@ public class Server {
             }
         });
         socketThread.start();
+        Thread pingThread = new Thread(() -> {
+            while(true) {
+                try {
+                    Thread.sleep(10000);
+                    long time = System.currentTimeMillis();
+                    for(String id : ClientsLastSeen.keySet()) {
+                        if(time - ClientsLastSeen.get(id) > 11000)
+                        {
+                            disconnect(id); //removes him form last seen, form clients list, sends message to everyone else
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        pingThread.setDaemon(true);
+        pingThread.start();
     }
 
 
