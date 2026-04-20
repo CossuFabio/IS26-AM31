@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.network;
 import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.exceptions.PlayerAlreadyInGameException;
+import it.polimi.ingsw.am31.am31.exceptions.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
@@ -34,43 +35,50 @@ public class Server {
             try {
                 joinGameLobby((JoinNetworkRequest) r);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
+                System.err.println("Error to join the game: " + e.getMessage());
             }
         });
         commands.put(RequestMethodsConstants.METHOD_SHOW_LOBBIES, r -> {
             try {
                 showLobbies((ShowLobbyNetworkRequest)r);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+               //throw new RuntimeException(e);
+                System.err.println("Error to show the lobbies: " + e.getMessage());
             }
         });
         commands.put(RequestMethodsConstants.METHOD_NEW_GAME, r -> {
             try {
                 createNewLobby((NewGameNetworkRequest) r);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
+                System.err.println("Error to create a lobby: " + e.getMessage());
             }
         });
         commands.put(RequestMethodsConstants.METHOD_DRAW, r-> {
-            try{
-
-
-            }
-            catch (Exception e) {
-
+            try {
+                DrawNetworkRequest req = (DrawNetworkRequest) r;
+                GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
+                ctrl.handleDraw(req);
+            } catch (PlayerNotFoundException e) {
+                //throw new RuntimeException(e);
+                System.err.println("Player not found: " + e.getMessage());
             }
         });
-        commands.put(RequestMethodsConstants.METHOD_PLACE_TOTEM, r->{
+        commands.put(RequestMethodsConstants.METHOD_PLACE_TOTEM, r-> {
             try {
-
-            } catch (Exception e) {
-
+                TotemNetworkRequest req = (TotemNetworkRequest) r;
+                GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
+                ctrl.handleTotemAction(req);
+            } catch (PlayerNotFoundException e) {
+                //throw new RuntimeException(e);
+                System.err.println("Error to place the totem: " + e.getMessage());
             }
         });
     }
 
 
-    public void handleNetworkRequest (NetworkRequest request) throws Exception {
+    public void handleNetworkRequest (NetworkRequest request) {
         if(request == null){
             System.out.println("Stringa vuota!");
             return;
@@ -109,6 +117,9 @@ public class Server {
 
         if(commands.containsKey(request.getType())){
             commands.get(request.getType()).accept(request);
+        }
+        else {
+            System.err.println("Unknow request type: " + request.getType());
         }
 
 
@@ -180,6 +191,7 @@ public class Server {
             GameObserver obs = new NetworkObserver(clients.get(request.getPlayerID()));
             controller.handleAddPlayerMessage(request,obs); //(request, connection)
         }
+        //TODO: notificare il client se la lobby non esiste
     }
 
 }
