@@ -27,7 +27,7 @@ public class Client {
         String ip = "127.0.0.1";
 
         System.out.println("Enter 1 for RMI, 2 for Socket: ");
-        int type = 2;  //scanner.nextInt();
+        int type = 1;  //scanner.nextInt();
         int newport = Integer.parseInt(args[0]);
         VirtualServer connection = null;
         switch (type) {
@@ -45,7 +45,7 @@ public class Client {
 
         while(true){
             NetworkRequest request = null;
-            System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby");
+            System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n4 - Place your Totem\n5 - Draw a card\n");
             System.out.print("> ");
             String input = scanner.next();
 
@@ -65,6 +65,9 @@ public class Client {
                     Color color = Color.valueOf(scanner.next());
                     request = new JoinNetworkRequest(color, i);
                     break;
+                case "4" :
+                    System.out.println("Enter your chosen OfferCard");
+
             }
             connection.sendRequest(request);
         }

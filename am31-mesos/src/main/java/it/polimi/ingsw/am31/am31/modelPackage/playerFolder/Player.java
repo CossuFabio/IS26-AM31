@@ -3,6 +3,8 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endGame.DefaultEndGameHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endGame.IEndGameHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endRound.DefaultEndRoundHandler;
@@ -28,7 +30,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Player {
+public class Player implements GameObservable {
     private final Color color;
     private int food;
     private int prestigePoints;
@@ -218,6 +220,10 @@ public class Player {
         return this == player || this.nickname.equals(((Player) player).getNickname());
     }
 
+    @Override
+    public void addObserver(ObserverHandler obs){
+
+    }
 
 
 }

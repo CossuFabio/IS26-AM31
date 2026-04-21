@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -27,13 +28,10 @@ public class Server {
     private final GamesManager gamesManager;
     //map that associates each string-type with the method to call
     private final Map<String, Consumer<NetworkRequest>> commands = new HashMap<>();
-    //map of connected players with their last seen time
-    private final Map<String, Long> ClientsLastSeen;
 
     public Server() {
         this.gamesManager = new GamesManager();
         this.clients = new ConcurrentHashMap<>();
-        this.ClientsLastSeen = new ConcurrentHashMap<>();
 
         commands.put(RequestMethodsConstants.METHOD_JOIN_GAME, r -> {
             try {
@@ -91,8 +89,13 @@ public class Server {
             System.out.println("Stringa vuota!");
             return;
         }
-
-        ClientsLastSeen.put(request.getPlayerID(), System.currentTimeMillis());
+        if(!clients.containsKey(request.getPlayerID()) && !Objects.equals(request.getType(), RequestMethodsConstants.METHOD_JOIN_GAME))
+        {
+            System.out.println("Richiesta da utente non valido ricevuta");
+            return;
+        }
+        for(VirtualView v : clients.values())
+            v.updateLastTime();
         if(commands.containsKey(request.getType())){
             commands.get(request.getType()).accept(request);
         }
@@ -108,26 +111,15 @@ public class Server {
     public void addClient(String identifier, VirtualView virtualView) {
 
         clients.put(identifier, virtualView);
-        ClientsLastSeen.put(identifier, System.currentTimeMillis());
         System.out.println("Client " + identifier + " has been added");
         //TODO add listener threads when accepting socket connection
     }
-    public void disconnect(String id) throws Exception {
-        clients.remove(id);
-        ClientsLastSeen.remove(id);
-        System.out.println("Client " + id + " has been disconnected");
-        //TODO closes the game aswell
-        for(VirtualView v : clients.values()) {
-            v.receiveMessage("User "+id+" Has left");
-        }
 
-    }
 
 
     //old main put into start method
     public void start() {
         final String serverName = ServerConfig.SERVER_NAME;
-
         //Rmi server  launch
         Thread rmiThread = new Thread(() -> {
             try {
@@ -135,8 +127,6 @@ public class Server {
                 System.out.println("RmiServer on");
             } catch (RemoteException e) {
                 System.out.println("RmiServer Fail" + e.getMessage());
-
-                //modifica: aggiunto un altro catch per la nuova eccezione
             } catch (UnknownHostException e) {
                 System.out.println("Failed to start RMI server!");
             }
@@ -160,10 +150,11 @@ public class Server {
                 try {
                     Thread.sleep(ServerConfig.HEARTBEAT_SERVER_INTERVAL);
                     long time = System.currentTimeMillis();
-                    for(String id : ClientsLastSeen.keySet()) {
-                        if(time - ClientsLastSeen.get(id) > ServerConfig.HEARTBEAT_TIMOUT)
+                    for(Map.Entry<String, VirtualView> v : clients.entrySet()) {
+                        if(time - v.getValue().getLastTime() > ServerConfig.HEARTBEAT_TIMOUT)
                         {
-                            disconnect(id); //removes him form last seen, form clients list, sends message to everyone else
+                             //removes client form clients list, sends message to everyone else
+                            disconnect(v.getKey());
                         }
                     }
                 } catch (Exception e) {
@@ -174,7 +165,14 @@ public class Server {
         pingThread.setDaemon(true);
         pingThread.start();
     }
-
+    public void disconnect(String id) throws Exception {
+       clients.remove(id);
+        System.out.println(" Client "+id+ " has been disconnected");
+        //TODO closes the game aswell
+        for(VirtualView g : clients.values()) {
+            g.receiveMessage("a User "+id + " has left");
+        }
+    }
 
     public static void main(String[] args) throws RemoteException {
         Server server = new Server();

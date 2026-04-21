@@ -12,9 +12,11 @@ import java.util.List;
 
 public class RmiClientAdapter implements VirtualView {
     private final VirtualViewRmi clientStub;
+    private long lastTimeSeen;
 
     public RmiClientAdapter (VirtualViewRmi client) {
         this.clientStub = client;
+        lastTimeSeen = System.currentTimeMillis();
 
     }
     //adapter contains the clients callback in clientStub, calls methods on the stub.
@@ -47,6 +49,14 @@ public class RmiClientAdapter implements VirtualView {
             System.err.println("RmiClientAdapter.receiveUpdate error");
         }
     }
+    @Override
+    public void updateLastTime() {
+     this.lastTimeSeen = System.currentTimeMillis();
+    }
 
-    ;
+
+    @Override
+    public long  getLastTime() {
+        return lastTimeSeen;
+    }
 }

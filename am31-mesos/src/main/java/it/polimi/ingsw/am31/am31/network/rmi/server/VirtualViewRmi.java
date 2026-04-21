@@ -13,6 +13,8 @@ public interface VirtualViewRmi extends Remote {
     void receiveUpdate(String data) throws RemoteException;
     void receiveMessage(String data) throws RemoteException;
     void receiveErrorMessage(String errorMessage) throws RemoteException;
+    void updateLastTime() throws RemoteException;
+    long getLastTime() throws RemoteException;
 
     //Tolto anche qua, vedi motivazioni su VirtualView se serve
     //void setGameController(GameController controller) throws RemoteException;

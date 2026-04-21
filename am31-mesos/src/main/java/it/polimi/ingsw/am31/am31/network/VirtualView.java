@@ -12,6 +12,8 @@ public interface VirtualView {
     void receiveUpdate(UpdateMessage data) throws Exception;
     void receiveMessage(String data) throws Exception;
     void receiveErrorMessage(ErrorMessage error);
+    void updateLastTime();
+    long getLastTime();
 
     //Lo lascio scritto commentato ma andrebbe tolto: non si puo mandare un controller intero via rete
     //per due motivi:

@@ -75,4 +75,14 @@ public class SocketClientHandler implements VirtualView {
         this.output.println(ErrorMessageMapper.serialize(error));
         this.output.flush();
     }
+
+    @Override
+    public void updateLastTime() {
+
+    }
+
+    @Override
+    public long getLastTime() {
+        return 0;
+    }
 }

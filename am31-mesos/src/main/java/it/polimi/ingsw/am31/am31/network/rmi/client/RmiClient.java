@@ -60,6 +60,16 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     }
 
     @Override
+    public void updateLastTime() throws RemoteException {
+
+    }
+
+    @Override
+    public long getLastTime() throws RemoteException {
+        return 0;
+    }
+
+    @Override
     public void receiveUpdate (String updateMessage) {
         UpdateMessage message = UpdateMapper.deserialize(updateMessage);
 
