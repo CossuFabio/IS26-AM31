@@ -3,6 +3,8 @@ import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerAlreadyInGameException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
+import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorCategory;
+import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
 import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
@@ -61,7 +63,7 @@ public class Server {
             try {
                 DrawNetworkRequest req = (DrawNetworkRequest) r;
                 GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
-                ctrl.handleDraw(req);
+                //ctrl.handleDraw(req);
             } catch (PlayerNotFoundException e) {
                 //throw new RuntimeException(e);
                 System.err.println("Player not found: " + e.getMessage());
@@ -71,7 +73,7 @@ public class Server {
             try {
                 TotemNetworkRequest req = (TotemNetworkRequest) r;
                 GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
-                ctrl.handleTotemAction(req);
+                //ctrl.handleTotemAction(req);
             } catch (PlayerNotFoundException e) {
                 //throw new RuntimeException(e);
                 System.err.println("Error to place the totem: " + e.getMessage());
@@ -81,6 +83,7 @@ public class Server {
                 PingNetworkRequest req = (PingNetworkRequest) r;
 
         });
+
     }
 
 
@@ -198,14 +201,31 @@ public class Server {
     }
 
     public void joinGameLobby(JoinNetworkRequest request) throws Exception {
+        VirtualView requester = clients.get(request.getPlayerID());
+        if (requester == null)
+        {
+            System.err.println("Joingame: client not found for player " + request.getPlayerID());
+            return;
+        }
+
         GameController controller = gamesManager.getControllerI(request.getGameID());
-        if(controller!=null) {
-        //checks if player is already in game
-            if(controller.isPlayerInGame(request.getPlayerID())) {throw new PlayerAlreadyInGameException(request.getPlayerID());}
+
+        if (controller == null)
+        {
+            requester.receiveErrorMessage(new ErrorMessage("Lobby does not exist.", ErrorCategory.LOBBY_ERROR));
+            return;
+        }
+        else
+        {
+            //checks if player is already in game
+            if(controller.isPlayerInGame(request.getPlayerID()))
+            {
+                requester.receiveErrorMessage(new ErrorMessage("Player already in game.", ErrorCategory.LOBBY_ERROR));
+                throw new PlayerAlreadyInGameException(request.getPlayerID());
+            }
             GameObserver obs = new NetworkObserver(clients.get(request.getPlayerID()));
             controller.handleAddPlayerMessage(request,obs); //(request, connection)
         }
-        //TODO: notificare il client se la lobby non esiste
     }
 
 }

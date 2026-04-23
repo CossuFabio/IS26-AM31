@@ -39,7 +39,10 @@ public class GamesManager {
     public List<GameController> getActiveGames(){return this.activeGames.stream().toList();}
 
     public GameController getControllerI(int i) {
+        if (i < 0 || i >= activeGames.size()) return null;
         return this.activeGames.get(i);
+        //old version: return this.activeGames.get(i);
+        //c'era un problema con il metodo joinGameLobby di server.java che non riusciva a rilevare l'errore controller == null
     }
 
     //TODO: method for deleting active game

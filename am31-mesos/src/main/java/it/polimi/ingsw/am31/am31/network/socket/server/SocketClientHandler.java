@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.network.VirtualView;
 import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessageMapper;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
@@ -35,7 +36,10 @@ public class SocketClientHandler implements VirtualView {
             while((jsonReq = input.readLine()) != null){
                 System.out.println(jsonReq);
                 NetworkRequest req = RequestsMapper.deserialize(jsonReq);
-                mainServer.handleNetworkRequest(req);
+                if(req.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION))
+                    mainServer.addClient(req.getPlayerID(), this);
+                else
+                    mainServer.handleNetworkRequest(req);
             }
         }catch(IOException e){
             System.err.println("Input error");
@@ -46,6 +50,7 @@ public class SocketClientHandler implements VirtualView {
             closeConnection();
         }
     }
+
 
     private void closeConnection(){
         try{

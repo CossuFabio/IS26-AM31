@@ -5,7 +5,10 @@ module it.polimi.ingsw.am31.am31 {
     requires com.fasterxml.jackson.databind;
     requires java.rmi;
     requires java.desktop;
-   // requires it.polimi.ingsw.am31.am31;
+    requires it.polimi.ingsw.am31.am31;
+    //requires it.polimi.ingsw.am31.am31;
+    //requires it.polimi.ingsw.am31.am31;
+    // requires it.polimi.ingsw.am31.am31;
     //requires it.polimi.ingsw.am31.am31;
 
 

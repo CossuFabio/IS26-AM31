@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am31.am31.controller;
 
+import it.polimi.ingsw.am31.am31.exceptions.GameInvariantException;
+import it.polimi.ingsw.am31.am31.exceptions.IllegalActionException;
+import it.polimi.ingsw.am31.am31.exceptions.LobbyException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerColorAlreadyTakenException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
@@ -26,7 +29,7 @@ import java.util.List;
 
 public class GameController {
 
-    private ResourceFinder resourceFinder;
+    private final ResourceFinder resourceFinder;
     private Game game;
     private final ObserverHandler observerHandler;
 
@@ -46,97 +49,79 @@ public class GameController {
     }
 
     //-----Requests handling-----
-    public void handleAddPlayerMessage(JoinNetworkRequest request, GameObserver obs){
+    public void handleAddPlayerMessage(JoinNetworkRequest request, GameObserver obs) throws LobbyException, IllegalActionException {
 
         Player newPlayer = new Player(request.getPlayerID(), request.getColor());
-
-        try{
-            game.addPlayer(newPlayer);
-            observerHandler.addObserver(obs);
-            if(game.getPlayersList().size() == game.getNumPlayers())
-                game.gameStart();
-            //Must notify clients after game starts!
-        }catch(UsernameAlreadyTakenException | PlayerColorAlreadyTakenException | TooManyPlayersException e){
-            //Client.sendError(e.getMessage()); //Client side exception
-        }catch(EmptyDeckException | WrongRoundPhaseException | InsufficientPlayersNumberException e){
-            System.err.println(e.getMessage()); //Server side error
-        }
+        game.addPlayer(newPlayer);
+        observerHandler.addObserver(obs);
+        if(game.getPlayersList().size() == game.getNumPlayers())
+            game.gameStart();
 
     }
 
     //Must add all exceptions and add the request source's connection in signature
-    public void handleDraw(DrawNetworkRequest request){
-        try{
+    public void handleDraw(DrawNetworkRequest request) throws IllegalActionException{
+        
 
-            Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
-            Card card = resourceFinder.getCardFromId(request.getCardID());
+        Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
+        Card card = resourceFinder.getCardFromId(request.getCardID());
 
-            if(! (card instanceof IPickable)){
-                throw new InvalidDrawException();
+        if(! (card instanceof IPickable)){
+            throw new InvalidDrawException();
+        }
+
+        if(request.getBoardRows() == BoardRows.UPPER){
+            game.playerDrawFromUpper(player, ((IPickable)card));
+        }
+        else if(request.getBoardRows() == BoardRows.LOWER){
+            game.playerDrawFromLower(player, ((IPickable)card));
+        }
+        else{
+            throw new InvalidResourceException("ROW");
+        }
+
+
+        if (game.getCurrentRoundPhase() == RoundPhasesEnum.ACTION_PHASE) {
+            while(game.hasCurrentPlayerFinishedDrawing() && !game.isDrawPhaseFinished()) {
+                game.setNextPlayerDrawing();
             }
 
-            if(request.getBoardRows() == BoardRows.UPPER){
-                game.playerDrawFromUpper(player, ((IPickable)card));
+            if(game.isDrawPhaseFinished()) {
+                startBonusDrawPhase();
             }
-            else if(request.getBoardRows() == BoardRows.LOWER){
-                game.playerDrawFromLower(player, ((IPickable)card));
-            }
-            else{
-                throw new InvalidResourceException("ROW");
-            }
-
-
-            if (game.getCurrentRoundPhase() == RoundPhasesEnum.ACTION_PHASE) {
-
-                while(game.hasCurrentPlayerFinishedDrawing() && !game.isDrawPhaseFinished()) {
-                    game.setNextPlayerDrawing();
-                }
-
-                if(game.isDrawPhaseFinished()) {
-                    startBonusDrawPhase();
-                }
             }
             else if (game.getCurrentRoundPhase() == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
 
-                // Qui usiamo il metodo isBonusDrawPhaseFinished! Non avremo mai eccezioni.
+
                 if (game.hasCurrentPlayerFinishedDrawing() && game.isBonusDrawPhaseFinished()) {
                     startEndGamePhase();
                 }
             }
 
         }
-        catch(Exception e){
-            //client.notify(e.getMessage());
-        }
-    }
+
+
 
     //-----TOTEM PHASE-----
     //TODO: Test this
-    public void handleTotemAction(TotemNetworkRequest request) {
-        try{
-            Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
-            OfferCard offerCard = resourceFinder.getOfferCard(request.getOfferTrackID());
+    public void handleTotemAction(TotemNetworkRequest request) throws IllegalActionException{
 
-            game.totemChoiceAction(player, offerCard);
-
-            if(game.getTurnOrder().everybodyPlayed())
-                startDrawPhase();
-
-        } catch (PlayerNotFoundException | WrongRoundPhaseException | OfferTrackTileAlreadyTakenException |
-                 WrongPlayerTurnException | OfferCardNotFoundException | InvalidPickException | InvalidResourceException e) {
-            //client.notify(message);
-        } catch(EverybodyPlayedException e){
-            System.err.println(e.getMessage());
-        }
-
+        Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
+        OfferCard offerCard = resourceFinder.getOfferCard(request.getOfferTrackID());
+        game.totemChoiceAction(player, offerCard);
+        if(game.getTurnOrder().everybodyPlayed())
+            startDrawPhase();
     }
 
-    public void startTotemPlacingPhase(){
+    public void startTotemPlacingPhase() throws IllegalActionException{
         try{
             game.setUpTotemPlacingPhase();
+        }catch(GameInvariantException e){
+            System.err.println("Game invariant violated! ");
+            e.printStackTrace();
         }
-        catch (WrongRoundPhaseException e) {System.out.println(e.getMessage());}
-        catch(IllegalStateException e) {System.out.println(e.getMessage());}
+
+
     }
 
 
@@ -176,7 +161,7 @@ public class GameController {
             if(game.isGameFinished()) handleEndGame();
             else startTotemPlacingPhase();
 
-        }catch (WrongRoundPhaseException e) {System.out.println(e.getMessage());}
+        }catch (Exception e) {System.out.println(e.getMessage());}
 
     }
 

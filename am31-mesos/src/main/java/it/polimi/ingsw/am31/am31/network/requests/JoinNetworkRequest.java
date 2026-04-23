@@ -10,7 +10,6 @@ public class JoinNetworkRequest extends NetworkRequest {
     private final int gameID;
 
 
-    //TODO: Finish this
     @JsonCreator
     public JoinNetworkRequest(
             @JsonProperty("color")Color color,

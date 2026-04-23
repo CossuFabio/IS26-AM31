@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.Building
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endGame.DefaultEndGameHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endGame.IEndGameHandler;
@@ -51,6 +52,8 @@ public class Player implements GameObservable {
     private int bonusDrawFromUpper;
     private int bonusDrawFromLower;
 
+    private ObserverHandler observers;
+
     public Player(String nickname, Color color) {
         this.nickname = nickname;
         this.color = color;
@@ -72,6 +75,10 @@ public class Player implements GameObservable {
 
         bonusDrawFromLower = 0;
         bonusDrawFromUpper = 0;
+
+        //Prevents NullPointerException but must be set from game when creating new player!
+        this.observers = new GameObserversSet();
+
     }
 
     public String getNickname() {
@@ -87,7 +94,7 @@ public class Player implements GameObservable {
         int newFood = this.food + valFood;
         if(newFood < 0) this.food = 0;
         else this.food = newFood;
-        //updateViews();
+        observers.onPlayerScoresUpdate(this);
     }
 
     public int getFood() {
@@ -98,7 +105,7 @@ public class Player implements GameObservable {
         int oldPP = getPrestigePoints();
         int newPP = oldPP + valPP;
         this.prestigePoints = newPP;
-        //updateViews();
+        observers.onPlayerScoresUpdate(this);
     }
 
     public int getPrestigePoints() {
@@ -124,12 +131,14 @@ public class Player implements GameObservable {
     public void addCard(CharacterCard card) {
         this.drawHandler.handleDraw(this, card);
         personalTribeCards.add(card);
+        observers.onPlayerTribeUpdate(this);
     }
 
     public void addCard(BuildingCard card)
     {
         this.drawHandler.handleDraw(this, card);
         personalBuildingCards.add(card);
+        observers.onPlayerNewBuildingEvent(this);
     }
 
     public int getBuildersDiscount(){
@@ -222,7 +231,7 @@ public class Player implements GameObservable {
 
     @Override
     public void addObserver(ObserverHandler obs){
-
+        this.observers = obs;
     }
 
 

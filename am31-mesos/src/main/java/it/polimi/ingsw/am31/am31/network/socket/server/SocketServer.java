@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am31.am31.network.socket.server;
 
 import it.polimi.ingsw.am31.am31.network.Server;
+import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -25,7 +27,6 @@ public class SocketServer extends Thread implements VirtualServerSocket{
                 InputStreamReader socketRx = new InputStreamReader(client.getInputStream());
                 OutputStreamWriter socketTx = new OutputStreamWriter(client.getOutputStream());
                 SocketClientHandler clientHandler =  new SocketClientHandler(mainServer, this, new BufferedReader(socketRx), new PrintWriter(socketTx));
-
                 new Thread(()->{
                     try{
                         clientHandler.runVirtualView();

@@ -12,9 +12,10 @@ public class ErrorMessageMapper {
     public static String serialize(ErrorMessage request){
         try{
             String result = mapper.writeValueAsString(request);
-            System.out.println(result);
+            //System.out.println(result);
             return result;
         }catch(JsonProcessingException e){
+            System.err.println("Serialization error: " + e.getMessage());
             System.err.println(e);
         }
         return null;

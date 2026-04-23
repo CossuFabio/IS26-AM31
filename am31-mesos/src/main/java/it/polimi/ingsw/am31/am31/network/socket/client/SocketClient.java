@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.network.socket.client;
 
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.NewSocketConnectionNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
@@ -20,8 +21,8 @@ public class SocketClient implements VirtualServer, VirtualViewSocket{
         this.socket = new Socket(ip, port);
         this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.output = new PrintWriter(socket.getOutputStream());
-        
-
+        NetworkRequest newSocketReq = new NewSocketConnectionNetworkRequest();
+        sendRequest(newSocketReq);
         startClientSocket();
         System.out.println("Connesso al server");
     }
@@ -57,4 +58,6 @@ public class SocketClient implements VirtualServer, VirtualViewSocket{
     public void disconnect() throws Exception {
 
     }
+
+
 }

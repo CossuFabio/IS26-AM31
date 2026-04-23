@@ -65,6 +65,7 @@ public class Game implements GameObservable {
         this.turnOrder = new TurnOrder(nPlayers);
         this.currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
 
+
         this.gameResources = gameResources;
         tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
         buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
@@ -86,6 +87,7 @@ public class Game implements GameObservable {
 
         if(players.size()<nPlayers){
             players.add(player);
+            observers.onPlayersListUpdate(this);
         }
         else throw new TooManyPlayersException();
     }
@@ -145,6 +147,7 @@ public class Game implements GameObservable {
 
         this.roundNumber = 1;
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
+        observers.onGameRoundStatusUpdate(this);
     }
     
 
@@ -154,6 +157,7 @@ public class Game implements GameObservable {
         if(!isGameFinished()) throw new WrongRoundPhaseException();
 
         currentRoundPhase = RoundPhasesEnum.END_TURN;
+        observers.onGameRoundStatusUpdate(this);
 
         players.forEach(player->{player.resolveEndGame();});
         List<Player> scores = new  ArrayList<>();
@@ -227,6 +231,7 @@ public class Game implements GameObservable {
         if(!(this.currentRoundPhase == RoundPhasesEnum.BONUS_DRAWING_PHASE && isBonusDrawPhaseFinished())) throw new WrongRoundPhaseException();
 
         this.currentRoundPhase = RoundPhasesEnum.END_TURN;
+        observers.onGameRoundStatusUpdate(this);
         //Players handle the end of the round
         players.forEach(player -> player.resolveEndRound());
         resolveEvents();
@@ -426,7 +431,9 @@ public class Game implements GameObservable {
 
     }
 
-    public void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){this.currentRoundPhase = currentRoundPhase;}
+    public void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){
+        this.currentRoundPhase = currentRoundPhase;
+        observers.onGameRoundStatusUpdate(this);}
 
     public void setNextPlayerDrawing() throws IllegalStateException, WrongRoundPhaseException{
 
@@ -465,6 +472,7 @@ public class Game implements GameObservable {
         if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new WrongRoundPhaseException();
 
         this.currentRoundPhase = RoundPhasesEnum.BONUS_DRAWING_PHASE;
+        observers.onGameRoundStatusUpdate(this);
 
         Player playerWithBonus = players.stream().filter(player -> player.hasBonusDraw()).findFirst().orElse(null);
 
@@ -478,6 +486,7 @@ public class Game implements GameObservable {
         if(currentRoundPhase != RoundPhasesEnum.END_TURN) throw new WrongRoundPhaseException();
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
         roundNumber++;
+        observers.onGameRoundStatusUpdate(this);
     }
 
 }
