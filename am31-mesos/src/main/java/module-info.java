@@ -5,11 +5,7 @@ module it.polimi.ingsw.am31.am31 {
     requires com.fasterxml.jackson.databind;
     requires java.rmi;
     requires java.desktop;
-    requires it.polimi.ingsw.am31.am31;
-    //requires it.polimi.ingsw.am31.am31;
-    //requires it.polimi.ingsw.am31.am31;
-    // requires it.polimi.ingsw.am31.am31;
-    //requires it.polimi.ingsw.am31.am31;
+
 
 
     opens it.polimi.ingsw.am31.am31 to javafx.fxml;
@@ -54,5 +50,7 @@ module it.polimi.ingsw.am31.am31 {
     opens it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.am31.am31.modelPackage.observerPattern;
     opens it.polimi.ingsw.am31.am31.modelPackage.observerPattern to javafx.fxml;
+    exports it.polimi.ingsw.am31.am31.network.errorMessage;
+    opens it.polimi.ingsw.am31.am31.network.errorMessage to com.fasterxml.jackson.databind;
 
 }

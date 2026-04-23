@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.network;
 import it.polimi.ingsw.am31.am31.controller.GameController;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.LobbyNotFoundException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerAlreadyInGameException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
@@ -204,7 +205,7 @@ public class Server {
         VirtualView requester = clients.get(request.getPlayerID());
         if (requester == null)
         {
-            System.err.println("Joingame: client not found for player " + request.getPlayerID());
+            System.err.println("Joingame: client not found for player" + request.getPlayerID());
             return;
         }
 
@@ -212,15 +213,15 @@ public class Server {
 
         if (controller == null)
         {
-            requester.receiveErrorMessage(new ErrorMessage("Lobby does not exist.", ErrorCategory.LOBBY_ERROR));
-            return;
+            requester.receiveErrorMessage(new ErrorMessage("Lobby does not exist!", ErrorCategory.LOBBY_ERROR));
+            throw new LobbyNotFoundException(request.getGameID());
         }
         else
         {
             //checks if player is already in game
             if(controller.isPlayerInGame(request.getPlayerID()))
             {
-                requester.receiveErrorMessage(new ErrorMessage("Player already in game.", ErrorCategory.LOBBY_ERROR));
+                requester.receiveErrorMessage(new ErrorMessage("Player already in game!", ErrorCategory.LOBBY_ERROR));
                 throw new PlayerAlreadyInGameException(request.getPlayerID());
             }
             GameObserver obs = new NetworkObserver(clients.get(request.getPlayerID()));

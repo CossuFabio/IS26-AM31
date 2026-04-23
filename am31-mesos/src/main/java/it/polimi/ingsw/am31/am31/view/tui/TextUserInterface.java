@@ -26,14 +26,19 @@ public class TextUserInterface implements View {
     public void Start() throws Exception {
         Scanner scanner = new Scanner(System.in);
         NetworkRequest request = null;
-        System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n4 - Place your Totem\n5 - Draw a card\n");
+        System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n4 - Place your Totem\n5 - Draw a card");
         System.out.print("> ");
         String input = scanner.next();
 
         switch (input) {
             case "1" :
-                System.out.println("Enter the number of players");
-                int nplayers = scanner.nextInt();
+                int nplayers = 1;
+                while (nplayers < 2 || nplayers > 5)
+                {
+                    System.out.println("Enter the number of players (2-5)");
+                    nplayers = scanner.nextInt();
+                    if (nplayers < 2 || nplayers > 5) System.out.println("Invalid number!");
+                }
                 request = new NewGameNetworkRequest(nplayers);
                 break;
             case "2" :
@@ -42,9 +47,20 @@ public class TextUserInterface implements View {
             case "3" :
                 System.out.println("Enter the number of the lobby");
                 int i = scanner.nextInt();
-                System.out.println("Enter the color of the totem");
-                Color color = Color.valueOf(scanner.next());
-                request = new JoinNetworkRequest(color, i);
+                Color color = null;
+                while (color == null)
+                {
+                    System.out.println("Enter the color of the totem (white, black, red, yellow, blue)");
+                    try
+                    {
+                        color = Color.valueOf(scanner.next().toUpperCase());
+                        request = new JoinNetworkRequest(color, i);
+                    }
+                    catch (IllegalArgumentException e)
+                    {
+                        System.out.println("Invalid color!");
+                    }
+                }
                 break;
             case "4" :
                 System.out.println("Enter your chosen OfferCard");
