@@ -1,17 +1,19 @@
-package it.polimi.ingsw.am31.am31.network.requests;
+package it.polimi.ingsw.am31.am31.network.requests.lobbyRequest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
-public class JoinNetworkRequest extends NetworkRequest {
+public class JoinGameNetworkRequest extends NetworkRequest {
 
     private final Color color;
     private final Integer gameID;
 
 
     @JsonCreator
-    public JoinNetworkRequest(
+    public JoinGameNetworkRequest(
             @JsonProperty("color")Color color,
             @JsonProperty("gameID")Integer gameID) {
         super(RequestMethodsConstants.METHOD_JOIN_GAME);

@@ -8,13 +8,13 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMethodsConstants;
 public class PlayerScoresUpdate extends UpdateMessage {
 
     private final String playerId;
-    private final int newPrestigePoints;
-    private final int newFood;
+    private final Integer newPrestigePoints;
+    private final Integer newFood;
     @JsonCreator
     public PlayerScoresUpdate(
             @JsonProperty String playerId,
-            @JsonProperty int newPrestigePoints,
-            @JsonProperty int newFood){
+            @JsonProperty Integer newPrestigePoints,
+            @JsonProperty Integer newFood){
         super(UpdateMethodsConstants.PLAYER_SCORES_UPDATE_METHOD);
         this.playerId = playerId;
         this.newPrestigePoints = newPrestigePoints;
@@ -22,8 +22,12 @@ public class PlayerScoresUpdate extends UpdateMessage {
     }
 
     public String getPlayerId(){return this.playerId; }
-    public int getNewPrestigePoints(){return this.newPrestigePoints;}
-    public int getNewFood(){return this.newFood;}
+    public Integer getNewPrestigePoints(){return this.newPrestigePoints;}
+    public Integer getNewFood(){return this.newFood;}
 
+    @Override
+    protected boolean checkSpecificValidity(){
+        return playerId != null && newPrestigePoints != null && newFood != null;
+    }
 
 }

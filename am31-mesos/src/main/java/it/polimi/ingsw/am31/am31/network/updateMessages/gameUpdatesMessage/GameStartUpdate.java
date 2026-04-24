@@ -8,18 +8,19 @@ import it.polimi.ingsw.am31.am31.view.LocalGameState;
 
 public class GameStartUpdate extends UpdateMessage {
 
-    private final LocalGameState newGame;
     @JsonCreator
-    public GameStartUpdate(LocalGameState newGame){
+    public GameStartUpdate(){
         super(UpdateMethodsConstants.GAME_START_UPDATE);
-        this.newGame = newGame;
-    }
-    public LocalGameState getNewGame(){
-        return newGame;
     }
 
     public void acceptVisit(UpdateVisitor updateVisitor) {
         updateVisitor.visit(this);
+    }
+
+
+    @Override
+    protected boolean checkSpecificValidity() {
+        return true;
     }
 }
 

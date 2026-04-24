@@ -9,21 +9,28 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateVisitor;
 
 public class GameRoundStatusUpdate extends UpdateMessage {
 
-    private final int roundNumber;
+    private final Integer roundNumber;
     private final RoundPhasesEnum phase;
 
     @JsonCreator
-    public GameRoundStatusUpdate(@JsonProperty("roundNumber") int roundNumber,
+    public GameRoundStatusUpdate(@JsonProperty("roundNumber") Integer roundNumber,
                                  @JsonProperty("phase") RoundPhasesEnum phase){
         super(UpdateMethodsConstants.GAME_ROUND_UPDATE_METHOD);
         this.roundNumber = roundNumber;
         this.phase = phase;
     }
 
-    public int getRoundNumber(){return this.roundNumber; }
+    public Integer getRoundNumber(){return this.roundNumber; }
     public RoundPhasesEnum getPhase(){return this.phase; }
 
     public void acceptVisit(UpdateVisitor updateVisitor) {
        updateVisitor.visit(this);
     }
+
+    @Override
+    protected boolean checkSpecificValidity(){
+        return this.roundNumber != null && phase != null;
+    }
+
+
 }

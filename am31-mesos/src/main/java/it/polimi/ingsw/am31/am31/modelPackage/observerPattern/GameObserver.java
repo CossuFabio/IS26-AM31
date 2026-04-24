@@ -17,5 +17,5 @@ public interface GameObserver {
     void onCardLineUpdate(Board board, BoardRows row);
     void onOfferTrackUpdate(Board board);
     void onTurnOrderUpdate(Board board);
-    void onGameStartUpdate(LocalGameState localGameState);
+    void onGameStartUpdate();
 }

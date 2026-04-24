@@ -26,4 +26,9 @@ public class OfferCardMessage {
     public String getTotemPlayerNickname(){return this.totemPlayerNickname;}
     public boolean isFree(){return this.isFree;}
 
+
+    public boolean checkValidity(){
+        return cardId != null && totemPlayerNickname != null;
+    }
+
 }

@@ -1,6 +1,13 @@
 package it.polimi.ingsw.am31.am31.network.requests;
 
 import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
+import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 
@@ -8,10 +15,11 @@ import com.fasterxml.jackson.annotation.*;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = DrawNetworkRequest.class, name = RequestMethodsConstants.METHOD_DRAW),
         @JsonSubTypes.Type(value = TotemNetworkRequest.class, name = RequestMethodsConstants.METHOD_PLACE_TOTEM),
-        @JsonSubTypes.Type(value = JoinNetworkRequest.class, name = RequestMethodsConstants.METHOD_JOIN_GAME),
+        @JsonSubTypes.Type(value = JoinGameNetworkRequest.class, name = RequestMethodsConstants.METHOD_JOIN_GAME),
         @JsonSubTypes.Type(value = NewGameNetworkRequest.class, name =  RequestMethodsConstants.METHOD_NEW_GAME),
         @JsonSubTypes.Type(value = ShowLobbyNetworkRequest.class, name = RequestMethodsConstants.METHOD_SHOW_LOBBIES),
-        @JsonSubTypes.Type(value = PingNetworkRequest.class, name = RequestMethodsConstants.PING)
+        @JsonSubTypes.Type(value = PingNetworkRequest.class, name = RequestMethodsConstants.PING),
+        @JsonSubTypes.Type(value = NewServerConnectionRequest.class, name = RequestMethodsConstants.METHOD_NEW_CONNECTION)
 })
 public abstract class NetworkRequest{
 

@@ -86,6 +86,7 @@ public class NetworkObserver implements GameObserver {
             System.err.println(e.getMessage());
         }
     }
+    @Override
     public void onGameStartUpdate () {
         try{
             virtualView.receiveUpdate(UpdateFactory.createGameStartUpdate());

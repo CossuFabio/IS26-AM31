@@ -18,6 +18,7 @@ public class GameObserversSet implements ObserverHandler{
 
     private final List<GameObserver> observers;
     private final ExecutorService executors;
+
     public GameObserversSet(){
         this.observers = new CopyOnWriteArrayList<>();
         this.executors = Executors.newSingleThreadExecutor();
@@ -76,6 +77,8 @@ public class GameObserversSet implements ObserverHandler{
             observers.forEach(o -> o.onTurnOrderUpdate(board));
         });
     }
+    @Override
+    public void onGameStartUpdate(){}
 
     private void sendAsyncUpdate(Runnable updateFunc){
         executors.submit(updateFunc);

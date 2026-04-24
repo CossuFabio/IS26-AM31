@@ -16,7 +16,6 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.*;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
-import it.polimi.ingsw.am31.am31.view.LocalGameState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,8 +92,8 @@ public class UpdateFactory {
         return new TurnOrderUpdate();
     }
 
-    public static GameStartUpdate createGameStartUpdate(LocalGameState newGame){
-        return new GameStartUpdate(newGame);
+    public static GameStartUpdate createGameStartUpdate(){
+        return new GameStartUpdate();
     }
 
 }

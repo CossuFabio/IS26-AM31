@@ -111,6 +111,7 @@ public class Game implements GameObservable {
         if(players.size()<nPlayers){
             throw new InsufficientPlayersNumberException();
         }
+        observers.onGameStartUpdate();
         observers.onGameRoundStatusUpdate(this);
         //Just a placeholder, otherwise this would be null and risk a NullPointerException. It will be ignored because the first phase
         //Is TOTEM_PLACING
@@ -157,16 +158,18 @@ public class Game implements GameObservable {
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
 
         //method that copies current state into a view-safe copy
-        LocalGameState newGame = createState();
+        //LocalGameState newGame = createState();
         //copy is then sent to observers
-        observers.onGameStartUpdate(newGame);
+        //observers.onGameStartUpdate(this);
 
     }
-    public LocalGameState createState(){
-        LocalGameState state = null;
-        state.copyfromgame(this);
-        //TODO FINISH THIS
-    }
+
+    //Non deve stare qui, il local game state è una cosa del client. Bisogna mandarlo in altri modi
+    //public LocalGameState createState(){
+    //    LocalGameState state = null;
+    //    state.copyfromgame(this);
+    //    //TODO FINISH THIS
+    //}
     
 
     //TODO : Test This - Review
@@ -197,25 +200,6 @@ public class Game implements GameObservable {
         return winners;
         //method should then show winners
     }
-
-
-    //TODO: Test this
-    //Proposta: togliere il metodo. La funzionalita di reset non è richiesta dalla specifica e potrebbe complicarci le cose.
-//    public void resetGame() throws IOException, EmptyDeckException{
-//        players.forEach(player->{player.editFood(-player.getFood());});
-//        players.forEach(player->{player.editPrestigePoints(-player.getPrestigePoints());});
-//        board = new Board(nPlayers, gameResources.getOfferCards());
-//        buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
-//        tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
-//        turnOrder = new TurnOrder(nPlayers);
-//        era = 1;
-//        try{
-//            gameStart();
-//        }
-//        catch(InsufficientPlayersNumberException | WrongRoundPhaseException e){
-//            System.err.println(e.getMessage());
-//        }
-//    }
 
 
     //TODO: fix this (Discuss together)

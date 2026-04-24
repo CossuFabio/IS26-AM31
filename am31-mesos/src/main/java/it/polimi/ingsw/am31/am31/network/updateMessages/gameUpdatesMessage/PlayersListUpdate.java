@@ -20,4 +20,10 @@ public class PlayersListUpdate extends UpdateMessage {
     public List<String> getPlayersList() {
         return playersList;
     }
+
+
+    @Override
+    protected boolean checkSpecificValidity() {
+        return playersList != null && !playersList.contains(null);
+    }
 }

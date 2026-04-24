@@ -20,4 +20,8 @@ public class ShowLobbyUpdate extends UpdateMessage {
     public List<LobbyDescriptor> getLobbies(){return this.lobbies.stream().toList(); }
 
 
+    @Override
+    protected boolean checkSpecificValidity() {
+        return lobbies != null && !lobbies.contains(null) && lobbies.stream().allMatch(l -> l.checkValidity());
+    }
 }

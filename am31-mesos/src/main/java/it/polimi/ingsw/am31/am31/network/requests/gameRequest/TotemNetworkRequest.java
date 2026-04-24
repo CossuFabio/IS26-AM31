@@ -1,7 +1,9 @@
-package it.polimi.ingsw.am31.am31.network.requests;
+package it.polimi.ingsw.am31.am31.network.requests.gameRequest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
 public class TotemNetworkRequest extends NetworkRequest {
 

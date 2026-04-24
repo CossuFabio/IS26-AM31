@@ -19,4 +19,8 @@ public class OfferTrackUpdate extends UpdateMessage {
 
     public List<OfferCardMessage> getOfferTrack(){return this.offerTrack;}
 
+    @Override
+    protected boolean checkSpecificValidity() {
+        return offerTrack != null && !offerTrack.contains(null) && offerTrack.stream().allMatch(oft -> oft.checkValidity());
+    }
 }

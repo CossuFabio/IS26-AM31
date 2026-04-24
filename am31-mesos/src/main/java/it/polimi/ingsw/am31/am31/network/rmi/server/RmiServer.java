@@ -14,17 +14,21 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
-    private int port;
-    private Server mainServer;
-    private String serverName;
+    private final int port;
+    private final Server mainServer;
+    private final String serverName;
+    private final Map<VirtualViewRmi, VirtualView> adaptersMap;
 
     public RmiServer(String serverName,int port, Server mainServer) throws RemoteException {
         super(port); //RMI usa una porta dinamica per l'oggetto remoto --> problema con i firewall
         this.port=port;
         this.serverName=serverName;
         this.mainServer=mainServer;
+        adaptersMap = new ConcurrentHashMap<VirtualViewRmi, VirtualView>();
     }
 
     @Override
@@ -33,11 +37,16 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
     }
 
     @Override
-    public void sendRequest(String request) throws RemoteException {
+    public void sendRequest(String request, VirtualViewRmi client) throws RemoteException {
         try {
+            VirtualView requestor = adaptersMap.get(client);
+            if(requestor == null){
+                System.out.println("Unable to find requestor");
+                return;
+            }
             NetworkRequest req = RequestsMapper.deserialize(request);
             System.out.println("Received: " + request);
-            mainServer.handleNetworkRequest(req);
+            mainServer.handleNetworkRequest(req, requestor);
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -47,8 +56,14 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
     public void connect(String identifier ,VirtualViewRmi client) throws RemoteException {
         //more clients could invoke this
         //we create a rmiadapter and add him to rmi server clients
+            if(client == null) {
+                System.out.println("Received null skeleton");
+                return;
+            } //Impossible to send response to null client
             VirtualView rmiClient = new RmiClientAdapter(client);
-            mainServer.addClient(identifier,rmiClient);
+
+
+            adaptersMap.put(client, rmiClient);
             System.out.println("Connected "+identifier);
     }
 

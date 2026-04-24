@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.PingNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
 
 public class ClientController {
     private final VirtualServer connection;

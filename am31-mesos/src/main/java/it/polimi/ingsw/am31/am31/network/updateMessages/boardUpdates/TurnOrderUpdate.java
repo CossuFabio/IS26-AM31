@@ -13,4 +13,8 @@ public class TurnOrderUpdate extends UpdateMessage {
         super(UpdateMethodsConstants.BOARD_TURNORDER_UPDATE_METHOD);
     }
 
+    @Override
+    protected boolean checkSpecificValidity() {
+        return false;
+    }
 }

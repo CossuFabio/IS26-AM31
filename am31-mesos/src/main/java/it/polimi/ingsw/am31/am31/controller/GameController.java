@@ -14,11 +14,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
-import it.polimi.ingsw.am31.am31.network.requests.DrawNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.JoinNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.TotemNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 
-import java.io.IOException;
 import java.util.List;
 
 public class GameController {
@@ -44,7 +43,7 @@ public class GameController {
     }
 
     //-----Requests handling-----
-    public void handleAddPlayerMessage(JoinNetworkRequest request, GameObserver obs) throws LobbyException, GameInvariantException {
+    public void handleAddPlayerMessage(JoinGameNetworkRequest request, GameObserver obs) throws LobbyException, GameInvariantException {
 
         Player newPlayer = new Player(request.getPlayerID(), request.getColor());
         newPlayer.addObserver(observerHandler);

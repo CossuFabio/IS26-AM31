@@ -23,4 +23,9 @@ public class PlayerBuildingsUpdate extends UpdateMessage {
     public String getPlayerId(){return this.playerId; }
     public List<String> getBuildingCardsIds(){return this.buildingCardsIds; }
 
+    @Override
+    protected boolean checkSpecificValidity(){
+        return this.buildingCardsIds!=null && !this.buildingCardsIds.contains(null) && playerId != null;
+    }
+
 }

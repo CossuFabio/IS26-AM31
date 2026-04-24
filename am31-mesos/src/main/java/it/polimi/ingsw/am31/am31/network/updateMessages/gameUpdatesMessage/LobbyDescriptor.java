@@ -5,19 +5,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LobbyDescriptor {
 
-    private final int id;
-    private final int nPlayers;
-    private final int freeSlots;
+    private final Integer id;
+    private final Integer nPlayers;
+    private final Integer freeSlots;
 
     @JsonCreator
-    public LobbyDescriptor(@JsonProperty("id") int id,
-                           @JsonProperty("nPlayers") int nPlayers,
-                           @JsonProperty("freeSlots") int freeSlots) {
+    public LobbyDescriptor(@JsonProperty("id") Integer id,
+                           @JsonProperty("nPlayers") Integer nPlayers,
+                           @JsonProperty("freeSlots") Integer freeSlots) {
         this.id = id;
         this.nPlayers = nPlayers;
         this.freeSlots = freeSlots;
     }
-    public int getId() {return id;}
-    public int getnPlayers(){return nPlayers; }
-    public int getFreeSlots(){return freeSlots; }
+    public Integer getId() {return id;}
+    public Integer getnPlayers(){return nPlayers; }
+    public Integer getFreeSlots(){return freeSlots; }
+
+
+
+    public boolean checkValidity(){
+        return id != null && nPlayers != null && freeSlots != null;
+    }
+
 }

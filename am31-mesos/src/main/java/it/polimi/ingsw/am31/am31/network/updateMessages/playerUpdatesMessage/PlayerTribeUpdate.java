@@ -23,4 +23,9 @@ public class PlayerTribeUpdate extends UpdateMessage {
     public String getPlayerId(){return this.playerId; }
     public List<String> getTribeCardsId(){return this.tribeCardsIds; }
 
+    @Override
+    protected boolean checkSpecificValidity(){
+        return tribeCardsIds !=null && playerId != null && !tribeCardsIds.contains(null);
+    }
+
 }

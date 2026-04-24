@@ -31,7 +31,6 @@ public class RmiClientAdapter implements VirtualView {
         }
     }
 
-
     @Override
     public void receiveMessage(String data) throws RemoteException {
         try{

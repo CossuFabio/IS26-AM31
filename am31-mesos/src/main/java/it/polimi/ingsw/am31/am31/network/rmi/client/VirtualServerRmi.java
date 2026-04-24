@@ -12,7 +12,7 @@ public interface VirtualServerRmi extends Remote {
     //should have methods rmiClients call on the server.
     void connect(String identifier, VirtualViewRmi client) throws RemoteException;
 
-    void sendRequest(String request) throws RemoteException;
+    void sendRequest(String request, VirtualViewRmi skeleton) throws RemoteException;
 
     void disconnect() throws RemoteException;
 }

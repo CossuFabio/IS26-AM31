@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessageMapper;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.NetworkRequestFactory;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.rmi.server.VirtualViewRmi;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
@@ -40,15 +41,18 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
         //connects to registry
         Registry registry = LocateRegistry.getRegistry(ip,ServerConfig.SERVER_PORT_RMI);
         this.serverStub = (VirtualServerRmi) registry.lookup(ServerConfig.SERVER_NAME);
-        //sends himself to server
+        //sends himself to RMI server
         this.serverStub.connect(this.identifier,this);
+
+        //trying to register with specified id
+        sendRequest(NetworkRequestFactory.createNewServerConnectionRequest());
 
 
     }
     @Override
     public void sendRequest(NetworkRequest request) throws RemoteException {
         request.setPlayerID(this.identifier);
-        serverStub.sendRequest(RequestsMapper.serialize(request));
+        serverStub.sendRequest(RequestsMapper.serialize(request), this);
     }
 
     @Override
@@ -89,14 +93,16 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
         }
         if (message.getUpdateType().equals(UpdateMethodsConstants.GAME_START_UPDATE)){
             GameStartUpdate gameStartUpdate = (GameStartUpdate) message;
-            //
-            gameState.
+            gameState.GameStart();
         }
     }
 
     @Override
     public void disconnect() throws RemoteException{
 
+    }
+    public void setGameState(LocalGameState gameState) {
+        this.gameState = gameState;
     }
 
 }

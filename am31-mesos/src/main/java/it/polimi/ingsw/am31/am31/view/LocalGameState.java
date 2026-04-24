@@ -21,6 +21,7 @@ public class LocalGameState implements GameObservable {
     private GameObserver gameObserver; //only one
 
     public LocalGameState () {
+
     }
 
 
@@ -29,12 +30,8 @@ public class LocalGameState implements GameObservable {
         gameObserver=obs;
     }
 
-    public void GameStart(LocalGameState newGame) {
-    gameObserver.onGameStartUpdate(newGame);
-    }
-
-    public void copyfromgame(Game game){
-        this.currentRoundPhase = game.getCurrentRoundPhase();
-        //TODO FINISHI THIS
+    public void GameStart() {
+        //calls on its observers that the game has started
+        gameObserver.onGameStartUpdate();
     }
 }
