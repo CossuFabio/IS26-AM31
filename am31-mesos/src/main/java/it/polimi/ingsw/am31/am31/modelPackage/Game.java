@@ -1,18 +1,21 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.GameAlreadyStartedException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerColorAlreadyTakenException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.UsernameAlreadyTakenException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EverybodyPlayedException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.IncorrectMethodCallException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientPlayersNumberException;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
@@ -20,13 +23,13 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 
 import java.io.IOException;
 import java.util.*;
 
-import static java.util.Comparator.*;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparingInt;
 
 public class Game implements GameObservable {
 
@@ -36,10 +39,10 @@ public class Game implements GameObservable {
     private final int nPlayers;
 
     //Game objects
-    private Board board;
-    private BuildingDeck buildingDeck;
-    private TribeDeck tribeDeck;
-    private TurnOrder turnOrder;
+    private final Board board;
+    private final BuildingDeck buildingDeck;
+    private final TribeDeck tribeDeck;
+    private final TurnOrder turnOrder;
 
     //Game state attributes
     private int era;
@@ -81,24 +84,28 @@ public class Game implements GameObservable {
         this.observers = gameObserver;
     }
 
-    public void addPlayer(Player player) throws TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {
+    public void addPlayer(Player player) throws GameAlreadyStartedException, TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {
+        if(currentRoundPhase != RoundPhasesEnum.GAME_STARTING) throw new GameAlreadyStartedException();
         if(players.stream().anyMatch(inGamePlayer -> inGamePlayer.getNickname().equals(player.getNickname()))) throw new UsernameAlreadyTakenException();
         if(players.stream().map(p -> p.getColor()).anyMatch(c -> c == player.getColor())) throw new PlayerColorAlreadyTakenException(player.getColor());
 
         if(players.size()<nPlayers){
             players.add(player);
+            player.addObserver(this.observers);
             observers.onPlayersListUpdate(this);
         }
         else throw new TooManyPlayersException();
     }
     public void removePlayer(Player player){
         players.remove(player);
+        //Remove player from observers TODO
+        observers.onPlayersListUpdate(this);
     }
 
     //TODO: Test This
-    public void gameStart() throws WrongRoundPhaseException, InsufficientPlayersNumberException, EmptyDeckException {
+    public void gameStart() throws IncorrectMethodCallException, InsufficientPlayersNumberException, EmptyDeckException {
         
-        if(currentRoundPhase != RoundPhasesEnum.GAME_STARTING) throw new WrongRoundPhaseException();
+        if(currentRoundPhase != RoundPhasesEnum.GAME_STARTING) throw new IncorrectMethodCallException("gameStart", "Game already started");
 
         if(players.size()<nPlayers){
             throw new InsufficientPlayersNumberException();
@@ -151,10 +158,10 @@ public class Game implements GameObservable {
     }
     
 
-    //TODO : Test This
-    public List<Player> gameEnd() throws WrongRoundPhaseException{
+    //TODO : Test This - Review
+    public List<Player> gameEnd() throws IncorrectMethodCallException{
 
-        if(!isGameFinished()) throw new WrongRoundPhaseException();
+        if(!isGameFinished()) throw new IncorrectMethodCallException("gameEnd", "Game not finished!");
 
         currentRoundPhase = RoundPhasesEnum.END_TURN;
         observers.onGameRoundStatusUpdate(this);
@@ -182,21 +189,22 @@ public class Game implements GameObservable {
 
 
     //TODO: Test this
-    public void resetGame() throws IOException, EmptyDeckException{
-        players.forEach(player->{player.editFood(-player.getFood());});
-        players.forEach(player->{player.editPrestigePoints(-player.getPrestigePoints());});
-        board = new Board(nPlayers, gameResources.getOfferCards());
-        buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
-        tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
-        turnOrder = new TurnOrder(nPlayers);
-        era = 1;
-        try{
-            gameStart();
-        }
-        catch(InsufficientPlayersNumberException | WrongRoundPhaseException e){
-            System.err.println(e.getMessage());
-        }
-    }
+    //Proposta: togliere il metodo. La funzionalita di reset non è richiesta dalla specifica e potrebbe complicarci le cose.
+//    public void resetGame() throws IOException, EmptyDeckException{
+//        players.forEach(player->{player.editFood(-player.getFood());});
+//        players.forEach(player->{player.editPrestigePoints(-player.getPrestigePoints());});
+//        board = new Board(nPlayers, gameResources.getOfferCards());
+//        buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
+//        tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
+//        turnOrder = new TurnOrder(nPlayers);
+//        era = 1;
+//        try{
+//            gameStart();
+//        }
+//        catch(InsufficientPlayersNumberException | WrongRoundPhaseException e){
+//            System.err.println(e.getMessage());
+//        }
+//    }
 
 
     //TODO: fix this (Discuss together)
@@ -226,9 +234,9 @@ public class Game implements GameObservable {
         }
     }
 
-    public void endRound() throws WrongRoundPhaseException{
+    public void endRound() throws IncorrectMethodCallException{
 
-        if(!(this.currentRoundPhase == RoundPhasesEnum.BONUS_DRAWING_PHASE && isBonusDrawPhaseFinished())) throw new WrongRoundPhaseException();
+        if(!(this.currentRoundPhase == RoundPhasesEnum.BONUS_DRAWING_PHASE && isBonusDrawPhaseFinished())) throw new IncorrectMethodCallException("endRound");
 
         this.currentRoundPhase = RoundPhasesEnum.END_TURN;
         observers.onGameRoundStatusUpdate(this);
@@ -260,6 +268,7 @@ public class Game implements GameObservable {
     }
 
     //TODO: TEST THIS
+    //TODO add changeEraUpdateMessage
     public void changeEra(){
         board.moveLowerBuildings();
         //we increase the era, then check if the next card in building deck is the new era -> add it to upperbline.
@@ -347,15 +356,15 @@ public class Game implements GameObservable {
         //false values are placeholder
         return (roundNumber == GameConstants.ROUNDS_NUMBER && currentRoundPhase == RoundPhasesEnum.END_TURN);
     }
-    public boolean isTotemPlacingPhaseFinished() throws WrongRoundPhaseException{
-        if(currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) {throw new WrongRoundPhaseException();}
+    public boolean isTotemPlacingPhaseFinished() throws IncorrectMethodCallException{
+        if(currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) {throw new IncorrectMethodCallException("isTotemPlacingPhaseFinished", "Wrong phase");}
         return turnOrder.everybodyPlayed();
     }
-    public boolean isDrawPhaseFinished() throws WrongRoundPhaseException{
+    public boolean isDrawPhaseFinished() throws IncorrectMethodCallException{
 
         //Phase must be ACTION_PHASE
         if (this.currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) {
-            throw new WrongRoundPhaseException();
+            throw new IncorrectMethodCallException("isDrawPhaseFinished", "Wrong phase");
         }
 
         //If no offer card is occupied, everybody has drawed
@@ -364,8 +373,8 @@ public class Game implements GameObservable {
     }
 
     //TODO NOT SURE IF CORRECT - REVIEW
-    public boolean isBonusDrawPhaseFinished() throws WrongRoundPhaseException{
-        if (this.currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) {throw new WrongRoundPhaseException();}
+    public boolean isBonusDrawPhaseFinished() throws IncorrectMethodCallException{
+        if (this.currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) {throw new IncorrectMethodCallException("isBonusDrawFinished", "WrongPhase");}
         if(players.stream().noneMatch(player -> player.hasBonusDraw())) return true;
         return drawManager.hasFinishedDrawing();
     }
@@ -400,8 +409,8 @@ public class Game implements GameObservable {
     //---Setters---
     //Sets up the next player and how many cards should it draw
 
-    public void setUpPlayerActing(Player nextPlayerActing, OfferCard offerCardChosen){
-
+    public void setUpPlayerActing(Player nextPlayerActing, OfferCard offerCardChosen) throws IncorrectMethodCallException{
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) throw new IncorrectMethodCallException("setUpPlayerActing", "Wrong phase");
         this.playerActing = nextPlayerActing;
         drawManager.setUp(offerCardChosen.getDrawFromUpper(), offerCardChosen.getDrawFromUnder());
 
@@ -410,21 +419,22 @@ public class Game implements GameObservable {
 
     }
 
-    public void setUpDrawingPhase() throws WrongRoundPhaseException, IllegalAccessException {
+    public void setUpDrawingPhase() throws IncorrectMethodCallException{
 
         //Must check if still in TOTEM_PLACING_PHASE
-        if(this.currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) throw new WrongRoundPhaseException();
+        if(this.currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) throw new IncorrectMethodCallException("setUpDrawingPhase", "Wrong phase");
 
         //Checks if TOTEM_PLACING_PHASE is finished
-        if(!turnOrder.everybodyPlayed()) throw new IllegalAccessException();
+        if(!turnOrder.everybodyPlayed()) throw new IncorrectMethodCallException("setUpDrawingPhase", "Totem phase not finished");
 
         this.currentRoundPhase  = RoundPhasesEnum.ACTION_PHASE;
+        observers.onGameRoundStatusUpdate(this);
 
         Optional<OfferCard> firstPlayer = board.getOfferCards().stream()
                     .filter(offerCard -> !offerCard.isFree()).findFirst();
 
         //Shouldn't happen but better checking
-        if(!firstPlayer.isPresent()) throw new IllegalStateException();
+        if(!firstPlayer.isPresent()) throw new IllegalStateException("Cannot find players in offerTrack");
 
         OfferCard offerCard = firstPlayer.get();
         setUpPlayerActing(offerCard.getPlayer(), offerCard);
@@ -433,12 +443,13 @@ public class Game implements GameObservable {
 
     public void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){
         this.currentRoundPhase = currentRoundPhase;
-        observers.onGameRoundStatusUpdate(this);}
+        observers.onGameRoundStatusUpdate(this);
+    }
 
-    public void setNextPlayerDrawing() throws IllegalStateException, WrongRoundPhaseException{
+    public void setNextPlayerDrawing() throws IncorrectMethodCallException{
 
-        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new WrongRoundPhaseException();
-        if(!drawManager.hasFinishedDrawing()) throw new IllegalStateException("Wrong usage of method setNextPlayerDrawing()! Previous player must finish drawing");
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new IncorrectMethodCallException("setNextPlayerDrawing", "Wrong phase");
+        if(!drawManager.hasFinishedDrawing()) throw new IncorrectMethodCallException("setNextPlayerDrawing", "Current player hasn't finished drawing");
 
         //Must free the Offer Card of the previous player
         Optional<OfferCard> previousPlayerOfferCard = board.getOfferCards().stream().filter(card -> !card.isFree()).findFirst();
@@ -467,9 +478,9 @@ public class Game implements GameObservable {
 
     }
 
-    public void setUpBonusDrawingPhase() throws WrongRoundPhaseException{
+    public void setUpBonusDrawingPhase() throws IncorrectMethodCallException{
 
-        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new WrongRoundPhaseException();
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new IncorrectMethodCallException("setUpBonusDrawingPhase", "Wrong phase");
 
         this.currentRoundPhase = RoundPhasesEnum.BONUS_DRAWING_PHASE;
         observers.onGameRoundStatusUpdate(this);
@@ -482,8 +493,8 @@ public class Game implements GameObservable {
 
     }
 
-    public void setUpTotemPlacingPhase() throws WrongRoundPhaseException {
-        if(currentRoundPhase != RoundPhasesEnum.END_TURN) throw new WrongRoundPhaseException();
+    public void setUpTotemPlacingPhase() throws IncorrectMethodCallException {
+        if(currentRoundPhase != RoundPhasesEnum.END_TURN) throw new IncorrectMethodCallException("setUpTotemPlacingPhase" , "Wrong phase");
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
         roundNumber++;
         observers.onGameRoundStatusUpdate(this);

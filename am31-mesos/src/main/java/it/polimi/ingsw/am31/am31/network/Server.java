@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.network;
+
 import it.polimi.ingsw.am31.am31.controller.GameController;
-import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.LobbyNotFoundException;
+
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerAlreadyInGameException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
@@ -10,7 +11,6 @@ import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
 import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateFactory;
-
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -88,7 +88,7 @@ public class Server {
     }
 
 
-    public void handleNetworkRequest (NetworkRequest request) throws Exception {
+    public void handleNetworkRequest (NetworkRequest request){
         if(request == null || request.getType() == null){
             System.out.println("Stringa vuota!");
             return;
@@ -214,7 +214,7 @@ public class Server {
         if (controller == null)
         {
             requester.receiveErrorMessage(new ErrorMessage("Lobby does not exist!", ErrorCategory.LOBBY_ERROR));
-            throw new LobbyNotFoundException(request.getGameID());
+            //throw new LobbyNotFoundException(request.getGameID());
         }
         else
         {

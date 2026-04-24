@@ -18,6 +18,8 @@ public class ErrorMessage {
         this.category = category;
     }
 
+
+
     public String getMessage(){return message; }
     public ErrorCategory getCategory(){return category; }
 
