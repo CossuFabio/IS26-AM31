@@ -22,5 +22,10 @@ public class DrawNetworkRequest extends NetworkRequest{
 
     public String getCardID(){return cardID;}
     public BoardRows getBoardRows(){return boardRow;}
-    
+
+    @Override
+    protected boolean checkSpecificRequestValidity(){
+        return this.cardID != null && boardRow != null;
+    }
+
 }

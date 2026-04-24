@@ -4,14 +4,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NewGameNetworkRequest extends NetworkRequest{
-    private int nplayers;
+    private Integer nPlayers;
 
     @JsonCreator
     public  NewGameNetworkRequest(
-            @JsonProperty("nplayers")int nplayers) {
+            @JsonProperty("nPlayers")int nPlayers) {
         super(RequestMethodsConstants.METHOD_NEW_GAME);
-        this.nplayers = nplayers;
+        this.nPlayers = nPlayers;
     }
 
-    public int getnplayers() {return nplayers;}
+    public Integer nPlayers() {return nPlayers;}
+
+    @Override
+    protected boolean checkSpecificRequestValidity(){
+        return nPlayers != null;
+    }
 }

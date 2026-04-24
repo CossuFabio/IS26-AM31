@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.network.updateMessages;
 
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameRoundStatusUpdate;
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameStartUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
 
@@ -16,5 +17,8 @@ public class UpdateVisitor implements IUpdateVisitor{
 
     public boolean visit(GameRoundStatusUpdate gameRoundStatusUpdate) {
         return true;
+    }
+
+    public void visit(GameStartUpdate gameStartUpdate) {
     }
 }

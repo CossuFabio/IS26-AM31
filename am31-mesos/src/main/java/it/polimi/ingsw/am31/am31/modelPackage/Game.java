@@ -24,6 +24,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
+import it.polimi.ingsw.am31.am31.view.LocalGameState;
 
 import java.io.IOException;
 import java.util.*;
@@ -154,7 +155,17 @@ public class Game implements GameObservable {
 
         this.roundNumber = 1;
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
-        observers.onGameRoundStatusUpdate(this);
+
+        //method that copies current state into a view-safe copy
+        LocalGameState newGame = createState();
+        //copy is then sent to observers
+        observers.onGameStartUpdate(newGame);
+
+    }
+    public LocalGameState createState(){
+        LocalGameState state = null;
+        state.copyfromgame(this);
+        //TODO FINISH THIS
     }
     
 

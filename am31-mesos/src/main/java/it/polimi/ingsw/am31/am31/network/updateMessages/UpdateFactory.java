@@ -12,13 +12,11 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.CardLineUpd
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.OfferCardMessage;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.TurnOrderUpdate;
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameRoundStatusUpdate;
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.LobbyDescriptor;
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.PlayersListUpdate;
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.*;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
+import it.polimi.ingsw.am31.am31.view.LocalGameState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +91,10 @@ public class UpdateFactory {
     public static TurnOrderUpdate createTurnOrderUpdate(Board board){
         //TODO THINK HOW TO DO THIS - MAYBE CHANGE TURNORDER
         return new TurnOrderUpdate();
+    }
+
+    public static GameStartUpdate createGameStartUpdate(LocalGameState newGame){
+        return new GameStartUpdate(newGame);
     }
 
 }

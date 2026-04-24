@@ -7,13 +7,13 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 public class JoinNetworkRequest extends NetworkRequest {
 
     private final Color color;
-    private final int gameID;
+    private final Integer gameID;
 
 
     @JsonCreator
     public JoinNetworkRequest(
             @JsonProperty("color")Color color,
-            @JsonProperty("gameID")int gameID) {
+            @JsonProperty("gameID")Integer gameID) {
         super(RequestMethodsConstants.METHOD_JOIN_GAME);
         this.color = color;
         this.gameID = gameID;
@@ -21,5 +21,13 @@ public class JoinNetworkRequest extends NetworkRequest {
 
 
     public Color getColor() {return color;}
-    public int getGameID() {return gameID;}
+    public Integer getGameID() {return gameID;}
+
+    @Override
+    protected boolean checkSpecificRequestValidity(){
+        //gameID validity is domain oriented
+        return this.color != null && gameID != null;
+    }
+
+
 }

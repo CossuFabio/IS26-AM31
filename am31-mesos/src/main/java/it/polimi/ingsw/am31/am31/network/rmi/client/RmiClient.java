@@ -11,8 +11,10 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMethodsConstants;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameRoundStatusUpdate;
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameStartUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
+import it.polimi.ingsw.am31.am31.view.LocalGameState;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -28,6 +30,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     private final VirtualServerRmi serverStub;
     private final String identifier;
     private VirtualViewRmi clientStub;
+    private LocalGameState gameState;
 
     public RmiClient(String ip, int port, String identifier) throws RemoteException, NotBoundException {
 
@@ -83,6 +86,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
         if (message.getUpdateType().equals(UpdateMethodsConstants.GAME_ROUND_UPDATE_METHOD)) {
             GameRoundStatusUpdate gameRoundUpdate = (GameRoundStatusUpdate) message;
             System.out.println(((GameRoundStatusUpdate) message).getPhase() + "\n ROUND "+ ((GameRoundStatusUpdate) message).getRoundNumber());
+        }
+        if (message.getUpdateType().equals(UpdateMethodsConstants.GAME_START_UPDATE)){
+            GameStartUpdate gameStartUpdate = (GameStartUpdate) message;
+            //
+            gameState.
         }
     }
 

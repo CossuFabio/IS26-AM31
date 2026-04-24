@@ -11,6 +11,10 @@ public class ShowLobbyNetworkRequest extends NetworkRequest{
         super(RequestMethodsConstants.METHOD_SHOW_LOBBIES);
     }
 
-
+    @Override
+    protected boolean checkSpecificRequestValidity(){
+        //Nothing to verify
+        return true;
+    }
 
 }

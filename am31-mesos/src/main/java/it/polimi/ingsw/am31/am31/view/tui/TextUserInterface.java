@@ -1,6 +1,12 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
+import it.polimi.ingsw.am31.am31.controller.BoardRows;
+import it.polimi.ingsw.am31.am31.modelPackage.Game;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.requests.JoinNetworkRequest;
@@ -12,9 +18,9 @@ import it.polimi.ingsw.am31.am31.view.View;
 
 import java.util.Scanner;
 
-public class TextUserInterface implements View {
+public class TextUserInterface implements View, ObserverHandler {
     private final ClientController controller;
-    private final LocalGameState gameState;
+    private LocalGameState gameState;
 
     public TextUserInterface (ClientController controller){
         this.controller=controller;
@@ -74,6 +80,63 @@ public class TextUserInterface implements View {
     @Override
     public void PrintScreen() {
 
+
+    }
+
+    @Override
+    public void onPlayerNewBuildingEvent(Player player) {
+
+    }
+
+    @Override
+    public void onPlayerScoresUpdate(Player player) {
+
+    }
+
+    @Override
+    public void onPlayerTribeUpdate(Player player) {
+
+    }
+
+    @Override
+    public void onGameRoundStatusUpdate(Game game) {
+
+    }
+
+    @Override
+    public void onPlayersListUpdate(Game game) {
+
+    }
+
+    @Override
+    public void onCardLineUpdate(Board board, BoardRows row) {
+
+    }
+
+    @Override
+    public void onOfferTrackUpdate(Board board) {
+
+    }
+
+    @Override
+    public void onTurnOrderUpdate(Board board) {
+
+    }
+
+    @Override
+    public void onGameStartUpdate(LocalGameState  newGame) {
+        this.gameState=newGame;
+        gameState.addObserver(this);
+        //this.GameStart(), changes interface into game interface, no more join lobby, create lobby, etc...
+    }
+
+    @Override
+    public void addObserver(GameObserver o) {
+
+    }
+
+    @Override
+    public void removeObserver(GameObserver o) {
 
     }
 }

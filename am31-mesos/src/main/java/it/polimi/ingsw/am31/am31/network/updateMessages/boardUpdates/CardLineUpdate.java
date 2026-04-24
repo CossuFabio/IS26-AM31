@@ -24,4 +24,6 @@ public class CardLineUpdate extends UpdateMessage {
 
     public List<String> getCardIds(){return this.cardIds;}
     public BoardRows getRow(){return this.row; }
+
+
 }

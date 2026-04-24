@@ -9,4 +9,11 @@ public class NewSocketConnectionNetworkRequest extends NetworkRequest{
     public NewSocketConnectionNetworkRequest(){
         super(RequestMethodsConstants.METHOD_NEW_CONNECTION);
     }
+
+    @Override
+    protected boolean checkSpecificRequestValidity(){
+        //Nothing to verify
+        return true;
+    }
+
 }

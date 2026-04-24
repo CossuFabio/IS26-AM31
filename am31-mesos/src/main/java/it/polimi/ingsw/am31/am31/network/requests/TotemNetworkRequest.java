@@ -17,4 +17,10 @@ public class TotemNetworkRequest extends NetworkRequest {
     }
 
     public String getOfferTrackID() {return offerTrackID;}
+
+    @Override
+    protected boolean checkSpecificRequestValidity(){
+        return offerTrackID != null;
+    }
+
 }

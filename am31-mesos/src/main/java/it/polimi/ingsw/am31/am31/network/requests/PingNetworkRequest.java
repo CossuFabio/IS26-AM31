@@ -7,4 +7,11 @@ public class PingNetworkRequest extends NetworkRequest {
     public PingNetworkRequest() {
         super(RequestMethodsConstants.PING);
     }
+
+    @Override
+    protected boolean checkSpecificRequestValidity(){
+        //Nothing to verify
+        return true;
+    }
+
 }

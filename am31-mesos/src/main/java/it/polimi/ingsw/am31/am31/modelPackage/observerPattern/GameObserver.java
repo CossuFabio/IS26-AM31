@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.view.LocalGameState;
 
 public interface GameObserver {
     void onPlayerNewBuildingEvent(Player player);
@@ -16,5 +17,5 @@ public interface GameObserver {
     void onCardLineUpdate(Board board, BoardRows row);
     void onOfferTrackUpdate(Board board);
     void onTurnOrderUpdate(Board board);
-
+    void onGameStartUpdate(LocalGameState localGameState);
 }

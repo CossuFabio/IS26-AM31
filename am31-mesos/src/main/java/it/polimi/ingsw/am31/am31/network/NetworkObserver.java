@@ -86,4 +86,11 @@ public class NetworkObserver implements GameObserver {
             System.err.println(e.getMessage());
         }
     }
+    public void onGameStartUpdate () {
+        try{
+            virtualView.receiveUpdate(UpdateFactory.createGameStartUpdate());
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
 }

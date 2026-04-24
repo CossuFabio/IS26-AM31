@@ -38,5 +38,8 @@ public abstract class UpdateMessage {
     @JsonIgnore
     public String getUpdateType(){return updateType; }
 
+    //TODO: implement for this and other updates
+    //@JsonIgnore
+    //public abstract boolean checkValidity();
 
 }

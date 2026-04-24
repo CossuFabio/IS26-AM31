@@ -30,4 +30,11 @@ public abstract class NetworkRequest{
     //Will be called by the connection right before the invocation of the method that
     //sends the message to the server in the transport layer
     public void setPlayerID(String playerID){this.playerID = playerID; }
+
+    public final boolean checkValidity(){
+        return this.type != null && this.playerID != null && checkSpecificRequestValidity();
+    }
+
+    protected abstract boolean checkSpecificRequestValidity();
+
 }
