@@ -16,10 +16,12 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.*;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
+import it.polimi.ingsw.am31.am31.network.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class UpdateFactory {
  //PLAYER RELATED UPDATES
@@ -51,17 +53,17 @@ public class UpdateFactory {
         return new PlayersListUpdate(game.getPlayersList().stream().map(Player::getNickname).toList());
     }
     public static GameRoundStatusUpdate createGameRoundStatusUpdate(Game game){
-        return new GameRoundStatusUpdate(game.getRoundNumber(), game.getCurrentRoundPhase());
+        return new GameRoundStatusUpdate(game.getRoundNumber(), game.getCurrentRoundPhase(), game.getEra());
     }
 
-    //TODO: Fix this
+
     public static ShowLobbyUpdate createShowLobbyUpdate(GamesManager gamesManager){
 
-        Map<Integer, GameController> activeGames = gamesManager.getActiveGames();
+        Set<Map.Entry<Integer, GameController>> activeGames = gamesManager.getActiveGames();
         List<LobbyDescriptor> lobbies = new ArrayList<>();
-        for(int i = 0; i<activeGames.size(); i++){
-            lobbies.add(new LobbyDescriptor(i, activeGames.get(i).getNumPlayers(), activeGames.get(i).getNumActivePlayers()));
-        }
+        activeGames.forEach(entry -> {
+            lobbies.add(new LobbyDescriptor(entry.getKey(), entry.getValue().getNumPlayers(), entry.getValue().getNumActivePlayers()));
+        });
         return new ShowLobbyUpdate(lobbies);
     }
     public static GameStartUpdate createGameStartUpdate(){
@@ -95,5 +97,12 @@ public class UpdateFactory {
     }
 
 
+    public static GameCrashUpdate createGameCrashUpdate() {
+        return new GameCrashUpdate();
+    }
+
+    public static SuccessRegistrationUpdate createSuccessRegistrationUpdate(String username){
+        return new SuccessRegistrationUpdate(username);
+    }
 
 }

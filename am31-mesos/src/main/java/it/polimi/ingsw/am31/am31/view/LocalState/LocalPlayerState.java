@@ -12,8 +12,11 @@ public class LocalPlayerState {
     private String nickname;
     private List<IPickable> tribe;
 
+    public LocalPlayerState(String nickname){
+        this.nickname = nickname;
+    }
     public void setColor(){}
-    public void  setFood(){}
+    public void setFood(){}
     public void setPrestigePoints(){}
     public void setNickname(){}
     public void setTribe(){}

@@ -1,13 +1,9 @@
 package it.polimi.ingsw.am31.am31.view.LocalState;
 
-import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.CardLineUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.TurnOrderUpdate;
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameRoundStatusUpdate;
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameStartUpdate;
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.PlayersListUpdate;
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.*;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
@@ -28,12 +24,14 @@ public class StateUpdater {
     public void HandleUpdateMessage(CardLineUpdate msg){
         //msg contains a list of cards and the row they are in
         //both building and other cards
+        //WE NEED TO TRANSLATE CARDIDS INTO CARDS (SAME FOR OFFERCARDS)
+        gameState.setCardLine(msg.getCardIds(),msg.getRow());
 
     }
     public void HandleUpdateMessage(OfferTrackUpdate msg){
         //msg contains the offertrack,with the player inside or free,
         // sent when its freed / set and when game starts
-
+        gameState.setOfferTrack(msg.getOfferTrack());
 
     }
     public void HandleUpdateMessage(TurnOrderUpdate msg){
@@ -44,6 +42,11 @@ public class StateUpdater {
     //game
     public void HandleUpdateMessage(GameRoundStatusUpdate msg){
         //contains a round number and phase, sent when it changes
+        gameState.setCurrentRoundPhase(msg.getPhase());
+        gameState.setRoundNumber(msg.getRoundNumber());
+        gameState.setEra(msg.getEra());
+
+
 
     }
     public void HandleUpdateMessage(GameStartUpdate msg){
@@ -52,11 +55,12 @@ public class StateUpdater {
     }
     public void HandleUpdateMessage(PlayersListUpdate msg){
             //msg contains a list of players, its sent when a new one is added
-
+        gameState.setPlayers(msg.getPlayersList());
     }
     public void HandleUpdateMessage(ShowLobbyUpdate msg){
             //msg contains a list of lobby descriptors, with their attributes
             //sent on request
+        gameState.ShowLobby(msg.getLobbies());
     }
 
     //player
@@ -68,5 +72,8 @@ public class StateUpdater {
     }
     public void HandleUpdateMessage(PlayerTribeUpdate msg){
             //msg contains the list of tribecards and a nickname, sent when cards change
+    }
+    public void HandleUpdateMessage(GameCrashUpdate msg){
+
     }
 }

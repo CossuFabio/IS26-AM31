@@ -19,5 +19,7 @@ public interface GameObserver {
     void onTurnOrderUpdate(Board board);
     void onGameStartUpdate(Game game);
 
+    void onGameCrashUpdate();
+
     String getIdentifier();
 }

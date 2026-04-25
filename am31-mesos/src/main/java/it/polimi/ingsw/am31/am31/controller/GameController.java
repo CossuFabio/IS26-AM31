@@ -5,6 +5,8 @@ import it.polimi.ingsw.am31.am31.exceptions.IllegalActionException;
 import it.polimi.ingsw.am31.am31.exceptions.LobbyException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InvalidDrawException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InvalidResourceException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.GameNoLongerActiveException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
@@ -25,26 +27,23 @@ public class GameController {
     private final ResourceFinder resourceFinder;
     private Game game;
     private final ObserverHandler observerHandler;
+    private final Integer gameID;
 
-    public GameController(Game gameInstance){
+    private volatile boolean isGameStillActive = true;
+
+    public GameController(Game gameInstance, Integer gameID){
         this.game = gameInstance;
         this.resourceFinder = new ResourceFinder(game);
         observerHandler = new GameObserversSet();
         game.addObserver(observerHandler);
+        this.gameID = gameID;
     }
 
-
-    public synchronized boolean isPlayerInGame(String nickname){
-        if(nickname == null) return false;
-        for(Player p: game.getPlayersList())
-            if(p.getNickname().equals(nickname))
-                return true;
-        return false;
-    }
+    public Integer getGameID(){return this.gameID; }
 
     //-----Requests handling-----
     public synchronized void handleAddPlayerMessage(JoinGameNetworkRequest request, GameObserver obs) throws LobbyException, GameInvariantException {
-
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player newPlayer = new Player(request.getPlayerID(), request.getColor());
         newPlayer.addObserver(observerHandler);
         game.addPlayer(newPlayer);
@@ -56,6 +55,7 @@ public class GameController {
 
 
     public synchronized void handleDraw(DrawNetworkRequest request) throws IllegalActionException, GameInvariantException{
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
         Card card = resourceFinder.getCardFromId(request.getCardID());
 
@@ -95,7 +95,7 @@ public class GameController {
     //-----TOTEM PHASE-----
     //TODO: Test this
     public synchronized void handleTotemAction(TotemNetworkRequest request) throws IllegalActionException, GameInvariantException{
-
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
         OfferCard offerCard = resourceFinder.getOfferCard(request.getOfferTrackID());
         game.totemChoiceAction(player, offerCard);
@@ -104,6 +104,7 @@ public class GameController {
     }
 
     public synchronized void startTotemPlacingPhase() throws GameInvariantException{
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
         game.setUpTotemPlacingPhase();
     }
 
@@ -111,7 +112,7 @@ public class GameController {
     //-----DRAW PHASES-----
 
     public synchronized void startDrawPhase() throws GameInvariantException{
-
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
         game.setUpDrawingPhase();
         //It is possible that the player doesn't need to draw
         while(game.hasCurrentPlayerFinishedDrawing() && !game.isDrawPhaseFinished()) {
@@ -123,12 +124,14 @@ public class GameController {
     }
 
     public synchronized void startBonusDrawPhase() throws GameInvariantException{
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
         game.setUpBonusDrawingPhase();
         if(game.isBonusDrawPhaseFinished()) startEndGamePhase();
     }
 
     //-----ROUND END-----
     public synchronized void startEndGamePhase() throws GameInvariantException {
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
         game.endRound();
         if(game.isGameFinished()) handleEndGame();
         else startTotemPlacingPhase();
@@ -136,12 +139,43 @@ public class GameController {
 
      //-----Endgame methods-----
     public synchronized void handleEndGame() throws GameInvariantException{
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
         List<Player> leaderboard = game.gameEnd();
         //Broadcast clients the results of the winners
     }
 
-    public synchronized int getNumActivePlayers(){return game.getPlayersList().size(); }
-    public synchronized int getNumPlayers(){return game.getNumPlayers();}
+    public synchronized int getNumActivePlayers() throws GameInvariantException{
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
+        return game.getPlayersList().size();
+    }
+    public synchronized int getNumPlayers() throws GameInvariantException{
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
+        return game.getNumPlayers();
+    }
 
+    //Happens when a player disconnects. Returns true if the Game was still in starting phase
+    public synchronized boolean handleDisconnection(String playerID){
+
+        observerHandler.removeObserver(playerID);
+
+        if(!game.isGameInStartingPhase()) {
+            observerHandler.onGameCrashUpdate();
+            isGameStillActive = false;
+            return false;
+        }
+
+
+        try{
+            Player player = resourceFinder.getPlayerFromNickname(playerID);
+            game.removePlayer(player);
+        }catch(PlayerNotFoundException e){
+            System.err.println(e.getMessage());
+        }
+
+
+
+        return true;
+
+    }
     
 }

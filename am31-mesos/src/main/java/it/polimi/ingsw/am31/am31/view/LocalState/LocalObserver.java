@@ -1,5 +1,22 @@
 package it.polimi.ingsw.am31.am31.view.LocalState;
 
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.LobbyDescriptor;
+
+import java.util.List;
+
 public interface LocalObserver {
     void onGameStartUpdate();
+
+    void onRoundPhaseUpdate();
+
+    void onRoundNumberUpdate();
+
+    void onShowLobbyUpdate(List<LobbyDescriptor> lobbies);
+    //what if there was only one update method?
+    void onCardLineUpdate();
+
+    void onPlayerListUpdate();
+
+    void onEraUpdate();
 }
+

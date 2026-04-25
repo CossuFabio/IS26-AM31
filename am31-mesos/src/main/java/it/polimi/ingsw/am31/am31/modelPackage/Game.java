@@ -353,6 +353,7 @@ public class Game implements GameObservable {
         return board.getOfferCards().stream()
                 .noneMatch(offerCard -> !offerCard.isFree());
     }
+    public boolean isGameInStartingPhase(){return currentRoundPhase == RoundPhasesEnum.GAME_STARTING;}
 
     //TODO NOT SURE IF CORRECT - REVIEW
     public boolean isBonusDrawPhaseFinished() throws IncorrectMethodCallException{
@@ -371,7 +372,7 @@ public class Game implements GameObservable {
     public GameResources getGameResources(){return this.gameResources; }
     public List<Player> getPlayersList(){return players.stream().toList();}
     public int getRoundNumber(){return this.roundNumber;}
-
+    public int getEra(){ return this.era;}
     //May differ from players.size() in case of disconnections!
     public int getNumPlayers(){return this.nPlayers;}
 

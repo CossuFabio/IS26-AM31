@@ -9,6 +9,7 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,13 +27,19 @@ public class GameObserversSet implements ObserverHandler{
 
 
     public void addObserver(GameObserver observer) {
-        if(observer != null && !this.observers.contains(observer)) this.observers.add(observer);
+        //Username duplicate is impossible because GameController filters it first
+        if(observer != null && !this.observers.contains(observer) && observer != this &&
+                this.observers.stream().noneMatch(o-> observer.getIdentifier().equals(o.getIdentifier())))
+            this.observers.add(observer);
     }
 
     public void removeObserver(GameObserver o ){
         observers.remove(o);
     }
 
+    public void removeObserver(String identifier){
+        observers.removeIf(o-> o.getIdentifier().equals(identifier));
+    }
 
     @Override
     public void onPlayerNewBuildingEvent(Player player) {
@@ -78,7 +85,16 @@ public class GameObserversSet implements ObserverHandler{
         });
     }
     @Override
-    public void onGameStartUpdate(Game game){}
+    public void onGameStartUpdate(Game game){sendAsyncUpdate(()-> {
+        observers.forEach(o -> o.onGameStartUpdate(game));
+    });}
+
+    @Override
+    public void onGameCrashUpdate() {
+        sendAsyncUpdate(()-> {
+            observers.forEach(o -> o.onGameCrashUpdate());
+        });
+    }
 
     private void sendAsyncUpdate(Runnable updateFunc){
         executors.submit(updateFunc);

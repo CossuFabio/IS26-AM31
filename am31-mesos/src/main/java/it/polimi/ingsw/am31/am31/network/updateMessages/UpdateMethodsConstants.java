@@ -19,4 +19,8 @@ public class UpdateMethodsConstants {
     public final static String BOARD_CARDLINE_UPDATE_METHOD  = "BoardUpdateCardLine";
     public final static String BOARD_TURNORDER_UPDATE_METHOD = "BoardUpdateTurnOrder";
 
+    //Others
+    public final static String GAME_CRASHED_METHOD = "GameCrashed";
+    public final static String USERNAME_ACCEPTED_METHOD = "UsernameAccepted";
+
 }

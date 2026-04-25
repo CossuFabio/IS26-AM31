@@ -33,7 +33,9 @@ public class TUIlobby implements TUIPhase {
                         nplayers = scanner.nextInt();
                         if (nplayers < 2 || nplayers > 5) System.out.println("Invalid number!");
                     }
-                    request = new NewGameNetworkRequest(nplayers);
+                    //TODO: SORRY REF MA DOVEVA ESSERE CAMBIATO per far si che si registrasse al game appena creato. Poi
+                    // fixare che chiede il colore. Se vuoi faccio io se no te no te procupe
+                    request = new NewGameNetworkRequest(nplayers, Color.RED);
                     break;
                 case "2":
                     request = new ShowLobbyNetworkRequest();

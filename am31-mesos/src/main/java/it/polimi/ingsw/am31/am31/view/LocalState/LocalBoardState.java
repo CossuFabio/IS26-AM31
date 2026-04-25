@@ -10,13 +10,9 @@ public class LocalBoardState {
     private ArrayList<OfferCard> offerTrack;
     private ArrayList<Card> upperLine;
     private ArrayList<Card> underLine;
-    private ArrayList<BuildingCard> upperBLine;
-    private ArrayList<BuildingCard> underBLine;
+
 
     public void setOfferTrack(){}
     public void setUpperLine(){}
     public void setUnderLine(){}
-    public void setUpperBLine(){}
-    public void setUnderBLine(){}
-
 }

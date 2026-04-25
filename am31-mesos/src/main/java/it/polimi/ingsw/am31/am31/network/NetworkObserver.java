@@ -13,7 +13,7 @@ public class NetworkObserver implements GameObserver {
     private final String identifier;
 
     public NetworkObserver(VirtualView virtualView, String identifier){
-        this.identifier = identifier;
+        this.identifier = identifier == null ? "" : identifier;
         this.virtualView = virtualView;
     }
 
@@ -93,6 +93,15 @@ public class NetworkObserver implements GameObserver {
             System.err.println(e.getMessage());
         }
     }
+
+    public void onGameCrashUpdate(){
+        try{
+            virtualView.receiveUpdate(UpdateFactory.createGameCrashUpdate());
+        }catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
+
 
     @Override
     public void onGameStartUpdate (Game game) {

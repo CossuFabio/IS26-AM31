@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.CardLineUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.TurnOrderUpdate;
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameCrashUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameRoundStatusUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.PlayersListUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
+import it.polimi.ingsw.am31.am31.network.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "updateType")
 
@@ -24,7 +26,11 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.Pla
         @JsonSubTypes.Type(value = OfferTrackUpdate.class,      name = UpdateMethodsConstants.BOARD_OFFERCARD_UPDATE_METHOD),
         @JsonSubTypes.Type(value = CardLineUpdate.class,        name = UpdateMethodsConstants.BOARD_CARDLINE_UPDATE_METHOD),
         @JsonSubTypes.Type(value = TurnOrderUpdate.class,       name = UpdateMethodsConstants.BOARD_TURNORDER_UPDATE_METHOD),
+        @JsonSubTypes.Type(value = GameCrashUpdate.class,       name = UpdateMethodsConstants.GAME_CRASHED_METHOD),
+        @JsonSubTypes.Type(value = SuccessRegistrationUpdate.class,       name = UpdateMethodsConstants.USERNAME_ACCEPTED_METHOD)
 })
+
+
 public abstract class UpdateMessage {
 
 
