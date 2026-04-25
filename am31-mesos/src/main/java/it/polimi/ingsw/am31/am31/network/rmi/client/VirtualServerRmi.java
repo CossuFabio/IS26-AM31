@@ -14,5 +14,5 @@ public interface VirtualServerRmi extends Remote {
 
     void sendRequest(String request, VirtualViewRmi skeleton) throws RemoteException;
 
-    void disconnect() throws RemoteException;
+    void disconnect(String identifier) throws RemoteException;
 }

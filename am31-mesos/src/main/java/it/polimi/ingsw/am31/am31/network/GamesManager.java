@@ -1,59 +1,140 @@
 package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.controller.GameController;
+import it.polimi.ingsw.am31.am31.exceptions.GameException;
 import it.polimi.ingsw.am31.am31.exceptions.GameInvariantException;
-import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
+import it.polimi.ingsw.am31.am31.exceptions.NetworkException;
+import it.polimi.ingsw.am31.am31.exceptions.networkException.BadNetworkRequestException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonTribeCardsSupplier;
+import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessageFactory;
+import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.NetworkRequestFactory;
+import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 
 public class GamesManager {
 
-    private List<GameController> activeGames;
+    //Associates GameID with controller
+    private final Map<Integer, GameController> games;
 
-    public GamesManager() {
-        activeGames = new ArrayList<GameController>();
+    //Associates PlayerID with game
+    private final Map<String, GameController> playerToGame;
+
+    //Used to create the next gameID concurrently
+    private final AtomicInteger nextGameID;
+
+    //Used for requests routing
+    private final Map<String, BiConsumer<NetworkRequest, VirtualView>> commands;
+
+    public  GamesManager() {
+        this.games = new ConcurrentHashMap<>();
+        this.playerToGame =  new ConcurrentHashMap<>();
+        this.nextGameID = new AtomicInteger(1);
+        this.commands = new ConcurrentHashMap<>();
+
+        commands.put(RequestMethodsConstants.METHOD_NEW_GAME, this::createGame);
+        commands.put(RequestMethodsConstants.METHOD_DRAW, this::drawCard);
+        commands.put(RequestMethodsConstants.METHOD_JOIN_GAME, this::joinGame);
+        //commands.put(RequestMethodsConstants.METHOD_SHOW_LOBBIES, this::showLobbies);
+
+
     }
 
-    //TODO: method for creating new game, calls for GameController constructor
-    public void createGame(int nplayers) throws IOException {
-        GameResources gameResources = new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier());
-        Game gameinstance = new Game (nplayers, gameResources);
-        activeGames.add(new GameController(gameinstance));
+    //Integrity is already checked by the server
+    public void handleRequest(NetworkRequest request, VirtualView virtualView) {
+        if(!commands.containsKey(request.getType())){
+            virtualView.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Unknown type")));
+        }
+        else{
+            commands.get(request.getType()).accept(request, virtualView);
+        }
+
     }
 
-    public GameController getGameControllerWithPlayer(String nickname) throws PlayerNotFoundException {
-            for (GameController g : activeGames) {
-                if(g.isPlayerInGame(nickname))
-                    return g;
-            }
-            throw new PlayerNotFoundException(nickname);
+    //Utilities
+    private GameController findGameFromPlayerUsername(String username) throws BadNetworkRequestException{
+        GameController game = playerToGame.get(username);
+        if(game != null) return game;
+        throw new BadNetworkRequestException("Game not found");
     }
 
-    //returns immutable lists
-    public List<GameController> getActiveGames(){return this.activeGames.stream().toList();}
-
-    public GameController getControllerI(int i) {
-        if (i < 0 || i >= activeGames.size()) return null;
-        return this.activeGames.get(i);
+    public Map<Integer, GameController> getActiveGames() {
+        return games;
     }
 
-    //TODO FINISH THIS
-    public void handlePlayerDisconnected(String identifier){
+    private void createGame(NetworkRequest req, VirtualView view){
         try{
-            GameController gameController = getGameControllerWithPlayer(identifier);
-            if(gameController == null) return;
-        }catch(GameInvariantException e){
+            //No validity checks required on specReq fields
+            NewGameNetworkRequest specReq = (NewGameNetworkRequest) req;
 
+            //Game creation
+            GameResources gameResources = new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier());
+            Game gameInstance = new Game (((NewGameNetworkRequest) req).getNumPlayers(), gameResources);
+
+            //Controller creation and insert into map
+            GameController gameController = new GameController(gameInstance);
+            Integer id = nextGameID.getAndIncrement();
+            games.put(id, gameController);
+
+            //TODO: Send player the CreationSuccessUpdate and join page? Or modify CreateGameReq with the color to add directly here
+
+        }catch(IOException e){
+            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Unable to create game")));
+        }catch(GameException e){
+            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
+        }catch(Exception e){
+            //For uncatched exceptions
+            System.err.println(e.getMessage());
+        }
+
+    }
+
+    private void drawCard(NetworkRequest req, VirtualView view){
+        try{
+            //No validity check required
+            DrawNetworkRequest specReq = (DrawNetworkRequest) req;
+            String requestorId = req.getPlayerID();
+            GameController gameController = findGameFromPlayerUsername(requestorId);
+            gameController.handleDraw(specReq);
+
+
+        }catch(NetworkException e){
+            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
+        }catch(GameException e){
+            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
         }
 
 
     }
+
+    private void joinGame(NetworkRequest req, VirtualView view){}
+
+//TODO: Finish this
+//
+//    private void showLobbies(NetworkRequest req, VirtualView view){
+//
+//       try{
+//            ShowLobbyNetworkRequest specReq = (ShowLobbyNetworkRequest) req;
+//            //view.receiveUpdate(UpdateFactory.createShowLobbyUpdate(this));
+//        //}catch(NetworkException e){
+//        //    view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
+//       // }
+//    }
 
 }

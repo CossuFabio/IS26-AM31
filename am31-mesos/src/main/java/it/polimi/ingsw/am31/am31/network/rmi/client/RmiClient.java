@@ -16,6 +16,7 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.GameS
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
 import it.polimi.ingsw.am31.am31.view.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -78,8 +79,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
 
     @Override
     public void receiveUpdate (String updateMessage) {
+        //TODO receival of all Updates -> call on the updater
         UpdateMessage message = UpdateMapper.deserialize(updateMessage);
-
+        StateUpdater updater = new StateUpdater(gameState);
         if(message == null || message.getUpdateType() == null) return;
         if(message.getUpdateType().equals(UpdateMethodsConstants.GAME_SHOW_LOBBY_UPDATE_METHOD)){
             ShowLobbyUpdate lobbyUpdate = (ShowLobbyUpdate) message;
@@ -93,14 +95,20 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
         }
         if (message.getUpdateType().equals(UpdateMethodsConstants.GAME_START_UPDATE)){
             GameStartUpdate gameStartUpdate = (GameStartUpdate) message;
-            gameState.GameStart();
+            updater.HandleUpdateMessage(gameStartUpdate);
         }
     }
 
     @Override
     public void disconnect() throws RemoteException{
-
+        try {
+            serverStub.disconnect(this.identifier);
+            UnicastRemoteObject.unexportObject(this, true);
+        } catch (Exception e) {
+            System.err.println("Disconnection failed: " + e.getMessage());
+        }
     }
+
     public void setGameState(LocalGameState gameState) {
         this.gameState = gameState;
     }

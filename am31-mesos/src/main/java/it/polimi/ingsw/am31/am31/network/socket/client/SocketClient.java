@@ -1,7 +1,9 @@
 package it.polimi.ingsw.am31.am31.network.socket.client;
 
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
+import it.polimi.ingsw.am31.am31.network.VirtualView;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.DisconnectNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
@@ -10,7 +12,7 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
 import java.io.*;
 import java.net.Socket;
 
-public class SocketClient implements VirtualServer, VirtualViewSocket{
+public class SocketClient implements VirtualServer, VirtualViewSocket {
     private final String identifier;
     private final Socket socket;
     private final PrintWriter output;
@@ -56,8 +58,12 @@ public class SocketClient implements VirtualServer, VirtualViewSocket{
 
     @Override
     public void disconnect() throws Exception {
-
+        sendRequest(new DisconnectNetworkRequest());
+        output.close();
+        input.close();
+        socket.close();
     }
+
 
 
 }

@@ -34,7 +34,7 @@ public class GameController {
     }
 
 
-    public boolean isPlayerInGame(String nickname){
+    public synchronized boolean isPlayerInGame(String nickname){
         if(nickname == null) return false;
         for(Player p: game.getPlayersList())
             if(p.getNickname().equals(nickname))
@@ -43,7 +43,7 @@ public class GameController {
     }
 
     //-----Requests handling-----
-    public void handleAddPlayerMessage(JoinGameNetworkRequest request, GameObserver obs) throws LobbyException, GameInvariantException {
+    public synchronized void handleAddPlayerMessage(JoinGameNetworkRequest request, GameObserver obs) throws LobbyException, GameInvariantException {
 
         Player newPlayer = new Player(request.getPlayerID(), request.getColor());
         newPlayer.addObserver(observerHandler);
@@ -54,8 +54,8 @@ public class GameController {
 
     }
 
-    //Must add all exceptions and add the request source's connection in signature
-    public void handleDraw(DrawNetworkRequest request) throws IllegalActionException, GameInvariantException{
+
+    public synchronized void handleDraw(DrawNetworkRequest request) throws IllegalActionException, GameInvariantException{
         Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
         Card card = resourceFinder.getCardFromId(request.getCardID());
 
@@ -92,10 +92,9 @@ public class GameController {
     }
 
 
-
     //-----TOTEM PHASE-----
     //TODO: Test this
-    public void handleTotemAction(TotemNetworkRequest request) throws IllegalActionException, GameInvariantException{
+    public synchronized void handleTotemAction(TotemNetworkRequest request) throws IllegalActionException, GameInvariantException{
 
         Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
         OfferCard offerCard = resourceFinder.getOfferCard(request.getOfferTrackID());
@@ -104,14 +103,14 @@ public class GameController {
             startDrawPhase();
     }
 
-    public void startTotemPlacingPhase() throws GameInvariantException{
+    public synchronized void startTotemPlacingPhase() throws GameInvariantException{
         game.setUpTotemPlacingPhase();
     }
 
 
     //-----DRAW PHASES-----
 
-    public void startDrawPhase() throws GameInvariantException{
+    public synchronized void startDrawPhase() throws GameInvariantException{
 
         game.setUpDrawingPhase();
         //It is possible that the player doesn't need to draw
@@ -123,25 +122,26 @@ public class GameController {
 
     }
 
-    public void startBonusDrawPhase() throws GameInvariantException{
+    public synchronized void startBonusDrawPhase() throws GameInvariantException{
         game.setUpBonusDrawingPhase();
         if(game.isBonusDrawPhaseFinished()) startEndGamePhase();
     }
 
     //-----ROUND END-----
-    public void startEndGamePhase() throws GameInvariantException {
+    public synchronized void startEndGamePhase() throws GameInvariantException {
         game.endRound();
         if(game.isGameFinished()) handleEndGame();
         else startTotemPlacingPhase();
     }
 
      //-----Endgame methods-----
-    public void handleEndGame() throws GameInvariantException{
+    public synchronized void handleEndGame() throws GameInvariantException{
         List<Player> leaderboard = game.gameEnd();
         //Broadcast clients the results of the winners
     }
 
-    public int getNumActivePlayers(){return game.getPlayersList().size(); }
-    public int getNumPlayers(){return game.getNumPlayers();}
+    public synchronized int getNumActivePlayers(){return game.getPlayersList().size(); }
+    public synchronized int getNumPlayers(){return game.getNumPlayers();}
 
+    
 }

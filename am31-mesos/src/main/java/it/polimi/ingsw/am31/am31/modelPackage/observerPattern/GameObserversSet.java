@@ -78,9 +78,13 @@ public class GameObserversSet implements ObserverHandler{
         });
     }
     @Override
-    public void onGameStartUpdate(){}
+    public void onGameStartUpdate(Game game){}
 
     private void sendAsyncUpdate(Runnable updateFunc){
         executors.submit(updateFunc);
     }
+
+    @Override
+    public String getIdentifier(){return "GameObserverSet";}
+
 }

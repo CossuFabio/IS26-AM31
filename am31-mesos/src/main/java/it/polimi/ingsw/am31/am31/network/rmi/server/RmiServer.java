@@ -32,8 +32,12 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
     }
 
     @Override
-    public void disconnect() throws RemoteException {
-
+    public void disconnect(String identifier) throws RemoteException {
+        try {
+            mainServer.disconnect(identifier);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -9,8 +9,6 @@ public class RequestMethodsConstants {
     public static final String METHOD_NEW_GAME= "NEW_GAME";
     public static final String PING= "PING";
     public static final String METHOD_NEW_CONNECTION = "NEW_CONNECTION";
-
-
-
+    public static final String METHOD_DISCONNECT = "DISCONNECT";
 
 }

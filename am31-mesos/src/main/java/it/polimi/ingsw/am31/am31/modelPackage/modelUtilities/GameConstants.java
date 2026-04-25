@@ -2,6 +2,9 @@ package it.polimi.ingsw.am31.am31.modelPackage.modelUtilities;
 
 public class GameConstants {
 
+    public static final int MIN_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 5;
+
     //First player gets 2, second and third get 3, last two get 4
     public static final int[] STARTING_FOOD = {2, 3, 3, 4, 4};
 

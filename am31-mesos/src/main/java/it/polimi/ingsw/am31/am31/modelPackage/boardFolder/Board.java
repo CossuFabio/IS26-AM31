@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage.boardFolder;
 
+import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.CardNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
@@ -20,7 +21,8 @@ public class Board implements GameObservable {
     private final ArrayList<Card> underLine;
     private final ArrayList<BuildingCard> upperBLine;
     private final ArrayList<BuildingCard> underBLine;
-
+    //observable
+    private ObserverHandler observers;
 
     public Board(int numPlayers, List<OfferCard> offerCardsCatalog) throws IOException {
         CardLoader loader = new CardLoader();
@@ -34,29 +36,45 @@ public class Board implements GameObservable {
 
         upperBLine = new ArrayList<BuildingCard>();
         underBLine = new ArrayList<BuildingCard>();
+        observers.onCardLineUpdate(this, BoardRows.UPPER);
+        observers.onCardLineUpdate(this, BoardRows.LOWER);
+        observers.onOfferTrackUpdate(this);
     }
 
     public void moveLowerTribes(){
         underLine.clear();
         underLine.addAll(upperLine);
         upperLine.clear();
+        //has to update both upper and lower
+        observers.onCardLineUpdate(this, BoardRows.UPPER);
+        observers.onCardLineUpdate(this, BoardRows.LOWER);
+
     }
     public void moveLowerBuildings(){
         underBLine.clear();
         underBLine.addAll(upperBLine);
         upperBLine.clear();
+        //has to update both upper and lower
+        observers.onCardLineUpdate(this, BoardRows.UPPER);
+        observers.onCardLineUpdate(this, BoardRows.LOWER);
     }
 
     //ADDERS
     public void addUpper(BuildingCard card){
         upperBLine.add(card);
+        observers.onCardLineUpdate(this, BoardRows.UPPER);
     }
     public void addUpper(Card card){
         upperLine.add(card);
+        observers.onCardLineUpdate(this, BoardRows.UPPER);
     }
-    public void addLower(BuildingCard card) { underBLine.add(card);}
+    public void addLower(BuildingCard card) {
+        underBLine.add(card);
+        observers.onCardLineUpdate(this, BoardRows.LOWER);
+    }
     public void addLower(Card card){
         underLine.add(card);
+        observers.onCardLineUpdate(this, BoardRows.LOWER);
     }
 
     //GETTERS
@@ -83,11 +101,12 @@ public class Board implements GameObservable {
     //The !(buildings.remove || tribe.remove) checks if the card was present, if it wasn't the method throws the exception
     public void drawFromUpper(IPickable card) throws CardNotFoundException{
         if(!(upperBLine.remove(card) || upperLine.remove(card))) throw new CardNotFoundException();
-
+        observers.onCardLineUpdate(this, BoardRows.UPPER);
     }
 
     public void drawFromLower(IPickable card) throws CardNotFoundException{
         if(!(underBLine.remove(card) || underLine.remove(card))) throw new CardNotFoundException();
+        observers.onCardLineUpdate(this, BoardRows.LOWER);
     }
 
     public List<OfferCard> getOfferCards(){
@@ -107,8 +126,8 @@ public class Board implements GameObservable {
     public int getOfferTrackSize(){return offerTrack.size();}
 
     @Override
-    public void addObserver(ObserverHandler handler){
-
+    public void addObserver(ObserverHandler obs){
+        this.observers = obs;
     }
 
 

@@ -48,7 +48,7 @@ public class Server {
 
         commands.put(RequestMethodsConstants.METHOD_JOIN_GAME, (r, view )-> {
             try {
-                joinGameLobby((JoinGameNetworkRequest) r, view);
+                //joinGameLobby((JoinGameNetworkRequest) r, view);
             } catch (Exception e) {
                 //throw new RuntimeException(e);
                 System.err.println("Error to join the game: " + e.getMessage());
@@ -56,7 +56,7 @@ public class Server {
         });
         commands.put(RequestMethodsConstants.METHOD_SHOW_LOBBIES, (r, view) -> {
             try {
-                showLobbies((ShowLobbyNetworkRequest)r, view);
+                gamesManager.handleRequest(r, view);
             } catch (Exception e) {
                //throw new RuntimeException(e);
                 System.err.println("Error to show the lobbies: " + e.getMessage());
@@ -64,8 +64,8 @@ public class Server {
         });
         commands.put(RequestMethodsConstants.METHOD_NEW_GAME, (r, view ) -> {
             try {
-                createNewLobby((NewGameNetworkRequest) r, view);
-            } catch (IOException e) {
+                gamesManager.handleRequest(r, view);
+            } catch (Exception e) {
                 //throw new RuntimeException(e);
                 System.err.println("Error to create a lobby: " + e.getMessage());
             }
@@ -73,7 +73,8 @@ public class Server {
         commands.put(RequestMethodsConstants.METHOD_DRAW, (r, view )-> {
             try {
                 DrawNetworkRequest req = (DrawNetworkRequest) r;
-                GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
+                gamesManager.handleRequest(req, view);
+                //GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
                 //ctrl.handleDraw(req);
             } catch (PlayerNotFoundException e) {
                 //throw new RuntimeException(e);
@@ -83,7 +84,8 @@ public class Server {
         commands.put(RequestMethodsConstants.METHOD_PLACE_TOTEM, (r, view )-> {
             try {
                 TotemNetworkRequest req = (TotemNetworkRequest) r;
-                GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
+                gamesManager.handleRequest(req, view);
+                //GameController ctrl = gamesManager.getGameControllerWithPlayer(req.getPlayerID());
                 //ctrl.handleTotemAction(req);
             } catch (PlayerNotFoundException e) {
                 //throw new RuntimeException(e);
@@ -101,6 +103,13 @@ public class Server {
                 addClient(identifier, view);
         });
 
+        commands.put(RequestMethodsConstants.METHOD_DISCONNECT, (r, view) -> {
+            try {
+                disconnect(r.getPlayerID());
+            } catch (Exception e) {
+                System.err.println("Disconnection error: " + e.getMessage());                                                                                                                                                                               }
+        });
+
     }
 
     //Routing the request and verify the validity. Since this is the only entry point to the server, passing this validty
@@ -115,11 +124,16 @@ public class Server {
 
             return;
         }
-        if(!clients.containsKey(request.getPlayerID()) && !Objects.equals(request.getType(), RequestMethodsConstants.METHOD_NEW_CONNECTION))
-        {
+
+        if(!clients.containsKey(request.getPlayerID()) && !Objects.equals(request.getType(), RequestMethodsConstants.METHOD_NEW_CONNECTION)) {
             System.out.println("Richiesta da utente non valido ricevuta");
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new UsernameNotRegisteredException()));
             return;
+        }
+
+        //Blocks spoofing
+        if(clients.get(request.getPlayerID()) != view){
+            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Wrong username!")));
         }
 
         view.updateLastTime();
@@ -201,13 +215,9 @@ public class Server {
     //methods for creating a new game (on player request), showing active games (on player request)
     //these methods creates a new gameController -> a new game, with 0 players in.
     //No visibility operator means not visible outside the package. We want it to mantain the validity of the request
-    void createNewLobby(NewGameNetworkRequest req, VirtualView view) throws IOException {
-        try {
-            System.out.println("Richiesta nuova partita da "+ req.getNumPlayers() + " giocatori");
-            gamesManager.createGame(req.getNumPlayers());
-        } catch (IOException e) {
-
-        }
+    //void createNewLobby(NewGameNetworkRequest req, VirtualView view) {
+    /*    System.out.println("Richiesta nuova partita da "+ req.getNumPlayers() + " giocatori");
+        //gamesManager.createGame(req, view);
     }
 
     void showLobbies(ShowLobbyNetworkRequest request, VirtualView view) throws Exception {
@@ -240,10 +250,10 @@ public class Server {
                 requester.receiveErrorMessage(new ErrorMessage("Player already in game!", ErrorCategory.LOBBY_ERROR));
                 throw new PlayerAlreadyInGameException(request.getPlayerID());
             }
-            GameObserver obs = new NetworkObserver(clients.get(request.getPlayerID()));
+            GameObserver obs = new NetworkObserver(view, request.getPlayerID());
             controller.handleAddPlayerMessage(request,obs); //(request, connection)
         }
-    }
+    }*/
     //method to register a client via is username
     //Not public!
     void addClient(String identifier, VirtualView virtualView){

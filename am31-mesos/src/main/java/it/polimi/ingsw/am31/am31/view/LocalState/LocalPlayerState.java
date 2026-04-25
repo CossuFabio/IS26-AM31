@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.view;
+package it.polimi.ingsw.am31.am31.view.LocalState;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
@@ -12,5 +12,9 @@ public class LocalPlayerState {
     private String nickname;
     private List<IPickable> tribe;
 
-
+    public void setColor(){}
+    public void  setFood(){}
+    public void setPrestigePoints(){}
+    public void setNickname(){}
+    public void setTribe(){}
 }

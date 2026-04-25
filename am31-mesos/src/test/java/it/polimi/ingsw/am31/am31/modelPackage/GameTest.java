@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.InvalidPlayersNumber;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
@@ -44,7 +45,7 @@ class GameTest {
     }
     //TODO RUN this
     @Test
-    void TestShouldChangeEra() throws IOException {
+    void TestShouldChangeEra() throws IOException, InvalidPlayersNumber {
         Game game = new Game(3, new GameResources(
                 new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()
         ));

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.view;
+package it.polimi.ingsw.am31.am31.view.LocalState;
 
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
@@ -12,4 +12,11 @@ public class LocalBoardState {
     private ArrayList<Card> underLine;
     private ArrayList<BuildingCard> upperBLine;
     private ArrayList<BuildingCard> underBLine;
+
+    public void setOfferTrack(){}
+    public void setUpperLine(){}
+    public void setUnderLine(){}
+    public void setUpperBLine(){}
+    public void setUnderBLine(){}
+
 }

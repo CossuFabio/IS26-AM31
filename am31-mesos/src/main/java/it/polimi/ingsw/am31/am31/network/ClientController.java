@@ -5,13 +5,14 @@ import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetw
 
 public class ClientController {
     private final VirtualServer connection;
+    private boolean connected = true;
 
     public ClientController(VirtualServer connection) {
         this.connection = connection;
     }
     public void ping() {
         Thread pingThread = new Thread (() -> {
-            while(true) {
+            while(connected) {
                 try{
                     Thread.sleep(ClientConfig.CLIENT_HEARTBEAT_INTERVAL);
                     NetworkRequest ping = new PingNetworkRequest();
@@ -35,5 +36,12 @@ public class ClientController {
     }
     public void sendRequest(NetworkRequest request) throws Exception {
         this.connection.sendRequest(request);
+    }
+    public void disconnect() throws Exception {
+        connected = false;
+        this.connection.disconnect();
+    }
+    public boolean isConnected() {
+        return connected;
     }
 }

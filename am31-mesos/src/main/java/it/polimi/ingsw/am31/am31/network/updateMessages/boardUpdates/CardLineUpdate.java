@@ -27,10 +27,8 @@ public class CardLineUpdate extends UpdateMessage {
 
     @Override
     protected boolean checkSpecificValidity() {
-        return cardIds != null && |cardIds.contains(null) && row != null;
+        return cardIds != null && cardIds.contains(null) && row != null;
     }
-
-
 
 
 

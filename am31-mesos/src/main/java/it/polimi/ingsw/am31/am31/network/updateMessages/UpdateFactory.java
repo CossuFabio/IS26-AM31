@@ -19,9 +19,10 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.Pla
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UpdateFactory {
-
+ //PLAYER RELATED UPDATES
     public static PlayerScoresUpdate createPlayerScoresUpdate(Player player){
         return new PlayerScoresUpdate(
                 player.getNickname(),
@@ -29,7 +30,6 @@ public class UpdateFactory {
                 player.getFood()
         );
     }
-
     public static PlayerTribeUpdate createPlayerTribeUpdate(Player player){
         List<String> ids = player.getTribe().stream().map(Card::getCardId).toList();
 
@@ -38,7 +38,6 @@ public class UpdateFactory {
                 ids
         );
     }
-
     public static PlayerBuildingsUpdate createPlayerBuildingsUpdate(Player player){
         List<String> ids = player.getBuildings().stream().map(Card::getCardId).toList();
         return new PlayerBuildingsUpdate(
@@ -47,24 +46,29 @@ public class UpdateFactory {
         );
     }
 
+    //GAME RELATED UPDATES
     public static PlayersListUpdate createPlayersListUpdate(Game game){
         return new PlayersListUpdate(game.getPlayersList().stream().map(Player::getNickname).toList());
     }
-
     public static GameRoundStatusUpdate createGameRoundStatusUpdate(Game game){
         return new GameRoundStatusUpdate(game.getRoundNumber(), game.getCurrentRoundPhase());
     }
 
+    //TODO: Fix this
     public static ShowLobbyUpdate createShowLobbyUpdate(GamesManager gamesManager){
 
-        List<GameController> activeGames = gamesManager.getActiveGames();
+        Map<Integer, GameController> activeGames = gamesManager.getActiveGames();
         List<LobbyDescriptor> lobbies = new ArrayList<>();
         for(int i = 0; i<activeGames.size(); i++){
             lobbies.add(new LobbyDescriptor(i, activeGames.get(i).getNumPlayers(), activeGames.get(i).getNumActivePlayers()));
         }
         return new ShowLobbyUpdate(lobbies);
     }
+    public static GameStartUpdate createGameStartUpdate(){
+        return new GameStartUpdate();
+    }
 
+    //BOARD RELATED UPDATES
     public static OfferTrackUpdate createOfferTrackUpdate(Board board){
         List<OfferCard> offerTrack = board.getOfferCards();
         List<OfferCardMessage> offerTrackMessages = new ArrayList<OfferCardMessage>();
@@ -77,7 +81,6 @@ public class UpdateFactory {
         return new OfferTrackUpdate(offerTrackMessages);
 
     }
-
     public static CardLineUpdate createCardLineUpdate(Board board, BoardRows row){
 
         List<String> cardIds;
@@ -86,14 +89,11 @@ public class UpdateFactory {
         return new CardLineUpdate(cardIds, row);
 
     }
-
     public static TurnOrderUpdate createTurnOrderUpdate(Board board){
         //TODO THINK HOW TO DO THIS - MAYBE CHANGE TURNORDER
         return new TurnOrderUpdate();
     }
 
-    public static GameStartUpdate createGameStartUpdate(){
-        return new GameStartUpdate();
-    }
+
 
 }

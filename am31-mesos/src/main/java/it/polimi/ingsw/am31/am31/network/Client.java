@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
 import it.polimi.ingsw.am31.am31.view.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
 import it.polimi.ingsw.am31.am31.view.View;
 import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;
 
@@ -58,7 +59,7 @@ public class Client {
             default:
                 break;
         }
-        gameState.addObserver((ObserverHandler) view);
+        gameState.addObserver((LocalObserver) view);
             view.Start();//after this, the clients acts through the view
     }
 

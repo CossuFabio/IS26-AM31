@@ -1,10 +1,7 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
-import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.GameAlreadyStartedException;
-import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerColorAlreadyTakenException;
-import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
-import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.UsernameAlreadyTakenException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EverybodyPlayedException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.IncorrectMethodCallException;
@@ -24,7 +21,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
-import it.polimi.ingsw.am31.am31.view.LocalGameState;
 
 import java.io.IOException;
 import java.util.*;
@@ -59,12 +55,14 @@ public class Game implements GameObservable {
     private ObserverHandler observers;
 
     //Setup
-    public Game (int nPlayers, GameResources gameResources) throws IOException {
+    public Game (int nPlayers, GameResources gameResources) throws IOException, InvalidPlayersNumber {
 
         roundNumber=0; //set to 1 in gameStart
         players= new ArrayList<Player>();
 
         era = 1;
+        if(nPlayers  < GameConstants.MIN_PLAYERS || nPlayers > GameConstants.MAX_PLAYERS)
+            throw new InvalidPlayersNumber();
         this.nPlayers= nPlayers;
         this.turnOrder = new TurnOrder(nPlayers);
         this.currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
@@ -83,6 +81,7 @@ public class Game implements GameObservable {
     @Override
     public void addObserver(ObserverHandler gameObserver) {
         this.observers = gameObserver;
+        board.addObserver(gameObserver);
     }
 
     public void addPlayer(Player player) throws GameAlreadyStartedException, TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {
@@ -111,8 +110,7 @@ public class Game implements GameObservable {
         if(players.size()<nPlayers){
             throw new InsufficientPlayersNumberException();
         }
-        observers.onGameStartUpdate();
-        observers.onGameRoundStatusUpdate(this);
+        observers.onGameStartUpdate(this);
         //Just a placeholder, otherwise this would be null and risk a NullPointerException. It will be ignored because the first phase
         //Is TOTEM_PLACING
         playerActing = players.getFirst();
@@ -156,20 +154,7 @@ public class Game implements GameObservable {
 
         this.roundNumber = 1;
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
-
-        //method that copies current state into a view-safe copy
-        //LocalGameState newGame = createState();
-        //copy is then sent to observers
-        //observers.onGameStartUpdate(this);
-
     }
-
-    //Non deve stare qui, il local game state è una cosa del client. Bisogna mandarlo in altri modi
-    //public LocalGameState createState(){
-    //    LocalGameState state = null;
-    //    state.copyfromgame(this);
-    //    //TODO FINISH THIS
-    //}
     
 
     //TODO : Test This - Review
@@ -289,9 +274,11 @@ public class Game implements GameObservable {
             throw new WrongRoundPhaseException();
         }
         if (!(player == getPlayerActingTotemPhase())) throw new WrongPlayerTurnException();
-        if (offerCard.isFree())
+        if (offerCard.isFree()) {
             offerCard.setPlayer(player);
-        else
+            observers.onOfferTrackUpdate(board);
+        }
+            else
             throw new OfferTrackTileAlreadyTakenException();
         turnOrder.goToNextPlayer();
     }
@@ -455,7 +442,8 @@ public class Game implements GameObservable {
         //Frees the offerCard
         turnOrder.setPlayer(previousPlayerOfferCard.get().getPlayer());
         previousPlayerOfferCard.get().free();
-
+        //OfferTrackUpdate?
+        observers.onOfferTrackUpdate(board);
 
         Optional<OfferCard> nextOfferCard = board.getOfferCards().stream().filter(card -> !card.isFree()).findFirst();
 
@@ -469,6 +457,7 @@ public class Game implements GameObservable {
 
 
         setUpPlayerActing(nextPlayer, offerCard);
+        //update?
 
 
     }

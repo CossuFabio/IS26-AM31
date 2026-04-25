@@ -10,9 +10,16 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateFactory;
 public class NetworkObserver implements GameObserver {
 
     private final VirtualView virtualView;
+    private final String identifier;
 
-    public NetworkObserver(VirtualView virtualView){
+    public NetworkObserver(VirtualView virtualView, String identifier){
+        this.identifier = identifier;
         this.virtualView = virtualView;
+    }
+
+    @Override
+    public String getIdentifier(){
+        return identifier;
     }
 
     @Override
@@ -86,10 +93,24 @@ public class NetworkObserver implements GameObserver {
             System.err.println(e.getMessage());
         }
     }
+
     @Override
-    public void onGameStartUpdate () {
+    public void onGameStartUpdate (Game game) {
         try{
             virtualView.receiveUpdate(UpdateFactory.createGameStartUpdate());
+            //signals game start, then updates every part of the view
+            for(Player p : game.getPlayersList()){
+                onPlayerTribeUpdate(p);
+                onPlayerScoresUpdate(p);
+                //onPlayerNewBuildingEvent(p); idk about this one
+            }
+            //game status update
+            onGameRoundStatusUpdate(game);
+            //board updates
+            onCardLineUpdate(game.getBoard(),BoardRows.UPPER);
+            onCardLineUpdate(game.getBoard(),BoardRows.LOWER);
+            onOfferTrackUpdate(game.getBoard());
+            onTurnOrderUpdate(game.getBoard());
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
