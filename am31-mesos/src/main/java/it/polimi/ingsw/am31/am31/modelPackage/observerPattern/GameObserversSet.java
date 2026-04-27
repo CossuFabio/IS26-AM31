@@ -18,11 +18,9 @@ import java.util.function.Consumer;
 public class GameObserversSet implements ObserverHandler{
 
     private final List<GameObserver> observers;
-    private final ExecutorService executors;
 
     public GameObserversSet(){
         this.observers = new CopyOnWriteArrayList<>();
-        this.executors = Executors.newSingleThreadExecutor();
     }
 
 
@@ -43,62 +41,53 @@ public class GameObserversSet implements ObserverHandler{
 
     @Override
     public void onPlayerNewBuildingEvent(Player player) {
-        sendAsyncUpdate( () -> {observers.forEach(o -> o.onPlayerNewBuildingEvent(player));});
+       observers.forEach(o -> o.onPlayerNewBuildingEvent(player));
     }
 
     @Override
     public void onPlayerScoresUpdate(Player player) {
-        sendAsyncUpdate( () -> {observers.forEach(o -> o.onPlayerScoresUpdate(player));});
+        observers.forEach(o -> o.onPlayerScoresUpdate(player));
     }
 
     @Override
     public void onPlayerTribeUpdate(Player player) {
-        sendAsyncUpdate( () -> {observers.forEach(o -> o.onPlayerTribeUpdate(player));});
+        observers.forEach(o -> o.onPlayerTribeUpdate(player));
     }
 
     @Override
     public void onGameRoundStatusUpdate(Game game) {
-        sendAsyncUpdate( () -> {
-            observers.forEach(o -> o.onGameRoundStatusUpdate(game));
-        });
+        observers.forEach(o -> o.onGameRoundStatusUpdate(game));
     }
 
     @Override
     public void onPlayersListUpdate(Game game) {
-        sendAsyncUpdate( () -> {observers.forEach(o -> o.onPlayersListUpdate(game));});
+        observers.forEach(o -> o.onPlayersListUpdate(game));
     }
 
     @Override
     public void onCardLineUpdate(Board board, BoardRows row) {
-        sendAsyncUpdate(() -> {observers.forEach(o -> o.onCardLineUpdate(board, row));});
+        observers.forEach(o -> o.onCardLineUpdate(board, row));
     }
 
     @Override
     public void onOfferTrackUpdate(Board board) {
-        sendAsyncUpdate( () -> {observers.forEach(o -> o.onOfferTrackUpdate(board));});
+        observers.forEach(o -> o.onOfferTrackUpdate(board));
     }
 
     @Override
     public void onTurnOrderUpdate(Board board) {
-        sendAsyncUpdate(()-> {
-            observers.forEach(o -> o.onTurnOrderUpdate(board));
-        });
+        observers.forEach(o -> o.onTurnOrderUpdate(board));
     }
     @Override
-    public void onGameStartUpdate(Game game){sendAsyncUpdate(()-> {
+    public void onGameStartUpdate(Game game){
         observers.forEach(o -> o.onGameStartUpdate(game));
-    });}
+    }
 
     @Override
     public void onGameCrashUpdate() {
-        sendAsyncUpdate(()-> {
-            observers.forEach(o -> o.onGameCrashUpdate());
-        });
+        observers.forEach(o -> o.onGameCrashUpdate());
     }
 
-    private void sendAsyncUpdate(Runnable updateFunc){
-        executors.submit(updateFunc);
-    }
 
     @Override
     public String getIdentifier(){return "GameObserverSet";}

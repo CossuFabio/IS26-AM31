@@ -7,14 +7,19 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateFactory;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class NetworkObserver implements GameObserver {
 
     private final VirtualView virtualView;
     private final String identifier;
+    private final ExecutorService executors;
 
     public NetworkObserver(VirtualView virtualView, String identifier){
         this.identifier = identifier == null ? "" : identifier;
         this.virtualView = virtualView;
+        this.executors = Executors.newSingleThreadExecutor();
     }
 
     @Override
@@ -24,88 +29,91 @@ public class NetworkObserver implements GameObserver {
 
     @Override
     public void onPlayerNewBuildingEvent(Player player) {
-        try{
+        executors.submit(()->{
+        try {
             virtualView.receiveUpdate(UpdateFactory.createPlayerBuildingsUpdate(player));
-        }catch(Exception e){
+        } catch (Exception e) {
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
     @Override
     public void onPlayerScoresUpdate(Player player) {
-        try{
+
+        executors.submit(()->{try{
             virtualView.receiveUpdate(UpdateFactory.createPlayerScoresUpdate(player));
         }catch(Exception e){
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
     @Override
     public void onPlayerTribeUpdate(Player player) {
+        executors.submit(()->{
         try{
             virtualView.receiveUpdate(UpdateFactory.createPlayerTribeUpdate(player));
         }catch(Exception e){
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
     @Override
     public void onGameRoundStatusUpdate(Game game) {
-        try{
+        executors.submit(()->{try{
             virtualView.receiveUpdate(UpdateFactory.createGameRoundStatusUpdate(game));
         }catch(Exception e){
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
     @Override
     public void onPlayersListUpdate(Game game) {
-        try{
+        executors.submit(()->{try{
             virtualView.receiveUpdate(UpdateFactory.createPlayersListUpdate(game));
         }catch(Exception e){
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
     @Override
     public void onCardLineUpdate(Board board, BoardRows row) {
-        try{
+        executors.submit(()->{try{
             virtualView.receiveUpdate(UpdateFactory.createCardLineUpdate(board, row));
         }catch(Exception e){
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
     @Override
     public void onOfferTrackUpdate(Board board) {
-        try{
+        executors.submit(()->{try{
             virtualView.receiveUpdate(UpdateFactory.createOfferTrackUpdate(board));
         }catch(Exception e){
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
     @Override
     public void onTurnOrderUpdate(Board board) {
-        try{
+        executors.submit(()->{try{
             virtualView.receiveUpdate(UpdateFactory.createTurnOrderUpdate(board));
         }catch(Exception e){
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
     public void onGameCrashUpdate(){
-        try{
+        executors.submit(()->{try{
             virtualView.receiveUpdate(UpdateFactory.createGameCrashUpdate());
         }catch(Exception e){
             System.err.println(e.getMessage());
-        }
+        }});
     }
 
 
     @Override
     public void onGameStartUpdate (Game game) {
-        try{
+        executors.submit(()->{try{
             virtualView.receiveUpdate(UpdateFactory.createGameStartUpdate());
             //signals game start, then updates every part of the view
             for(Player p : game.getPlayersList()){
@@ -122,6 +130,6 @@ public class NetworkObserver implements GameObserver {
             onTurnOrderUpdate(game.getBoard());
         } catch (Exception e) {
             System.err.println(e.getMessage());
-        }
+        }});
     }
 }

@@ -1,12 +1,9 @@
 package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
-import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
-import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
-import it.polimi.ingsw.am31.am31.network.requests.*;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
-import it.polimi.ingsw.am31.am31.view.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
 import it.polimi.ingsw.am31.am31.view.View;
 import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;

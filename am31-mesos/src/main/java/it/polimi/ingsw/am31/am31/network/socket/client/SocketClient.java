@@ -8,15 +8,18 @@ import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServe
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 
 import java.io.*;
 import java.net.Socket;
+import java.rmi.RemoteException;
 
 public class SocketClient implements VirtualServer, VirtualViewSocket {
     private final String identifier;
     private final Socket socket;
     private final PrintWriter output;
     private final BufferedReader input;
+    private LocalGameState gameState;
 
     public SocketClient(String ip, int port, String identifier) throws Exception{
         this.identifier = identifier;
@@ -64,6 +67,7 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
         socket.close();
     }
 
+    public void setGameState(LocalGameState gameState){this.gameState = gameState;}
 
 
 }

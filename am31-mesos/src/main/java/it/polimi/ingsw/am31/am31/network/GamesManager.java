@@ -106,10 +106,21 @@ public class GamesManager {
             //Controller creation and insert into map
             Integer id = nextGameID.getAndIncrement();
             GameController gameController = new GameController(gameInstance, id);
+
+            if(playerToGame.putIfAbsent(specReq.getPlayerID(), gameController) != null) {
+                view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(
+                        new PlayerAlreadyInGameException(specReq.getPlayerID())));
+                return;
+            }
+
             games.put(id, gameController);
-            JoinGameNetworkRequest joinReq = new JoinGameNetworkRequest(specReq.getColor(), id);
-            joinReq.setPlayerID(req.getPlayerID());
-            joinGame(joinReq, view);
+
+            NetworkObserver newPlayerObs = new NetworkObserver(view, specReq.getPlayerID());
+            JoinGameNetworkRequest fakeJoinReq = new JoinGameNetworkRequest(specReq.getColor(), id);
+            gameController.handleAddPlayerMessage(fakeJoinReq, newPlayerObs);
+
+
+
 
         }catch(IOException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Unable to create game")));
@@ -119,7 +130,7 @@ public class GamesManager {
         catch(GameInvariantException e){
             System.err.println("Game invariant violated: " + e.getMessage());
         }catch(Exception e){
-            //For uncatched exceptions
+            //For others uncatched exceptions
             System.err.println(e.getMessage());
         }
 

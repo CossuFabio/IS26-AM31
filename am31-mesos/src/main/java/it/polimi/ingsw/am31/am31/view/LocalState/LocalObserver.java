@@ -18,5 +18,9 @@ public interface LocalObserver {
     void onPlayerListUpdate();
 
     void onEraUpdate();
+
+    void onOfferTrackUpdate();
+
+    void onPlayerScoreUpdate();
 }
 

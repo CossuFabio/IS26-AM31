@@ -17,17 +17,18 @@ import java.io.PrintWriter;
 
 public class SocketClientHandler implements VirtualView {
 
-    final Server mainServer;
-    final SocketServer socketServer;
-    final BufferedReader input;
-    final PrintWriter output;
-
+    private final Server mainServer;
+    private final SocketServer socketServer;
+    private final BufferedReader input;
+    private final PrintWriter output;
+    private long lastTimeSeen;
 
     public SocketClientHandler(Server mainServer, SocketServer socketServer, BufferedReader input, PrintWriter output){
         this.mainServer = mainServer;
         this.socketServer = socketServer;
         this.input = input;
         this.output = output;
+        this.lastTimeSeen = System.currentTimeMillis();
     }
 
 
@@ -82,11 +83,11 @@ public class SocketClientHandler implements VirtualView {
 
     @Override
     public void updateLastTime() {
-
+        this.lastTimeSeen = System.currentTimeMillis();
     }
 
     @Override
     public long getLastTime() {
-        return 0;
+        return lastTimeSeen;
     }
 }

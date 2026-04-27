@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 //The only purpose of this class is encapsulating the state of an offerTrack before sending to the client
 public class OfferCardMessage {
 
-
+    public static final String EMPTY_CARD = "CARD_IS_EMPTY";
     private final String cardId;
     private final String totemPlayerNickname;
 

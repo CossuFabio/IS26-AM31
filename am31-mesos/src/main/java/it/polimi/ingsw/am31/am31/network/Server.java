@@ -114,14 +114,14 @@ public class Server {
                     Thread.sleep(ServerConfig.HEARTBEAT_SERVER_INTERVAL);
                     long time = System.currentTimeMillis();
                     for(Map.Entry<String, VirtualView> v : clients.entrySet()) {
-                        if(time - v.getValue().getLastTime() > ServerConfig.HEARTBEAT_TIMOUT)
+                        if(time - v.getValue().getLastTime() > ServerConfig.HEARTBEAT_TIMEOUT)
                         {
                              //removes client form clients list, sends message to everyone else
                             disconnect(v.getKey());
                         }
                     }
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    System.err.println(e.getMessage());
                 }
             }
         });

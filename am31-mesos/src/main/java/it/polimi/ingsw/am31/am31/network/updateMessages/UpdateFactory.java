@@ -50,7 +50,7 @@ public class UpdateFactory {
 
     //GAME RELATED UPDATES
     public static PlayersListUpdate createPlayersListUpdate(Game game){
-        return new PlayersListUpdate(game.getPlayersList().stream().map(Player::getNickname).toList());
+        return new PlayersListUpdate(game.getPlayersList().stream().map(p -> new PlayerMessage(p.getNickname(), p.getColor())).toList());
     }
     public static GameRoundStatusUpdate createGameRoundStatusUpdate(Game game){
         return new GameRoundStatusUpdate(game.getRoundNumber(), game.getCurrentRoundPhase(), game.getEra());
@@ -76,7 +76,7 @@ public class UpdateFactory {
         List<OfferCardMessage> offerTrackMessages = new ArrayList<OfferCardMessage>();
 
         for(OfferCard c : offerTrack){
-            String nickname = c.isFree() ? null : c.getPlayer().getNickname();
+            String nickname = c.isFree() ? OfferCardMessage.EMPTY_CARD : c.getPlayer().getNickname();
             offerTrackMessages.add(new OfferCardMessage(c.getOfferCardId(), nickname, c.isFree()));
         }
 

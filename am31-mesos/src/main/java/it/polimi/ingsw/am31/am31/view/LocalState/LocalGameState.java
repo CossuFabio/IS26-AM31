@@ -1,16 +1,15 @@
-package it.polimi.ingsw.am31.am31.view;
+package it.polimi.ingsw.am31.am31.view.LocalState;
 
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
-import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.Deck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
 import it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates.OfferCardMessage;
 import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.LobbyDescriptor;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalBoardState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalObservable;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
+import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.PlayerMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,17 +52,18 @@ public class LocalGameState implements LocalObservable {
         this.currentRoundPhase=newPhase;
         gameObserver.onRoundPhaseUpdate();
     }
-    public void setPlayers(List<String> playersList){
+    public void setPlayers(List<PlayerMessage> playersList){
+        //remakes the list everytime
         int i=0;
-        for(String p : playersList)
-            players.set(i++, new LocalPlayerState(p));
+        for(PlayerMessage p: playersList)
+            players.set(i++, new LocalPlayerState(p.getNickname(), p.getColor(),));
         gameObserver.onPlayerListUpdate();
     }
-    public void setCardLine(List<String> cardIds, BoardRows row){
+    public void setCardLine(List<Card> cards, BoardRows row){
         if(row.equals(BoardRows.LOWER))
-            board.setUnderLine();
+            board.setUnderLine(cards);
         else if(row.equals(BoardRows.UPPER))
-            board.setUpperLine();
+            board.setUpperLine(cards);
         gameObserver.onCardLineUpdate();
     }
     public void setEra(int era){
@@ -74,7 +74,28 @@ public class LocalGameState implements LocalObservable {
         this.roundNumber=newRound;
         gameObserver.onRoundNumberUpdate();
     }
-    public void setOfferTrack(List<OfferCardMessage> offerTrack){
+    public void setOfferTrack(ArrayList<LocalOfferCard> offerTrack){
+//updates the offerTrack, after every totem placement
+        board.setOfferTrack(offerTrack);
+        gameObserver.onOfferTrackUpdate();
+    }
+
+    public void updatePlayerScore(String id,int newfood, int newpp){
+        for(LocalPlayerState p: players)
+            if(p.getNickname().equals(id))
+            {
+                //finds the player, udpates scores
+                p.setFood(newfood);
+                p.setPrestigePoints(newpp);
+        }
+        gameObserver.onPlayerScoreUpdate();
+    }
+    public void updatePlayerBuildings(String id, List<Card> cards){
+        for(LocalPlayerState p: players)
+            if(p.getNickname().equals(id))
+                //TODO CONTINUE THIS
+    }
+    public void updatePlayerDeck(String id, List<Card> cards){
 
     }
 }

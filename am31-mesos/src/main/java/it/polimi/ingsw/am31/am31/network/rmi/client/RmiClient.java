@@ -1,5 +1,4 @@
 package it.polimi.ingsw.am31.am31.network.rmi.client;
-import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.network.ServerConfig;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessage;
@@ -18,7 +17,7 @@ import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.*;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
-import it.polimi.ingsw.am31.am31.view.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
 
 import java.rmi.NotBoundException;
@@ -26,7 +25,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 
 
 public class RmiClient extends UnicastRemoteObject implements VirtualServer, VirtualViewRmi {
@@ -70,22 +68,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
         System.out.println(errorMessage.getMessage());
     }
 
-    @Override
-    public void updateLastTime() throws RemoteException {
-
-    }
-
-    @Override
-    public long getLastTime() throws RemoteException {
-        return 0;
-    }
 
     @Override
     public void receiveUpdate (String updateMessage) {
         //TODO receival of all Updates -> call on the updater
         UpdateMessage message = UpdateMapper.deserialize(updateMessage);
         StateUpdater updater = new StateUpdater(gameState);
-        if(message == null || message.getUpdateType() == null) return;
+        if(message == null || !message.checkValidity()) return;
         if(message.getUpdateType().equals(UpdateMethodsConstants.GAME_SHOW_LOBBY_UPDATE_METHOD)){
             ShowLobbyUpdate lobbyUpdate = (ShowLobbyUpdate) message;
             updater.HandleUpdateMessage(lobbyUpdate);

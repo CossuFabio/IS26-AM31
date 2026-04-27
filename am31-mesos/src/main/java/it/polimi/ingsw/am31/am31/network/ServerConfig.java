@@ -7,5 +7,5 @@ public class ServerConfig {
     public static final String SERVER_NAME = "MesosServer";
 
     public static final int HEARTBEAT_SERVER_INTERVAL = 10000;
-    public static final int HEARTBEAT_TIMOUT = 11000;
+    public static final int HEARTBEAT_TIMEOUT = 25000;
 }

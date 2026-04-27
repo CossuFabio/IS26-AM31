@@ -33,9 +33,16 @@ public class TUIlobby implements TUIPhase {
                         nplayers = scanner.nextInt();
                         if (nplayers < 2 || nplayers > 5) System.out.println("Invalid number!");
                     }
-                    //TODO: SORRY REF MA DOVEVA ESSERE CAMBIATO per far si che si registrasse al game appena creato. Poi
-                    // fixare che chiede il colore. Se vuoi faccio io se no te no te procupe
-                    request = new NewGameNetworkRequest(nplayers, Color.RED);
+                    Color colorz = null;
+                    while(colorz == null) {
+                        System.out.println("Choose your totem's color (white, black, red, yellow, blue)");
+                        try {
+                            colorz = Color.valueOf(scanner.next().toUpperCase());
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Invalid color!");
+                        }
+                    }
+                    request = new NewGameNetworkRequest(nplayers, colorz);
                     break;
                 case "2":
                     request = new ShowLobbyNetworkRequest();
