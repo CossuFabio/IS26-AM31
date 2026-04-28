@@ -39,25 +39,26 @@ module it.polimi.ingsw.am31.am31 {
     exports it.polimi.ingsw.am31.am31.network.requests;
     opens it.polimi.ingsw.am31.am31.network.requests to javafx.fxml, com.fasterxml.jackson.databind;
 
-    exports it.polimi.ingsw.am31.am31.network.updateMessages;
-    opens it.polimi.ingsw.am31.am31.network.updateMessages to javafx.fxml, com.fasterxml.jackson.databind;
-    exports it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage;
-    opens it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage to com.fasterxml.jackson.databind;
-    exports it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage;
-    opens it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage to com.fasterxml.jackson.databind;
-    exports it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates;
-    opens it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates to com.fasterxml.jackson.databind;
-    exports it.polimi.ingsw.am31.am31.network.updateMessages.serverMessages;
-    opens it.polimi.ingsw.am31.am31.network.updateMessages.serverMessages to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.Messages.updateMessages;
+    opens it.polimi.ingsw.am31.am31.network.Messages.updateMessages to javafx.fxml, com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage;
+    opens it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage;
+    opens it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates;
+    opens it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages;
+    opens it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.am31.am31.modelPackage.observerPattern;
     opens it.polimi.ingsw.am31.am31.modelPackage.observerPattern to javafx.fxml;
-    exports it.polimi.ingsw.am31.am31.network.errorMessage;
-    opens it.polimi.ingsw.am31.am31.network.errorMessage to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.Messages.errorMessage;
+    opens it.polimi.ingsw.am31.am31.network.Messages.errorMessage to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.am31.am31.network.requests.gameRequest;
     opens it.polimi.ingsw.am31.am31.network.requests.gameRequest to com.fasterxml.jackson.databind, javafx.fxml;
     exports it.polimi.ingsw.am31.am31.network.requests.lobbyRequest;
     opens it.polimi.ingsw.am31.am31.network.requests.lobbyRequest to com.fasterxml.jackson.databind, javafx.fxml;
     exports it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest;
     opens it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest to com.fasterxml.jackson.databind, javafx.fxml;
+    exports it.polimi.ingsw.am31.am31.network.Messages;
 
 }

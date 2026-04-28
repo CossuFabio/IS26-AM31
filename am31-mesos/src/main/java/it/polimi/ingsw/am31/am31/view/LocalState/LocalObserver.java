@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.view.LocalState;
 
-import it.polimi.ingsw.am31.am31.network.updateMessages.gameUpdatesMessage.LobbyDescriptor;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 
 import java.util.List;
 

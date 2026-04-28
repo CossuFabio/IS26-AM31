@@ -1,14 +1,12 @@
 package it.polimi.ingsw.am31.am31.network.rmi.server;
 
-import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.network.VirtualView;
-import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessageMapper;
-import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
-import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageMapper;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMapper;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 
 import java.rmi.RemoteException;
-import java.util.List;
 
 public class RmiClientAdapter implements VirtualView {
     private final VirtualViewRmi clientStub;

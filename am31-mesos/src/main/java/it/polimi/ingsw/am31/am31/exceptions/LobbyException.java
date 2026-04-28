@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.exceptions;
 
-import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorCategory;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCategory;
 
 //Caused by illegal actions performed before the starting of the game
 public abstract class LobbyException extends GameException {

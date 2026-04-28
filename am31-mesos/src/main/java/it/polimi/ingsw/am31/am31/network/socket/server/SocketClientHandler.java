@@ -2,15 +2,12 @@ package it.polimi.ingsw.am31.am31.network.socket.server;
 
 import it.polimi.ingsw.am31.am31.network.Server;
 import it.polimi.ingsw.am31.am31.network.VirtualView;
-import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessageMapper;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageMapper;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
-import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
-import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
-import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
-import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMapper;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 
 import java.io.*;
 import java.net.Socket;
