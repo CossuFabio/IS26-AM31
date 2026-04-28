@@ -47,6 +47,8 @@ module it.polimi.ingsw.am31.am31 {
     opens it.polimi.ingsw.am31.am31.network.updateMessages.playerUpdatesMessage to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates;
     opens it.polimi.ingsw.am31.am31.network.updateMessages.boardUpdates to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.am31.am31.network.updateMessages.serverMessages;
+    opens it.polimi.ingsw.am31.am31.network.updateMessages.serverMessages to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.am31.am31.modelPackage.observerPattern;
     opens it.polimi.ingsw.am31.am31.modelPackage.observerPattern to javafx.fxml;
     exports it.polimi.ingsw.am31.am31.network.errorMessage;

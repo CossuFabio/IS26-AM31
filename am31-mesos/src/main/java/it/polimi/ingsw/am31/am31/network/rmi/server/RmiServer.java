@@ -21,7 +21,11 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
     private final int port;
     private final Server mainServer;
     private final String serverName;
+
     private final Map<VirtualViewRmi, VirtualView> adaptersMap;
+
+
+
 
     public RmiServer(String serverName,int port, Server mainServer) throws RemoteException {
         super(port); //RMI usa una porta dinamica per l'oggetto remoto --> problema con i firewall
@@ -36,7 +40,7 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
         try {
             mainServer.disconnect(identifier);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
         }
     }
 
@@ -60,14 +64,14 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
     public void connect(String identifier ,VirtualViewRmi client) throws RemoteException {
         //more clients could invoke this
         //we create a rmiadapter and add him to rmi server clients
-            if(client == null) {
+            if(client == null || identifier == null) {
                 System.out.println("Received null skeleton");
                 return;
             } //Impossible to send response to null client
-            VirtualView rmiClient = new RmiClientAdapter(client);
-
+            VirtualView rmiClient = new RmiClientAdapter(client, this);
 
             adaptersMap.put(client, rmiClient);
+            mainServer.registerWaitingRoom(rmiClient);
             System.out.println("Connected "+identifier);
     }
 
@@ -80,6 +84,8 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
         Registry registry = LocateRegistry.createRegistry(port);
         registry.rebind(serverName,this);
     }
+
+    public void removeAdapter(VirtualViewRmi adapter){this.adaptersMap.remove(adapter);}
 
 
 }

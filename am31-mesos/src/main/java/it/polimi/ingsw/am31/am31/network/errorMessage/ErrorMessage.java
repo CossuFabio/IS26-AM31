@@ -4,7 +4,7 @@ package it.polimi.ingsw.am31.am31.network.errorMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+//TODO: Find a way to handle both error and update messages on SocketClient
 public class ErrorMessage {
 
     private final ErrorCategory category;

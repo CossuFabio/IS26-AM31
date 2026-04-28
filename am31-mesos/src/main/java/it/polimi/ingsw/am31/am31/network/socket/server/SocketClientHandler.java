@@ -8,26 +8,28 @@ import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
+import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMapper;
 import it.polimi.ingsw.am31.am31.network.updateMessages.UpdateMessage;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.Socket;
 
 public class SocketClientHandler implements VirtualView {
 
     private final Server mainServer;
-    private final SocketServer socketServer;
+    private final Socket socket;
     private final BufferedReader input;
     private final PrintWriter output;
-    private long lastTimeSeen;
+    private volatile long lastTimeSeen;
 
-    public SocketClientHandler(Server mainServer, SocketServer socketServer, BufferedReader input, PrintWriter output){
+
+
+    public SocketClientHandler(Server mainServer, Socket socket) throws IOException {
         this.mainServer = mainServer;
-        this.socketServer = socketServer;
-        this.input = input;
-        this.output = output;
+        this.socket = socket;
+        this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         this.lastTimeSeen = System.currentTimeMillis();
     }
 
@@ -54,12 +56,12 @@ public class SocketClientHandler implements VirtualView {
 
     private void closeConnection(){
         try{
-            if (!(input == null)) input.close();
-            if (!(output == null)) output.close();
-        }catch(IOException e){
+            if (input != null) input.close();
+            if (output != null) output.close();
+            if (socket != null && !socket.isClosed()) socket.close();
+        }catch(Exception e){
             System.err.println(e.getMessage());
         }
-
     }
 
 
@@ -89,5 +91,13 @@ public class SocketClientHandler implements VirtualView {
     @Override
     public long getLastTime() {
         return lastTimeSeen;
+    }
+
+    @Override
+    public void forceDisconnect() {
+        //Forse the closure of the socket.
+        //This will make the readLine in (jsonReq = input.readLine()) in runVirtualView to throw an error (that calls again closeConnection
+        //but this is not a problem: close is idempotent.
+        closeConnection();
     }
 }

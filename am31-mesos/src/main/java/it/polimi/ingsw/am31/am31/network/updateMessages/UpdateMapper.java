@@ -16,6 +16,8 @@ public class UpdateMapper {
             return result;
         }catch(JsonProcessingException e){
             System.err.println(e);
+        }catch(Exception e){
+            System.err.println(e);
         }
         return null;
     }

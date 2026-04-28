@@ -14,7 +14,7 @@ public interface VirtualView {
     void receiveErrorMessage(ErrorMessage error);
     void updateLastTime();
     long getLastTime();
-
+    void forceDisconnect();
     //Lo lascio scritto commentato ma andrebbe tolto: non si puo mandare un controller intero via rete
     //per due motivi:
     // 1- Stai dicendo al client che deve conoscere la logica di gioco e l'interfaccia del controller, ma il client deve rimanere

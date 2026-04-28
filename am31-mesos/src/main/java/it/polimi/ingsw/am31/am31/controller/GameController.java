@@ -46,10 +46,19 @@ public class GameController {
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player newPlayer = new Player(request.getPlayerID(), request.getColor());
         newPlayer.addObserver(observerHandler);
-        game.addPlayer(newPlayer);
-        observerHandler.addObserver(obs);
-        if(game.getPlayersList().size() == game.getNumPlayers())
-            game.gameStart();
+        try{
+            observerHandler.addObserver(obs);
+            game.addPlayer(newPlayer);
+            if(game.getPlayersList().size() == game.getNumPlayers())
+                game.gameStart();
+        }catch(Exception e){
+            //Catch block remove the observer handler then propagate back the exception
+            observerHandler.removeObserver(obs);
+            throw e;
+        }
+
+
+
 
     }
 
@@ -59,6 +68,8 @@ public class GameController {
         Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
         Card card = resourceFinder.getCardFromId(request.getCardID());
 
+
+        //Acceptable instanceof
         if(! (card instanceof IPickable)){
             throw new InvalidDrawException();
         }
@@ -84,6 +95,9 @@ public class GameController {
             }
         }
         else if (game.getCurrentRoundPhase() == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
+
+            //There can be only one player with bonus draw.
+            //It is an hard-coded rule but it is easier to handle.
             if (game.hasCurrentPlayerFinishedDrawing() && game.isBonusDrawPhaseFinished()) {
                 startEndGamePhase();
             }
@@ -159,8 +173,8 @@ public class GameController {
         observerHandler.removeObserver(playerID);
 
         if(!game.isGameInStartingPhase()) {
-            observerHandler.onGameCrashUpdate();
             isGameStillActive = false;
+            observerHandler.onGameCrashUpdate();
             return false;
         }
 
@@ -168,6 +182,7 @@ public class GameController {
         try{
             Player player = resourceFinder.getPlayerFromNickname(playerID);
             game.removePlayer(player);
+
         }catch(PlayerNotFoundException e){
             System.err.println(e.getMessage());
         }

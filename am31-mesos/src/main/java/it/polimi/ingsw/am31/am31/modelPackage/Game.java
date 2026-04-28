@@ -98,7 +98,6 @@ public class Game implements GameObservable {
     }
     public void removePlayer(Player player){
         players.remove(player);
-        //Remove player from observers TODO
         observers.onPlayersListUpdate(this);
     }
 

@@ -15,8 +15,9 @@ public class ErrorMessageMapper {
             //System.out.println(result);
             return result;
         }catch(JsonProcessingException e){
+            System.err.println("Serialization JSON error: " + e.getMessage());
+        }catch(Exception e){
             System.err.println("Serialization error: " + e.getMessage());
-            System.err.println(e);
         }
         return null;
     }

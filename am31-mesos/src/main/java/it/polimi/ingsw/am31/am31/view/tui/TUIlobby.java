@@ -20,10 +20,10 @@ public class TUIlobby implements TUIPhase {
     }
 
     public void draw() throws Exception {
-            NetworkRequest request = null;
-            Scanner scanner= new Scanner(System.in);
-            String input = scanner.next();
-            System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n4 - Place your Totem\n5 - Draw a card");
+        NetworkRequest request = null;
+        Scanner scanner= new Scanner(System.in);
+        System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n4 - Place your Totem\n5 - Draw a card");
+        String input = scanner.next();
             //the "lobby phase"
             switch (input) {
                 case "1":

@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.network.errorMessage.ErrorMessageFactory;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
+import it.polimi.ingsw.am31.am31.network.rmi.server.VirtualViewRmi;
 import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
 import it.polimi.ingsw.am31.am31.network.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
@@ -14,7 +15,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -25,56 +28,65 @@ public class Server {
     //gamesManager, contains games and controllers
     private final GamesManager gamesManager;
 
+    //This Set keeps track of all connections that haven't been registered with a username. A background thread
+    //periodically check their registration time and if they do not register, the connection is closed.
+    private final Set<VirtualView> waitingRoom;
+
     public Server() {
         this.gamesManager = new GamesManager();
         this.clients = new ConcurrentHashMap<>();
+        this.waitingRoom = ConcurrentHashMap.newKeySet();
 
     }
 
     //Routing the request and verify the validity. Since this is the only entry point to the server, passing this validty
     //Test means that we do not need to always check the validities!
     public void handleNetworkRequest (NetworkRequest request, VirtualView view){
-        //Server cannot do anything
-        if(view == null) return;
+        try{//Server cannot do anything
+            if (view == null) return;
 
-        if(request == null || !request.checkValidity()){
-            String type = (request != null && request.getType() != null) ? request.getType() : "Unknown type";
-            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException(type)));
-            return;
+            if (request == null || !request.checkValidity()) {
+                String type = (request != null && request.getType() != null) ? request.getType() : "Unknown type";
+                view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException(type)));
+                return;
+            }
+            VirtualView inServerClientView = clients.get(request.getPlayerID());
+            if (inServerClientView == null && !request.getType().equals((RequestMethodsConstants.METHOD_NEW_CONNECTION))) {
+                System.out.println("Richiesta da utente non valido ricevuta");
+                view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new UsernameNotRegisteredException()));
+                return;
+            }
+
+            //Blocks spoofing
+            if (!request.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION) && inServerClientView != view) {
+                view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Wrong username!")));
+                return;
+            }
+
+            view.updateLastTime();
+
+            //Don't care if pinging
+            if (request.getType().equals(RequestMethodsConstants.PING)) return;
+
+            //Received new connection
+            if (request.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION)) {
+                //This method will handle success or failure
+                addClient(request.getPlayerID(), view);
+                return;
+            }
+
+            //Routes for disconnections
+            if (request.getType().equals((RequestMethodsConstants.METHOD_DISCONNECT))) {
+                disconnect(request.getPlayerID());
+                return;
+            }
+
+            //Else: received a game-related request that will be handled by the GamesManager
+            gamesManager.handleRequest(request, view);
+
+        }catch(Exception e){ //Saves the server in case of unchecked exceptions
+            System.err.println(e.getMessage());
         }
-
-        if(!clients.containsKey(request.getPlayerID()) && !request.getType().equals((RequestMethodsConstants.METHOD_NEW_CONNECTION))){
-            System.out.println("Richiesta da utente non valido ricevuta");
-            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new UsernameNotRegisteredException()));
-            return;
-        }
-
-        //Blocks spoofing
-        if(!request.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION) && clients.get(request.getPlayerID()) != view){
-            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Wrong username!")));
-            return;
-        }
-
-        view.updateLastTime();
-
-        //Don't care if pinging
-        if(request.getType().equals(RequestMethodsConstants.PING)) return;
-
-        //Received new connection
-        if(request.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION)) {
-            //This method will handle success or failure
-            addClient(request.getPlayerID(), view);
-            return;
-        }
-
-        //Routes for disconnections
-        if(request.getType().equals((RequestMethodsConstants.METHOD_DISCONNECT))){
-            disconnect(request.getPlayerID());
-            return;
-        }
-
-        //Else: received a game-related request that will be handled by the GamesManager
-        gamesManager.handleRequest(request, view);
 
 
     }
@@ -100,7 +112,7 @@ public class Server {
         //SocketServer launch
         Thread socketThread = new Thread(() -> {
             try {
-                new SocketServer(new ServerSocket(ServerConfig.SERVER_PORT_SOCKET), this).run();
+                new SocketServer(new ServerSocket(ServerConfig.SERVER_PORT_SOCKET), this).start();
 
 
             } catch (IOException e) {
@@ -114,12 +126,20 @@ public class Server {
                     Thread.sleep(ServerConfig.HEARTBEAT_SERVER_INTERVAL);
                     long time = System.currentTimeMillis();
                     for(Map.Entry<String, VirtualView> v : clients.entrySet()) {
-                        if(time - v.getValue().getLastTime() > ServerConfig.HEARTBEAT_TIMEOUT)
-                        {
-                             //removes client form clients list, sends message to everyone else
+                        if(time - v.getValue().getLastTime() > ServerConfig.HEARTBEAT_TIMEOUT) {
                             disconnect(v.getKey());
                         }
                     }
+
+                    for(VirtualView v : waitingRoom){
+                        if(time - v.getLastTime() > ServerConfig.WAITING_ROOM_TIMEOUT){
+                            if(waitingRoom.remove(v)){
+                                v.forceDisconnect();
+                            }
+                        }
+                    }
+
+
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
                 }
@@ -131,7 +151,10 @@ public class Server {
 
     public void disconnect(String id){
         try {
-            clients.remove(id);
+            //Stop the thread in SocketClientHandler or removes from the adapters map in RMIServer
+            VirtualView disconnectedClient = clients.remove(id);
+            if(disconnectedClient != null) disconnectedClient.forceDisconnect();
+
             System.out.println(" Client " + id + " has been disconnected");
             gamesManager.handleDisconnect(id);
         }catch(Exception e){
@@ -147,6 +170,7 @@ public class Server {
     //Not public!
     void addClient(String identifier, VirtualView virtualView){
 
+
         //Better explanation for putIfAbsent in the method in GameController that adds a new player
         if(clients.putIfAbsent(identifier, virtualView) != null){
             virtualView.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new UsernameAlreadyInUseException(identifier)));
@@ -154,14 +178,21 @@ public class Server {
         }
 
         System.out.println("Client " + identifier + " has been added");
+
         try{
             virtualView.receiveUpdate(new SuccessRegistrationUpdate(identifier));
+            waitingRoom.remove(virtualView);
         }catch(Exception e){
             System.out.println("Unable to notify client. Removing it from the list");
             clients.remove(identifier, virtualView);
         }
 
-        //TODO add listener threads when accepting socket connection
+
     }
+
+    public void registerWaitingRoom(VirtualView view){
+        if(view != null) waitingRoom.add(view);
+    }
+
 
 }

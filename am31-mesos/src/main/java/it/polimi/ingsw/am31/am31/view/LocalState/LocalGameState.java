@@ -55,8 +55,10 @@ public class LocalGameState implements LocalObservable {
     public void setPlayers(List<PlayerMessage> playersList){
         //remakes the list everytime
         int i=0;
-        for(PlayerMessage p: playersList)
-            players.set(i++, new LocalPlayerState(p.getNickname(), p.getColor(),));
+        for(PlayerMessage p: playersList) {
+            players.set(i, new LocalPlayerState(p.getNickname(), p.getColor()));
+            i++;
+        }
         gameObserver.onPlayerListUpdate();
     }
     public void setCardLine(List<Card> cards, BoardRows row){

@@ -95,46 +95,60 @@ public class GamesManager {
 
     //Game methods TODO Fix concurrency problem
     private void createGame(NetworkRequest req, VirtualView view){
+        Integer id = nextGameID.getAndIncrement();
+        GameController gameController = null;
+
+        //Flags used in finally block. Used to repeat less code in catch blocks and keep track of the advancement of this
+        //process
+
+        //Flags if the player has been put in the playerToGameMap. Used to rollback in case of subsequent errors
+        boolean playerPut = false;
+
+        //Flags if the game has been put in the games map. Used to rollback in case of subsequent errors
+        boolean gamePut = false;
+
+        //Flags the correct completion of the operations (no rollback required in this case)
+        boolean success = false;
+
         try{
-            //No validity checks required on specReq fields
             NewGameNetworkRequest specReq = (NewGameNetworkRequest) req;
 
-            //Game creation
-            GameResources gameResources = new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier());
-            Game gameInstance = new Game (((NewGameNetworkRequest) req).getNumPlayers(), gameResources);
+            GameResources gameResources = new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new
+                    JsonOfferSupplier());
+            Game gameInstance = new Game(specReq.getNumPlayers(), gameResources);
+            gameController = new GameController(gameInstance, id);
 
-            //Controller creation and insert into map
-            Integer id = nextGameID.getAndIncrement();
-            GameController gameController = new GameController(gameInstance, id);
-
-            if(playerToGame.putIfAbsent(specReq.getPlayerID(), gameController) != null) {
+            if(playerToGame.putIfAbsent(specReq.getPlayerID(), gameController) != null){
                 view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(
                         new PlayerAlreadyInGameException(specReq.getPlayerID())));
                 return;
             }
+            playerPut = true;
 
             games.put(id, gameController);
+            gamePut = true;
 
             NetworkObserver newPlayerObs = new NetworkObserver(view, specReq.getPlayerID());
             JoinGameNetworkRequest fakeJoinReq = new JoinGameNetworkRequest(specReq.getColor(), id);
             gameController.handleAddPlayerMessage(fakeJoinReq, newPlayerObs);
 
-
-
-
+            success = true;
         }catch(IOException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Unable to create game")));
         }catch(GameException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
-        }
-        catch(GameInvariantException e){
+        }catch(GameInvariantException e){
             System.err.println("Game invariant violated: " + e.getMessage());
         }catch(Exception e){
-            //For others uncatched exceptions
             System.err.println(e.getMessage());
+        }finally{
+            if(!success){
+                if(gamePut) games.remove(id);
+                if(playerPut) playerToGame.remove(req.getPlayerID(), gameController);
+            }
         }
-
     }
+
 
     private void drawCard(NetworkRequest req, VirtualView view){
         try{
@@ -161,7 +175,9 @@ public class GamesManager {
     }
 
 
-    private void joinGame(NetworkRequest req, VirtualView view) {                                                                                                       JoinGameNetworkRequest joinReq = (JoinGameNetworkRequest) req;
+    private void joinGame(NetworkRequest req, VirtualView view) {
+
+        JoinGameNetworkRequest joinReq = (JoinGameNetworkRequest) req;
         GameController gameToJoin = games.get(joinReq.getGameID());
         if (gameToJoin == null) {
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new LobbyNotFoundException(joinReq.getGameID())));

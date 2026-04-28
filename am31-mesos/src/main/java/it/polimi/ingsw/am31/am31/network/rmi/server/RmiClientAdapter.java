@@ -12,12 +12,14 @@ import java.util.List;
 
 public class RmiClientAdapter implements VirtualView {
     private final VirtualViewRmi clientStub;
-    private long lastTimeSeen;
+    private volatile long lastTimeSeen;
+    private final RmiServer owner;
 
-    public RmiClientAdapter (VirtualViewRmi client) {
+
+    public RmiClientAdapter (VirtualViewRmi client, RmiServer owner) {
         this.clientStub = client;
         lastTimeSeen = System.currentTimeMillis();
-
+        this.owner = owner;
     }
     //adapter contains the clients callback in clientStub, calls methods on the stub.
     //adapter implements ClintConnection methods, callable by server on its clients
@@ -28,6 +30,8 @@ public class RmiClientAdapter implements VirtualView {
             clientStub.receiveUpdate(UpdateMapper.serialize(updateMessage));
         }catch (RemoteException e){
             System.err.println("RmiClientAdapter.receiveUpdate error");
+        }catch(Exception e){
+            System.err.println("RmiClientAdapter.receiveUpdate error" + e.getMessage());
         }
     }
 
@@ -37,6 +41,8 @@ public class RmiClientAdapter implements VirtualView {
             clientStub.receiveMessage(data);
         }catch(RemoteException e){
             System.err.println("RmiClientAdapter.receiveMessage error");
+        }catch(Exception e){
+            System.err.println("RmiClientAdapter.receiveMessage error" + e.getMessage());
         }
     }
 
@@ -46,6 +52,8 @@ public class RmiClientAdapter implements VirtualView {
             clientStub.receiveErrorMessage(ErrorMessageMapper.serialize(error));
         }catch (RemoteException e){
             System.err.println("RmiClientAdapter.receiveUpdate error");
+        }catch(Exception e){
+            System.err.println("RmiClientAdapter.receiveUpdate error" + e.getMessage());
         }
     }
     @Override
@@ -57,5 +65,11 @@ public class RmiClientAdapter implements VirtualView {
     @Override
     public long  getLastTime() {
         return lastTimeSeen;
+    }
+
+    @Override
+    public void forceDisconnect() {
+        //Forces the removal of the stub from the adaptersMap in RMIServer
+        owner.removeAdapter(clientStub);
     }
 }

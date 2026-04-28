@@ -23,22 +23,24 @@ public class SocketServer extends Thread implements VirtualServerSocket{
         Socket client = null;
         System.out.println("SocketServer on");
         try {
-            while ((client = listenSocket.accept())!= null) {
-                InputStreamReader socketRx = new InputStreamReader(client.getInputStream());
-                OutputStreamWriter socketTx = new OutputStreamWriter(client.getOutputStream());
-                SocketClientHandler clientHandler =  new SocketClientHandler(mainServer, this, new BufferedReader(socketRx), new PrintWriter(socketTx));
-                new Thread(()->{
-                    try{
-                        clientHandler.runVirtualView();
-                    }catch(RuntimeException e){
-                        System.err.println(e.getMessage());
-                    }
-
-                }).start();
-
-
+            while ((client = listenSocket.accept()) != null) {
+                try {
+                    SocketClientHandler clientHandler = new SocketClientHandler(mainServer, client);
+                    mainServer.registerWaitingRoom(clientHandler);
+                    new Thread(() -> {
+                        try {
+                            clientHandler.runVirtualView();
+                        } catch(RuntimeException e){
+                            System.err.println(e.getMessage());
+                        }
+                    }).start();
+                } catch (Exception e) {
+                    System.err.println("Failed to set up client handler: " + e.getMessage());
+                    try { client.close(); } catch (Exception ignored) {}
+                    // continua ad accettare altri client
+                }
             }
-        }catch(IOException e){
+        } catch(Exception e){
             System.err.println(e.getMessage());
         }
     }
