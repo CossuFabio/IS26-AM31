@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.CardLoader;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class Board implements GameObservable {
     private ObserverHandler observers;
 
     public Board(int numPlayers, List<OfferCard> offerCardsCatalog) throws IOException {
-        CardLoader loader = new CardLoader();
+
 
 
         this.offerTrack = (ArrayList<OfferCard>) offerCardsCatalog.stream().filter(c -> c.getMinPlayers() <= numPlayers)
@@ -33,13 +34,12 @@ public class Board implements GameObservable {
 
         upperLine = new ArrayList<Card>();
         underLine = new ArrayList<Card>();
-
         upperBLine = new ArrayList<BuildingCard>();
         underBLine = new ArrayList<BuildingCard>();
-        observers.onCardLineUpdate(this, BoardRows.UPPER);
-        observers.onCardLineUpdate(this, BoardRows.LOWER);
-        observers.onOfferTrackUpdate(this);
+
+        this.observers = new GameObserversSet();
     }
+
 
     public void moveLowerTribes(){
         underLine.clear();
@@ -127,15 +127,12 @@ public class Board implements GameObservable {
 
     @Override
     public void addObserver(ObserverHandler obs){
+
         this.observers = obs;
+
+        observers = new GameObserversSet();
     }
 
 
+
 }
-//SERVER
-
-//New game(numGIoc, GameResources(SupplierCarte, SupplierOffer, SupplierBuildings))
-//New controller(game);
-
-//arriva richiesta pescata
-//Card cardRequested = game.gameResources.getTribeCards().searchBYId(requestid)

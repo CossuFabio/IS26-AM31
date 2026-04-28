@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
@@ -48,6 +50,7 @@ public class Client {
         LocalGameState gameState = new LocalGameState();
         ((RmiClient) connection).setGameState(gameState); //(not definitive)
         int viewType = 1; //scanner.nextInt();
+        connection.sendRequest(new NewGameNetworkRequest(3, Color.RED));
         switch (viewType) {
             case 1: view = new TextUserInterface(controller, gameState);
             break;
@@ -58,6 +61,7 @@ public class Client {
         }
         gameState.addObserver((LocalObserver) view);
             view.Start();//after this, the clients acts through the view
+
     }
 
 }

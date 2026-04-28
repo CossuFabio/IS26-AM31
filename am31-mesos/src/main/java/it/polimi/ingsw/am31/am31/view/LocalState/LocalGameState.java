@@ -51,9 +51,16 @@ public class LocalGameState implements LocalObservable {
     }
     public void setPlayers(List<PlayerMessage> playersList){
         //remakes the list everytime
+
         int i=0;
         for(PlayerMessage p: playersList) {
-            players.set(i, new LocalPlayerState(p.getNickname(), p.getColor()));
+            //SOSEW
+            //Te l'ho commentato perche tirava IndexOutOfBounds
+            //players.set(i, new LocalPlayerState(p.getNickname(), p.getColor()));
+            //se vuoi fix veloce con funzionale:
+            //players = playersList.stream().map(p-> new LocalPlayerState(p.getNickname(), p.getColor())).toList();
+            //Occhio che la lista mi sa che è non modificabile se fai tolist, quindi o la rimetti da zero come fa la riga sopra o cambi
+            //funzione di collezione della mappa
             i++;
         }
         gameObserver.onPlayerListUpdate();
@@ -92,7 +99,7 @@ public class LocalGameState implements LocalObservable {
     public void updatePlayerBuildings(String id, List<Card> cards){
         for(LocalPlayerState p: players)
             if(p.getNickname().equals(id))
-                //TODO CONTINUE THIS
+                p.setTribe();
     }
     public void updatePlayerDeck(String id, List<Card> cards){
 

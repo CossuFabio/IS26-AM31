@@ -5,6 +5,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 public interface GameObserver {
+
+    //Notifies observer that they have been removed
+    void notifyRemoveMe();
+
     void onPlayerNewBuildingEvent(Player player);
     void onPlayerScoresUpdate(Player player);
     void onPlayerTribeUpdate(Player player);

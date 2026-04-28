@@ -29,7 +29,8 @@ public class RmiClientAdapter implements VirtualView {
         }catch (RemoteException e){
             System.err.println("RmiClientAdapter.receiveUpdate error");
         }catch(Exception e){
-            System.err.println("RmiClientAdapter.receiveUpdate error" + e.getMessage());
+            System.err.println("RmiClientAdapter.receiveUpdate error");
+            e.printStackTrace();
         }
     }
 

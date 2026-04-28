@@ -28,6 +28,11 @@ public class NetworkObserver implements GameObserver {
     }
 
     @Override
+    public void notifyRemoveMe() {
+        executors.shutdown();
+    }
+
+    @Override
     public void onPlayerNewBuildingEvent(Player player) {
         executors.submit(()->{
         try {

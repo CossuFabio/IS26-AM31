@@ -53,7 +53,8 @@ public class GameController {
                 game.gameStart();
         }catch(Exception e){
             //Catch block remove the observer handler then propagate back the exception
-            observerHandler.removeObserver(obs);
+            try { observerHandler.removeObserver(obs); } catch(Exception ignored){}
+            try { game.removePlayer(newPlayer); } catch(Exception ignored){}
             throw e;
         }
 

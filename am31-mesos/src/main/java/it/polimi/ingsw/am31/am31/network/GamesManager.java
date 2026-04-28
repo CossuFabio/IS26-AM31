@@ -84,7 +84,7 @@ public class GamesManager {
 
 
 
-    //Game methods TODO Fix concurrency problem
+    //Game methods
     private void createGame(NetworkRequest req, VirtualView view){
         Integer id = nextGameID.getAndIncrement();
         GameController gameController = null;
@@ -121,8 +121,10 @@ public class GamesManager {
 
             NetworkObserver newPlayerObs = new NetworkObserver(view, specReq.getPlayerID());
             JoinGameNetworkRequest fakeJoinReq = new JoinGameNetworkRequest(specReq.getColor(), id);
+            fakeJoinReq.setPlayerID(specReq.getPlayerID());
             gameController.handleAddPlayerMessage(fakeJoinReq, newPlayerObs);
-
+            //SOSEW
+            System.out.println("Created game: " + specReq.getPlayerID());
             success = true;
         }catch(IOException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Unable to create game")));

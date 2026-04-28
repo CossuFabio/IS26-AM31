@@ -90,7 +90,7 @@ public class Server {
     }
 
 
-    //old main put into start method TODO: Some bugs with exceptions - FIX
+
     public void start() {
         final String serverName = ServerConfig.SERVER_NAME;
         //Rmi server  launch
@@ -102,7 +102,10 @@ public class Server {
                 System.out.println("RmiServer Fail" + e.getMessage());
             } catch (UnknownHostException e) {
                 System.out.println("Failed to start RMI server!");
+            }catch (Exception e) {
+                System.out.println("Failed to start socket server!");
             }
+
         });
         rmiThread.start();
 
@@ -113,7 +116,7 @@ public class Server {
                 new SocketServer(new ServerSocket(ServerConfig.SERVER_PORT_SOCKET), this).start();
 
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println("Failed to start socket server!");
             }
         });
@@ -189,7 +192,15 @@ public class Server {
     }
 
     public void registerWaitingRoom(VirtualView view){
-        if(view != null) waitingRoom.add(view);
+        try{
+            if(view != null) waitingRoom.add(view);
+        }catch(Exception e){
+            //Shouldn't throw any exception but better check
+            System.out.println("Error in registerWaitingRoom: ");
+            e.printStackTrace();
+
+        }
+
     }
 
 

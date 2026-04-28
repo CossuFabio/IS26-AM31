@@ -59,19 +59,27 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
     }
 
     @Override
-    public void sendRequest(NetworkRequest request) throws Exception {
-        request.setPlayerID(identifier);
-        String jsonReq = RequestsMapper.serialize(request);
-        output.println(jsonReq);
-        output.flush();
+    public void sendRequest(NetworkRequest request){
+        try{
+            request.setPlayerID(identifier);
+            String jsonReq = RequestsMapper.serialize(request);
+            output.println(jsonReq);
+            output.flush();
+        } catch (Exception e) {
+            System.out.println("Error sending request");
+        }
     }
 
     @Override
-    public void disconnect() throws Exception {
-        sendRequest(new DisconnectNetworkRequest());
-        output.close();
-        input.close();
-        socket.close();
+    public void disconnect(){
+        try{
+            sendRequest(new DisconnectNetworkRequest());
+            output.close();
+            input.close();
+            socket.close();
+        }catch(Exception e){
+            System.out.println("Error closing connection");
+        }
     }
 
 }

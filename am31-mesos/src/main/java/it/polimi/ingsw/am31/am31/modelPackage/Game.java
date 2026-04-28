@@ -72,9 +72,10 @@ public class Game implements GameObservable {
         tribeDeck = new TribeDeck(nPlayers, gameResources.getTribeCards());
         buildingDeck = new BuildingDeck(nPlayers, gameResources.getBuildingCards());
         board= new Board(nPlayers, gameResources.getOfferCards());
-
         this.drawManager = new TurnDrawManager(board);
         this.observers = new GameObserversSet();
+        board.addObserver(observers);
+
     }
 
     //Must be called when creating game

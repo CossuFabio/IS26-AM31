@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameObserversSet implements ObserverHandler{
@@ -26,10 +27,19 @@ public class GameObserversSet implements ObserverHandler{
 
     public void removeObserver(GameObserver o ){
         observers.remove(o);
+        o.notifyRemoveMe();
     }
 
-    public void removeObserver(String identifier){
-        observers.removeIf(o-> o.getIdentifier().equals(identifier));
+    public void removeObserver(String identifier) {
+        observers.stream()
+                .filter(obs -> obs.getIdentifier().equals(identifier))
+                .findFirst()
+                .ifPresent(o -> {
+                    //Blocks other concurrent threads
+                    if (observers.remove(o)) {
+                        o.notifyRemoveMe();
+                    }
+                });
     }
 
     @Override
@@ -84,5 +94,8 @@ public class GameObserversSet implements ObserverHandler{
 
     @Override
     public String getIdentifier(){return "GameObserverSet";}
+
+    @Override
+    public void notifyRemoveMe(){/*Nothing to do*/}
 
 }

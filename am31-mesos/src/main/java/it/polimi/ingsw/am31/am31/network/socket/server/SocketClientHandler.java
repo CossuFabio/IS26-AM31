@@ -63,21 +63,38 @@ public class SocketClientHandler implements VirtualView {
 
 
     @Override
-    public void receiveUpdate(UpdateMessage data) throws Exception {
-        this.output.println(UpdateMapper.serialize(data));
-        this.output.flush();
+    public void receiveUpdate(UpdateMessage data){
+        try{
+            this.output.println(UpdateMapper.serialize(data));
+            this.output.flush();
+        }catch(Exception e){
+            System.out.println("Error in receiveUpdate SocketClientHandler");
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void receiveMessage(String data) throws Exception {
-        this.output.println(data);
-        this.output.flush();
+    public void receiveMessage(String data){
+        try{
+            this.output.println(data);
+            this.output.flush();
+        }catch(Exception e){
+            System.out.println("Error in receiveMessage SocketClientHandler");
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public void receiveErrorMessage(ErrorMessage error) {
-        this.output.println(ErrorMessageMapper.serialize(error));
-        this.output.flush();
+        try{
+            this.output.println(ErrorMessageMapper.serialize(error));
+            this.output.flush();
+        }catch(Exception e){
+            System.out.println("Error in receiveErrorMessage SocketClientHandler");
+            e.printStackTrace();
+        }
+
     }
 
     @Override
