@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.exceptions.networkException.BadNetworkRequestEx
 import it.polimi.ingsw.am31.am31.exceptions.networkException.UsernameAlreadyInUseException;
 import it.polimi.ingsw.am31.am31.exceptions.networkException.UsernameNotRegisteredException;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFactory;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateFactory;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
@@ -70,6 +71,7 @@ public class Server {
             if (request.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION)) {
                 //This method will handle success or failure
                 addClient(request.getPlayerID(), view);
+                view.receiveUpdate(UpdateFactory.createSuccessRegistrationUpdate(request.getPlayerID()));
                 return;
             }
 

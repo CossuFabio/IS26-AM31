@@ -4,7 +4,6 @@ package it.polimi.ingsw.am31.am31.network.Messages.updateMessages;
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.am31.am31.network.Messages.IMessageVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.Message;
-import it.polimi.ingsw.am31.am31.network.Messages.MessageVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.CardLineUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
@@ -16,6 +15,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMe
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
+import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "updateType")
 
@@ -56,8 +56,8 @@ public abstract class UpdateMessage extends Message {
     protected abstract boolean checkSpecificValidity();
 
     @Override
-    public void acceptVisit(IMessageVisitor visitor){
-        visitor.visitUpdate(this);
+    public void acceptVisit(IMessageVisitor visitor, StateUpdater updater){
+        visitor.visitUpdate(this, updater);
     }
 
 }

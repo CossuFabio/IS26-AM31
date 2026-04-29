@@ -181,7 +181,6 @@ public class Game implements GameObservable {
                 if(winners.getFirst().getFood() == playerToCompare.getFood()) {
                     winners.add(playerToCompare);
                 }
-                else return winners;
             }
         }
         return winners;

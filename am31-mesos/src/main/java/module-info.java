@@ -5,6 +5,7 @@ module it.polimi.ingsw.am31.am31 {
     requires com.fasterxml.jackson.databind;
     requires java.rmi;
     requires java.desktop;
+    //requires it.polimi.ingsw.am31.am31;
 
 
     opens it.polimi.ingsw.am31.am31 to javafx.fxml;
@@ -60,5 +61,6 @@ module it.polimi.ingsw.am31.am31 {
     exports it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest;
     opens it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest to com.fasterxml.jackson.databind, javafx.fxml;
     exports it.polimi.ingsw.am31.am31.network.Messages;
+
 
 }

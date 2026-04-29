@@ -7,8 +7,9 @@ import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.DisconnectNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMapper;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.Messages.MessageMapper;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -20,6 +21,8 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
     private final Socket socket;
     private final PrintWriter output;
     private final BufferedReader input;
+    private LocalGameState gameState;
+    private StateUpdater stateUpdater;
 
 
     public SocketClient(String ip, int port, String identifier) throws Exception{
@@ -39,15 +42,13 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
             String jsonMsg;
             try{
                 while ((jsonMsg = input.readLine()) != null){
-                    Message message = UpdateMapper.deserialize(jsonMsg);
+                    Message message = MessageMapper.deserialize(jsonMsg);
                     MessageVisitor visitor = new MessageVisitor();
-                    message.acceptVisit(visitor);
-                    //TODO: Implement behaviour in visitor
+                    message.acceptVisit(visitor, stateUpdater);
 //                    if(updateMessage != null && updateMessage.checkValidity()){
 //                        //TODO: DISPATCH THE UPDATE
 //                        //SOSEW: Remove this
 //                        System.out.println(updateMessage.getUpdateType());
-//                        System.out.println("TODO: DISPATCH THIS UPDATE (SocketClient - startClientSocket)");
 //                    }
                 }
             }catch(Exception e){
@@ -80,6 +81,11 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
         }catch(Exception e){
             System.out.println("Error closing connection");
         }
+    }
+
+    public void setGameState(LocalGameState gameState){
+        this.gameState = gameState;
+        this.stateUpdater = new StateUpdater(gameState);
     }
 
 }

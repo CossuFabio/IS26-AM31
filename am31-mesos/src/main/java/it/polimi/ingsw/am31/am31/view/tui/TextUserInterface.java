@@ -3,18 +3,19 @@ package it.polimi.ingsw.am31.am31.view.tui;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
 import it.polimi.ingsw.am31.am31.view.View;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class TextUserInterface implements View, LocalObserver {
     private final ClientController controller;
     private LocalGameState gameState;
-    private int currentPhase = 1; //TODO change into enum
-    private TUIPhase phase;
+    private volatile TUIPhase currentphase;
     private List<Card> cards;
     private List<OfferCard> offercards;
 
@@ -22,18 +23,45 @@ public class TextUserInterface implements View, LocalObserver {
         this.controller=controller;
         this.gameState = gameState;
         //gamestate starts as null
-        this.phase = new TUIlobby(this, controller);
+        this.currentphase = new TUIlobby(this, controller);
     }
 //class for visualization via CLI
     @Override
     public void Start() throws Exception {
 
         //draws the current phase
-        while(true)
-            TUIPhase.draw();
+            printScreen();
+
+        //we need an input thread
+        Thread inputThread = new Thread(()-> {
+           Scanner scanner = new Scanner(System.in);
+           while(true){
+               String input = scanner.nextLine();
+               try {
+                   currentphase.handleInput(input); //we don't send directly to the server, inputs
+                   //change meaning depending on currentphase
+               } catch (Exception e) {
+                   System.err.println("error");
+               }
+
+           }
+        });
+        inputThread.setDaemon(true);
+        inputThread.start();
     }
+
     @Override
-    public void PrintScreen() {
+    public void printScreen() {
+        System.out.println("\\033[H\\033[2J"); //doenst work
+        System.out.flush();
+
+            currentphase.draw();
+    }
+
+
+    public void changePhase(TUIPhase newphase){
+        currentphase=newphase;
+        printScreen();
     }
 
     //Observer methods
@@ -57,6 +85,8 @@ public class TextUserInterface implements View, LocalObserver {
     @Override
     public void onShowLobbyUpdate(List<LobbyDescriptor> lobbies){
     //tui shows the lobbies
+        //could use update visitor for these methods
+        lobbies.forEach(l -> {System.out.println("Partita: " + l.getId() + ", richiede: " + l.getnPlayers() + " giocatori. Giocatori in lobby: " + l.getFreeSlots());});
     }
     @Override
     public void onCardLineUpdate() {
@@ -81,5 +111,9 @@ public class TextUserInterface implements View, LocalObserver {
     public void onPlayerScoreUpdate(){
 //
     }
+    @Override
+    public void onPlayerTribeUpdate(){}
 
+    @Override
+    public void onTurnOrderUpdate(){}
 }

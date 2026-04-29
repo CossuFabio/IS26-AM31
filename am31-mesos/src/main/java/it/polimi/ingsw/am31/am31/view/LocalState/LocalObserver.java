@@ -22,5 +22,9 @@ public interface LocalObserver {
     void onOfferTrackUpdate();
 
     void onPlayerScoreUpdate();
+
+    void onPlayerTribeUpdate();
+
+    void onTurnOrderUpdate();
 }
 

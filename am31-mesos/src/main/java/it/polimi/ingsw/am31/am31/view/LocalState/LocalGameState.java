@@ -21,6 +21,7 @@ public class LocalGameState implements LocalObservable {
     private LocalObserver gameObserver; //only one, its the players view
     private BuildingDeck buildings;
     private TribeDeck cards;
+    private List<String> turnorder;
     public LocalGameState () {
         players = new ArrayList<LocalPlayerState>();
     }
@@ -52,18 +53,10 @@ public class LocalGameState implements LocalObservable {
     public void setPlayers(List<PlayerMessage> playersList){
         //remakes the list everytime
 
-        int i=0;
-        for(PlayerMessage p: playersList) {
-            //SOSEW
-            //Te l'ho commentato perche tirava IndexOutOfBounds
-            //players.set(i, new LocalPlayerState(p.getNickname(), p.getColor()));
-            //se vuoi fix veloce con funzionale:
-            //players = playersList.stream().map(p-> new LocalPlayerState(p.getNickname(), p.getColor())).toList();
-            //Occhio che la lista mi sa che è non modificabile se fai tolist, quindi o la rimetti da zero come fa la riga sopra o cambi
-            //funzione di collezione della mappa
-            i++;
-        }
+        //k
+        players = playersList.stream().map(p-> new LocalPlayerState(p.getNickname(), p.getColor())).toList();
         gameObserver.onPlayerListUpdate();
+        //once final this really should never change
     }
     public void setCardLine(List<Card> cards, BoardRows row){
         if(row.equals(BoardRows.LOWER))
@@ -95,13 +88,32 @@ public class LocalGameState implements LocalObservable {
                 p.setPrestigePoints(newpp);
         }
         gameObserver.onPlayerScoreUpdate();
+        //
     }
     public void updatePlayerBuildings(String id, List<Card> cards){
         for(LocalPlayerState p: players)
             if(p.getNickname().equals(id))
-                p.setTribe();
+                p.setBuildings(cards);
+        gameObserver.onPlayerTribeUpdate();
+        //
     }
-    public void updatePlayerDeck(String id, List<Card> cards){
+    public void updatePlayerTribe(String id, List<Card> cards){
+        for(LocalPlayerState p: players)
+            if(p.getNickname().equals(id))
+                p.setTribe(cards);
+        gameObserver.onPlayerTribeUpdate();
+        //
+    }
+    public void setTurnOrder(List<String> newturnorder){
+        //makes new turnorder, adds all names
+        turnorder = new ArrayList<>();
+        turnorder.addAll(newturnorder);
 
+        gameObserver.onTurnOrderUpdate();
+        //
+    }
+    public void removeObserver(LocalObserver obs) {
+        if (gameObserver == obs)
+            gameObserver = null;
     }
 }

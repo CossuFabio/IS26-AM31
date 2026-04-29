@@ -34,6 +34,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     private final String identifier;
     private VirtualViewRmi clientStub;
     private LocalGameState gameState;
+    private StateUpdater updater;
 
     public RmiClient(String ip, int port, String identifier) throws RemoteException, NotBoundException {
 
@@ -72,9 +73,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
 
     @Override
     public void receiveUpdate (String updateMessage) {
-        //TODO receival of all Updates -> call on the updater
         UpdateMessage message = UpdateMapper.deserialize(updateMessage);
-        StateUpdater updater = new StateUpdater(gameState);
         if(message == null || !message.checkValidity()) return;
         if(message.getUpdateType().equals(UpdateMethodsConstants.GAME_SHOW_LOBBY_UPDATE_METHOD)){
             ShowLobbyUpdate lobbyUpdate = (ShowLobbyUpdate) message;
@@ -120,7 +119,12 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
             PlayerTribeUpdate update = (PlayerTribeUpdate) message;
             updater.HandleUpdateMessage(update);
         }
-  //      if(message.getUpdateType().equals(UpdateMethodsConstants.))
+        //if(message.getUpdateType().equals(UpdateMethodsConstants.USERNAME_ACCEPTED_METHOD))
+        if(message.getUpdateType().equals(UpdateMethodsConstants.GAME_END_UPDATE)){
+            EndGameUpdate update = (EndGameUpdate) message;
+            updater.HandleUpdateMessage(update);
+        }
+
     }
 
 
@@ -136,6 +140,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
 
     public void setGameState(LocalGameState gameState) {
         this.gameState = gameState;
+        this.updater = new StateUpdater(gameState);
     }
 
 }

@@ -7,6 +7,7 @@ public class UpdateMethodsConstants {
     public final static String GAME_ROUND_UPDATE_METHOD = "GameUpdateRound"; //Updates both the round number and the phase
     public final static String GAME_SHOW_LOBBY_UPDATE_METHOD = "GameShowLobby";
     public final static String GAME_START_UPDATE = "GameStarted"; //when the game starts
+    public final static String GAME_END_UPDATE = "GameEnded";
 
     //Player methods
     public final static String PLAYER_SCORES_UPDATE_METHOD    = "PlayerUpdateScores";

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class OfferTrackUpdate extends UpdateMessage {
 
-    private final List<OfferCardMessage> offerTrack;
+    private final List<it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferCardMessage> offerTrack;
 
     @JsonCreator
     public OfferTrackUpdate(@JsonProperty("offerTrack") List<OfferCardMessage> offerTrack){

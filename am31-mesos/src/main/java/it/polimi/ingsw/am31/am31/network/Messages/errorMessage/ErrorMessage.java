@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.network.Messages.IMessageVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.Message;
-import it.polimi.ingsw.am31.am31.network.Messages.MessageVisitor;
+import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
 
 public class ErrorMessage extends Message {
 
@@ -27,7 +27,7 @@ public class ErrorMessage extends Message {
     public ErrorCategory getCategory(){return category; }
 
     @Override
-    public void acceptVisit(IMessageVisitor visitor) {
+    public void acceptVisit(IMessageVisitor visitor, StateUpdater updater) {
        visitor.visitError(this);
     }
 }

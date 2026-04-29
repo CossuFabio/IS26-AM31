@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
+import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
 import it.polimi.ingsw.am31.am31.view.View;
 import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;
 
@@ -48,9 +49,10 @@ public class Client {
         System.out.println("Enter 1 for TUI, 2 for GUI");
         //i want the gameState to be shared by connection (for updates) and view (for visualization)
         LocalGameState gameState = new LocalGameState();
-        ((RmiClient) connection).setGameState(gameState); //(not definitive)
+        ((RmiClient) connection).setGameState(gameState);//(not definitive)
         int viewType = 1; //scanner.nextInt();
-        connection.sendRequest(new NewGameNetworkRequest(3, Color.RED));
+
+        //connection.sendRequest(new NewGameNetworkRequest(3, Color.RED));
         switch (viewType) {
             case 1: view = new TextUserInterface(controller, gameState);
             break;
@@ -59,6 +61,7 @@ public class Client {
             default:
                 break;
         }
+        //move to view?
         gameState.addObserver((LocalObserver) view);
             view.Start();//after this, the clients acts through the view
 

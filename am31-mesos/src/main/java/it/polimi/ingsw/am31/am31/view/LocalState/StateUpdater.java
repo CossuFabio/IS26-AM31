@@ -19,7 +19,7 @@ public class StateUpdater {
 
     public StateUpdater(LocalGameState gameState) {
         this.gameState = gameState;
-        //creates a CardMapper, wich contains every possible card and a method to
+        //creates a CardMapper, which contains every possible card and a method to
         //get them through their id
         try {
             mapper = new CardMapper();
@@ -28,7 +28,7 @@ public class StateUpdater {
         }
     }
 
-    //TODO FINISH HANDLING OF UPDATES
+    //TODO FINISH HANDLING OF UPDATES: GAME_END,
 
     //board
     public void HandleUpdateMessage(CardLineUpdate msg){
@@ -48,8 +48,9 @@ public class StateUpdater {
         //
     }
     public void HandleUpdateMessage(TurnOrderUpdate msg){
-        //msg contains... nothing atm, its never sent
-
+        //msg contains a list of nicknames in order, atm is never sent
+        gameState.setTurnOrder(msg.getTurnOrder());
+        //
     }
 
     //game
@@ -77,10 +78,17 @@ public class StateUpdater {
         //
     }
 
+    public void HandleUpdateMessage(EndGameUpdate msg){
+        //TODO: IMPLEMENT THIS
+        //msg contains winners, for now
+        //shows usernames and score (need to create new PlayerMessage class with player.getScore)
+    }
+
     //player
     public void HandleUpdateMessage(PlayerBuildingsUpdate msg){
             //msg contains list of buildingcards and nickname, sent when it changes
         gameState.updatePlayerBuildings(msg.getPlayerId(),mapper.getCards(msg.getBuildingCardsIds()));
+    //
     }
     public void HandleUpdateMessage(PlayerScoresUpdate msg){
             //msg contains a nickanme, pp, food for a single player, sent when changed
@@ -89,9 +97,11 @@ public class StateUpdater {
     }
     public void HandleUpdateMessage(PlayerTribeUpdate msg){
             //msg contains the list of tribecards and a nickname, sent when cards change
-            //continue this
+        //cardIds mapped to List of cards, set to the player
+        gameState.updatePlayerTribe(msg.getPlayerId(),mapper.getCards(msg.getTribeCardsId()));
+        //
     }
     public void HandleUpdateMessage(GameCrashUpdate msg){
-
+        //TODO: IMPLEMENT THIS
     }
 }

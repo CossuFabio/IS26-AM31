@@ -8,6 +8,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateFactory;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -134,6 +135,15 @@ public class NetworkObserver implements GameObserver {
             onCardLineUpdate(game.getBoard(),BoardRows.LOWER);
             onOfferTrackUpdate(game.getBoard());
             onTurnOrderUpdate(game.getTurnOrder());
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }});
+    }
+
+    @Override
+    public void onGameEndUpdate(List<Player> leaderboard) {
+        executors.submit(()-> {try{
+            virtualView.receiveUpdate(UpdateFactory.createGameEndUpdate(leaderboard));
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }});

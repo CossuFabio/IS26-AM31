@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
 public interface TUIPhase {
-    static void draw() throws Exception {}
+    void draw();
+
+    void handleInput(String input) throws Exception;
 }

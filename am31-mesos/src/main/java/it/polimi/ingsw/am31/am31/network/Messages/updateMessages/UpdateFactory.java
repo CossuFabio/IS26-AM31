@@ -14,7 +14,6 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.Of
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
@@ -71,6 +70,8 @@ public class UpdateFactory {
     public static GameStartUpdate createGameStartUpdate(){
         return new GameStartUpdate();
     }
+
+    public static EndGameUpdate createGameEndUpdate(List<Player> leaderboard) {return new EndGameUpdate(leaderboard.stream().map(p -> new PlayerMessage(p.getNickname(), p.getColor())).toList());}
 
     //BOARD RELATED UPDATES
     public static OfferTrackUpdate createOfferTrackUpdate(Board board){

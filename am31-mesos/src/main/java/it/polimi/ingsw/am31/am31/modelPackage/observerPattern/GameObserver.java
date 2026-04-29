@@ -5,6 +5,8 @@ import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
+import java.util.List;
+
 public interface GameObserver {
 
     //Notifies observer that they have been removed
@@ -21,6 +23,7 @@ public interface GameObserver {
     void onOfferTrackUpdate(Board board);
     void onTurnOrderUpdate(TurnOrder turnOrder);
     void onGameStartUpdate(Game game);
+    void onGameEndUpdate(List<Player> leaderboard);
 
     void onGameCrashUpdate();
 

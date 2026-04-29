@@ -37,6 +37,7 @@ public class ClientController {
     public void sendRequest(NetworkRequest request) throws Exception {
         this.connection.sendRequest(request);
     }
+
     public void disconnect() throws Exception {
         connected = false;
         this.connection.disconnect();

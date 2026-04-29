@@ -154,7 +154,7 @@ public class GameController {
     public synchronized void handleEndGame() throws GameInvariantException{
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         List<Player> leaderboard = game.gameEnd();
-        //Broadcast clients the results of the winners
+        observerHandler.onGameEndUpdate(leaderboard);
     }
 
     public synchronized int getNumActivePlayers() throws GameInvariantException{
