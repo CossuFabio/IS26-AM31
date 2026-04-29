@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.handlers;
 
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.onDraw.GeneralAdditionalFoodDecorator;
@@ -111,29 +112,30 @@ public class DrawHandlers {
 
         int currentFood = player.getFood();
 
-        //Shouldn't add food: the decorator hasn't been added yet
+        //Shouldn't add food: the decorator hasn't been added yet, and it is a finite pair
         player.addCard(new Inventor("dummy", 1, 2,IconEnum.ARROW));
         player.addCard(new Inventor("dummy", 1, 2,IconEnum.ARROW));
 
         assertEquals(currentFood, player.getFood());
 
-        //Shouldn't be counter towards the bonus: the decorator hasn't been added yet
+        //Should be counted towards the bonus: the decorator hasn't been added yet, but it doesn't form a pair
         player.addCard(new Inventor("dummy", 1,2, IconEnum.BAIT));
 
+        int ppBuilding = 5;
+        player.addCard(new BuildingCard("dummy", 1, 2, ppBuilding, p -> {p.addDrawEffect(InventorAdditionalFoodDecorator::new);}));
+        //player.addDrawEffect(InventorAdditionalFoodDecorator::new);
+        int foodBonus = InventorAdditionalFoodDecorator.FOOD_BONUS; //Bonus given by the decorator
 
-        player.addDrawEffect(InventorAdditionalFoodDecorator::new);
-        int foodBonus = 3; //Bonus given by the decorator
-
-        //Shouldn't add food: this icon has been added before the creation of the decorator
+        //Should add food: this icon has been added before the creation of the decorator
         player.addCard(new Inventor("dummy", 1,2, IconEnum.BAIT));
 
-        assertEquals(currentFood, player.getFood());
+        assertEquals(foodBonus, player.getFood());
 
         //Should add food: new couple
         player.addCard(new Inventor("dummy", 1, 2,IconEnum.BREAD));
         player.addCard(new Inventor("dummy", 1,2, IconEnum.BREAD));
 
-        assertEquals(currentFood + foodBonus, player.getFood());
+        assertEquals(2*foodBonus, player.getFood());
 
 
     }

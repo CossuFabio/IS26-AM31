@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class InventorAdditionalFoodDecorator extends CardDrawHandlerDecorator{
 
     private final HashSet<IconEnum> icons;
-    private static final int FOOD_BONUS = 3;
+    public static final int FOOD_BONUS = 3;
 
     //Need to load the tribe for the first time.
     private boolean isFirstDraw = true;

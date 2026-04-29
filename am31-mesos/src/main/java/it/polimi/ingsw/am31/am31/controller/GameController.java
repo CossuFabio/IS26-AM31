@@ -29,13 +29,13 @@ public class GameController {
     private final ObserverHandler observerHandler;
     private final Integer gameID;
 
-    private volatile boolean isGameStillActive = true;
+    private boolean isGameStillActive = true;
 
     public GameController(Game gameInstance, Integer gameID){
         this.game = gameInstance;
         this.resourceFinder = new ResourceFinder(game);
         observerHandler = new GameObserversSet();
-        game.addObserver(observerHandler);
+        game.setObserverHandler(observerHandler);
         this.gameID = gameID;
     }
 
@@ -45,7 +45,7 @@ public class GameController {
     public synchronized void handleAddPlayerMessage(JoinGameNetworkRequest request, GameObserver obs) throws LobbyException, GameInvariantException {
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player newPlayer = new Player(request.getPlayerID(), request.getColor());
-        newPlayer.addObserver(observerHandler);
+        newPlayer.setObserverHandler(observerHandler);
         try{
             observerHandler.addObserver(obs);
             game.addPlayer(newPlayer);
@@ -69,9 +69,7 @@ public class GameController {
         Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
         Card card = resourceFinder.getCardFromId(request.getCardID());
 
-
-        //Acceptable instanceof
-        if(! (card instanceof IPickable)){
+        if(card == null || !card.canBePicked()){
             throw new InvalidDrawException();
         }
 

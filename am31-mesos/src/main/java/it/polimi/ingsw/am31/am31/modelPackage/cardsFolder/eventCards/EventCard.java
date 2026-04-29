@@ -32,4 +32,6 @@ public abstract class EventCard extends Card {
     public void acceptVisit(TribeVisitor visitor){
             visitor.visit(this);
         }
+
+
 }

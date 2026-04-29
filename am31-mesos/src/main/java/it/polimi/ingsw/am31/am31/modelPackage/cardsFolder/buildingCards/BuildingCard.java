@@ -62,4 +62,10 @@ public class BuildingCard extends Card implements IPickable {
         if(! (player.getFood() + player.getBuildersDiscount() >= this.cost)) throw new InsufficientFoodException(player.getFood(), player.getBuildersDiscount(), this.cost);
     }
 
+
+    @Override
+    public boolean canBePicked() {
+        return true;
+    }
+
 }

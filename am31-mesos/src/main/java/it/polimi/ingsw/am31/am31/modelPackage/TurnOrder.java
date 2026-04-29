@@ -1,63 +1,89 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
-
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EverybodyPlayedException;
+import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class TurnOrder {
+public class TurnOrder implements GameObservable {
 
-    private ArrayList<Player> players;
-    private int currentPlayer;
     private final int numPlayers;
 
+    //Fixed number of slots
+    private final ArrayList<Player> slots;
+
+    //Next player that moves
+    private int nextToAct;
+    //Where to place totem when a player's turn ends
+    private int nextEmptySlot;
+
+    private ObserverHandler observers;
+
     public TurnOrder(int numPlayers){
-        this.currentPlayer = 0;
-        this.players = new ArrayList<Player>();
         this.numPlayers = numPlayers;
+        this.slots = new ArrayList<>(numPlayers);
+        for (int i = 0; i < numPlayers; i++) slots.add(null);
+        this.nextToAct = 0;
+        this.nextEmptySlot = 0;
+        this.observers = new GameObserversSet();
     }
 
-    public void setPlayer(Player player) {
-        int place = currentPlayer;
-        players.set(place, player);
-        //end-turn effects get solved directly by player handler
-        player.resolveEndTurn(place, numPlayers);
-        this.currentPlayer++;
-        if(currentPlayer == numPlayers) //index gets reset for next round
-            currentPlayer = 0;
-    }
-    //when every player is on the OfferTrack, TurnOrder resets. It is then rebuilt with setPlayer which is called
-    //every time a player finishes their move on the OfferTrack to set the new order for next turn.
 
-    //For the first round they must not resolve their end turn effect!
+
+    //First round only: places players in random order
     public void setPlayerFirstRound(Player player){
-        int place = currentPlayer;
-        players.set(place, player);
-        this.currentPlayer++;
-        if(currentPlayer == numPlayers) //index gets reset for next round
-            currentPlayer = 0;
-
+        slots.set(nextEmptySlot, player);
+        nextEmptySlot++;
+        if (nextEmptySlot == numPlayers) nextEmptySlot = 0;
+        observers.onTurnOrderUpdate(this);
     }
 
+    //Player that has to place totem in current TotemPhase
     public Player getPlayerActing(){
-        return players.get(currentPlayer);
+        return slots.get(nextToAct);
     }
 
-//    public void reset(){
-//
-//        players.clear();
-//        currentPlayer = 0;
-//    }
+    //After a player placed totem, moves the cursor and frees the slot
+    public void goToNextPlayer() throws EverybodyPlayedException {
+        if (nextToAct == numPlayers) throw new EverybodyPlayedException();
+        slots.set(nextToAct, null);
+        nextToAct++;
+        observers.onTurnOrderUpdate(this);
+    }
 
-    //TODO TESTING
-    public void goToNextPlayer() throws EverybodyPlayedException{
-        if(currentPlayer == numPlayers) throw new EverybodyPlayedException();
-        players.set(currentPlayer, null);
-        this.currentPlayer = currentPlayer + 1;
+    public boolean everybodyPlayed(){
+        return nextToAct == numPlayers;
+    }
+
+    //After finishing action, the player is set in the first empty slot
+    public void setPlayer(Player player){
+        int place = nextEmptySlot;
+        slots.set(place, player);
+        player.resolveEndTurn(place, numPlayers);
+        nextEmptySlot++;
+        if (nextEmptySlot == numPlayers) {
+            //Reset the turnorder after everybody placed
+            nextEmptySlot = 0;
+            nextToAct = 0;
+        }
+        observers.onTurnOrderUpdate(this);
+    }
+
+    //Uses a free string as a placeholder for empty slots
+    public List<String> getSlotsNicknames(){
+        List<String> out = new ArrayList<>(numPlayers);
+        for (Player p : slots) out.add(p == null ? GameConstants.EMPTY_STRING : p.getNickname());
+        return Collections.unmodifiableList(out);
     }
 
 
-    public boolean everybodyPlayed(){ return currentPlayer == numPlayers; }
-
+    @Override
+    public void setObserverHandler(ObserverHandler observer) {
+        this.observers = observer;
+    }
 }
-

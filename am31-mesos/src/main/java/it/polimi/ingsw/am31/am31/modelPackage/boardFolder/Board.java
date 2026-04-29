@@ -126,7 +126,7 @@ public class Board implements GameObservable {
     public int getOfferTrackSize(){return offerTrack.size();}
 
     @Override
-    public void addObserver(ObserverHandler obs){
+    public void setObserverHandler(ObserverHandler obs){
 
         this.observers = obs;
 

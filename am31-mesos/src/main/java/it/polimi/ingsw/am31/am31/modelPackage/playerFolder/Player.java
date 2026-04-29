@@ -230,9 +230,15 @@ public class Player implements GameObservable {
     }
 
     @Override
-    public void addObserver(ObserverHandler obs){
+    public int hashCode() {
+        return nickname.hashCode();
+    }
+
+    @Override
+    public void setObserverHandler(ObserverHandler obs){
         this.observers = obs;
     }
+
 
 
 }

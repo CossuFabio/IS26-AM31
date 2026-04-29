@@ -49,6 +49,7 @@ public abstract class Card {
 
     public abstract String toString();
 
+    public boolean canBePicked(){return false; }
 
 
 }

@@ -43,6 +43,8 @@ public abstract class CharacterCard extends Card implements IPickable {
         player.addCard(this);
     }
 
-
-
+    @Override
+    public boolean canBePicked() {
+        return true;
+    }
 }

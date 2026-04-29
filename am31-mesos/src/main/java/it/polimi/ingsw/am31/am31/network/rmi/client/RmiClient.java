@@ -63,6 +63,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     }
 
     @Override
+    //TODO forward it to the view!
     public void receiveErrorMessage(String errorMessageString) throws RemoteException {
         ErrorMessage errorMessage = ErrorMessageMapper.deserialize(errorMessageString);
         System.out.println(errorMessage.getMessage());

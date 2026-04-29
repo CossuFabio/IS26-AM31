@@ -65,6 +65,7 @@ public class Game implements GameObservable {
             throw new InvalidPlayersNumber();
         this.nPlayers= nPlayers;
         this.turnOrder = new TurnOrder(nPlayers);
+
         this.currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
 
 
@@ -74,15 +75,16 @@ public class Game implements GameObservable {
         board= new Board(nPlayers, gameResources.getOfferCards());
         this.drawManager = new TurnDrawManager(board);
         this.observers = new GameObserversSet();
-        board.addObserver(observers);
 
     }
 
     //Must be called when creating game
     @Override
-    public void addObserver(ObserverHandler gameObserver) {
+    public void setObserverHandler(ObserverHandler gameObserver) {
         this.observers = gameObserver;
-        board.addObserver(gameObserver);
+        board.setObserverHandler(gameObserver);
+        turnOrder.setObserverHandler(this.observers);
+        players.forEach(p -> p.setObserverHandler(observers));
     }
 
     public void addPlayer(Player player) throws GameAlreadyStartedException, TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {
@@ -92,7 +94,7 @@ public class Game implements GameObservable {
 
         if(players.size()<nPlayers){
             players.add(player);
-            player.addObserver(this.observers);
+            player.setObserverHandler(this.observers);
             observers.onPlayersListUpdate(this);
         }
         else throw new TooManyPlayersException();
@@ -259,7 +261,7 @@ public class Game implements GameObservable {
             }
         }
         catch(EmptyDeckException e){
-            System.err.println();
+            System.err.println("Empty deck!");
         }
     }
 

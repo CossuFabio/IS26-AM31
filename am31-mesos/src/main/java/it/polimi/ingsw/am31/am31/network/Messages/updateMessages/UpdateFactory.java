@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31.network.Messages.updateMessages;
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.controller.GameController;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
+import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
@@ -92,9 +93,10 @@ public class UpdateFactory {
         return new CardLineUpdate(cardIds, row);
 
     }
-    public static TurnOrderUpdate createTurnOrderUpdate(Board board){
-        //TODO THINK HOW TO DO THIS - MAYBE CHANGE TURNORDER
-        return new TurnOrderUpdate();
+    public static TurnOrderUpdate createTurnOrderUpdate(TurnOrder turnorder){
+
+        return new TurnOrderUpdate(turnorder.getSlotsNicknames());
+
     }
 
 
