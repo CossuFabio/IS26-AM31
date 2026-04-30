@@ -18,7 +18,7 @@ public class LoginController extends BaseController{
     @FXML private Button connectButton;
     @FXML private Label errorLabel;
     @FXML private ImageView backgroundImage;
-    @FXML private ImageView logoImage;
+    @FXML private ImageView logoTitle;
 
     @FXML
     private void initialize () {
@@ -34,9 +34,13 @@ public class LoginController extends BaseController{
             if (newScene != null) {
                 backgroundImage.fitWidthProperty().bind(newScene.widthProperty());
                 backgroundImage.fitHeightProperty().bind(newScene.heightProperty());
-                logoImage.fitWidthProperty().bind(newScene.widthProperty().multiply(0.5));
+                logoTitle.fitWidthProperty().bind(newScene.widthProperty().multiply(0.5));
             }
         });
+
+        connectButton.setOnMousePressed(e -> connectButton.setOpacity(0.7));
+        connectButton.setOnMouseReleased(e -> connectButton.setOpacity(1.0));
+        Platform.runLater(() -> nicknameField.getParent().requestFocus());
     }
 
     @FXML private void handleConnect() {
