@@ -72,7 +72,7 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
 
             adaptersMap.put(client, rmiClient);
             mainServer.registerWaitingRoom(rmiClient);
-            System.out.println("Connected "+identifier);
+
     }
 
 

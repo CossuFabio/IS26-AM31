@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
 
@@ -16,6 +17,11 @@ public class GameCrashUpdate extends UpdateMessage {
     @Override
     protected boolean checkSpecificValidity(){
         return true;
+    }
+
+    @Override
+    public void acceptVisit(IUpdateVisitor visitor){
+        visitor.HandleUpdateMessage(this);
     }
 
 }

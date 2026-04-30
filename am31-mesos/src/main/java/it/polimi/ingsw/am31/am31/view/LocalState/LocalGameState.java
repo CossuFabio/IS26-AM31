@@ -3,15 +3,20 @@ package it.polimi.ingsw.am31.am31.view.LocalState;
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
-import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
+import it.polimi.ingsw.am31.am31.network.ClientConfig;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.PlayerMessage;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.RED;
+
 public class LocalGameState implements LocalObservable {
+
+
     private int era;
     private RoundPhasesEnum currentRoundPhase;
     private LocalPlayerState playerActing;
@@ -19,11 +24,20 @@ public class LocalGameState implements LocalObservable {
     private List<LocalPlayerState> players;
     private LocalBoardState board;
     private LocalObserver gameObserver; //only one, its the players view
-    private BuildingDeck buildings;
-    private TribeDeck cards;
     private List<String> turnorder;
     public LocalGameState () {
         players = new ArrayList<LocalPlayerState>();
+        board = new LocalBoardState();
+
+        //Prevent nullpointerexc
+        //TODO: Insert dummy observer
+
+        turnorder = new ArrayList<>();
+        int roundNumber = 0;
+        //DUMMY
+        playerActing = new LocalPlayerState("dummy", RED);
+
+        currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
     }
 
 
@@ -33,6 +47,8 @@ public class LocalGameState implements LocalObservable {
         gameObserver=obs;
     }
 
+
+//updates before start of the game
     public void GameStart() {
         //calls on its observer that the game has started
         gameObserver.onGameStartUpdate();
@@ -41,6 +57,11 @@ public class LocalGameState implements LocalObservable {
         //sends the view the lobbies
         gameObserver.onShowLobbyUpdate(lobbies);
     }
+    public void successRegistration(SuccessRegistrationUpdate msg){
+        gameObserver.onSuccessRegistration(msg);
+    }
+
+
 
     //setter methods, called by the connection when it receives updates.
     public void setPlayerActing() {
@@ -116,4 +137,20 @@ public class LocalGameState implements LocalObservable {
         if (gameObserver == obs)
             gameObserver = null;
     }
+    public void receiveLobbyError(String errorMessage){
+        //redirects to view
+        gameObserver.onLobbyError(errorMessage);
+        //error implemented differently by tui and gui
+    }
+
+
+//getters, used by TUI / GUI to draw
+    public RoundPhasesEnum getCurrentRoundPhase(){return currentRoundPhase;}
+    public int getRoundNumber(){return roundNumber;}
+    public int getEra(){return era;}
+    public LocalBoardState getBoard(){return board;}
+    public String getPlayerActing (){return turnorder.getFirst();}
+    public List<String> getTurnorder(){return turnorder;}
+
+
 }

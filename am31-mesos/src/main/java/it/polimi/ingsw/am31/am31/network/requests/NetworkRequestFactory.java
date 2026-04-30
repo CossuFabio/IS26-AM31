@@ -9,8 +9,8 @@ public class NetworkRequestFactory {
 
 
 
-    public static NewServerConnectionRequest createNewServerConnectionRequest(){
-        return new NewServerConnectionRequest();
+    public static NewServerConnectionRequest createNewServerConnectionRequest(String identifier){
+        return new NewServerConnectionRequest(identifier);
     }
 
 

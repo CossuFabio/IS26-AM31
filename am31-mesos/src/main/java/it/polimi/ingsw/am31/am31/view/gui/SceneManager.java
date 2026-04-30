@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.view.gui;
 
+import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalBoardState;
@@ -18,22 +19,24 @@ import java.util.List;
 //classe per gestire la navigazione delle scene.
 public class SceneManager {
     private final Stage stage;
-    private final VirtualServer server;
+    private final ClientController controller;
     private final LocalGameState localGameState;
     private BaseController currentController = null;
 
-    public SceneManager (Stage stage, VirtualServer server, LocalGameState localGameState) {
+    public SceneManager (Stage stage, ClientController controller, LocalGameState localGameState) {
         this.stage = stage;
-        this.server = server;
+        this.controller = controller;
         this.localGameState = localGameState;
     }
-    
+
     //methods to switch the scene
-    public void showLogin() {}
+    public void showLogin() {
+        switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/login.fxml", "Login");
+    }
     public void showGame() {}
     public void showWaitingRoom() {}
     public void showEndGame() {}
-    
+
     public void switchTo(String path, String title) {
         Platform.runLater( () -> {
             try {
@@ -42,12 +45,12 @@ public class SceneManager {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
                 Parent root = loader.load();
 
-                BaseController controller = loader.getController();
-                controller.setServer(server);
-                controller.setLocalGameState(localGameState);
-                controller.setSceneManager(this);
-                localGameState.addObserver(controller);
-                currentController = controller;
+                BaseController sceneController = loader.getController();
+                sceneController.setController(controller);
+                sceneController.setLocalGameState(localGameState);
+                sceneController.setSceneManager(this);
+                localGameState.addObserver(sceneController);
+                currentController = sceneController;
 
                 stage.setTitle(title);
                 stage.setScene(new Scene(root));

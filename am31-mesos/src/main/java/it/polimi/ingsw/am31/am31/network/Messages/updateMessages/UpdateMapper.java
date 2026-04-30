@@ -27,7 +27,7 @@ public class UpdateMapper {
             return result;
         }catch(JsonProcessingException e){
             System.out.println("Errore di deserializzazione!");
-            System.err.println(e);
+            e.printStackTrace();
         }
         return null;
     }

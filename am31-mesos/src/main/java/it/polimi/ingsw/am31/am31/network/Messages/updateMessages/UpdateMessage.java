@@ -7,10 +7,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.Message;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.CardLineUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameCrashUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameRoundStatusUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.PlayersListUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
@@ -30,22 +27,26 @@ import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
         @JsonSubTypes.Type(value = CardLineUpdate.class,        name = UpdateMethodsConstants.BOARD_CARDLINE_UPDATE_METHOD),
         @JsonSubTypes.Type(value = TurnOrderUpdate.class,       name = UpdateMethodsConstants.BOARD_TURNORDER_UPDATE_METHOD),
         @JsonSubTypes.Type(value = GameCrashUpdate.class,       name = UpdateMethodsConstants.GAME_CRASHED_METHOD),
-        @JsonSubTypes.Type(value = SuccessRegistrationUpdate.class,       name = UpdateMethodsConstants.USERNAME_ACCEPTED_METHOD)
+        @JsonSubTypes.Type(value = SuccessRegistrationUpdate.class,       name = UpdateMethodsConstants.USERNAME_ACCEPTED_METHOD),
+        @JsonSubTypes.Type(value = GameStartUpdate.class,       name = UpdateMethodsConstants.GAME_START_UPDATE),
 })
 
 
 public abstract class UpdateMessage extends Message {
 
+    public static final String messageType = "UPDATE";
 
+    @JsonIgnore
     private final String updateType;
 
 
     protected UpdateMessage(String updateType){
+        super(messageType);
         this.updateType = updateType;
     }
 
     @JsonIgnore
-    public String getUpdateType(){return updateType; }
+    public String getUpdateType(){return updateType;}
 
 
     @JsonIgnore
@@ -56,9 +57,12 @@ public abstract class UpdateMessage extends Message {
     protected abstract boolean checkSpecificValidity();
 
     @Override
-    public void acceptVisit(IMessageVisitor visitor, StateUpdater updater){
-        visitor.visitUpdate(this, updater);
+    public void acceptVisit(IMessageVisitor visitor){
+        visitor.visitUpdate(this);
     }
+
+    public abstract void acceptVisit(IUpdateVisitor visitor);
+
 
 }
 

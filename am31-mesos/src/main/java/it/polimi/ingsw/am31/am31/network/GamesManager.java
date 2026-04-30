@@ -129,6 +129,7 @@ public class GamesManager {
         }catch(IOException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Unable to create game")));
         }catch(GameException e){
+
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
         }catch(GameInvariantException e){
             System.err.println("Game invariant violated: " + e.getMessage());
@@ -173,6 +174,7 @@ public class GamesManager {
         JoinGameNetworkRequest joinReq = (JoinGameNetworkRequest) req;
         GameController gameToJoin = games.get(joinReq.getGameID());
         if (gameToJoin == null) {
+            //takes the view back to lobby start
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new LobbyNotFoundException(joinReq.getGameID())));
             return;
         }
@@ -226,7 +228,7 @@ public class GamesManager {
         }catch(GameException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
         }catch(GameInvariantException e){
-            System.err.println(e.getMessage());
+            System.err.println("Invariant violated: " + e.getMessage());
         }catch(Exception e){
             System.err.println(e.getMessage());
         }

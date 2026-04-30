@@ -6,5 +6,5 @@ import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
 
 public interface IMessageVisitor {
     void visitError(ErrorMessage message);
-    void visitUpdate(UpdateMessage message, StateUpdater updater);
+    void visitUpdate(UpdateMessage message);
 }

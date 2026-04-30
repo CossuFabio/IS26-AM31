@@ -18,6 +18,10 @@ public class LocalPlayerState {
     public LocalPlayerState(String nickname, Color color){
         this.nickname = nickname;
         this.color = color;
+        prestigePoints = 0;
+        food = 0;
+        tribe = new ArrayList<>();
+        buildings = new ArrayList<>();
     }
    //useless public void setColor(){}
    //useless public void setNickname(){}
@@ -38,7 +42,14 @@ public class LocalPlayerState {
         buildings = new ArrayList<>();
         buildings.addAll(newbuildings);
     }
+    //getters
+    public int getFood(){return food;}
+    public int getPrestigePoints(){return prestigePoints;}
+    public Color getColor(){return color;}
     public String getNickname(){
-        return nickname;
+      return nickname;
     }
+    public List<Card> getTribe(){return tribe;}
+    public List<Card> getBuildings(){return buildings;}
+
 }

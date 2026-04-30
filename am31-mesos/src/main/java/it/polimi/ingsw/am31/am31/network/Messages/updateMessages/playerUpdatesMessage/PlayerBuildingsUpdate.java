@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesM
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
 
@@ -13,8 +14,8 @@ public class PlayerBuildingsUpdate extends UpdateMessage {
     private final String playerId;
     @JsonCreator
     public PlayerBuildingsUpdate(
-            @JsonProperty String playerId,
-            @JsonProperty List<String> buildingCardsIds){
+            @JsonProperty ("playerId")String playerId,
+            @JsonProperty ("buildingCardsIds")List<String> buildingCardsIds){
         super(UpdateMethodsConstants.PLAYER_BUILDINGS_UPDATE_METHOD);
         this.playerId = playerId;
         this.buildingCardsIds = buildingCardsIds;
@@ -27,5 +28,11 @@ public class PlayerBuildingsUpdate extends UpdateMessage {
     protected boolean checkSpecificValidity(){
         return this.buildingCardsIds!=null && !this.buildingCardsIds.contains(null) && playerId != null;
     }
+
+    @Override
+    public void acceptVisit(IUpdateVisitor visitor){
+        visitor.HandleUpdateMessage(this);
+    }
+
 
 }

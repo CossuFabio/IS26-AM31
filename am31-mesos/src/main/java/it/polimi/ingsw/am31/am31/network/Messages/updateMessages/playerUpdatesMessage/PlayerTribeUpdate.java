@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesM
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
 
@@ -21,11 +22,17 @@ public class PlayerTribeUpdate extends UpdateMessage {
     }
 
     public String getPlayerId(){return this.playerId; }
-    public List<String> getTribeCardsId(){return this.tribeCardsIds; }
+    public List<String> getTribeCardsIds(){return this.tribeCardsIds; }
 
     @Override
     protected boolean checkSpecificValidity(){
         return tribeCardsIds !=null && playerId != null && !tribeCardsIds.contains(null);
+    }
+
+
+    @Override
+    public void acceptVisit(IUpdateVisitor visitor){
+        visitor.HandleUpdateMessage(this);
     }
 
 }

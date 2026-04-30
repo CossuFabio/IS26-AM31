@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
 
@@ -23,6 +24,11 @@ public class SuccessRegistrationUpdate extends UpdateMessage {
     @Override
     protected boolean checkSpecificValidity() {
         return username != null;
+    }
+
+    @Override
+    public void acceptVisit(IUpdateVisitor visitor){
+        visitor.HandleUpdateMessage(this);
     }
 
 }

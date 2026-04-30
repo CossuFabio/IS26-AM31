@@ -154,8 +154,9 @@ public class Game implements GameObservable {
         for(int i = 0; i <GameConstants.getEraOneBuildings(nPlayers); i++)
             board.addUpper((BuildingCard)buildingDeck.draw());
 
-        this.roundNumber = 1;
-        this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
+        roundNumber = 1;
+        currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
+        observers.onGameRoundStatusUpdate(this);
     }
     
 

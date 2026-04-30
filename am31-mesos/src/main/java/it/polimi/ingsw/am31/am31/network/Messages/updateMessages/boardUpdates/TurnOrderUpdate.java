@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
 
@@ -24,4 +25,10 @@ public class TurnOrderUpdate extends UpdateMessage {
     protected boolean checkSpecificValidity() {
         return turnOrder != null && !turnOrder.contains(null);
     }
+
+    @Override
+    public void acceptVisit(IUpdateVisitor visitor){
+        visitor.HandleUpdateMessage(this);
+    }
+
 }

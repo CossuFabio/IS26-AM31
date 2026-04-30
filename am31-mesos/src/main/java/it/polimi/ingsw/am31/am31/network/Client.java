@@ -1,15 +1,16 @@
 package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.TooManyPlayersException;
-import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
-import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
+import it.polimi.ingsw.am31.am31.view.LocalState.StateErrorUpdater;
 import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
 import it.polimi.ingsw.am31.am31.view.View;
+import it.polimi.ingsw.am31.am31.view.gui.GraphicUserInterface;
 import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;
+import org.fusesource.jansi.AnsiConsole;
 
 
 import java.io.IOException;
@@ -19,45 +20,47 @@ import java.util.Scanner;
 public class Client {
     //main client class
     public static void main(String[] args) throws IOException, NotBoundException, TooManyPlayersException, Exception  {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter Nickname: ");
-        String nickname = args[1];//scanner.nextLine();
 
-        System.out.println("Enter server IP: ");
-        //String ip = scanner.nextLine(); // aggiunto
-        //FOR TESTING: uncomment this to use a fixed ip.
-        String ip = "127.0.0.1";
+        //TODO: ADD CHECK FOR CORRECT COMMAND LINE PARAMS
 
-        System.out.println("Enter 1 for RMI, 2 for Socket: ");
-        int type = 1;  //scanner.nextInt();
-        int newport = ClientConfig.CLIENT_PORT;
+        String connectionType = "1"; //args[0];
+        String viewType = "2"; //args[1];
+
+        //library to display colors, idk if this works, idk if this goes here
+        AnsiConsole.systemInstall();
+
+        LocalGameState gameState = new LocalGameState();
+        StateUpdater stateUpdater = new StateUpdater(gameState);
+        StateErrorUpdater errorUpdater = new StateErrorUpdater(gameState);
+        MessageDispatcher messageDispatcher = new MessageDispatcher(stateUpdater, errorUpdater);
+
+        //Scanner scanner = new Scanner(System.in);
+        //System.out.println("Enter Nickname: ");
+        //String nickname = scanner.nextLine();
+
+
         VirtualServer connection = null;
-        switch (type) {
-            //ip is localhost
-            //case 1 starts
-            case 1: connection = new RmiClient(ip,newport,nickname);
+        switch (connectionType) {
+            case "1": connection = new RmiClient(ServerConfig.SERVER_IP_ADDRESS, ClientConfig.CLIENT_PORT, messageDispatcher);
                 break;
-            case 2: connection = new SocketClient(ip,ServerConfig.SERVER_PORT_SOCKET,nickname); //temporary
+            case "2": connection = new SocketClient(ServerConfig.SERVER_IP_ADDRESS, ServerConfig.SERVER_PORT_SOCKET, messageDispatcher); //temporary
                 break;
             default:
                 break;
         }
 
+
+
         ClientController controller = new ClientController(connection);
-        controller.ping();
         View view = null;
-        System.out.println("Enter 1 for TUI, 2 for GUI");
-        //i want the gameState to be shared by connection (for updates) and view (for visualization)
-        LocalGameState gameState = new LocalGameState();
-        ((RmiClient) connection).setGameState(gameState);//(not definitive)
-        int viewType = 1; //scanner.nextInt();
+
 
         //connection.sendRequest(new NewGameNetworkRequest(3, Color.RED));
         switch (viewType) {
-            case 1: view = new TextUserInterface(controller, gameState);
+            case "1": view = new TextUserInterface(controller, gameState);
             break;
-          //  case 2: view = new GraphicUserInterface()
-            //break;
+            case "2": view = new GraphicUserInterface(controller, gameState);
+            break;
             default:
                 break;
         }

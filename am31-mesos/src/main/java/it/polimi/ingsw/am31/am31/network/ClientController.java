@@ -7,6 +7,11 @@ public class ClientController {
     private final VirtualServer connection;
     private boolean connected = true;
 
+    private String localPlayerUsername = ClientConfig.UNREGISTERED_CLIENT_ID;
+
+    private volatile boolean usernameSet = false;
+
+
     public ClientController(VirtualServer connection) {
         this.connection = connection;
     }
@@ -42,7 +47,22 @@ public class ClientController {
         connected = false;
         this.connection.disconnect();
     }
+
     public boolean isConnected() {
         return connected;
     }
+
+    public synchronized void setLocalPlayerUsername(String identifier){
+        if(!usernameSet){
+            usernameSet = true;
+            this.localPlayerUsername = identifier;
+            connection.setIdentifier(identifier);
+            ping();
+        }
+    }
+
+    public synchronized String getLocalPlayerUsername(){
+        return localPlayerUsername;
+    }
+
 }

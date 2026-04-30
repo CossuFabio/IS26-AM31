@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFacto
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateFactory;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
+import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
 import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
@@ -42,13 +43,20 @@ public class Server {
     //Test means that we do not need to always check the validities!
     public void handleNetworkRequest (NetworkRequest request, VirtualView view){
         try{//Server cannot do anything
-            if (view == null) return;
 
-            if (request == null || !request.checkValidity()) {
+            if (view == null) return;
+            if(!waitingRoom.contains(view))
+                view.updateLastTime();
+
+            //Don't care if pinging
+            if (request == null || request.getType().equals(RequestMethodsConstants.PING)) return;
+
+            if (!request.checkValidity()) {
                 String type = (request != null && request.getType() != null) ? request.getType() : "Unknown type";
                 view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException(type)));
                 return;
             }
+
             VirtualView inServerClientView = clients.get(request.getPlayerID());
             if (inServerClientView == null && !request.getType().equals((RequestMethodsConstants.METHOD_NEW_CONNECTION))) {
                 System.out.println("Richiesta da utente non valido ricevuta");
@@ -62,16 +70,11 @@ public class Server {
                 return;
             }
 
-            view.updateLastTime();
-
-            //Don't care if pinging
-            if (request.getType().equals(RequestMethodsConstants.PING)) return;
-
             //Received new connection
             if (request.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION)) {
                 //This method will handle success or failure
-                addClient(request.getPlayerID(), view);
-                view.receiveUpdate(UpdateFactory.createSuccessRegistrationUpdate(request.getPlayerID()));
+                String newId = ((NewServerConnectionRequest) request).getRequestedUsername();
+                addClient(newId, view);
                 return;
             }
 
@@ -183,7 +186,7 @@ public class Server {
         System.out.println("Client " + identifier + " has been added");
 
         try{
-            virtualView.receiveUpdate(new SuccessRegistrationUpdate(identifier));
+            virtualView.receiveUpdate(UpdateFactory.createSuccessRegistrationUpdate(identifier));
             waitingRoom.remove(virtualView);
         }catch(Exception e){
             System.out.println("Unable to notify client. Removing it from the list");

@@ -4,4 +4,6 @@ public interface TUIPhase {
     void draw();
 
     void handleInput(String input) throws Exception;
+
+    void handleError(String errorMsg);
 }

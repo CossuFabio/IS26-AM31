@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
 import it.polimi.ingsw.am31.am31.view.View;
@@ -16,8 +17,6 @@ public class TextUserInterface implements View, LocalObserver {
     private final ClientController controller;
     private LocalGameState gameState;
     private volatile TUIPhase currentphase;
-    private List<Card> cards;
-    private List<OfferCard> offercards;
 
     public TextUserInterface (ClientController controller, LocalGameState gameState){
         this.controller=controller;
@@ -57,20 +56,13 @@ public class TextUserInterface implements View, LocalObserver {
 
             currentphase.draw();
     }
-
-
-    public void changePhase(TUIPhase newphase){
-        currentphase=newphase;
-        printScreen();
-    }
-
     //Observer methods
     @Override
     public void onGameStartUpdate() {
         //this changes interface into game interface, no more join lobby, create lobby, etc...
         //implemented for tui.
-        System.out.print("\033[H\033[2J");
-        //currentPhase = ;
+        currentphase = (new TUIGamephase(this,controller,gameState));
+        printScreen();
     }
     @Override
     public void onRoundNumberUpdate(){
@@ -116,4 +108,14 @@ public class TextUserInterface implements View, LocalObserver {
 
     @Override
     public void onTurnOrderUpdate(){}
+
+    @Override
+    public void onLobbyError(String errorMsg){
+        currentphase.handleError(errorMsg);
+    };
+
+    @Override
+    public void onSuccessRegistration(SuccessRegistrationUpdate msg){
+        controller.setLocalPlayerUsername(msg.getUsername());
+    }
 }

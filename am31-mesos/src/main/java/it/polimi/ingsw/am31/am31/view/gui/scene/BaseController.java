@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.view.gui.scene;
 
+import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
@@ -7,12 +8,12 @@ import it.polimi.ingsw.am31.am31.view.gui.SceneManager;
 
 //implementa LocalObserver perchè ogni controller deve reagire agli eventi per aggiornare la propria schermata
 public abstract class BaseController implements LocalObserver {
-    protected VirtualServer server;
+    protected ClientController controller;
     protected LocalGameState localGameState;
     protected SceneManager sceneManager;
 
-    public void setServer(VirtualServer server) {
-        this.server = server;
+    public void setController(ClientController controller) {
+        this.controller = controller;
     }
 
     public void setLocalGameState(LocalGameState localGameState) {

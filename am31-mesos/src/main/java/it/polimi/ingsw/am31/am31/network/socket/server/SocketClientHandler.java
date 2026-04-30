@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am31.am31.network.socket.server;
 
+import it.polimi.ingsw.am31.am31.network.Messages.Message;
+import it.polimi.ingsw.am31.am31.network.Messages.MessageMapper;
 import it.polimi.ingsw.am31.am31.network.Server;
 import it.polimi.ingsw.am31.am31.network.VirtualView;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
@@ -64,31 +66,22 @@ public class SocketClientHandler implements VirtualView {
 
     @Override
     public void receiveUpdate(UpdateMessage data){
+        Message message = (Message) data;
         try{
-            this.output.println(UpdateMapper.serialize(data));
+            this.output.println(MessageMapper.serialize(message));
             this.output.flush();
         }catch(Exception e){
             System.out.println("Error in receiveUpdate SocketClientHandler");
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void receiveMessage(String data){
-        try{
-            this.output.println(data);
-            this.output.flush();
-        }catch(Exception e){
-            System.out.println("Error in receiveMessage SocketClientHandler");
-            e.printStackTrace();
-        }
-
-    }
+    
 
     @Override
     public void receiveErrorMessage(ErrorMessage error) {
+        Message message = (Message) error;
         try{
-            this.output.println(ErrorMessageMapper.serialize(error));
+            this.output.println(MessageMapper.serialize(message));
             this.output.flush();
         }catch(Exception e){
             System.out.println("Error in receiveErrorMessage SocketClientHandler");

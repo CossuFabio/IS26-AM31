@@ -61,10 +61,9 @@ public class UpdateFactory {
     public static ShowLobbyUpdate createShowLobbyUpdate(GamesManager gamesManager){
 
         Set<Map.Entry<Integer, GameController>> activeGames = gamesManager.getActiveGames();
+        List<GameController> games= activeGames.stream().filter(game -> game.getValue().getNumPlayers() != game.getValue().getNumActivePlayers()).map(entry -> entry.getValue()).toList();
         List<LobbyDescriptor> lobbies = new ArrayList<>();
-        activeGames.forEach(entry -> {
-            lobbies.add(new LobbyDescriptor(entry.getKey(), entry.getValue().getNumPlayers(), entry.getValue().getNumActivePlayers()));
-        });
+        games.forEach( g -> lobbies.add(new LobbyDescriptor(g.getGameID(), g.getNumPlayers(), g.getNumActivePlayers())));
         return new ShowLobbyUpdate(lobbies);
     }
     public static GameStartUpdate createGameStartUpdate(){

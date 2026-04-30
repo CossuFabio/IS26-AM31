@@ -34,16 +34,6 @@ public class RmiClientAdapter implements VirtualView {
         }
     }
 
-    @Override
-    public void receiveMessage(String data) throws RemoteException {
-        try{
-            clientStub.receiveMessage(data);
-        }catch(RemoteException e){
-            System.err.println("RmiClientAdapter.receiveMessage error");
-        }catch(Exception e){
-            System.err.println("RmiClientAdapter.receiveMessage error" + e.getMessage());
-        }
-    }
 
     @Override
     public void receiveErrorMessage(ErrorMessage error) {

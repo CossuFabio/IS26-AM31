@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
 
 import java.util.Scanner;
 
@@ -17,18 +18,21 @@ public class TUIlobby implements TUIPhase {
     private Color color;
     private int gameId;
 
-    private enum TuiLobbyStep {START,CREATING_GAME,SELECT_COLOR, JOINING_GAME, WAITING_GAMESTART}
+    private enum TuiLobbyStep {REGISTRATION, START,CREATING_GAME,SELECT_COLOR, JOINING_GAME, WAITING_GAMESTART}
     private TuiLobbyStep currentstep;
     private int nplayers;
 
     public TUIlobby(TextUserInterface TUI, ClientController controller) {
         this.TUI = TUI;
         this.controller = controller;
-        this.currentstep=TuiLobbyStep.START;
+        this.currentstep=TuiLobbyStep.REGISTRATION;
     }
     @Override
     public void draw() {
             switch (currentstep) {
+                case REGISTRATION:
+                    System.out.println("Enter nickname:");break;
+
                 case START:
                     creatingGame = false;
                     System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n");break;
@@ -52,10 +56,16 @@ public class TUIlobby implements TUIPhase {
         if (input == null || input.equals(""))
             return;
         switch(currentstep){
+            case REGISTRATION:
+                String nickname = input.toString();
+                controller.sendRequest(new NewServerConnectionRequest(nickname));
+                currentstep = TuiLobbyStep.START;
+                break;
+
             case START:{
                 switch(input){
                     case "1":{currentstep=TuiLobbyStep.CREATING_GAME;}break;
-                    case "2":{controller.sendRequest(new ShowLobbyNetworkRequest());break;}
+                    case "2":controller.sendRequest(new ShowLobbyNetworkRequest());break;
                     case "3":{currentstep=TuiLobbyStep.JOINING_GAME;}break;
                     default: System.out.println("Invalid input!");break;
             }
@@ -85,6 +95,7 @@ public class TUIlobby implements TUIPhase {
                 }
                 else {
                     controller.sendRequest(new JoinGameNetworkRequest(color, gameId));
+                    //this doesn't check if the request fails
                     currentstep = TuiLobbyStep.WAITING_GAMESTART;
                 }
                 }break;
@@ -95,5 +106,11 @@ public class TUIlobby implements TUIPhase {
 
         }
         TUI.printScreen();
-}
+
+    }
+    public void handleError(String errorMsg){
+        System.out.println("Received this msg: "+errorMsg+"\nGoing back to start\n");
+        currentstep = TuiLobbyStep.START;
+        TUI.printScreen();
+    }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 
 public interface VirtualServer {
 
@@ -8,5 +9,6 @@ public interface VirtualServer {
     void sendRequest(NetworkRequest request) throws Exception;
     void disconnect() throws Exception;
 
+    void setIdentifier(String identifier);
 
 }
