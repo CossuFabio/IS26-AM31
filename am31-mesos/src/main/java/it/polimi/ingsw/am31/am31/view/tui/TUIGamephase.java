@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 
 import static org.fusesource.jansi.Ansi.*;
 
@@ -53,8 +54,8 @@ public TUIGamephase (TextUserInterface TUI, ClientController controller, LocalGa
             System.out.println(ansi().a(" <"+c.getCardId()+"> "));
         //prints players in order of acting
         System.out.println(ansi().a(" >\n"));
-        for(String s: gameState.getTurnorder())
-            System.out.println(ansi().a(s+" "));
+        for(LocalPlayerState p: gameState.getTurnorder())
+            System.out.println(ansi().a(p+" "));
         //prints offertrack, but only ids? and player inside?
         System.out.println(ansi().a("\n"));
         for(LocalOfferCard c: gameState.getBoard().getOfferTrack()) {

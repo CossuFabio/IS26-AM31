@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.view.gui;
 
+import com.google.common.eventbus.Subscribe;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
@@ -23,4 +24,6 @@ public class GUIView extends Application {
         SceneManager sceneManager = new SceneManager(stage, controller, localGameState);
         sceneManager.showLogin();
     }
+
+
 }

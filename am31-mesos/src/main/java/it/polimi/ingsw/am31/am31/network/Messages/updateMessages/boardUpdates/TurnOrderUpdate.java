@@ -28,7 +28,7 @@ public class TurnOrderUpdate extends UpdateMessage {
 
     @Override
     public void acceptVisit(IUpdateVisitor visitor){
-        visitor.HandleUpdateMessage(this);
+        visitor.handleUpdateMessage(this);
     }
 
 }

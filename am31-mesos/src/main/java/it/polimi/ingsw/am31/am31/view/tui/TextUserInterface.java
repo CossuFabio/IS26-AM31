@@ -1,28 +1,31 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
-import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
 import it.polimi.ingsw.am31.am31.view.View;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class TextUserInterface implements View, LocalObserver {
+public class TextUserInterface implements View{
+
     private final ClientController controller;
     private LocalGameState gameState;
+    private final IEventBus eventBus;
+
+
     private volatile TUIPhase currentphase;
 
-    public TextUserInterface (ClientController controller, LocalGameState gameState){
+    public TextUserInterface (ClientController controller, LocalGameState gameState, IEventBus eventBus){
         this.controller=controller;
         this.gameState = gameState;
         //gamestate starts as null
         this.currentphase = new TUIlobby(this, controller);
+        this.eventBus = eventBus;
+
     }
 //class for visualization via CLI
     @Override
@@ -56,66 +59,5 @@ public class TextUserInterface implements View, LocalObserver {
 
             currentphase.draw();
     }
-    //Observer methods
-    @Override
-    public void onGameStartUpdate() {
-        //this changes interface into game interface, no more join lobby, create lobby, etc...
-        //implemented for tui.
-        currentphase = (new TUIGamephase(this,controller,gameState));
-        printScreen();
-    }
-    @Override
-    public void onRoundNumberUpdate(){
-        //tui handling the change
-        //reprint everything? change the view phase? idk
-    }
-    @Override
-    public void onRoundPhaseUpdate(){
-        //tui handling the change
 
-    }
-    @Override
-    public void onShowLobbyUpdate(List<LobbyDescriptor> lobbies){
-    //tui shows the lobbies
-        //could use update visitor for these methods
-        lobbies.forEach(l -> {System.out.println("Partita: " + l.getId() + ", richiede: " + l.getnPlayers() + " giocatori. Giocatori in lobby: " + l.getFreeSlots());});
-    }
-    @Override
-    public void onCardLineUpdate() {
-        //
-    }
-    @Override
-    public void onPlayerListUpdate(){
-//
-    }
-
-    @Override
-    public void onEraUpdate() {
-  //
-    }
-
-    @Override
-    public void onOfferTrackUpdate(){
-//
-    }
-
-    @Override
-    public void onPlayerScoreUpdate(){
-//
-    }
-    @Override
-    public void onPlayerTribeUpdate(){}
-
-    @Override
-    public void onTurnOrderUpdate(){}
-
-    @Override
-    public void onLobbyError(String errorMsg){
-        currentphase.handleError(errorMsg);
-    };
-
-    @Override
-    public void onSuccessRegistration(SuccessRegistrationUpdate msg){
-        controller.setLocalPlayerUsername(msg.getUsername());
-    }
 }

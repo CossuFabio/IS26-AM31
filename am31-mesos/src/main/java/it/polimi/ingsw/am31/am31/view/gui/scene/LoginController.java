@@ -69,13 +69,13 @@ public class LoginController extends BaseController{
         }).start();
     }
 
-    @Override
+
     public void onSuccessRegistration(SuccessRegistrationUpdate msg) {
         // Nickname accepted by server, move to waiting room
         sceneManager.showWaitingRoom();
     }
 
-    @Override
+
     public void onLobbyError(String errorMsg) {
         // Show error message on screen (e.g. username already taken)
         Platform.runLater(() -> {
@@ -84,15 +84,5 @@ public class LoginController extends BaseController{
         });
     }
 
-    @Override public void onGameStartUpdate() {}
-    @Override public void onRoundPhaseUpdate() {}
-    @Override public void onRoundNumberUpdate() {}
-    @Override public void onCardLineUpdate() {}
-    @Override public void onPlayerListUpdate() {}
-    @Override public void onEraUpdate() {}
-    @Override public void onOfferTrackUpdate() {}
-    @Override public void onPlayerScoreUpdate() {}
-    @Override public void onPlayerTribeUpdate() {}
-    @Override public void onTurnOrderUpdate() {}
-    @Override public void onShowLobbyUpdate(List<LobbyDescriptor> lobbies) {}
+
 }

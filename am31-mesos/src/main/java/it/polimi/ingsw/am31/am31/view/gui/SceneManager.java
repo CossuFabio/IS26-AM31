@@ -1,11 +1,7 @@
 package it.polimi.ingsw.am31.am31.view.gui;
 
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
-import it.polimi.ingsw.am31.am31.network.VirtualServer;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalBoardState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
 import it.polimi.ingsw.am31.am31.view.gui.scene.BaseController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 //classe per gestire la navigazione delle scene.
 public class SceneManager {
@@ -40,8 +35,8 @@ public class SceneManager {
     public void switchTo(String path, String title) {
         Platform.runLater( () -> {
             try {
-                if (currentController != null)
-                    localGameState.removeObserver(currentController);
+//                if (currentController != null)
+//                    localGameState.removeObserver(currentController);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
                 Parent root = loader.load();
 
@@ -49,7 +44,7 @@ public class SceneManager {
                 sceneController.setController(controller);
                 sceneController.setLocalGameState(localGameState);
                 sceneController.setSceneManager(this);
-                localGameState.addObserver(sceneController);
+                //localGameState.addObserver(sceneController);
                 currentController = sceneController;
 
                 stage.setTitle(title);

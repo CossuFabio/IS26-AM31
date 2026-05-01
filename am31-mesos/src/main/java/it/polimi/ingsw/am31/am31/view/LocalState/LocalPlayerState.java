@@ -52,4 +52,13 @@ public class LocalPlayerState {
     public List<Card> getTribe(){return tribe;}
     public List<Card> getBuildings(){return buildings;}
 
+
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(nickname);
+        builder.append(", Color: ");
+        builder.append(color);
+        return builder.toString();
+    }
+
 }

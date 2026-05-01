@@ -27,7 +27,7 @@ public class OfferTrackUpdate extends UpdateMessage {
 
     @Override
     public void acceptVisit(IUpdateVisitor visitor){
-        visitor.HandleUpdateMessage(this);
+        visitor.handleUpdateMessage(this);
     }
 
 }
