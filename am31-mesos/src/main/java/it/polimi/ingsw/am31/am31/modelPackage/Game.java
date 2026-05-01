@@ -55,14 +55,14 @@ public class Game implements GameObservable {
     private ObserverHandler observers;
 
     //Setup
-    public Game (int nPlayers, GameResources gameResources) throws IOException, InvalidPlayersNumber {
+    public Game (int nPlayers, GameResources gameResources) throws IOException, InvalidPlayersNumberException {
 
         roundNumber=0; //set to 1 in gameStart
         players= new ArrayList<Player>();
 
         era = 1;
         if(nPlayers  < GameConstants.MIN_PLAYERS || nPlayers > GameConstants.MAX_PLAYERS)
-            throw new InvalidPlayersNumber();
+            throw new InvalidPlayersNumberException();
         this.nPlayers= nPlayers;
         this.turnOrder = new TurnOrder(nPlayers);
 

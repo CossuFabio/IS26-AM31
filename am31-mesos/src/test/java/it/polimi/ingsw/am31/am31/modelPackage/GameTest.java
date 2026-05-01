@@ -1,9 +1,7 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
-import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.InvalidPlayersNumber;
-import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.InvalidPlayersNumberException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
-import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
@@ -12,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameTest {
 
@@ -45,7 +43,7 @@ class GameTest {
     }
     //TODO RUN this
     @Test
-    void TestShouldChangeEra() throws IOException, InvalidPlayersNumber {
+    void TestShouldChangeEra() throws IOException, InvalidPlayersNumberException {
         Game game = new Game(3, new GameResources(
                 new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()
         ));

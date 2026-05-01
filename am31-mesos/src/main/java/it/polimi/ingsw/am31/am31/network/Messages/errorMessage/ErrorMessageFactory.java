@@ -8,14 +8,14 @@ public class ErrorMessageFactory {
     public static ErrorMessage createErrorMessage(GameException e){
         return new ErrorMessage(
                 e.getMessage(),
-                e.getCategory()
+                e.getErrorCode()
         );
     }
 
     public static ErrorMessage createErrorMessage(NetworkException e){
         return new ErrorMessage(
                 e.getMessage(),
-                e.getCategory()
+                e.getErrorCode()
         );
     }
 

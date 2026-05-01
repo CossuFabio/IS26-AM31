@@ -1,14 +1,16 @@
 package it.polimi.ingsw.am31.am31.exceptions;
 
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCategory;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCode;
 
 //Caused by in-game illegal actions
 public abstract class IllegalActionException extends GameException {
-    public IllegalActionException(String message) {
-        super(message);
+
+    protected IllegalActionException(String message, ErrorCode errorCode) {
+        super(message, errorCode);
+        if(errorCode.getCategory() != ErrorCategory.IN_GAME_ERROR) throw new IllegalArgumentException("Wrong ErrorCategory!");
     }
 
-    @Override
-    public ErrorCategory getCategory(){return ErrorCategory.IN_GAME_ERROR; }
+
 
 }

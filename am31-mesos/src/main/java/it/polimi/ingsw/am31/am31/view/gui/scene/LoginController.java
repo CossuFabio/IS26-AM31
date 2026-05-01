@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 import java.util.List;
 
@@ -19,6 +20,10 @@ public class LoginController extends BaseController{
     @FXML private Label errorLabel;
     @FXML private ImageView backgroundImage;
     @FXML private ImageView logoTitle;
+
+
+    @FXML private StackPane stackPane;
+
 
     @FXML
     private void initialize () {
@@ -41,6 +46,9 @@ public class LoginController extends BaseController{
         connectButton.setOnMousePressed(e -> connectButton.setOpacity(0.7));
         connectButton.setOnMouseReleased(e -> connectButton.setOpacity(1.0));
         Platform.runLater(() -> nicknameField.getParent().requestFocus());
+
+        stackPane.setOnMouseClicked(e -> stackPane.requestFocus());
+
     }
 
     @FXML private void handleConnect() {

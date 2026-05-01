@@ -1,9 +1,10 @@
 package it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException;
 
 import it.polimi.ingsw.am31.am31.exceptions.IllegalActionException;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCode;
 
 public class OfferTrackTileAlreadyTakenException extends IllegalActionException {
     public OfferTrackTileAlreadyTakenException() {
-        super("Offer track already taken!");
+        super("Offer track already taken!", ErrorCode.OFFER_TRACK_TILE_ALREADY_TAKEN);
     }
 }
