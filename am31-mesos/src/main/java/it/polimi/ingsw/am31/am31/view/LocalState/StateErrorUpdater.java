@@ -1,9 +1,11 @@
 package it.polimi.ingsw.am31.am31.view.LocalState;
 
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCode;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
 
 public class StateErrorUpdater implements ErrorHandler {
 
@@ -20,7 +22,12 @@ public class StateErrorUpdater implements ErrorHandler {
     @Override
     public void handleErrorMessage(ErrorMessage errorMessage){
 
+        if(errorMessage.getErrorCode() == ErrorCode.USERNAME_ALREADY_IN_USE){
+            eventBus.post(new FailedRegistrationEvent());
+        }
+
     }
+
 
 
 }

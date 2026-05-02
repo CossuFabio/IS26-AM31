@@ -1,38 +1,42 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
-import it.polimi.ingsw.am31.am31.controller.GameController;
+import com.google.common.eventbus.Subscribe;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 
-import java.util.Scanner;
-
-public class TUIlobby implements TUIPhase {
+public class TUILobby implements TUIPhase {
     private final TextUserInterface TUI;
     private final ClientController controller;
     private boolean creatingGame;
     private Color color;
     private int gameId;
+    private IEventBus eventBus;
 
-    private enum TuiLobbyStep {REGISTRATION, START,CREATING_GAME,SELECT_COLOR, JOINING_GAME, WAITING_GAMESTART}
-    private TuiLobbyStep currentstep;
+    private enum TuiLobbyStep {REGISTRATION, WAIT_REGISTRATION_RESULT, START,CREATING_GAME,SELECT_COLOR, JOINING_GAME, WAITING_GAMESTART}
+    private volatile TuiLobbyStep currentstep;
     private int nplayers;
 
-    public TUIlobby(TextUserInterface TUI, ClientController controller) {
+    public TUILobby(TextUserInterface TUI, ClientController controller, IEventBus eventBus) {
         this.TUI = TUI;
         this.controller = controller;
         this.currentstep=TuiLobbyStep.REGISTRATION;
+        this.eventBus = eventBus;
+        this.eventBus.register(this);
     }
     @Override
     public void draw() {
             switch (currentstep) {
                 case REGISTRATION:
                     System.out.println("Enter nickname:");break;
-
+                case WAIT_REGISTRATION_RESULT:
+                    break;
                 case START:
                     creatingGame = false;
                     System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n");break;
@@ -59,9 +63,10 @@ public class TUIlobby implements TUIPhase {
             case REGISTRATION:
                 String nickname = input.toString();
                 controller.sendRequest(new NewServerConnectionRequest(nickname));
-                currentstep = TuiLobbyStep.START;
+                currentstep = TuiLobbyStep.WAIT_REGISTRATION_RESULT;
                 break;
-
+            case WAIT_REGISTRATION_RESULT:
+                break;
             case START:{
                 switch(input){
                     case "1":{currentstep=TuiLobbyStep.CREATING_GAME;}break;
@@ -113,4 +118,24 @@ public class TUIlobby implements TUIPhase {
         currentstep = TuiLobbyStep.START;
         TUI.printScreen();
     }
+
+    @Subscribe
+    public void successRegistration(SuccessRegistrationEvent e){
+        if(currentstep == TuiLobbyStep.WAIT_REGISTRATION_RESULT){
+            System.out.println("Registered successfully with username " + e.getIdentifier());
+            currentstep = TuiLobbyStep.START;
+            TUI.printScreen();
+        }
+    }
+
+    @Subscribe
+    public void failedRegistration(FailedRegistrationEvent e){
+        if(currentstep == TuiLobbyStep.WAIT_REGISTRATION_RESULT){
+            System.out.println("Failed registration...");
+            currentstep = TuiLobbyStep.REGISTRATION;
+            TUI.printScreen();
+        }
+    }
+
+
 }
