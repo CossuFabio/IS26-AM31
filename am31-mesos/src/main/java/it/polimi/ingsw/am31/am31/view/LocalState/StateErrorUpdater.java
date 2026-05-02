@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InvalidColorPickEvent;
 
 public class StateErrorUpdater implements ErrorHandler {
 
@@ -24,6 +25,9 @@ public class StateErrorUpdater implements ErrorHandler {
 
         if(errorMessage.getErrorCode() == ErrorCode.USERNAME_ALREADY_IN_USE){
             eventBus.post(new FailedRegistrationEvent());
+        }
+        if(errorMessage.getErrorCode() == ErrorCode.PLAYER_COLOR_ALREADY_TAKEN){
+            eventBus.post(new InvalidColorPickEvent());
         }
 
     }

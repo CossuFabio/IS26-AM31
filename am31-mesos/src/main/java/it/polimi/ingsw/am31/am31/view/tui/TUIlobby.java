@@ -9,132 +9,153 @@ import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkR
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InvalidColorPickEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 
 public class TUILobby implements TUIPhase {
+
     private final TextUserInterface TUI;
     private final ClientController controller;
     private boolean creatingGame;
     private Color color;
     private int gameId;
-    private IEventBus eventBus;
 
-    private enum TuiLobbyStep {REGISTRATION, WAIT_REGISTRATION_RESULT, START,CREATING_GAME,SELECT_COLOR, JOINING_GAME, WAITING_GAMESTART}
-    private volatile TuiLobbyStep currentstep;
-    private int nplayers;
 
-    public TUILobby(TextUserInterface TUI, ClientController controller, IEventBus eventBus) {
+    private enum TuiLobbyStep {START,
+        WAIT_LOBBIES,
+        CREATING_GAME,
+        SELECT_COLOR,
+        JOINING_GAME, WAIT_JOIN_GAME_RESPONSE,
+        WAITING_GAMESTART}
+
+    private volatile TuiLobbyStep currentStep;
+
+    private int nPlayers;
+
+    public TUILobby(TextUserInterface TUI, ClientController controller) {
         this.TUI = TUI;
         this.controller = controller;
-        this.currentstep=TuiLobbyStep.REGISTRATION;
-        this.eventBus = eventBus;
-        this.eventBus.register(this);
+        this.currentStep=TuiLobbyStep.START;
     }
+
     @Override
     public void draw() {
-            switch (currentstep) {
-                case REGISTRATION:
-                    System.out.println("Enter nickname:");break;
-                case WAIT_REGISTRATION_RESULT:
-                    break;
-                case START:
+            switch (currentStep) {
+                case START: {
                     creatingGame = false;
-                    System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n");break;
+                    System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n");
+                    break;
+                }
                 case CREATING_GAME:{
                     System.out.println("Enter the number of players (2-5)\n");
-                    creatingGame = true;break;
+                    creatingGame = true;
+                    break;
                 }
                 case SELECT_COLOR:{
-                    System.out.println("Choose your totem's color (white, black, red, yellow, blue)\n");break;
+                    System.out.println("Choose your totem's color (white, black, red, yellow, blue)\n");
+                    break;
                 }
                 case JOINING_GAME:{
-                    System.out.println("Choose a gameId\n");break;
+                    System.out.println("Choose a gameId\n");
+                    break;
                 }
-                case WAITING_GAMESTART:
-                    System.out.println("Waiting for the game to Start...\n");break;
+                case WAITING_GAMESTART: {
+                    System.out.println("Waiting for the game to Start...\n");
+                    break;
+                }
             }
     }
 
     @Override
     public void handleInput(String input) throws Exception {
-        if (input == null || input.equals(""))
+        if (input == null || input.isEmpty())
             return;
-        switch(currentstep){
-            case REGISTRATION:
-                String nickname = input.toString();
-                controller.sendRequest(new NewServerConnectionRequest(nickname));
-                currentstep = TuiLobbyStep.WAIT_REGISTRATION_RESULT;
-                break;
-            case WAIT_REGISTRATION_RESULT:
-                break;
+        switch(currentStep){
             case START:{
                 switch(input){
-                    case "1":{currentstep=TuiLobbyStep.CREATING_GAME;}break;
-                    case "2":controller.sendRequest(new ShowLobbyNetworkRequest());break;
-                    case "3":{currentstep=TuiLobbyStep.JOINING_GAME;}break;
-                    default: System.out.println("Invalid input!");break;
+                    case "1": {currentStep=TuiLobbyStep.CREATING_GAME;}
+                        TUI.printScreen();
+                        break;
+                    case "2": controller.sendRequest(new ShowLobbyNetworkRequest());
+                        break;
+                    case "3":{currentStep=TuiLobbyStep.JOINING_GAME;}
+                        TUI.printScreen();
+                        break;
+                    default:
+                        System.out.println("Invalid input!");
+                        TUI.printScreen();
+                        break;
             }
-        break;}
+            break;
+            }
             case CREATING_GAME:{
-                nplayers = Integer.parseInt(input);
-                //might throw numberformatexception
-                if (nplayers < 2 || nplayers > 5) {System.out.println("Invalid number!\n"); break;}
-                currentstep = TuiLobbyStep.SELECT_COLOR;break;
+
+                try{
+                    nPlayers = Integer.parseInt(input);
+                }catch(Exception e){
+                    //sets invalid
+                    nPlayers = -1;
+                }
+
+
+                if (nPlayers < 2 || nPlayers > 5) {System.out.println("Invalid number!\n");
+                    break;
+                }
+                currentStep = TuiLobbyStep.SELECT_COLOR;
+                TUI.printScreen();
+                break;
+
             }
             case JOINING_GAME:{
                 gameId = Integer.parseInt(input);
                 //might throw numberformatexception
-                currentstep= TuiLobbyStep.SELECT_COLOR;break;
+                currentStep= TuiLobbyStep.SELECT_COLOR;
+                TUI.printScreen();
+                break;
             }
             case SELECT_COLOR:{
                 try {
                     color = Color.valueOf(input.toUpperCase());
                 } catch (IllegalArgumentException e) {
                     System.out.println("Invalid color\n");
+                    TUI.printScreen();
+                    break;
                 }
                 if(creatingGame) {
-                    controller.sendRequest(new NewGameNetworkRequest(nplayers, color));
+                    currentStep=TuiLobbyStep.WAITING_GAMESTART;
+                    controller.sendRequest(new NewGameNetworkRequest(nPlayers, color));
                     creatingGame = false;
                     //this doesn't check if the request fails
-                    currentstep=TuiLobbyStep.WAITING_GAMESTART;
                 }
                 else {
+                    currentStep = TuiLobbyStep.WAITING_GAMESTART;
                     controller.sendRequest(new JoinGameNetworkRequest(color, gameId));
                     //this doesn't check if the request fails
-                    currentstep = TuiLobbyStep.WAITING_GAMESTART;
+                    }
                 }
-                }break;
+                TUI.printScreen();
+                break;
             case WAITING_GAMESTART:{
                 //ignores inputs? or smth
 
             }
 
         }
-        TUI.printScreen();
+
 
     }
-    public void handleError(String errorMsg){
-        System.out.println("Received this msg: "+errorMsg+"\nGoing back to start\n");
-        currentstep = TuiLobbyStep.START;
+
+
+    @Subscribe
+    public void printLobbies(ShowLobbyEvent e){
+        e.getLobbies().forEach(l -> System.out.println("Lobby: " + l.getId() + ", Num Giocatori:" + l.getFreeSlots() + "/" + l.getnPlayers()));
         TUI.printScreen();
     }
 
     @Subscribe
-    public void successRegistration(SuccessRegistrationEvent e){
-        if(currentstep == TuiLobbyStep.WAIT_REGISTRATION_RESULT){
-            System.out.println("Registered successfully with username " + e.getIdentifier());
-            currentstep = TuiLobbyStep.START;
-            TUI.printScreen();
-        }
-    }
-
-    @Subscribe
-    public void failedRegistration(FailedRegistrationEvent e){
-        if(currentstep == TuiLobbyStep.WAIT_REGISTRATION_RESULT){
-            System.out.println("Failed registration...");
-            currentstep = TuiLobbyStep.REGISTRATION;
-            TUI.printScreen();
-        }
+    public void invalidColorSelected(InvalidColorPickEvent e){
+        System.out.println("Invalid color pick");
     }
 
 

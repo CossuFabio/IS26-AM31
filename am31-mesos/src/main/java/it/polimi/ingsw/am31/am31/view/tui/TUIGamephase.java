@@ -10,7 +10,7 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import static org.fusesource.jansi.Ansi.*;
 
 
-public class TUIGamephase implements TUIPhase{
+public class TUIGamePhase implements TUIPhase{
 
 
     private enum TuiGameStep {MAIN, PLAYER_DETAIL, CARDLINE_DETAIL, OFFER_DETAIL, TOTEM_PLACE}
@@ -20,12 +20,12 @@ public class TUIGamephase implements TUIPhase{
     private TextUserInterface TUI;
     private int choosingTotem = 0;
 
-public TUIGamephase (TextUserInterface TUI, ClientController controller, LocalGameState gameState){
-    this.TUI = TUI;
-    this.controller = controller;
-    this.gameState = gameState;
-    currentstep = TuiGameStep.MAIN;
-}
+    public TUIGamePhase(TextUserInterface TUI, ClientController controller, LocalGameState gameState){
+        this.TUI = TUI;
+        this.controller = controller;
+        this.gameState = gameState;
+        currentstep = TuiGameStep.MAIN;
+    }
 
 
 
@@ -139,8 +139,7 @@ public TUIGamephase (TextUserInterface TUI, ClientController controller, LocalGa
         }
         TUI.printScreen();
     }
-    @Override
-    public void handleError(String errorMsg){
 
-    }
+
+
 }

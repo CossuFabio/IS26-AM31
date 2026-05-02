@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31.network;
 import com.google.common.eventbus.Subscribe;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 
@@ -45,6 +46,7 @@ public class ClientController {
         pingThread.setDaemon(true);
         pingThread.start();
     }
+
     public void sendRequest(NetworkRequest request) throws Exception {
         this.connection.sendRequest(request);
     }

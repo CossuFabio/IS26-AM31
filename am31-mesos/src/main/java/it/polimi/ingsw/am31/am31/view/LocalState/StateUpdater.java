@@ -13,9 +13,12 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMe
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 
 import java.io.IOException;
+import java.util.List;
 
 public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     private final LocalGameState gameState;
@@ -86,7 +89,7 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
     @Override
     public void handleUpdateMessage(GameStartUpdate msg){
-
+        eventBus.post(new GameStartingEvent());
     }
 
     @Override
@@ -96,7 +99,8 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
     @Override
     public void handleUpdateMessage(ShowLobbyUpdate msg){
-        msg.getLobbies().forEach(l -> System.out.println("Lobby: " + l.getId() + ", Num Giocatori:" + l.getnPlayers() + "/" + l.getFreeSlots()));
+        List<LobbyDescriptor> lobbies = msg.getLobbies();
+        eventBus.post(new ShowLobbyEvent(lobbies));
     }
 
     @Override

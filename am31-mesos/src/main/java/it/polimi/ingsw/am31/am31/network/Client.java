@@ -62,7 +62,7 @@ public class Client {
         }
         //move to view?
         try{
-            view.Start();//after this, the clients acts through the view
+            view.startView();//after this, the clients acts through the view
         }catch(Exception e){
             System.out.println("An error with the requested view occurred");
         }

@@ -23,14 +23,13 @@ public class GraphicUserInterface implements View{
     }
 
     @Override
-    public void Start() throws Exception {
+    public void startView() throws Exception {
         GUIView.setController(controller);
         GUIView.setLocalGameState(localGameState);
         Application.launch(GUIView.class);
     }
 
-    @Override
-    public void printScreen() {}
+
 
 
 

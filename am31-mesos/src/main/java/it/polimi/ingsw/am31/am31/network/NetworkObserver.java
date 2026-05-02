@@ -121,7 +121,6 @@ public class NetworkObserver implements GameObserver {
     @Override
     public void onGameStartUpdate (Game game) {
         executors.submit(()->{try{
-            virtualView.receiveUpdate(UpdateFactory.createGameStartUpdate());
             //signals game start, then updates every part of the view
             for(Player p : game.getPlayersList()){
                 onPlayerTribeUpdate(p);
@@ -135,6 +134,7 @@ public class NetworkObserver implements GameObserver {
             onCardLineUpdate(game.getBoard(),BoardRows.LOWER);
             onOfferTrackUpdate(game.getBoard());
             onTurnOrderUpdate(game.getTurnOrder());
+            virtualView.receiveUpdate(UpdateFactory.createGameStartUpdate());
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }});

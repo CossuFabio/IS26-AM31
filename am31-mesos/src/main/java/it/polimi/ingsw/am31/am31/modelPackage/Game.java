@@ -100,8 +100,8 @@ public class Game implements GameObservable {
         else throw new TooManyPlayersException();
     }
     public void removePlayer(Player player){
-        players.remove(player);
-        observers.onPlayersListUpdate(this);
+        if(players.remove(player))
+            observers.onPlayersListUpdate(this);
     }
 
     //TODO: Test This
