@@ -5,10 +5,9 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import org.checkerframework.checker.units.qual.A;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class TurnOrder implements GameObservable {
 
@@ -74,11 +73,13 @@ public class TurnOrder implements GameObservable {
         observers.onTurnOrderUpdate(this);
     }
 
-    //Uses a free string as a placeholder for empty slots
-    public List<String> getSlotsNicknames(){
-        List<String> out = new ArrayList<>(numPlayers);
-        for (Player p : slots) out.add(p == null ? GameConstants.EMPTY_STRING : p.getNickname());
-        return Collections.unmodifiableList(out);
+
+    public List<Player> getOrder(){
+        List<Player> result = new ArrayList<>();
+        for(int i = 0; i<slots.size(); i++){
+            result.add(slots.get(i));
+        }
+        return result;
     }
 
 

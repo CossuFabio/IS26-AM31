@@ -26,13 +26,14 @@ public class TUIRegistration implements TUIPhase {
                 System.out.println("Enter nickname:");
                 break;
             case WAIT_REGISTRATION_RESULT:
+                System.out.println("Waiting for server response");
                 break;
         }
     }
 
     @Override
     public void handleInput(String input) {
-        if (input == null || input.isEmpty())
+        if (input == null || input.isBlank())
             return;
         switch (currentStep) {
             case REGISTRATION:
@@ -41,7 +42,9 @@ public class TUIRegistration implements TUIPhase {
                     controller.sendRequest(new NewServerConnectionRequest(input));
                 }
                 catch(Exception e){
+                    currentStep = TuiRegistrationStep.REGISTRATION;
                     System.out.println("Error sending request");
+                    TUI.printScreen();
                 }
                 break;
             case WAIT_REGISTRATION_RESULT:
@@ -53,7 +56,7 @@ public class TUIRegistration implements TUIPhase {
     @Subscribe
     public void failedRegistration(FailedRegistrationEvent e){
         if(currentStep == TuiRegistrationStep.WAIT_REGISTRATION_RESULT){
-            System.out.println("Failed registration...");
+            System.out.println("Failed registration: username already in use");
             currentStep = TuiRegistrationStep.REGISTRATION;
             TUI.printScreen();
         }

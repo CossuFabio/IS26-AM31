@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedJoinLobby;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InvalidColorPickEvent;
 
@@ -23,12 +24,34 @@ public class StateErrorUpdater implements ErrorHandler {
     @Override
     public void handleErrorMessage(ErrorMessage errorMessage){
 
-        if(errorMessage.getErrorCode() == ErrorCode.USERNAME_ALREADY_IN_USE){
-            eventBus.post(new FailedRegistrationEvent());
+        switch(errorMessage.getErrorCode()){
+
+            case ErrorCode.USERNAME_ALREADY_IN_USE: {
+                eventBus.post(new FailedRegistrationEvent());
+                break;
+            }
+
+            case ErrorCode.PLAYER_COLOR_ALREADY_TAKEN: {
+                eventBus.post(new InvalidColorPickEvent());
+                break;
+            }
+
+            case ErrorCode.GAME_ALREADY_STARTED:
+            case ErrorCode.LOBBY_NOT_FOUND:
+            case ErrorCode.PLAYER_ALREADY_IN_GAME:
+            case ErrorCode.TOO_MANY_PLAYERS :{
+                eventBus.post(new FailedJoinLobby(errorMessage.getMessage()));
+                break;
+            }
+
+            default:
+                break;
+
+
         }
-        if(errorMessage.getErrorCode() == ErrorCode.PLAYER_COLOR_ALREADY_TAKEN){
-            eventBus.post(new InvalidColorPickEvent());
-        }
+
+
+
 
     }
 

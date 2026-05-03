@@ -12,10 +12,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMe
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -74,7 +71,11 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
     @Override
     public void handleUpdateMessage(TurnOrderUpdate msg){
-
+        List<LocalPlayerState> newPlayers = msg.getTurnOrder().stream()
+                .map(pm -> pm == null ? null : new LocalPlayerState(pm.getNickname(), pm.getColor()))
+                .toList();
+        gameState.setTurnOrder(newPlayers);
+        eventBus.post(new BoardUpdateEvent());
     }
 
     //game
@@ -84,6 +85,7 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
         gameState.setCurrentRoundPhase(msg.getPhase());
         gameState.setRoundNumber(msg.getRoundNumber());
         gameState.setEra(msg.getEra());
+        eventBus.post(new BoardUpdateEvent());
         //
     }
 
@@ -94,7 +96,12 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
     @Override
     public void handleUpdateMessage(PlayersListUpdate msg){
+        List<LocalPlayerState> newPlayers = msg.getPlayersList().stream().
+                map(player -> new LocalPlayerState(player.getNickname(), player.getColor()))
+                .toList();
 
+        gameState.setPlayers(newPlayers);
+        eventBus.post(new PlayersInLobbyChangedEvent(newPlayers));
     }
 
     @Override
@@ -115,13 +122,15 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     public void handleUpdateMessage(PlayerBuildingsUpdate msg){
             //msg contains list of buildingcards and nickname, sent when it changes
         gameState.updatePlayerBuildings(msg.getPlayerId(),mapper.getCards(msg.getBuildingCardsIds()));
-    //
+        eventBus.post(new BoardUpdateEvent());
+        //
     }
 
     @Override
     public void handleUpdateMessage(PlayerScoresUpdate msg){
             //msg contains a nickanme, pp, food for a single player, sent when changed
             gameState.updatePlayerScore(msg.getPlayerId(),msg.getNewFood(),msg.getNewPrestigePoints());
+        eventBus.post(new BoardUpdateEvent());
             //
     }
 
@@ -130,6 +139,7 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
             //msg contains the list of tribecards and a nickname, sent when cards change
         //cardIds mapped to List of cards, set to the player
         gameState.updatePlayerTribe(msg.getPlayerId(),mapper.getCards(msg.getTribeCardsIds()));
+        eventBus.post(new BoardUpdateEvent());
         //
     }
 

@@ -69,6 +69,7 @@ module it.polimi.ingsw.am31.am31 {
     opens it.polimi.ingsw.am31.am31.view.gui.scene to javafx.fxml;
 
     requires com.google.common;
+    requires org.checkerframework.checker.qual;
     opens it.polimi.ingsw.am31.am31.view.eventsHandling.events to com.google.common;
     opens it.polimi.ingsw.am31.am31.view.tui to com.google.common;
 }

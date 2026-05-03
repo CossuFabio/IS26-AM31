@@ -1,12 +1,18 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
+import com.google.common.eventbus.Subscribe;
+import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 
+import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printCard;
 import static org.fusesource.jansi.Ansi.*;
 
 
@@ -19,6 +25,8 @@ public class TUIGamePhase implements TUIPhase{
     private ClientController controller;
     private TextUserInterface TUI;
     private int choosingTotem = 0;
+    private int choosingCard = 0;
+    private String cardrequest;
 
     public TUIGamePhase(TextUserInterface TUI, ClientController controller, LocalGameState gameState){
         this.TUI = TUI;
@@ -31,8 +39,9 @@ public class TUIGamePhase implements TUIPhase{
 
     @Override
     public void draw(){
-    //erases screen
+    //erases screen and resets font
         System.out.println(ansi().eraseScreen());
+        System.out.println(ansi().reset());
     switch(currentstep) {
         case MAIN:{ drawMain();}break;
         case OFFER_DETAIL:{drawOffer();}break;
@@ -94,10 +103,30 @@ public class TUIGamePhase implements TUIPhase{
             System.out.println(ansi().a("\nType the Id of the card you want to place in\n>"));
 }
     public void drawPlayers(){
-
+        for(LocalPlayerState p: gameState.getPlayers()) {
+            System.out.println(p.toString()); //formatting based on player color
+            for(Card c: p.getTribe())
+                System.out.println(c.toString());
+            for(Card c: p.getBuildings())
+                System.out.println(c.toString());
+        }
+        ansi().reset();
+        System.out.println("\nPress 1- go back to MAIN");
     }
     public void drawCardLines(){
-
+            System.out.println(ansi().a("Upper line:"));
+            for(Card c: gameState.getBoard().getUpperLine())
+                System.out.println("<"+printCard(c)+">"); //prints cards in funny color
+            System.out.print(ansi().a("Lower Line:"));
+            for(Card c: gameState.getBoard().getUnderLine())
+                System.out.println("<"+printCard(c)+">");
+        if(choosingCard == 0)
+        System.out.println("\nPress: \n1- Go back to MAIN" +
+                "2- to draw a card");
+        else if (choosingCard == 1)
+            System.out.println("\nChoose a Row to draw from, 1 = upper, 2 = lower");
+        else if (choosingCard == 2)
+            System.out.println("\nChoose a cardId");
     }
 
     @Override
@@ -128,12 +157,59 @@ public class TUIGamePhase implements TUIPhase{
                     }
                 }
             } break;
-            case PLAYER_DETAIL: break;
+            case PLAYER_DETAIL:if(input=="1") currentstep = TuiGameStep.MAIN; break;
 
-            case CARDLINE_DETAIL: break;
-
+            case CARDLINE_DETAIL: {
+                switch (choosingCard) {
+                    case 0: {
+                        switch (Integer.parseInt(input)) {
+                            case 1:
+                                currentstep = TuiGameStep.MAIN;
+                                break;
+                            case 2:
+                                if(gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
+                                    choosingCard = 1;
+                                else System.out.println("Not the time for this");
+                                break;
+                            default:
+                                System.out.println("Invalid input");
+                                break;
+                        }
+                        break;
+                    }
+                    case 1: {
+                        choosingCard = 2;
+                        cardrequest = input;
+                    }
+                    break;
+                    case 2: {
+                        int temp = Integer.parseInt(input);
+                        if (temp == 1)
+                            try {
+                                controller.sendRequest(new DrawNetworkRequest(cardrequest, BoardRows.UPPER));
+                            } catch (Exception e) {
+                                System.out.println("Failed to send request");
+                            }
+                        else
+                            try {
+                                controller.sendRequest(new DrawNetworkRequest(cardrequest, BoardRows.LOWER));
+                            } catch (Exception e) {
+                                System.out.println("Failed to send request");
+                            }
+                        choosingCard = 0;
+                        currentstep = TuiGameStep.MAIN;
+                    }
+                    break;
+                }
+            }
             case TOTEM_PLACE:{
               //input should be a offer card Id (letter A to G)
+                try{
+                    controller.sendRequest(new TotemNetworkRequest(input));
+                }catch(Exception e) {
+                    System.out.println("Failed to send request");
+                }
+                    currentstep = TuiGameStep.OFFER_DETAIL; //or main?
             }break;
             default:System.out.println("\nInvalid input\n"); break;
         }
@@ -141,5 +217,16 @@ public class TUIGamePhase implements TUIPhase{
     }
 
 
+    @Subscribe
+    public void handleBoardUpdate (BoardUpdateEvent e){
+        TUI.printScreen();
+    }
+
+    //Servono gli eventi nei parametri!!!
+    //    @Subscribe
+//    public void handleNewRound () {}//when round changes, takes you back to main?  (completely optional btw)
+//
+//    @Subscribe
+//    public void handleEndGame (){}
 
 }

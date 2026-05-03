@@ -36,6 +36,7 @@ public class TextUserInterface implements View{
         eventBus.register(this);
 
     }
+
     //class for visualization via CLI
     @Override
     public void startView() throws Exception {
@@ -79,6 +80,8 @@ public class TextUserInterface implements View{
             changePhase(new TUILobby(this, controller));
         }
     }
+
+
 
 
     @Subscribe

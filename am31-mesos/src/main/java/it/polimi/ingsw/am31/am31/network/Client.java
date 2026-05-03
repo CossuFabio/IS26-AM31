@@ -18,7 +18,7 @@ public class Client {
 
         //TODO: ADD CHECK FOR CORRECT COMMAND LINE PARAMS
 
-        String connectionType = "1"; //args[0];
+        String connectionType = "2"; //args[0];
         String viewType = "1"; //args[1];
 
         //library to display colors, idk if this works, idk if this goes here

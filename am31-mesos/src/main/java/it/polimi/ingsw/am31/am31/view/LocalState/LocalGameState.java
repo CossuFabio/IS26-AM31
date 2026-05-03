@@ -102,9 +102,7 @@ public class LocalGameState{
                 p.setTribe(cards);
     }
     public void setTurnOrder(List<LocalPlayerState> newTurnOrder){
-        //makes new turnorder, adds all names
-        turnorder = new ArrayList<>();
-        turnorder.addAll(newTurnOrder);
+        this.turnorder = newTurnOrder;
     }
 
     public void setPlayerActing(LocalPlayerState p){
@@ -134,6 +132,7 @@ public class LocalGameState{
     public LocalBoardState getBoard(){return board;}
     public LocalPlayerState getPlayerActing (){return playerActing;}
     public List<LocalPlayerState> getTurnorder(){return turnorder;}
+    public List<LocalPlayerState> getPlayers(){return players;}
 
 
 }
