@@ -8,7 +8,7 @@ public class ServerConfig {
     public static final String SERVER_IP_ADDRESS = "127.0.0.1";
 
     public static final int HEARTBEAT_SERVER_INTERVAL = 10000;
-    public static final int HEARTBEAT_TIMEOUT = 25000;
+    public static final int HEARTBEAT_TIMEOUT = 20000;
 
     //10 minutes timeout
     public static final long WAITING_ROOM_TIMEOUT = 10 * 1000 * 60; //minutes number[1] * second/millisecond * minute/second

@@ -43,13 +43,11 @@ public class TUILobby implements TUIPhase {
     public void draw() {
         switch (currentStep) {
             case START: {
-                creatingGame = false;
                 System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n");
                 break;
             }
             case CREATING_GAME: {
                 System.out.println("Enter the number of players (2-5) " + TUIConfig.GO_BACK_STRING + "\n");
-                creatingGame = true;
                 break;
             }
             case SELECT_COLOR: {
@@ -57,7 +55,6 @@ public class TUILobby implements TUIPhase {
                 break;
             }
             case JOINING_GAME: {
-                creatingGame = false;
                 System.out.println("Choose a gameId " + TUIConfig.GO_BACK_STRING + "\n");
                 break;
             }
@@ -77,24 +74,26 @@ public class TUILobby implements TUIPhase {
             case START: {
                 switch (input) {
                     case "1": {
+                        creatingGame = true;
                         currentStep = TuiLobbyStep.CREATING_GAME;
                         TUI.printScreen();
                         break;
                     }
-
                     case "2": {
                         controller.sendRequest(new ShowLobbyNetworkRequest());
                         break;
                     }
                     case "3": {
+                        creatingGame = false;
                         currentStep = TuiLobbyStep.JOINING_GAME;
                         TUI.printScreen();
                         break;
                     }
-                    default:
+                    default: {
                         System.out.println("Invalid input!");
                         TUI.printScreen();
                         break;
+                    }
                 }
                 break;
             }
@@ -159,19 +158,16 @@ public class TUILobby implements TUIPhase {
                     TUI.printScreen();
                     break;
                 }
+                currentStep = TuiLobbyStep.WAITING_GAMESTART;
                 if (creatingGame) {
-                    currentStep = TuiLobbyStep.WAITING_GAMESTART;
                     controller.sendRequest(new NewGameNetworkRequest(nPlayers, color));
-                    creatingGame = false;
-
                 } else {
-                    currentStep = TuiLobbyStep.WAITING_GAMESTART;
                     controller.sendRequest(new JoinGameNetworkRequest(color, gameId));
-
                 }
+
+                TUI.printScreen();
+                break;
             }
-            TUI.printScreen();
-            break;
             case WAITING_GAMESTART: {
                 break;
             }
@@ -184,6 +180,11 @@ public class TUILobby implements TUIPhase {
 
     @Subscribe
     public void printLobbies(ShowLobbyEvent e) {
+        if(e.getLobbies().isEmpty()){
+            System.out.println("No lobbies available!");
+            TUI.printScreen();
+            return;
+        }
         e.getLobbies().forEach(l -> System.out.println("Lobby: " + l.getId() + ", Free slots: " + l.getFreeSlots() + ", Game for " + l.getnPlayers() + " players"));
         TUI.printScreen();
     }
@@ -200,7 +201,7 @@ public class TUILobby implements TUIPhase {
 
     @Subscribe
     public void playersChanged(PlayersInLobbyChangedEvent e) {
-        if (currentStep != TuiLobbyStep.WAITING_GAMESTART) {
+        if (currentStep == TuiLobbyStep.WAITING_GAMESTART) {
             System.out.println("Players in lobby changed. New list:\n");
             e.getPlayers().forEach(p -> System.out.println("Nickname: " + p.getNickname() + ", color: " + p.getColor()));
             TUI.printScreen();
@@ -209,7 +210,11 @@ public class TUILobby implements TUIPhase {
 
     @Subscribe
     public void unableToJoin(FailedJoinLobby e) {
-        System.out.println("Unable to enter Lobby. " + e.getMessage());
+        if (currentStep == TuiLobbyStep.WAITING_GAMESTART) {
+            System.out.println("Unable to enter Lobby. " + e.getMessage());
+            currentStep = TuiLobbyStep.START;
+            TUI.printScreen();
+        }
     }
 
 }

@@ -22,12 +22,14 @@ public class TUIRegistration implements TUIPhase {
     @Override
     public void draw() {
         switch (currentStep){
-            case REGISTRATION:
+            case REGISTRATION: {
                 System.out.println("Enter nickname:");
                 break;
-            case WAIT_REGISTRATION_RESULT:
+            }
+            case WAIT_REGISTRATION_RESULT: {
                 System.out.println("Waiting for server response");
                 break;
+            }
         }
     }
 
@@ -36,19 +38,20 @@ public class TUIRegistration implements TUIPhase {
         if (input == null || input.isBlank())
             return;
         switch (currentStep) {
-            case REGISTRATION:
+            case REGISTRATION: {
                 try {
                     currentStep = TuiRegistrationStep.WAIT_REGISTRATION_RESULT;
                     controller.sendRequest(new NewServerConnectionRequest(input));
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     currentStep = TuiRegistrationStep.REGISTRATION;
                     System.out.println("Error sending request");
                     TUI.printScreen();
                 }
                 break;
-            case WAIT_REGISTRATION_RESULT:
+            }
+            case WAIT_REGISTRATION_RESULT: {
                 break;
+            }
         }
     }
 
