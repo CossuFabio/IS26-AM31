@@ -143,6 +143,10 @@ public class LocalGameState implements LocalObservable {
         //error implemented differently by tui and gui
     }
 
+    public List<LocalPlayerState> getPlayers() {
+        return players;
+    }
+
 
 //getters, used by TUI / GUI to draw
     public RoundPhasesEnum getCurrentRoundPhase(){return currentRoundPhase;}
