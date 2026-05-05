@@ -124,9 +124,6 @@ public class LocalGameState{
         currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
     }
 
-    public List<LocalPlayerState> getPlayers() {
-        return players;
-    }
 
 
     //getters, used by TUI / GUI to draw
