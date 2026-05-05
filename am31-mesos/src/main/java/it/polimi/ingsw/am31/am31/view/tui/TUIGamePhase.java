@@ -11,9 +11,11 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
+import org.fusesource.jansi.Ansi;
 
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printCard;
 import static org.fusesource.jansi.Ansi.*;
+import static org.fusesource.jansi.Ansi.Color.*;
 
 
 public class TUIGamePhase implements TUIPhase{
@@ -53,30 +55,31 @@ public class TUIGamePhase implements TUIPhase{
     }
 
     public void drawMain(){
-
-        //prints the round, phase and era
-        System.out.println(ansi().fg(Color.BLACK).bgBrightGreen().a("" +
-                "\nROUND " +gameState.getRoundNumber()+
-                " ERA "+gameState.getEra()+"\n").reset());
-        //prints upperline, but only ids
-        for(Card c :gameState.getBoard().getUpperLine())
-            System.out.println(ansi().a(" <"+c.getCardId()+"> "));
+        //prints the round, phase, and era
+        System.out.println(ansi().fg(Ansi.Color.RED).a("ROUND " +gameState.getRoundNumber()+
+                " ERA "+gameState.getEra()+" "+gameState.getCurrentRoundPhase()).reset());
         //prints players in order of acting
-        System.out.println(ansi().a(" >\n"));
+        System.out.println("\nPLAYERS, in order of action\n");
         for(LocalPlayerState p: gameState.getTurnorder())
-            System.out.println(ansi().a(p+" "));
+            System.out.println(ansi().a(p.getNickname()+" "+p.getColor()));
+        //prints upperline, but only ids
+        System.out.println(ansi().a("\nUpperline:"));
+        for(Card c :gameState.getBoard().getUpperLine())
+            System.out.print(ansi().a(" |"+c.getCardId()+"| "));
+
         //prints offertrack, but only ids? and player inside?
-        System.out.println(ansi().a("\n"));
+        System.out.print(ansi().a("\nOffer Track: "));
         for(LocalOfferCard c: gameState.getBoard().getOfferTrack()) {
             //should this display nicknames or color? or both?
-            System.out.println(ansi().a("<"+c.getOfferCardId() + " " + c.getPlayer().getNickname()+"> "));
+            System.out.print(ansi().a(" |"+c.getOfferCardId() + " " + c.getPlayer().getNickname()+"| "));
         }
         //prints lowerline
-        System.out.println(ansi().a("\n"));
+        System.out.println(ansi().a("\nLower Line: "));
         for(Card c :gameState.getBoard().getUnderLine())
-            System.out.println(ansi().a(" <"+c.getCardId()+"> "));
+            System.out.print(ansi().a(" |"+c.getCardId()+"| "));
         //prints your own tribe and stats?
-        //TODO add own info
+        //prints if its your turn or not
+        //System.out.println(gameState.getPlayerActing().equals(controller.getLocalPlayerUsername()) ? "it's your turn" : "it's "+gameState.getPlayerActing()+"'s turn" );
         //prints choices
         System.out.println(ansi().a("\nPress:\n1- for detailed CardLines" +
                 "\n2- for detailed offerTrack" +
@@ -116,13 +119,13 @@ public class TUIGamePhase implements TUIPhase{
     public void drawCardLines(){
             System.out.println(ansi().a("Upper line:"));
             for(Card c: gameState.getBoard().getUpperLine())
-                System.out.println("<"+printCard(c)+">"); //prints cards in funny color
-            System.out.print(ansi().a("Lower Line:"));
+                printCard(c); //prints cards in funny color
+            System.out.println(ansi().a("Lower Line:"));
             for(Card c: gameState.getBoard().getUnderLine())
-                System.out.println("<"+printCard(c)+">");
+                printCard(c);
         if(choosingCard == 0)
-        System.out.println("\nPress: \n1- Go back to MAIN" +
-                "2- to draw a card");
+        System.out.println("\nPress: \n1- Go back to Main" +
+                "\n2- to draw a card");
         else if (choosingCard == 1)
             System.out.println("\nChoose a Row to draw from, 1 = upper, 2 = lower");
         else if (choosingCard == 2)
@@ -205,7 +208,7 @@ public class TUIGamePhase implements TUIPhase{
             case TOTEM_PLACE:{
               //input should be a offer card Id (letter A to G)
                 try{
-                    controller.sendRequest(new TotemNetworkRequest(input));
+                    controller.sendRequest(new TotemNetworkRequest(input.toUpperCase()));
                 }catch(Exception e) {
                     System.out.println("Failed to send request");
                 }
@@ -228,5 +231,6 @@ public class TUIGamePhase implements TUIPhase{
 //
 //    @Subscribe
 //    public void handleEndGame (){}
+
 
 }

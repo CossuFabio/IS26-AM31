@@ -56,6 +56,7 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
         //we translate the cardIds, then update the state.
         gameState.setCardLine(mapper.getCards(msg.getCardIds()),msg.getRow());
+        eventBus.post(new BoardUpdateEvent());
         //
     }
 
@@ -66,6 +67,7 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
         //mapper creates a list of localofferCards
         gameState.setOfferTrack(mapper.getOfferCards(msg.getOfferTrack()));
+        eventBus.post(new BoardUpdateEvent());
         //
     }
 
