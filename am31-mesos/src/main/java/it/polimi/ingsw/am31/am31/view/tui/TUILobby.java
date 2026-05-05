@@ -1,12 +1,12 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
-import com.google.common.eventbus.Subscribe;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedJoinLobby;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InvalidColorPickEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.PlayersInLobbyChangedEvent;
