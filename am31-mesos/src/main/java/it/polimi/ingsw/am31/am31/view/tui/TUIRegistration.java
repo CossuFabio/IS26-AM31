@@ -1,8 +1,9 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
-import com.google.common.eventbus.Subscribe;
+
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
 
 public class TUIRegistration implements TUIPhase {

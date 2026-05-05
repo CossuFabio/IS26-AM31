@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
-import com.google.common.eventbus.Subscribe;
+
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
@@ -10,6 +10,7 @@ import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkReques
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printCard;
