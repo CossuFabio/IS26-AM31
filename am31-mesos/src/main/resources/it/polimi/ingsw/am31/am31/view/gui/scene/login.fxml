@@ -19,30 +19,33 @@
                 <Image url="@../assets/Background.jpg" />
             </image>
         </ImageView>
-        <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="15.0">
+        <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="400.0" spacing="15.0">
             <children>
                 <ImageView fx:id="logoTitle" fitHeight="447.0" fitWidth="993.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../assets/Title.png" />
                     </image>
                     <VBox.margin>
-                        <Insets bottom="100.0" />
+                        <Insets top="250.0" />
                     </VBox.margin>
                     <effect>
                         <DropShadow height="70.0" radius="34.5" spread="0.3" width="70.0" />
                     </effect>
                 </ImageView>
-                <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">
+                <HBox alignment="CENTER" prefHeight="66.0" prefWidth="200.0" spacing="50.0">
                     <children>
-                        <TextField fx:id="nicknameField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="500.0" promptText="Enter nickname" style="-fx-background-color: rgba(255,243,211,1);">
+                        <TextField fx:id="nicknameField" maxHeight="1.7976931348623157E308" prefHeight="900.0" prefWidth="500.0" promptText="Enter nickname" style="-fx-background-color: rgba(255,243,211,1);">
                             <font>
-                                <Font name="Roboto Italic" size="24.0" />
+                                <Font name="Inknut Antiqua Regular" size="20.0" />
                             </font>
                             <effect>
                                 <DropShadow />
                             </effect>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                         </TextField>
-                        <Button fx:id="connectButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleConnect" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="▶">
+                        <Button fx:id="connectButton" mnemonicParsing="false" onAction="#handleConnect" prefHeight="66.0" prefWidth="66.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="▶">
                             <effect>
                                 <DropShadow />
                             </effect>
@@ -54,6 +57,9 @@
                             </padding>
                         </Button>
                     </children>
+               <VBox.margin>
+                  <Insets top="50.0" />
+               </VBox.margin>
                 </HBox>
                 <Label fx:id="errorLabel" textAlignment="CENTER" textFill="WHITE" visible="false">
                     <font>

@@ -19,9 +19,13 @@ public class GUIView extends Application {
     public static void setLocalGameState (LocalGameState ls) {
         localGameState = ls;
     }
+
     @Override
     public void start(Stage stage) throws Exception {
         SceneManager sceneManager = new SceneManager(stage, controller, localGameState);
+        stage.setMaximized(true);
+        stage.setMinWidth(javafx.stage.Screen.getPrimary().getBounds().getWidth());
+        stage.setMinHeight(javafx.stage.Screen.getPrimary().getBounds().getHeight());
         sceneManager.showLogin();
     }
 

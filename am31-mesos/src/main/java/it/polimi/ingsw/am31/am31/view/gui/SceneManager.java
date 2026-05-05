@@ -28,8 +28,8 @@ public class SceneManager {
     public void showLogin() {
         switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/login.fxml", "Login");
     }
-    public void showGame() {}
-    public void showWaitingRoom() {}
+    public void showGame() { }
+    public void showWaitingRoom() {switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/waitingRoom.fxml", "WaitingRoom");}
     public void showEndGame() {}
 
     public void switchTo(String path, String title) {
