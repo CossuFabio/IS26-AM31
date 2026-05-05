@@ -3,6 +3,9 @@ package it.polimi.ingsw.am31.am31.view.gui.scene;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -53,7 +56,7 @@ public class LoginController extends BaseController{
 
         new Thread( () -> {
             try {
-                controller.setLocalPlayerUsername(nickname);
+//                controller.setLocalPlayerUsername(nickname);
                 controller.sendRequest(new NewServerConnectionRequest(nickname));
             } catch (Exception e) {
                 Platform.runLater( () -> {
@@ -64,17 +67,17 @@ public class LoginController extends BaseController{
         }).start();
     }
 
-
-    public void onSuccessRegistration(SuccessRegistrationUpdate msg) {
+    @Subscribe
+    public void onSuccessRegistration(SuccessRegistrationEvent e) {
         // Nickname accepted by server, move to waiting room
         sceneManager.showWaitingRoom();
     }
 
-
-    public void onLobbyError(String errorMsg) {
+    @Subscribe
+    public void onLobbyError(FailedRegistrationEvent e) {
         // Show error message on screen (e.g. username already taken)
         Platform.runLater(() -> {
-            errorLabel.setText(errorMsg);
+            errorLabel.setText("Username already taken or connection error");
             errorLabel.setVisible(true);
         });
     }

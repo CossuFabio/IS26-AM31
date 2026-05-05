@@ -26,6 +26,7 @@ public class GraphicUserInterface implements View{
     public void startView() throws Exception {
         GUIView.setController(controller);
         GUIView.setLocalGameState(localGameState);
+        GUIView.setEventBus(eventBus);
         Application.launch(GUIView.class);
     }
 

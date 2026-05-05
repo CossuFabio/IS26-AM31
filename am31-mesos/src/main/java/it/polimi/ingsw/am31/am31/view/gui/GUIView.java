@@ -2,8 +2,8 @@ package it.polimi.ingsw.am31.am31.view.gui;
 
 
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 public class GUIView extends Application {
     private static ClientController controller;
     private static LocalGameState localGameState;
+    private static IEventBus eventBus;
 
     public static void setController (ClientController c) {
         controller = c;
@@ -20,9 +21,13 @@ public class GUIView extends Application {
         localGameState = ls;
     }
 
+    public static void setEventBus (IEventBus e) {
+        eventBus = e;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
-        SceneManager sceneManager = new SceneManager(stage, controller, localGameState);
+        SceneManager sceneManager = new SceneManager(stage, controller, localGameState, eventBus);
         stage.setMaximized(true);
         stage.setMinWidth(javafx.stage.Screen.getPrimary().getBounds().getWidth());
         stage.setMinHeight(javafx.stage.Screen.getPrimary().getBounds().getHeight());
