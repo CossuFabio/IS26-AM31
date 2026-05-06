@@ -7,6 +7,8 @@ import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.GamesManager;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.CardLineUpdate;
@@ -93,10 +95,12 @@ public class UpdateFactory {
         return new CardLineUpdate(cardIds, row);
 
     }
-    public static TurnOrderUpdate createTurnOrderUpdate(TurnOrder turnorder){
 
-        return new TurnOrderUpdate(turnorder.getSlotsNicknames());
-
+    public static TurnOrderUpdate createTurnOrderUpdate(TurnOrder turnOrder){
+        List<PlayerMessage> newTurnOrder = turnOrder.getOrder().stream()
+                .map(p -> p == null ? null : new PlayerMessage(p.getNickname(), p.getColor()))
+                .toList();
+        return new TurnOrderUpdate(newTurnOrder);
     }
 
 

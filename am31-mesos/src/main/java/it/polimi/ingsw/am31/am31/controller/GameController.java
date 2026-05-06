@@ -166,7 +166,8 @@ public class GameController {
         return game.getNumPlayers();
     }
 
-    //Happens when a player disconnects. Returns true if the Game was still in starting phase
+    //Happens when a player disconnects. Returns true if the Game was still in starting phase and the lobby isn't
+    //empty after the last disconnection
     public synchronized boolean handleDisconnection(String playerID){
 
         observerHandler.removeObserver(playerID);
@@ -186,6 +187,10 @@ public class GameController {
             System.err.println(e.getMessage());
         }
 
+        if(game.getPlayersList().isEmpty()){
+            isGameStillActive = false;
+            return false;
+        }
 
 
         return true;

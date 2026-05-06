@@ -1,15 +1,59 @@
 package it.polimi.ingsw.am31.am31.view.LocalState;
 
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IErrorVisitor;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCode;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedJoinLobby;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InvalidColorPickEvent;
 
-public class StateErrorUpdater implements IErrorVisitor {
+public class StateErrorUpdater implements ErrorHandler {
 
-    private LocalGameState localState;
+    private final LocalGameState localState;
+    private final IEventBus eventBus;
 
-    public StateErrorUpdater(LocalGameState localState){
+    public StateErrorUpdater(LocalGameState localState, IEventBus eventBus){
+
         this.localState = localState;
+        this.eventBus = eventBus;
+
     }
 
+    @Override
+    public void handleErrorMessage(ErrorMessage errorMessage){
+
+        switch(errorMessage.getErrorCode()){
+
+            case ErrorCode.USERNAME_ALREADY_IN_USE: {
+                eventBus.post(new FailedRegistrationEvent());
+                break;
+            }
+
+            case ErrorCode.PLAYER_COLOR_ALREADY_TAKEN: {
+                eventBus.post(new InvalidColorPickEvent());
+                break;
+            }
+
+            case ErrorCode.GAME_ALREADY_STARTED:
+            case ErrorCode.LOBBY_NOT_FOUND:
+            case ErrorCode.PLAYER_ALREADY_IN_GAME:
+            case ErrorCode.TOO_MANY_PLAYERS :{
+                eventBus.post(new FailedJoinLobby(errorMessage.getMessage()));
+                break;
+            }
+
+            default:
+                break;
+
+
+        }
+
+
+
+
+    }
 
 
 

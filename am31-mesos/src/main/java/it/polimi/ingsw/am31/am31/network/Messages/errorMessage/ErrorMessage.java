@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.network.Messages.IMessageVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.Message;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IErrorVisitor;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
 
 public class ErrorMessage extends Message {
 
@@ -46,7 +46,7 @@ public class ErrorMessage extends Message {
         return message!=null && errorCode != null;
     }
 
-    public void acceptVisit(IErrorVisitor visitor){
+    public void acceptVisit(ErrorHandler visitor){
         
     }
 

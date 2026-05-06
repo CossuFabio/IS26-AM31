@@ -31,13 +31,14 @@ public class CardMapper {
                 return c;
     return null; //maybe add an exception
     }
+
     public LocalOfferCard getOfferCard(OfferCardMessage msg){
         for(OfferCard c : offercards)
             if(c.getOfferCardId().equals(msg.getCardId()))
             {
                 //once it finds the og offercard c
                 //creates new localOfferCard, with the player inside if needed
-                return new LocalOfferCard(c);
+                return new LocalOfferCard(c, msg);
             }
         //card not found? exception?
         return null;

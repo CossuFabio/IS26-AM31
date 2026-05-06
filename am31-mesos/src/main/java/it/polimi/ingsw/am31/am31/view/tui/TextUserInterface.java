@@ -1,121 +1,99 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
-import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
-import it.polimi.ingsw.am31.am31.view.View;
 
-import java.util.List;
+import it.polimi.ingsw.am31.am31.network.ClientController;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.View;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
+
 import java.util.Scanner;
 
-public class TextUserInterface implements View, LocalObserver {
-    private final ClientController controller;
-    private LocalGameState gameState;
-    private volatile TUIPhase currentphase;
+import static org.fusesource.jansi.Ansi.ansi;
 
-    public TextUserInterface (ClientController controller, LocalGameState gameState){
+public class TextUserInterface implements View{
+
+    private final ClientController controller;
+    private final LocalGameState gameState;
+    private final IEventBus eventBus;
+
+    private volatile TUIPhase currentPhase;
+
+    private enum Scene {REGISTER, MAIN_MENU, GAME}
+    private Scene currentScene;
+
+    public TextUserInterface (ClientController controller, LocalGameState gameState, IEventBus eventBus){
+
         this.controller=controller;
         this.gameState = gameState;
-        //gamestate starts as null
-        this.currentphase = new TUIlobby(this, controller);
-    }
-//class for visualization via CLI
-    @Override
-    public void Start() throws Exception {
+        this.eventBus = eventBus;
+        this.currentScene = Scene.REGISTER;
 
-        //draws the current phase
-            printScreen();
+        this.currentPhase = new TUIRegistration(this, controller);
+        eventBus.register(currentPhase);
+        eventBus.register(this);
 
-        //we need an input thread
-        Thread inputThread = new Thread(()-> {
-           Scanner scanner = new Scanner(System.in);
-           while(true){
-               String input = scanner.nextLine();
-               try {
-                   currentphase.handleInput(input); //we don't send directly to the server, inputs
-                   //change meaning depending on currentphase
-               } catch (Exception e) {
-                   System.err.println("error");
-               }
-
-           }
-        });
-        inputThread.setDaemon(true);
-        inputThread.start();
     }
 
+    //class for visualization via CLI
     @Override
+    public void startView() throws Exception {
+        printScreen();
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {       // Closes the thread when CLI is closed.
+            String input = scanner.nextLine();
+            try {
+                currentPhase.handleInput(input);
+            } catch (Exception e) {
+                System.err.println("error: " + e.getMessage());
+            }
+        }
+    }
+
     public void printScreen() {
-        System.out.println("\\033[H\\033[2J"); //doenst work
-        System.out.flush();
-
-            currentphase.draw();
+        System.out.println("\n----------------------------------------\n");
+        currentPhase.draw();
     }
-    //Observer methods
-    @Override
-    public void onGameStartUpdate() {
-        //this changes interface into game interface, no more join lobby, create lobby, etc...
-        //implemented for tui.
-        currentphase = (new TUIGamephase(this,controller,gameState));
+
+    private void changePhase(TUIPhase newPhase){
+        eventBus.unregister(currentPhase);
+        currentPhase = newPhase;
+        eventBus.register(currentPhase);
         printScreen();
     }
-    @Override
-    public void onRoundNumberUpdate(){
-        //tui handling the change
-        //reprint everything? change the view phase? idk
-    }
-    @Override
-    public void onRoundPhaseUpdate(){
-        //tui handling the change
 
-    }
-    @Override
-    public void onShowLobbyUpdate(List<LobbyDescriptor> lobbies){
-    //tui shows the lobbies
-        //could use update visitor for these methods
-        lobbies.forEach(l -> {System.out.println("Partita: " + l.getId() + ", richiede: " + l.getnPlayers() + " giocatori. Giocatori in lobby: " + l.getFreeSlots());});
-    }
-    @Override
-    public void onCardLineUpdate() {
-        //
-    }
-    @Override
-    public void onPlayerListUpdate(){
-//
+    @Subscribe
+    public void gameStarting(GameStartingEvent e){
+        if(currentScene == Scene.MAIN_MENU){
+            this.currentScene = Scene.GAME;
+            changePhase(new TUIGamePhase(this, controller, gameState));
+        }
     }
 
-    @Override
-    public void onEraUpdate() {
-  //
+    @Subscribe
+    public void gameEnded(GameEndedEvent e){
+        if(currentScene == Scene.GAME){
+            this.currentScene = Scene.MAIN_MENU;
+            gameState.reset();
+            changePhase(new TUILobby(this, controller));
+        }
     }
 
-    @Override
-    public void onOfferTrackUpdate(){
-//
+
+
+
+    @Subscribe
+    public void successRegistration(SuccessRegistrationEvent e){
+        if(currentScene == Scene.REGISTER){
+            System.out.println("Registered successfully with username " + e.getIdentifier());
+            this.currentScene = Scene.MAIN_MENU;
+            gameState.reset();
+            changePhase(new TUILobby(this, controller));
+        }
     }
 
-    @Override
-    public void onPlayerScoreUpdate(){
-//
-    }
-    @Override
-    public void onPlayerTribeUpdate(){}
 
-    @Override
-    public void onTurnOrderUpdate(){}
-
-    @Override
-    public void onLobbyError(String errorMsg){
-        currentphase.handleError(errorMsg);
-    };
-
-    @Override
-    public void onSuccessRegistration(SuccessRegistrationUpdate msg){
-        controller.setLocalPlayerUsername(msg.getUsername());
-    }
 }

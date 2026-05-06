@@ -1,41 +1,41 @@
 [
   {
-    "cardId" : "b1",
+    "cardId" : "bd1",
     "era" : 1,
     "cost" : 4,
     "prestigePointsGained" : 3,
     "effectId" : "GENERAL_ADDITIONAL_FOOD"
   },
   {
-    "cardId" : "b2",
+    "cardId" : "bd2",
     "era" : 1,
     "cost" : 4,
     "prestigePointsGained" : 4,
     "effectId" : "FARMER_DISCOUNT_BONUS"
   },
   {
-    "cardId" : "b3",
+    "cardId" : "bd3",
     "era" : 1,
     "cost" : 5,
     "prestigePointsGained" : 3,
     "effectId" : "ARTIST_DISCOUNT_BONUS"
   },
   {
-    "cardId" : "b4",
+    "cardId" : "bd4",
     "era" : 1,
     "cost" : 5,
     "prestigePointsGained" : 2,
     "effectId" : "NO_MALUS_RITUAL_LOSE"
   },
   {
-    "cardId" : "b5",
+    "cardId" : "bd5",
     "era" : 1,
     "cost" : 3,
     "prestigePointsGained" : 3,
     "effectId" : "FOOD_END_TURN"
   },
   {
-    "cardId" : "b6",
+    "cardId" : "bd6",
     "era" : 1,
     "cost" : 3,
     "prestigePointsGained" : 4,
@@ -45,49 +45,49 @@
 
 
   {
-    "cardId" : "b7",
+    "cardId" : "bd7",
     "era" : 2,
     "cost" : 7,
     "prestigePointsGained" : 0,
     "effectId" : "DOUBLE_WIN_RITUAL"
   },
   {
-    "cardId" : "b8",
+    "cardId" : "bd8",
     "era" : 2,
     "cost" : 6,
     "prestigePointsGained" : 4,
     "effectId" : "INCREASE_STARS_3"
   },
   {
-    "cardId" : "b9",
+    "cardId" : "bd9",
     "era" : 2,
     "cost" : 7,
     "prestigePointsGained" : 4,
     "effectId" : "INVENTOR_DISCOUNT_BONUS"
   },
   {
-    "cardId" : "b10",
+    "cardId" : "bd10",
     "era" : 2,
     "cost" : 7,
     "prestigePointsGained" : 2,
     "effectId" : "BONUS_HUNTER"
   },
   {
-    "cardId" : "b11",
+    "cardId" : "bd11",
     "era" : 2,
     "cost" : 6,
     "prestigePointsGained" : 4,
     "effectId" : "DOUBLE_BUILDER_ENDGAME"
   },
   {
-    "cardId" : "b12",
+    "cardId" : "bd12",
     "era" : 2,
     "cost" : 5,
     "prestigePointsGained" : 6,
     "effectId" : "BONUS_PAINT"
   },
   {
-    "cardId" : "b13",
+    "cardId" : "bd13",
     "era" : 2,
     "cost" : 5,
     "prestigePointsGained" : 6,
@@ -97,56 +97,56 @@
 
 
   {
-    "cardId" : "b14",
+    "cardId" : "bd14",
     "era" : 3,
     "cost" : 8,
     "prestigePointsGained" : 8,
     "effectId" : "HUNTER_PRESTIGE_BONUS"
   },
   {
-    "cardId" : "b15",
+    "cardId" : "bd15",
     "era" : 3,
     "cost" : 7,
     "prestigePointsGained" : 6,
     "effectId" : "FARMER_PRESTIGE_BONUS"
   },
   {
-    "cardId" : "b16",
+    "cardId" : "bd16",
     "era" : 3,
     "cost" : 7,
     "prestigePointsGained" : 4,
     "effectId" : "SHAMAN_PRESTIGE_BONUS"
   },
   {
-    "cardId" : "b17",
+    "cardId" : "bd17",
     "era" : 3,
     "cost" : 6,
     "prestigePointsGained" : 3,
     "effectId" : "BUILDER_PRESTIGE_BONUS"
   },
   {
-    "cardId" : "b18",
+    "cardId" : "bd18",
     "era" : 3,
     "cost" : 7,
     "prestigePointsGained" : 4,
     "effectId" : "ARTIST_PRESTIGE_BONUS"
   },
   {
-    "cardId" : "b19",
+    "cardId" : "bd19",
     "era" : 3,
     "cost" : 6,
     "prestigePointsGained" : 6,
     "effectId" : "INVENTOR_PRESTIGE_BONUS"
   },
   {
-    "cardId" : "b20",
+    "cardId" : "bd20",
     "era" : 3,
     "cost" : 9,
     "prestigePointsGained" : 3,
     "effectId" : "ONE_MORE_CARD"
   },
   {
-    "cardId" : "b21",
+    "cardId" : "bd21",
     "era" : 3,
     "cost" : 10,
     "prestigePointsGained" : 0,

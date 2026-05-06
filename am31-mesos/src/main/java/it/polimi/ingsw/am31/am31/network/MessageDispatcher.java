@@ -3,8 +3,8 @@ package it.polimi.ingsw.am31.am31.network;
 import it.polimi.ingsw.am31.am31.network.Messages.IMessageVisitor;
 import it.polimi.ingsw.am31.am31.network.Messages.Message;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IErrorVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateHandler;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 
 import java.util.concurrent.ExecutorService;
@@ -14,13 +14,13 @@ import java.util.concurrent.TimeUnit;
 public class MessageDispatcher implements IMessageVisitor{
 
     private final ExecutorService executor;
-    private final IUpdateVisitor updateVisitor;
-    private final IErrorVisitor errorVisitor;
+    private final UpdateHandler updateHandler;
+    private final ErrorHandler errorHandler;
 
-    public MessageDispatcher(IUpdateVisitor updateVisitor, IErrorVisitor errorVisitor){
+    public MessageDispatcher(UpdateHandler updateHandler, ErrorHandler errorHandler){
         this.executor = Executors.newSingleThreadExecutor();
-        this.updateVisitor = updateVisitor;
-        this.errorVisitor = errorVisitor;
+        this.updateHandler = updateHandler;
+        this.errorHandler = errorHandler;
     }
 
     public void submit(Message message) {
@@ -44,12 +44,12 @@ public class MessageDispatcher implements IMessageVisitor{
 
     @Override
     public void visitError(ErrorMessage message) {
-        message.acceptVisit(errorVisitor);
+        errorHandler.handleErrorMessage(message);
     }
 
     @Override
     public void visitUpdate(UpdateMessage update){
-        update.acceptVisit(updateVisitor);
+        updateHandler.handleUpdate(update);
     }
 
 

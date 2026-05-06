@@ -1,11 +1,8 @@
 package it.polimi.ingsw.am31.am31.view.gui;
 
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
-import it.polimi.ingsw.am31.am31.network.VirtualServer;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalBoardState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalObserver;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.gui.scene.BaseController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -14,34 +11,35 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 //classe per gestire la navigazione delle scene.
 public class SceneManager {
     private final Stage stage;
     private final ClientController controller;
     private final LocalGameState localGameState;
+    private final IEventBus eventBus;
     private BaseController currentController = null;
 
-    public SceneManager (Stage stage, ClientController controller, LocalGameState localGameState) {
+    public SceneManager (Stage stage, ClientController controller, LocalGameState localGameState, IEventBus eventBus) {
         this.stage = stage;
         this.controller = controller;
         this.localGameState = localGameState;
+        this.eventBus = eventBus;
     }
 
     //methods to switch the scene
     public void showLogin() {
         switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/login.fxml", "Login");
     }
-    public void showGame() { }
+    public void showGame() { switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/game.fxml", "Game"); }
     public void showWaitingRoom() {switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/waitingRoom.fxml", "WaitingRoom");}
-    public void showEndGame() {}
+    public void showEndGame() { switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/endGame.fxml", "EndGame");}
 
     public void switchTo(String path, String title) {
         Platform.runLater( () -> {
             try {
                 if (currentController != null)
-                    localGameState.removeObserver(currentController);
+                    eventBus.unregister(currentController);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
                 Parent root = loader.load();
 
@@ -49,7 +47,9 @@ public class SceneManager {
                 sceneController.setController(controller);
                 sceneController.setLocalGameState(localGameState);
                 sceneController.setSceneManager(this);
-                localGameState.addObserver(sceneController);
+                sceneController.setEventBus(eventBus);
+
+                eventBus.register(sceneController);
                 currentController = sceneController;
 
                 stage.setTitle(title);

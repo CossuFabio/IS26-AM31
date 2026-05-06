@@ -2,10 +2,15 @@ package it.polimi.ingsw.am31.am31.view.LocalState;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.*;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import org.fusesource.jansi.Ansi;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.*;
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class LocalPlayerState {
     private Color color;
@@ -51,5 +56,28 @@ public class LocalPlayerState {
     }
     public List<Card> getTribe(){return tribe;}
     public List<Card> getBuildings(){return buildings;}
+
+
+    public String toString(){
+        //StringBuilder builder = new StringBuilder(); //wts is this?
+        //builder.append(nickname);
+        //builder.append(", Color: ");
+        //builder.append(color);
+        //builder.append(", Food");
+        //return builder.toString();
+        switch(color) {
+            case RED:
+                return ansi().fg(Ansi.Color.RED).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+            case YELLOW:
+                return ansi().fg(Ansi.Color.YELLOW).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+            case BLUE:
+                return ansi().fg(Ansi.Color.BLUE).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+            case BLACK:
+                return ansi().fg(Ansi.Color.BLACK).bgBright(Ansi.Color.WHITE).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+            case WHITE:
+                return ansi().fg(Ansi.Color.WHITE).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+        }
+        return "";
+    }
 
 }

@@ -13,6 +13,8 @@ import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -99,6 +101,13 @@ public class Server {
     public void start() {
         final String serverName = ServerConfig.SERVER_NAME;
         //Rmi server  launch
+
+        try{
+            System.out.println("Server starting on ip: " + InetAddress.getLocalHost().getHostAddress());
+        }catch(Exception e){
+            System.out.println("Unable to setup server");
+        }
+
         Thread rmiThread = new Thread(() -> {
             try {
                 new RmiServer(serverName, ServerConfig.SERVER_PORT_RMI, this).start();

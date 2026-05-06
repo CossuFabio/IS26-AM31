@@ -63,8 +63,10 @@ module it.polimi.ingsw.am31.am31 {
     exports it.polimi.ingsw.am31.am31.network.Messages;
     exports it.polimi.ingsw.am31.am31.view.gui;
     opens it.polimi.ingsw.am31.am31.view.gui to javafx.fxml;
+    exports it.polimi.ingsw.am31.am31.view.tui;
 
     exports it.polimi.ingsw.am31.am31.view.gui.scene;
     opens it.polimi.ingsw.am31.am31.view.gui.scene to javafx.fxml;
+
 
 }

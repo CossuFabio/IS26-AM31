@@ -1,25 +1,26 @@
 package it.polimi.ingsw.am31.am31.view.LocalState;
 
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferCardMessage;
 
 public class LocalOfferCard {
-    public LocalOfferCard(OfferCard og) {
+    public LocalOfferCard(OfferCard og, OfferCardMessage message) {
         this.offerCardId = og.getOfferCardId();
-        if (!og.isFree())
-            this.player = new LocalPlayerState(og.getPlayer().getNickname(), og.getPlayer().getColor());
-        else this.player = new LocalPlayerState("EMPTY",null);
+        if (!message.isFree())
+            this.player = message.getTotemPlayerNickname();
+        else this.player = "EMPTY";
         food = og.getFood();
         drawFromUnder = og.getDrawFromUnder();
         drawFromUpper = og.getDrawFromUpper();
     }
     //will add other attributes if necessary
     private final String offerCardId;
-    private final LocalPlayerState player;
+    private final String player;
     private final int food;
     private final int drawFromUpper;
     private final int drawFromUnder;
 
-    public LocalPlayerState getPlayer() {
+    public String getPlayer() {
         return player;
     }
     public String getOfferCardId() {

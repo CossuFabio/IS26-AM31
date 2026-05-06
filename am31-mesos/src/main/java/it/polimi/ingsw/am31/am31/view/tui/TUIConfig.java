@@ -1,0 +1,41 @@
+package it.polimi.ingsw.am31.am31.view.tui;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import org.fusesource.jansi.Ansi;
+
+import static org.fusesource.jansi.Ansi.ansi;
+import static org.fusesource.jansi.Ansi.Color.*;
+public class TUIConfig {
+
+    //Useful constants used in TUI
+    public static String GO_BACK_VALUE = "back";
+    public static String GO_BACK_STRING = "[press " + GO_BACK_VALUE + " to go back]";
+
+
+
+    public static void printCard(Card c) {
+        String cardId = c.getCardId();
+        if (cardId == null) return;
+
+        if (cardId.startsWith("b")) { // Builders
+            System.out.println(ansi().fg(Ansi.Color.MAGENTA).a(c).reset());
+            return;
+        } else if (cardId.startsWith("s")) { // Shamans
+            System.out.println(ansi().fg(Ansi.Color.CYAN).a(c).reset());
+            return;
+        } else if (cardId.startsWith("h")) { // Hunters
+            System.out.println(ansi().fg(Ansi.Color.RED).a(c).reset());
+            return;
+        } else if (cardId.startsWith("i")) { //inventors
+            System.out.println(ansi().fg(BLUE).a(c).reset());
+            return;
+        } else if (cardId.startsWith("p")) { //painters
+            System.out.println(ansi().fg(YELLOW).a(c).reset());
+            return;
+        }
+        else if (cardId.startsWith("f")){ //farmers
+            System.out.println(ansi().fg(GREEN).a(c).reset());
+            return;
+        }
+        return ;
+    }
+}

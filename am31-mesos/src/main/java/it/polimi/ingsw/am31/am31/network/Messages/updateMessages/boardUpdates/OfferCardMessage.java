@@ -15,28 +15,32 @@ public class OfferCardMessage {
     @JsonIgnore
     public static final String EMPTY_CARD = "CARD_IS_EMPTY";
 
+
     //Serves as a double check: in case of error putting a null playerId, the user does not crash when trying to read nickname
     private final boolean isFree;
 
+
+
     @JsonCreator
     public OfferCardMessage(@JsonProperty("cardId") String cardId,
-                            @JsonProperty("totemPlayerNickname") String totemPlayerNickname,
+                            @JsonProperty("totemPlayerNickname") String totemPlayer,
                             @JsonProperty("isFree") boolean isFree) {
         this.cardId = cardId;
-        this.totemPlayerNickname = totemPlayerNickname;
+        this.totemPlayerNickname = totemPlayer;
         this.isFree = isFree;
     }
 
     public String getCardId(){return this.cardId; }
     public String getTotemPlayerNickname(){return this.totemPlayerNickname;}
 
-    @JsonIgnore
-    public boolean isFree(){return this.isFree;}
 
 
     public boolean checkValidity(){
         return cardId != null && totemPlayerNickname != null;
     }
+
+    @JsonIgnore
+    public boolean isFree(){return this.isFree;}
 
 
 }

@@ -1,7 +1,12 @@
 package it.polimi.ingsw.am31.am31.network;
 
+
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 
 public class ClientController {
     private final VirtualServer connection;
@@ -10,11 +15,14 @@ public class ClientController {
     private String localPlayerUsername = ClientConfig.UNREGISTERED_CLIENT_ID;
 
     private volatile boolean usernameSet = false;
+    private final IEventBus eventBus;
 
-
-    public ClientController(VirtualServer connection) {
+    public ClientController(VirtualServer connection, IEventBus eventBus) {
         this.connection = connection;
+        this.eventBus = eventBus;
+        eventBus.register(this);
     }
+
     public void ping() {
         Thread pingThread = new Thread (() -> {
             while(connected) {
@@ -39,6 +47,7 @@ public class ClientController {
         pingThread.setDaemon(true);
         pingThread.start();
     }
+
     public void sendRequest(NetworkRequest request) throws Exception {
         this.connection.sendRequest(request);
     }
@@ -64,5 +73,14 @@ public class ClientController {
     public synchronized String getLocalPlayerUsername(){
         return localPlayerUsername;
     }
+
+    @Subscribe
+    public void usernameAccepted(SuccessRegistrationEvent e){
+        setLocalPlayerUsername(e.getIdentifier());
+    }
+
+
+
+
 
 }

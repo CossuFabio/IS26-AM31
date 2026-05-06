@@ -1,13 +1,12 @@
 package it.polimi.ingsw.am31.am31.network.rmi.client;
 import it.polimi.ingsw.am31.am31.network.ClientConfig;
 import it.polimi.ingsw.am31.am31.network.MessageDispatcher;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IErrorVisitor;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
 import it.polimi.ingsw.am31.am31.network.ServerConfig;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageMapper;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.NetworkRequestFactory;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.rmi.server.VirtualViewRmi;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMapper;
@@ -30,7 +29,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     private VirtualViewRmi clientStub;
     private LocalGameState gameState;
     private StateUpdater updater;
-    private IErrorVisitor errorVisitor;
+    private ErrorHandler errorVisitor;
     private final MessageDispatcher messageDispatcher;
 
     private boolean usernameSet = false;

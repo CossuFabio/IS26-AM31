@@ -6,6 +6,11 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.PlayersInLobbyChangedEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -156,8 +161,9 @@ public class WaitingRoomController extends BaseController {
         }).start();
     }
 
-    @Override
-    public void onShowLobbyUpdate(List<LobbyDescriptor> lobbies) {
+    @Subscribe
+    public void onShowLobbyUpdate(ShowLobbyEvent e) {
+        List<LobbyDescriptor> lobbies = e.getLobbies();
         Platform.runLater(() -> {
             currentLobbies = lobbies;
             lobbyList.getItems().clear();
@@ -165,25 +171,22 @@ public class WaitingRoomController extends BaseController {
         });
     }
 
-    @Override
-    public void onGameStartUpdate() {
+    @Subscribe
+    public void onGameStartUpdate(GameStartingEvent e) {
         sceneManager.showGame();
     }
 
-    @Override public void onSuccessRegistration(SuccessRegistrationUpdate msg) {}
-    @Override public void onRoundPhaseUpdate() {}
-    @Override public void onRoundNumberUpdate() {}
-    @Override public void onCardLineUpdate() {}
-    @Override public void onPlayerListUpdate() {
+    @Subscribe
+    public void onSuccessRegistration(SuccessRegistrationEvent e) {
+        
+    }
+
+    @Subscribe
+    public void onPlayerListUpdate(PlayersInLobbyChangedEvent e) {
         Platform.runLater(() -> {
             int current = localGameState.getPlayers().size();
             waitingLabel.setText("Waiting for other players: " + current + "/" + totalPlayers);
         });
     }
-    @Override public void onEraUpdate() {}
-    @Override public void onOfferTrackUpdate() {}
-    @Override public void onPlayerScoreUpdate() {}
-    @Override public void onPlayerTribeUpdate() {}
-    @Override public void onTurnOrderUpdate() {}
-    @Override public void onLobbyError(String errorMsg) {}
+
 }

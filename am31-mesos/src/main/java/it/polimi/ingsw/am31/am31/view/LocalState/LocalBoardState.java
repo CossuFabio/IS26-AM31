@@ -20,7 +20,6 @@ public class LocalBoardState {
 
     public void setOfferTrack(ArrayList<LocalOfferCard> offerTrack){
         this.offerTrack = offerTrack;
-//could move this to localGameState?
     }
     public void setUpperLine(List<Card> cards){
         upperLine = new ArrayList<>();
@@ -30,6 +29,14 @@ public class LocalBoardState {
         underLine = new ArrayList<>();
         underLine.addAll(cards);
     }
+
+    public void reset(){
+        upperLine = new ArrayList<>();
+        underLine = new ArrayList<>();
+        offerTrack = new ArrayList<>();
+    }
+
+
     //getters, use by tui and gui
     public ArrayList<Card> getUpperLine(){return upperLine;}
     public ArrayList<Card> getUnderLine(){return underLine;}

@@ -12,25 +12,25 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.
 public interface IUpdateVisitor {
 
     //Board
-    void HandleUpdateMessage(CardLineUpdate msg);
-    void HandleUpdateMessage(OfferTrackUpdate msg);
-    void HandleUpdateMessage(TurnOrderUpdate msg);
+    void handleUpdateMessage(CardLineUpdate msg);
+    void handleUpdateMessage(OfferTrackUpdate msg);
+    void handleUpdateMessage(TurnOrderUpdate msg);
 
     //Game
-    void HandleUpdateMessage(GameRoundStatusUpdate msg);
-    void HandleUpdateMessage(GameStartUpdate msg);
-    void HandleUpdateMessage(PlayersListUpdate msg);
-    void HandleUpdateMessage(ShowLobbyUpdate msg);
+    void handleUpdateMessage(GameRoundStatusUpdate msg);
+    void handleUpdateMessage(GameStartUpdate msg);
+    void handleUpdateMessage(PlayersListUpdate msg);
+    void handleUpdateMessage(ShowLobbyUpdate msg);
 
-    void HandleUpdateMessage(EndGameUpdate msg);
+    void handleUpdateMessage(EndGameUpdate msg);
 
     //Player
-    void HandleUpdateMessage(PlayerBuildingsUpdate msg);
-    void HandleUpdateMessage(PlayerScoresUpdate msg);
-    void HandleUpdateMessage(PlayerTribeUpdate msg);
-    void HandleUpdateMessage(GameCrashUpdate msg);
+    void handleUpdateMessage(PlayerBuildingsUpdate msg);
+    void handleUpdateMessage(PlayerScoresUpdate msg);
+    void handleUpdateMessage(PlayerTribeUpdate msg);
+    void handleUpdateMessage(GameCrashUpdate msg);
 
-    void HandleUpdateMessage(SuccessRegistrationUpdate msg);
+    void handleUpdateMessage(SuccessRegistrationUpdate msg);
 }
 
 
