@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferCardMessage;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +27,8 @@ public class TUIGamephaseTest {
         Card f = new Farmer("f1",2,2,3);
         Card i = new Inventor("i1",2,2,IconEnum.BREAD);
         ArrayList<LocalOfferCard> track = new ArrayList<>();
-        LocalOfferCard a = new LocalOfferCard(new OfferCard("A",1,0,0,2));
-        LocalOfferCard b = new LocalOfferCard(new OfferCard("B",0,1,2,2));
+        LocalOfferCard a = new LocalOfferCard(new OfferCard("A",1,0,0,2), new OfferCardMessage("A", null,  true));
+        LocalOfferCard b = new LocalOfferCard(new OfferCard("B",0,1,2,2), new OfferCardMessage("B", null,  true));
         track.add(a);
         track.add(b);
 

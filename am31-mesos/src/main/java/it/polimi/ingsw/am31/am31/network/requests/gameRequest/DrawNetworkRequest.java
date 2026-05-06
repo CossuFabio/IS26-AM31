@@ -15,7 +15,7 @@ public class DrawNetworkRequest extends NetworkRequest {
     @JsonCreator
     public DrawNetworkRequest(
             @JsonProperty("cardID") String cardID,
-            @JsonProperty("boardRow")BoardRows row){
+            @JsonProperty("boardRows")BoardRows row){
         super(RequestMethodsConstants.METHOD_DRAW);
         this.cardID = cardID;
         this.boardRow = row;
