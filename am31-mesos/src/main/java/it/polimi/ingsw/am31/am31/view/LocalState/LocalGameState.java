@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.network.ClientConfig;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.PlayerMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
+import it.polimi.ingsw.am31.am31.view.tui.TUIConfig;
 
 
 import java.util.ArrayList;
@@ -114,7 +115,6 @@ public class LocalGameState{
     public void addPlayer(LocalPlayerState p){
         players.add(p);
     }
-
     public void reset(){
 
         isValidState = false;
@@ -137,12 +137,16 @@ public class LocalGameState{
     public int getEra(){return era;}
     public LocalBoardState getBoard(){return board;}
     public LocalPlayerState getPlayerActing (){
-        if(currentRoundPhase.equals(RoundPhasesEnum.TOTEM_PLACING))
-            return turnorder.getFirst();
-        else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE))
+        if(currentRoundPhase.equals(RoundPhasesEnum.TOTEM_PLACING)) {
+            for (LocalPlayerState p : turnorder)
+                if (!(p == null))
+                    return p;
+        }else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE))
             for(LocalOfferCard c: board.getOfferTrack())
-                if(!c.getPlayer().equals("FREE"))
-                    return players.stream().filter(p->p.getNickname().equals(c.getPlayer())).findFirst().get();
+                if(!c.isFree())
+                    for(LocalPlayerState d: players)
+                        if(d.getNickname().equals(c.getPlayer()))
+                            return d;
         return null;
     }
     public List<LocalPlayerState> getTurnorder(){return turnorder;}

@@ -9,6 +9,8 @@ public class TUIConfig {
     //Useful constants used in TUI
     public static String GO_BACK_VALUE = "back";
     public static String GO_BACK_STRING = "[press " + GO_BACK_VALUE + " to go back]";
+    public static String EMPTY_OFFER_VALUE = "EMPTY";
+
 
 
 
@@ -28,7 +30,7 @@ public class TUIConfig {
         } else if (cardId.startsWith("i")) { //inventors
             System.out.println(ansi().fg(BLUE).a(cardId+" "+c).reset());
             return;
-        } else if (cardId.startsWith("p")) { //painters
+        } else if (cardId.startsWith("a")) { //artist
             System.out.println(ansi().fg(YELLOW).a(cardId+" "+c).reset());
             return;
         }
@@ -36,6 +38,7 @@ public class TUIConfig {
             System.out.println(ansi().fg(GREEN).a(cardId+" "+c).reset());
             return;
         }
+        System.out.println((cardId)+" "+c);
         return ;
     }
 }

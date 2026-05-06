@@ -29,4 +29,7 @@ public class LocalOfferCard {
     public int getFood(){return food;}
     public int getDrawFromUpper(){return drawFromUpper;}
     public int getDrawFromUnder(){return drawFromUnder;}
+    public boolean isFree(){
+        return player.equals("FREE");
+    }
 }

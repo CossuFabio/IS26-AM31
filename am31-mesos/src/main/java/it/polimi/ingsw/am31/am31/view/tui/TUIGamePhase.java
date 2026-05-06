@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameEventResolveUpdate;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
@@ -168,7 +169,7 @@ public class TUIGamePhase implements TUIPhase{
         else if (choosingCard == 1)
             System.out.println("\nChoose a Row to draw from, 1 = upper, 2 = lower");
         else if (choosingCard == 2)
-            System.out.println("\nChoose a cardId");
+            System.out.println("\nChoose a cardId or type 'skip'");
     }
 
     @Override
@@ -212,7 +213,7 @@ public class TUIGamePhase implements TUIPhase{
                 break;
             case CARDLINE_DETAIL: {
                 switch (choosingCard) {
-                    case 0: {
+                    case 0: {//choice if drawing or other
                         switch (Integer.parseInt(input)) {
                             case 1:
                                 currentstep = TuiGameStep.MAIN;
@@ -220,7 +221,7 @@ public class TUIGamePhase implements TUIPhase{
                             case 2:
                                 if(gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
                                     choosingCard = 1;
-                                else System.out.println("Not the time for this");
+                                else {System.out.println("Not the time for this");choosingCard = 0;}
                                 break;
                             default:
                                 System.out.println("Invalid input");
@@ -228,7 +229,9 @@ public class TUIGamePhase implements TUIPhase{
                         }
                         break;
                     }
-                    case 1: {
+                    case 1: {//row choice
+                        if(!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
+                        {System.out.println("Not the time for this");choosingCard = 0;}
                         if(!(Integer.parseInt(input) == 1 || Integer.parseInt(input) == 2)) {
                             System.out.println("\nInvalid input\n");
                         }
@@ -239,27 +242,46 @@ public class TUIGamePhase implements TUIPhase{
                         break;
                     }
                     //break;
-                    case 2: {
+                    case 2: {//card or skip choice
+                        if(!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
+                        {System.out.println("Not the time for this");choosingCard = 0;}
                         int temp = Integer.parseInt(boardRowRequest);
-                        if (temp == 1)
+                        if (temp == 1) {
+                            if (!input.equals("skip")) {
+                                try {
+                                    controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.UPPER));
+                                } catch (Exception e) {
+                                    System.out.println("Failed to send request");
+                                }
+                            } else
+                                try {
+                                    controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.UPPER));
+                                } catch (Exception e) {
+                                    System.out.println("Failed to send request");
+                                }
+                        }
+                        if(temp == 2) {
+                            if (!input.equals("skip")) {
+                                try {
+                                    controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.LOWER));
+                                } catch (Exception e) {
+                                    System.out.println("Failed to send request");
+                                }
+                            }
                             try {
-                                controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.UPPER));
+                                controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.LOWER));
                             } catch (Exception e) {
                                 System.out.println("Failed to send request");
-                            }
-                        if(temp == 2)
-                            try {
-                                controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.LOWER));
-                            } catch (Exception e) {
                                 System.out.println("Failed to send request");
                             }
-                        choosingCard = 0;
-                        currentstep = TuiGameStep.MAIN;
+                            choosingCard = 0;
+                            currentstep = TuiGameStep.MAIN;
+                        }
                         break;
                     }
-                    //break;
                 }
             break;}
+
             case TOTEM_PLACE:{
               //input should be an offer card Id (letter A to G)
                 try{
@@ -286,12 +308,7 @@ public class TUIGamePhase implements TUIPhase{
         System.out.println("A game event has been resolved: "+e.getCardId()+"\n");
     }
 
-    //Servono gli eventi nei parametri!!!
-    //    @Subscribe
-//    public void handleNewRound () {}//when round changes, takes you back to main?  (completely optional btw)
-//
-//    @Subscribe
-//    public void handleEndGame (){}
+
 
 
 }
