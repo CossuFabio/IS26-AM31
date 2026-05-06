@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameEventResolveUpdate;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
@@ -93,19 +94,31 @@ public class TUIGamePhase implements TUIPhase{
         System.out.print(ansi().a("\nOffer Track: "));
         for(LocalOfferCard c: gameState.getBoard().getOfferTrack()) {
             //should this display nicknames or color? or both?
-            System.out.print(ansi().a(" |"+c.getOfferCardId() + " " + c.getPlayer()+"| "));
+            System.out.print(ansi().a(" |"+c.getOfferCardId() + " " + c.getPlayer() + " F: "+ c.getFood() + " UP: "+c.getDrawFromUpper() + " DOWN: " +c.getDrawFromUnder()+"| "));
         }
         //prints lowerline
         System.out.println(ansi().a("\nLower Line: "));
         for(Card c :gameState.getBoard().getUnderLine())
             System.out.print(ansi().a(" |"+c.getCardId()+"| "));
-        //prints your own tribe and stats?
-        //prints if its your turn or not
-        //System.out.println(gameState.getPlayerActing().equals(controller.getLocalPlayerUsername()) ? "it's your turn" : "it's "+gameState.getPlayerActing()+"'s turn" );
+
+        //prints who's in turn now
+        System.out.println("\n");
+        System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "it's your turn" : "it's "+gameState.getPlayerActing().getColor()+" "+gameState.getPlayerActing().getNickname()+"'s turn" );
+        //prints your own tribe or stats?
+        System.out.println("Your stats and tribe:");
+        for(LocalPlayerState p: gameState.getPlayers())
+            if(p.getNickname().equals(controller.getLocalPlayerUsername()))
+            {System.out.println(p);
+            for(Card c: p.getTribe())
+                System.out.println(c.toString());
+            for(Card c: p.getBuildings())
+                System.out.println(c.toString());}
+
+
         //prints choices
         System.out.println(ansi().a("\nPress:\n1- for detailed CardLines" +
                 "\n2- for detailed offerTrack" +
-                "\n3- to look at others tribes"));
+                "\n3- to look at all tribes"));
     }
 
 
@@ -123,7 +136,8 @@ public class TUIGamePhase implements TUIPhase{
     }
         if(choosingTotem==0)
         System.out.println(ansi().a("\nPress:\n1- to go back to MAIN" +
-                "\n2- to place totem on a tile.\n"));
+                "\n2- to place totem on a tile." +
+                "\n3- to go to cards and draw"));
         else
             System.out.println(ansi().a("\nType the Id of the card you want to place in\n>"));
 }
@@ -136,6 +150,7 @@ public class TUIGamePhase implements TUIPhase{
             for(Card c: p.getBuildings())
                 System.out.println(c.toString());
         }
+
         ansi().reset();
         System.out.println("\nPress 1- go back to MAIN");
     }
@@ -185,6 +200,11 @@ public class TUIGamePhase implements TUIPhase{
                         choosingTotem = 1;
                         break;
                     }
+                    case 3:{
+                        currentstep=TuiGameStep.CARDLINE_DETAIL;
+                        choosingCard = 1;
+                        break;
+                    }
                 }
              break;}
             case PLAYER_DETAIL:
@@ -209,9 +229,13 @@ public class TUIGamePhase implements TUIPhase{
                         break;
                     }
                     case 1: {
-                        choosingCard = 2;
-                        //TODO: Add checks
-                        boardRowRequest = input;
+                        if(!(Integer.parseInt(input) == 1 || Integer.parseInt(input) == 2)) {
+                            System.out.println("\nInvalid input\n");
+                        }
+                        else {
+                            boardRowRequest = input;
+                            choosingCard = 2;
+                        }
                         break;
                     }
                     //break;
@@ -219,13 +243,13 @@ public class TUIGamePhase implements TUIPhase{
                         int temp = Integer.parseInt(boardRowRequest);
                         if (temp == 1)
                             try {
-                                controller.sendRequest(new DrawNetworkRequest(input, BoardRows.UPPER));
+                                controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.UPPER));
                             } catch (Exception e) {
                                 System.out.println("Failed to send request");
                             }
                         if(temp == 2)
                             try {
-                                controller.sendRequest(new DrawNetworkRequest(input, BoardRows.LOWER));
+                                controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.LOWER));
                             } catch (Exception e) {
                                 System.out.println("Failed to send request");
                             }
@@ -237,7 +261,7 @@ public class TUIGamePhase implements TUIPhase{
                 }
             break;}
             case TOTEM_PLACE:{
-              //input should be a offer card Id (letter A to G)
+              //input should be an offer card Id (letter A to G)
                 try{
                     controller.sendRequest(new TotemNetworkRequest(input.toUpperCase()));
                     System.out.println("Successfully requested totem"); //for testing
@@ -245,7 +269,7 @@ public class TUIGamePhase implements TUIPhase{
                 }catch(Exception e) {
                     System.out.println("Failed to send request");
                 }
-                currentstep = TuiGameStep.OFFER_DETAIL; //or main?
+                currentstep =  TuiGameStep.MAIN;
             break;}
             default:System.out.println("\nInvalid input\n"); break;
         }
@@ -256,6 +280,10 @@ public class TUIGamePhase implements TUIPhase{
     @Subscribe
     public void handleBoardUpdate (BoardUpdateEvent e){
         TUI.printScreen();
+    }
+    @Subscribe
+    public void handleEventUpdate (GameEventResolveUpdate e){
+        System.out.println("A game event has been resolved: "+e.getCardId()+"\n");
     }
 
     //Servono gli eventi nei parametri!!!

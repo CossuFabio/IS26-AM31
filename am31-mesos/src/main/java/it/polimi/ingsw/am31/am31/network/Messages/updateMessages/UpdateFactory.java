@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
@@ -111,6 +112,10 @@ public class UpdateFactory {
 
     public static SuccessRegistrationUpdate createSuccessRegistrationUpdate(String username){
         return new SuccessRegistrationUpdate(username);
+    }
+
+    public static GameEventResolveUpdate createGameEventResolveUpdate (EventCard event){
+        return new GameEventResolveUpdate(event.getCardId());
     }
 
 }

@@ -113,6 +113,11 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     }
 
     @Override
+    public void handleUpdateMessage(GameEventResolveUpdate msg) {
+        eventBus.post(new GameEventResolveEvent(mapper.getCard(msg.getCardId())));
+    }
+
+    @Override
     public void handleUpdateMessage(EndGameUpdate msg){
         //TODO: IMPLEMENT THIS
         //msg contains winners, for now

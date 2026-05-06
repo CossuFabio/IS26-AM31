@@ -47,6 +47,11 @@ public class LocalPlayerState {
         buildings = new ArrayList<>();
         buildings.addAll(newbuildings);
     }
+    //for testing
+    public void addBuilding(Card newbuilding){
+        buildings.add(newbuilding);
+    }
+
     //getters
     public int getFood(){return food;}
     public int getPrestigePoints(){return prestigePoints;}
@@ -59,7 +64,7 @@ public class LocalPlayerState {
 
 
     public String toString(){
-        //StringBuilder builder = new StringBuilder(); //wts is this?
+        //StringBuilder builder = new StringBuilder(); //
         //builder.append(nickname);
         //builder.append(", Color: ");
         //builder.append(color);
@@ -67,15 +72,15 @@ public class LocalPlayerState {
         //return builder.toString();
         switch(color) {
             case RED:
-                return ansi().fg(Ansi.Color.RED).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+                return ansi().fg(Ansi.Color.RED).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
             case YELLOW:
-                return ansi().fg(Ansi.Color.YELLOW).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+                return ansi().fg(Ansi.Color.YELLOW).a("COLOR: YELLOW, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
             case BLUE:
-                return ansi().fg(Ansi.Color.BLUE).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+                return ansi().fg(Ansi.Color.BLUE).a("COLOR: BLUE, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
             case BLACK:
-                return ansi().fg(Ansi.Color.BLACK).bgBright(Ansi.Color.WHITE).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+                return ansi().fg(Ansi.Color.BLACK).bgBright(Ansi.Color.WHITE).a("COLOR: BLACK, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
             case WHITE:
-                return ansi().fg(Ansi.Color.WHITE).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).toString();
+                return ansi().fg(Ansi.Color.WHITE).a("COLOR: WHITE, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
         }
         return "";
     }

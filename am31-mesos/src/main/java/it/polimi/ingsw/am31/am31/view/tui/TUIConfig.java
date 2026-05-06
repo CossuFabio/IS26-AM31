@@ -17,23 +17,23 @@ public class TUIConfig {
         if (cardId == null) return;
 
         if (cardId.startsWith("b")) { // Builders
-            System.out.println(ansi().fg(Ansi.Color.MAGENTA).a(c).reset());
+            System.out.println(ansi().fg(Ansi.Color.MAGENTA).a(cardId+" "+c).reset());
             return;
         } else if (cardId.startsWith("s")) { // Shamans
-            System.out.println(ansi().fg(Ansi.Color.CYAN).a(c).reset());
+            System.out.println(ansi().fg(Ansi.Color.CYAN).a(cardId+" "+c).reset());
             return;
         } else if (cardId.startsWith("h")) { // Hunters
-            System.out.println(ansi().fg(Ansi.Color.RED).a(c).reset());
+            System.out.println(ansi().fg(Ansi.Color.RED).a(cardId+" "+c).reset());
             return;
         } else if (cardId.startsWith("i")) { //inventors
-            System.out.println(ansi().fg(BLUE).a(c).reset());
+            System.out.println(ansi().fg(BLUE).a(cardId+" "+c).reset());
             return;
         } else if (cardId.startsWith("p")) { //painters
-            System.out.println(ansi().fg(YELLOW).a(c).reset());
+            System.out.println(ansi().fg(YELLOW).a(cardId+" "+c).reset());
             return;
         }
         else if (cardId.startsWith("f")){ //farmers
-            System.out.println(ansi().fg(GREEN).a(c).reset());
+            System.out.println(ansi().fg(GREEN).a(cardId+" "+c).reset());
             return;
         }
         return ;

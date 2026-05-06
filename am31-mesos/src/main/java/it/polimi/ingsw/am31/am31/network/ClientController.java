@@ -70,6 +70,7 @@ public class ClientController {
         }
     }
 
+
     public synchronized String getLocalPlayerUsername(){
         return localPlayerUsername;
     }
@@ -79,7 +80,9 @@ public class ClientController {
         setLocalPlayerUsername(e.getIdentifier());
     }
 
-
+    public void setLocalNameTest () {
+        localPlayerUsername = "test";
+    }
 
 
 

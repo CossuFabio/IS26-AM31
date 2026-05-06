@@ -188,11 +188,8 @@ public class Game implements GameObservable {
         //method should then show winners
     }
 
-
-    //TODO: fix this (Discuss together)
     private void resolveEvents(){
 
-        //TODO Fix usage of priority queue
         PriorityQueue<EventCard> eventQueue = new PriorityQueue<>(
                 comparingInt(EventCard::getPriority)
         );
@@ -212,7 +209,9 @@ public class Game implements GameObservable {
 
         //Cannot use foreach (See documentation)
         while(!eventQueue.isEmpty()){
-            eventQueue.poll().resolve(players);
+            EventCard temp =eventQueue.poll();
+            temp.resolve(players);
+            observers.onGameEventResolveUpdate(temp);
         }
     }
 

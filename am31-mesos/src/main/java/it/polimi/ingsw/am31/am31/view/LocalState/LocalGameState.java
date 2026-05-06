@@ -103,12 +103,17 @@ public class LocalGameState{
     }
     public void setTurnOrder(List<LocalPlayerState> newTurnOrder){
         this.turnorder = newTurnOrder;
+        setPlayerActing(newTurnOrder.getFirst());
     }
 
     public void setPlayerActing(LocalPlayerState p){
         this.playerActing = p;
     }
 
+    //for testing
+    public void addPlayer(LocalPlayerState p){
+        players.add(p);
+    }
 
     public void reset(){
 
@@ -131,9 +136,16 @@ public class LocalGameState{
     public int getRoundNumber(){return roundNumber;}
     public int getEra(){return era;}
     public LocalBoardState getBoard(){return board;}
-    public LocalPlayerState getPlayerActing (){return playerActing;}
+    public LocalPlayerState getPlayerActing (){
+        if(currentRoundPhase.equals(RoundPhasesEnum.TOTEM_PLACING))
+            return turnorder.getFirst();
+        else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE))
+            for(LocalOfferCard c: board.getOfferTrack())
+                if(!c.getPlayer().equals("FREE"))
+                    return players.stream().filter(p->p.getNickname().equals(c.getPlayer())).findFirst().get();
+        return null;
+    }
     public List<LocalPlayerState> getTurnorder(){return turnorder;}
     public List<LocalPlayerState> getPlayers(){return players;}
-
 
 }

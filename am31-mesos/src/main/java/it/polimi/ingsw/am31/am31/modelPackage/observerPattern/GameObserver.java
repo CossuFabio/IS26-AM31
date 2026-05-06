@@ -3,6 +3,7 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public interface GameObserver {
     void onTurnOrderUpdate(TurnOrder turnOrder);
     void onGameStartUpdate(Game game);
     void onGameEndUpdate(List<Player> leaderboard);
+    void onGameEventResolveUpdate(EventCard c);
 
     void onGameCrashUpdate();
 

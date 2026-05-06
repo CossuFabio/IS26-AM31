@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.List;
@@ -102,4 +103,8 @@ public class GameObserversSet implements ObserverHandler{
     @Override
     public void notifyRemoveMe(){/*Nothing to do*/}
 
+    @Override
+    public void onGameEventResolveUpdate(EventCard c){
+        observers.forEach(o -> onGameEventResolveUpdate(c));
+    }
 }

@@ -21,7 +21,7 @@ public interface IUpdateVisitor {
     void handleUpdateMessage(GameStartUpdate msg);
     void handleUpdateMessage(PlayersListUpdate msg);
     void handleUpdateMessage(ShowLobbyUpdate msg);
-
+    void handleUpdateMessage(GameEventResolveUpdate msg);
     void handleUpdateMessage(EndGameUpdate msg);
 
     //Player
@@ -31,6 +31,7 @@ public interface IUpdateVisitor {
     void handleUpdateMessage(GameCrashUpdate msg);
 
     void handleUpdateMessage(SuccessRegistrationUpdate msg);
+
 }
 
 

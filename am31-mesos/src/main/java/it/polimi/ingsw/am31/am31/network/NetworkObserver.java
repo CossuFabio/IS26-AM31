@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateFactory;
@@ -144,6 +145,15 @@ public class NetworkObserver implements GameObserver {
     public void onGameEndUpdate(List<Player> leaderboard) {
         executors.submit(()-> {try{
             virtualView.receiveUpdate(UpdateFactory.createGameEndUpdate(leaderboard));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }});
+    }
+
+    @Override
+    public void onGameEventResolveUpdate(EventCard event) {
+        executors.submit(()->{try{
+            virtualView.receiveUpdate(UpdateFactory.createGameEventResolveUpdate(event));
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }});

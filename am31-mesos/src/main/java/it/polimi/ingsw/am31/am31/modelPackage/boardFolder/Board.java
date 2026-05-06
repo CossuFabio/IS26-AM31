@@ -130,7 +130,7 @@ public class Board implements GameObservable {
 
         this.observers = obs;
 
-        observers = new GameObserversSet();
+        //observers = new GameObserversSet();
     }
 
 

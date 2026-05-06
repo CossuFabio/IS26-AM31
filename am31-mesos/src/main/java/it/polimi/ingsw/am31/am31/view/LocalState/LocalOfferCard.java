@@ -8,7 +8,7 @@ public class LocalOfferCard {
         this.offerCardId = og.getOfferCardId();
         if (!message.isFree())
             this.player = message.getTotemPlayerNickname();
-        else this.player = "EMPTY";
+        else this.player = "FREE";
         food = og.getFood();
         drawFromUnder = og.getDrawFromUnder();
         drawFromUpper = og.getDrawFromUpper();
