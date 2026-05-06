@@ -117,6 +117,7 @@
                      </effect>
                      <children>
                         <ListView fx:id="lobbyList" maxWidth="-Infinity" prefHeight="200.0" prefWidth="500.0" />
+                        <ComboBox fx:id="joinColorBox" prefWidth="150.0" />
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Button fx:id="backButton1" mnemonicParsing="false" onAction="#handleBack" prefHeight="66.0" prefWidth="250.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Back" textAlignment="CENTER">
@@ -156,4 +157,3 @@
         </VBox>
     </children>
 </StackPane>
-

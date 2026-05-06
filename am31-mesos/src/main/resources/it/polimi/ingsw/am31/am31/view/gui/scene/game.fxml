@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am31.am31.view.gui.scene.GameController">
+   <children>
+      <BorderPane>
+         <top>
+            <HBox alignment="CENTER" spacing="25.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="roundLabel" text="Round 1">
+                     <font>
+                        <Font name="Inknut Antiqua Regular" size="18.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <Label fx:id="eraLabel" text="Era 1">
+                     <font>
+                        <Font name="Inknut Antiqua Regular" size="18.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <Label fx:id="turnLabel" text="Turno Mario">
+                     <font>
+                        <Font name="Inknut Antiqua Regular" size="18.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <Label fx:id="phaseLabel" text="Fase Totem">
+                     <font>
+                        <Font name="Inknut Antiqua Regular" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </top>
+         <center>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <ScrollPane maxHeight="1.7976931348623157E308" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                     <content>
+                        <HBox fx:id="upperRowContainer" spacing="8" HBox.hgrow="ALWAYS" />
+                     </content>
+                  </ScrollPane>
+                  <HBox fx:id="offerTrackContainer" prefHeight="100.0" prefWidth="200.0" />
+                  <ScrollPane maxHeight="1.7976931348623157E308" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                     <content>
+                        <HBox fx:id="lowerRowContainer" spacing="8" HBox.hgrow="ALWAYS" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </center>
+         <left>
+            <ImageView fx:id="deckImage" fitHeight="150.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+         </left>
+         <right>
+            <VBox fx:id="playersContainer" maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+         </right>
+         <bottom>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="foodIcon" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="myFoodLabel" text="Label" />
+                        <ImageView fx:id="PPIcon" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="myPPLabel" text="Label" />
+                     </children>
+                  </HBox>
+                  <ScrollPane maxWidth="1.7976931348623157E308" prefHeight="225.0" vbarPolicy="NEVER" VBox.vgrow="NEVER">
+                     <content>
+                        <HBox fx:id="myTribeContainer" prefHeight="250.0" />
+                     </content>
+                  </ScrollPane>
+                  <ScrollPane maxWidth="1.7976931348623157E308" prefHeight="225.0" vbarPolicy="NEVER">
+                     <content>
+                        <HBox fx:id="myBuildingsContainer" prefHeight="100.0" prefWidth="200.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </bottom>
+      </BorderPane>
+      <StackPane fx:id="deckOverlay" prefHeight="150.0" prefWidth="200.0" visible="false">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="ownerName" text="Label" />
+                        <Button mnemonicParsing="false" onAction="#closeTribeViewer" text="X" />
+                     </children>
+                  </HBox>
+                  <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <HBox fx:id="tribePlayerContainer" prefHeight="100.0" prefWidth="200.0" />
+                     </content>
+                  </ScrollPane>
+                  <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <HBox fx:id="buildingsPlayerContainer" prefHeight="100.0" prefWidth="200.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</StackPane>

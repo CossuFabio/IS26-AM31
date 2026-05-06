@@ -46,6 +46,7 @@ public class WaitingRoomController extends BaseController {
     @FXML private ListView<LobbyDescriptor> lobbyList;
     @FXML private Button backButton1;
     @FXML private Button joinButton;
+    @FXML private ComboBox<Color> joinColorBox;
     private int totalPlayers;
 
     private List<LobbyDescriptor> currentLobbies;
@@ -56,9 +57,10 @@ public class WaitingRoomController extends BaseController {
         playersBox.getItems().addAll(2,3,4,5);
         colorBox.getItems().addAll("Red","Blue","Yellow","White","Black");
 
-        //disable join button until a lobby is selected
+        //disable join button until a lobby and a color are selected
         joinButton.disableProperty().bind(
                 lobbyList.getSelectionModel().selectedItemProperty().isNull()
+                        .or(joinColorBox.valueProperty().isNull())
         );
 
         //disable create button until both comboboxes are selected
@@ -97,6 +99,13 @@ public class WaitingRoomController extends BaseController {
                     setGraphic(cell);
                     setStyle("-fx-background-color: transparent;");
                 }
+            }
+        });
+
+        lobbyList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                joinColorBox.getItems().clear();
+                joinColorBox.getItems().addAll(newVal.getAvailableColors());
             }
         });
     }
@@ -154,8 +163,8 @@ public class WaitingRoomController extends BaseController {
 
         new Thread(() -> {
             try {
-                controller.sendRequest(new JoinGameNetworkRequest(Color.valueOf(colorBox.getValue().toUpperCase()), selected.getId()));
-            } catch (Exception e) {
+                controller.sendRequest(new JoinGameNetworkRequest(joinColorBox.getValue(), selected.getId()));
+                 } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();

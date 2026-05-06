@@ -58,6 +58,7 @@ public class SceneManager {
 
             } catch (IOException e) {
                 System.err.println("Failed to load the FXML file " + path);
+                e.printStackTrace();
             }
         });
     }
