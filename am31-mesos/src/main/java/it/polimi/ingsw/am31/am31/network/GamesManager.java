@@ -16,6 +16,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFacto
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
@@ -56,7 +57,7 @@ public class GamesManager {
         commands.put(RequestMethodsConstants.METHOD_JOIN_GAME, this::joinGame);
         commands.put(RequestMethodsConstants.METHOD_SHOW_LOBBIES, this::showLobbies);
         commands.put(RequestMethodsConstants.METHOD_PLACE_TOTEM, this::placeTotem);
-
+        commands.put(RequestMethodsConstants.METHOD_SKIP_DRAW, this::skipDraw);
     }
 
     //Integrity is already checked by the server
@@ -235,6 +236,21 @@ public class GamesManager {
 
     }
 
+    private void skipDraw(NetworkRequest req, VirtualView view){
+        try{
+            SkipDrawNetworkRequest skipReq = (SkipDrawNetworkRequest) req;
+            GameController controller = findGameFromPlayerUsername(req.getPlayerID());
+            controller.handleSkip(skipReq);
+        }catch(NetworkException e){
+            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
+        }catch(GameException e){
+            view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
+        }catch(GameInvariantException e){
+            System.err.println("Invariant violated: " + e.getMessage());
+        }catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
 
 
     public void handleDisconnect(String playerID){
