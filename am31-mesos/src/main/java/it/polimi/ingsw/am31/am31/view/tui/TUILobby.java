@@ -185,7 +185,16 @@ public class TUILobby implements TUIPhase {
             TUI.printScreen();
             return;
         }
-        e.getLobbies().forEach(l -> System.out.println("Lobby: " + l.getId() + ", Free slots: " + l.getFreeSlots() + ", Game for " + l.getnPlayers() + " players"));
+        e.getLobbies().forEach(
+                l -> {
+                    System.out.println("Lobby: " + l.getId() + ", Free slots: " + l.getFreeSlots() +
+                            ", Game for " + l.getnPlayers() + " players.");
+                    System.out.print("Available colors:");
+                    l.getAvailableColors().forEach( c->{
+                        System.out.print(" "+c);
+                    });
+                    System.out.println();
+                });
         TUI.printScreen();
     }
 

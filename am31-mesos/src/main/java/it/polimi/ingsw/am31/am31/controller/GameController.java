@@ -15,11 +15,14 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameController {
@@ -196,5 +199,11 @@ public class GameController {
         return true;
 
     }
-    
+
+    public synchronized List<Color> getAvailableColors(){
+        List<Color> availableColors = new ArrayList<>(Arrays.asList(Color.values()));
+        game.getPlayersList().forEach(p -> availableColors.remove(p.getColor()));
+        return availableColors;
+    }
+
 }
