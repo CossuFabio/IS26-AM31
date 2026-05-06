@@ -18,6 +18,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 
@@ -86,7 +87,12 @@ public class GameController {
             throw new InvalidResourceException("ROW");
         }
 
+        advanceAfterDrawOrSkip();
 
+    }
+
+    //Synchronized probably not necessary TODO: Check this
+    private synchronized void advanceAfterDrawOrSkip() throws GameInvariantException {
         if (game.getCurrentRoundPhase() == RoundPhasesEnum.ACTION_PHASE) {
             while(game.hasCurrentPlayerFinishedDrawing() && !game.isDrawPhaseFinished()) {
                 game.setNextPlayerDrawing();
@@ -104,7 +110,6 @@ public class GameController {
                 startEndGamePhase();
             }
         }
-
     }
 
 
@@ -143,6 +148,18 @@ public class GameController {
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         game.setUpBonusDrawingPhase();
         if(game.isBonusDrawPhaseFinished()) startEndGamePhase();
+    }
+
+    public synchronized void handleSkip(SkipDrawNetworkRequest request) throws IllegalActionException,
+            GameInvariantException {
+        if(!isGameStillActive) throw new GameNoLongerActiveException();
+        Player player = resourceFinder.getPlayerFromNickname(request.getPlayerID());
+
+        if(request.getBoardRow() == BoardRows.UPPER) game.playerSkipUpper(player);
+        else if(request.getBoardRow() == BoardRows.LOWER) game.playerSkipLower(player);
+        else throw new InvalidResourceException("ROW");
+
+        advanceAfterDrawOrSkip();
     }
 
     //-----ROUND END-----

@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.CardNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.CardLoader;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
@@ -132,6 +133,23 @@ public class Board implements GameObservable {
 
         //observers = new GameObserversSet();
     }
+
+    private boolean hasCharacters(List<Card> cards){
+        CountVisitor countVisitor = new CountVisitor();
+        cards.forEach(c -> c.acceptVisit(countVisitor));
+        return countVisitor.getTotalCharacters() > 0;
+    }
+
+    private boolean hasPickable(List<Card> cards){
+        return cards.stream().anyMatch(c -> c.canBePicked());
+    }
+
+    public boolean upperLineHasPickable() { return hasPickable(getUpperLine()); }
+    public boolean underLineHasPickable() { return hasPickable(getUnderLine()); }
+    public boolean upperLineHasCharacters() { return hasCharacters(getUpperLine()); }
+    public boolean underLineHasCharacters() { return hasCharacters(getUnderLine()); }
+
+
 
 
 

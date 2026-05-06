@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
+import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;
@@ -484,6 +485,27 @@ public class Game implements GameObservable {
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
         roundNumber++;
         observers.onGameRoundStatusUpdate(this);
+    }
+
+
+    public void playerSkipUpper(Player player) throws WrongPlayerTurnException, WrongRoundPhaseException,
+            IllegalSkipException {
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE)
+            throw new WrongRoundPhaseException();
+        if(!player.equals(playerActing)) throw new WrongPlayerTurnException();
+        if(currentRoundPhase == RoundPhasesEnum.ACTION_PHASE && board.upperLineHasCharacters()) throw new
+                IllegalSkipException(BoardRows.UPPER);
+        drawManager.skipUpper();
+    }
+
+    public void playerSkipLower(Player player) throws WrongPlayerTurnException, WrongRoundPhaseException,
+            IllegalSkipException {
+        if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE)
+            throw new WrongRoundPhaseException();
+        if(!player.equals(playerActing)) throw new WrongPlayerTurnException();
+        if(currentRoundPhase == RoundPhasesEnum.ACTION_PHASE && board.underLineHasCharacters()) throw new
+                IllegalSkipException(BoardRows.LOWER);
+        drawManager.skipLower();
     }
 
 }

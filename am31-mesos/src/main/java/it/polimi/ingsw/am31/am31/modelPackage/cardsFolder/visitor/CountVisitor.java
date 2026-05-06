@@ -62,4 +62,9 @@ public class CountVisitor implements TribeVisitor{
     public int getInventors(){return Icount; }
     public int getArtists(){return Acount;}
     public int getEvent(){return Event;}
+
+    public int getTotalCharacters(){
+        return Hcount + Bcount + Scount + Fcount + Icount + Acount;
+    }
+
 }

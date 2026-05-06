@@ -45,10 +45,16 @@ public class TurnDrawManager {
     }
 
     public boolean hasFinishedDrawing(){
-        boolean hasFinishedUpper = (drawFromUpperThisTurn >= drawFromUpper) || (gameBoard.getUpperLine().isEmpty());
-        boolean hasFinishedLower = (drawFromLowerThisTurn >= drawFromLower) || (gameBoard.getUnderLine().isEmpty());
+        boolean hasFinishedUpper = (drawFromUpperThisTurn >= drawFromUpper) || !gameBoard.upperLineHasPickable();
+        boolean hasFinishedLower = (drawFromLowerThisTurn >= drawFromLower) || !gameBoard.underLineHasPickable();
 
         return hasFinishedUpper && hasFinishedLower;
     }
+
+    //Methods invoked (indirectly) from the Controller that allow the Player to skip its draw phase.
+    //Security checks are performed controller-side
+    public void skipUpper() { drawFromUpperThisTurn = drawFromUpper; }
+    public void skipLower() { drawFromLowerThisTurn = drawFromLower; }
+
 
 }
