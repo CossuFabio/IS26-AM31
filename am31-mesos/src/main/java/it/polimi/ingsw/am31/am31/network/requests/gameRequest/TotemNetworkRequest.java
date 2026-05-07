@@ -7,13 +7,15 @@ import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
 public class TotemNetworkRequest extends NetworkRequest {
 
+    public static final String METHOD = RequestMethodsConstants.METHOD_PLACE_TOTEM;
+
     private final String offerTrackID;
 
     @JsonCreator
     public TotemNetworkRequest(
             @JsonProperty("offerTrackID")String offerTrackID){
 
-        super(RequestMethodsConstants.METHOD_PLACE_TOTEM);
+        super(METHOD);
         this.offerTrackID = offerTrackID;
 
     }

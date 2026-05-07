@@ -9,12 +9,13 @@ import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 public class NewGameNetworkRequest extends NetworkRequest {
     private final Integer numPlayers;
     private final Color color;
+    public static final String METHOD = RequestMethodsConstants.METHOD_NEW_GAME;
     @JsonCreator
     public  NewGameNetworkRequest(
             @JsonProperty("numPlayers")int numPlayers,
             @JsonProperty("color") Color color)  {
 
-        super(RequestMethodsConstants.METHOD_NEW_GAME);
+        super(METHOD);
         this.numPlayers = numPlayers;
         this.color = color;
     }

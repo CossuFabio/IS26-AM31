@@ -6,14 +6,11 @@ import it.polimi.ingsw.am31.am31.exceptions.networkException.UsernameNotRegister
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFactory;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateFactory;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.DisconnectNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
+import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
 import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
-
-import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
@@ -51,7 +48,7 @@ public class Server {
                 view.updateLastTime();
 
             //Don't care if pinging
-            if (request == null || request.getType().equals(RequestMethodsConstants.PING)) return;
+            if (request == null || request.getType().equals(PingNetworkRequest.METHOD)) return;
 
             if (!request.checkValidity()) {
                 String type = (request != null && request.getType() != null) ? request.getType() : "Unknown type";
@@ -60,20 +57,20 @@ public class Server {
             }
 
             VirtualView inServerClientView = clients.get(request.getPlayerID());
-            if (inServerClientView == null && !request.getType().equals((RequestMethodsConstants.METHOD_NEW_CONNECTION))) {
+            if (inServerClientView == null && !request.getType().equals(NewServerConnectionRequest.METHOD)) {
                 System.out.println("Richiesta da utente non valido ricevuta");
                 view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new UsernameNotRegisteredException()));
                 return;
             }
 
             //Blocks spoofing
-            if (!request.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION) && inServerClientView != view) {
+            if (!request.getType().equals(NewServerConnectionRequest.METHOD) && inServerClientView != view) {
                 view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Wrong username!")));
                 return;
             }
 
             //Received new connection
-            if (request.getType().equals(RequestMethodsConstants.METHOD_NEW_CONNECTION)) {
+            if (request.getType().equals(NewServerConnectionRequest.METHOD)) {
                 //This method will handle success or failure
                 String newId = ((NewServerConnectionRequest) request).getRequestedUsername();
                 addClient(newId, view);
@@ -81,7 +78,7 @@ public class Server {
             }
 
             //Routes for disconnections
-            if (request.getType().equals((RequestMethodsConstants.METHOD_DISCONNECT))) {
+            if (request.getType().equals(DisconnectNetworkRequest.METHOD)) {
                 disconnect(request.getPlayerID());
                 return;
             }

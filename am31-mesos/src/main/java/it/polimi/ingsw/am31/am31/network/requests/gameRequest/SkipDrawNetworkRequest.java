@@ -8,11 +8,14 @@ import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
 public class SkipDrawNetworkRequest extends NetworkRequest {
+
+    public static final String METHOD = RequestMethodsConstants.METHOD_SKIP_DRAW;
+
     private final BoardRows boardRow;
 
     @JsonCreator
     public SkipDrawNetworkRequest(@JsonProperty("boardRow") BoardRows boardRow){
-        super(RequestMethodsConstants.METHOD_SKIP_DRAW);
+        super(METHOD);
         this.boardRow = boardRow;
     }
 

@@ -5,9 +5,12 @@ import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
 public class PingNetworkRequest extends NetworkRequest {
+
+    public static final String METHOD = RequestMethodsConstants.PING;
+
     @JsonCreator
     public PingNetworkRequest() {
-        super(RequestMethodsConstants.PING);
+        super(METHOD);
     }
 
     @Override

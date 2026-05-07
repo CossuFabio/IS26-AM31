@@ -52,12 +52,12 @@ public class GamesManager {
         this.commands = new ConcurrentHashMap<>();
 
         //GamesManager accepts only these commands. They are filtered from the Server
-        commands.put(RequestMethodsConstants.METHOD_NEW_GAME, this::createGame);
-        commands.put(RequestMethodsConstants.METHOD_DRAW, this::drawCard);
-        commands.put(RequestMethodsConstants.METHOD_JOIN_GAME, this::joinGame);
-        commands.put(RequestMethodsConstants.METHOD_SHOW_LOBBIES, this::showLobbies);
-        commands.put(RequestMethodsConstants.METHOD_PLACE_TOTEM, this::placeTotem);
-        commands.put(RequestMethodsConstants.METHOD_SKIP_DRAW, this::skipDraw);
+        commands.put(NewGameNetworkRequest.METHOD, this::createGame);
+        commands.put(DrawNetworkRequest.METHOD, this::drawCard);
+        commands.put(JoinGameNetworkRequest.METHOD, this::joinGame);
+        commands.put(ShowLobbyNetworkRequest.METHOD, this::showLobbies);
+        commands.put(TotemNetworkRequest.METHOD, this::placeTotem);
+        commands.put(SkipDrawNetworkRequest.METHOD, this::skipDraw);
     }
 
     //Integrity is already checked by the server

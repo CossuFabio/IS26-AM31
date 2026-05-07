@@ -6,10 +6,11 @@ import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
 public class ShowLobbyNetworkRequest extends NetworkRequest {
 
+    public static final String METHOD = RequestMethodsConstants.METHOD_SHOW_LOBBIES;
 
     @JsonCreator
     public ShowLobbyNetworkRequest(){
-        super(RequestMethodsConstants.METHOD_SHOW_LOBBIES);
+        super(METHOD);
     }
 
     @Override

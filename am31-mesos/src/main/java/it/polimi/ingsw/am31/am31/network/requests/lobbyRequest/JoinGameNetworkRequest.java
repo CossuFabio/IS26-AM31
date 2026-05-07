@@ -8,6 +8,9 @@ import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
 public class JoinGameNetworkRequest extends NetworkRequest {
 
+
+    public static final String METHOD = RequestMethodsConstants.METHOD_JOIN_GAME;
+
     private final Color color;
     private final Integer gameID;
 
@@ -16,7 +19,7 @@ public class JoinGameNetworkRequest extends NetworkRequest {
     public JoinGameNetworkRequest(
             @JsonProperty("color")Color color,
             @JsonProperty("gameID")Integer gameID) {
-        super(RequestMethodsConstants.METHOD_JOIN_GAME);
+        super(METHOD);
         this.color = color;
         this.gameID = gameID;
     }
