@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -12,11 +14,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am31.am31.view.gui.scene.GameController">
+<StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am31.am31.view.gui.scene.GameController">
    <children>
-      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: orange;">
+      <ImageView fitHeight="1080.0" fitWidth="1920.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/Background.jpg" />
+         </image>
+      </ImageView>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <top>
-            <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="100.0" spacing="50.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" spacing="50.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" BorderPane.alignment="CENTER">
                <children>
                   <Label fx:id="roundLabel" alignment="CENTER" prefWidth="300.0" text="Round 1" textAlignment="CENTER">
                      <font>
@@ -48,90 +55,107 @@
             </HBox>
          </top>
          <center>
-            <HBox maxHeight="-Infinity" prefHeight="560.0" prefWidth="1600.0" BorderPane.alignment="CENTER">
-               <VBox alignment="CENTER" prefHeight="560.0" prefWidth="147.0">
-                  <children>
-                     <ImageView fx:id="deckImage" fitHeight="180.0" fitWidth="127.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
-                  </children>
-                  <padding>
-                     <Insets right="20.0" />
-                  </padding>
-               </VBox>
-               <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="560.0" prefWidth="1223.0" BorderPane.alignment="CENTER">
+            <VBox alignment="CENTER" BorderPane.alignment="CENTER">
                <children>
-                  <ScrollPane maxHeight="-Infinity" prefHeight="180.0" style="-fx-padding: 0; -fx-background-insets: 0; -fx-border-width: 0;" vbarPolicy="NEVER">
-                     <content>
-                        <HBox fx:id="upperRowContainer" alignment="CENTER" maxHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" spacing="10.0" HBox.hgrow="ALWAYS" />
-                     </content>
-                        <VBox.margin>
-                           <Insets />
-                        </VBox.margin>
-                  </ScrollPane>
-                  <HBox fx:id="offerTrackContainer" prefHeight="180.0" />
-                  <ScrollPane maxHeight="-Infinity" prefHeight="180.0" style="-fx-padding: 0; -fx-background-insets: 0; -fx-border-width: 0;" vbarPolicy="NEVER">
-                     <content>
-                        <HBox fx:id="lowerRowContainer" prefHeight="180.0" spacing="10.0" HBox.hgrow="ALWAYS" />
-                     </content>
-                        <VBox.margin>
-                           <Insets />
-                        </VBox.margin>
-                  </ScrollPane>
+                  <HBox fx:id="upperRowContainer" alignment="CENTER" prefHeight="170.0" spacing="10.0">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="170.0">
+                     <ImageView fx:id="deckImage" fitHeight="170.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                           <Insets right="10.0" />
+                        </HBox.margin>
+                     </ImageView>
+                     <HBox fx:id="offerTrackContainer" alignment="CENTER" prefHeight="170.0" />
+                  </HBox>
+                  <HBox fx:id="lowerRowContainer" alignment="CENTER" prefHeight="170.0" spacing="10.0">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
-               </VBox>
                <BorderPane.margin>
                   <Insets bottom="15.0" top="25.0" />
                </BorderPane.margin>
-            </HBox>
+            </VBox>
          </center>
          <right>
-            <VBox fx:id="playersContainer" prefWidth="275.0" BorderPane.alignment="CENTER" />
+            <VBox alignment="TOP_CENTER" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Players:">
+                     <font>
+                        <Font name="Inknut Antiqua Regular" size="36.0" />
+                     </font>
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                     <effect>
+                        <DropShadow height="6.34" radius="1.9375" width="3.41" />
+                     </effect>
+                  </Label>
+                  <Separator prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="20.0" />
+                     </padding>
+                  </Separator>
+                  <VBox fx:id="playersContainer" />
+               </children>
+               <BorderPane.margin>
+                  <Insets top="25.0" />
+               </BorderPane.margin>
+            </VBox>
          </right>
          <bottom>
-            <HBox prefHeight="380.0" BorderPane.alignment="CENTER">
+            <HBox BorderPane.alignment="CENTER">
                <children>
-                  <VBox alignment="CENTER" prefHeight="380.0" prefWidth="200.0">
+                  <VBox alignment="BOTTOM_LEFT">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER">
                            <children>
                               <ImageView fx:id="foodIcon" fitHeight="45.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label fx:id="myFoodLabel" text="Label">
+                              <Label fx:id="myFoodLabel" style="-fx-padding: 0;" text="1" textFill="WHITE">
                                  <HBox.margin>
-                                    <Insets left="15.0" />
+                                    <Insets left="10.0" />
                                  </HBox.margin>
                                  <font>
-                                    <Font name="Inknut Antiqua Regular" size="16.0" />
+                                    <Font name="Inknut Antiqua Regular" size="30.0" />
                                  </font>
                               </Label>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER">
                            <children>
                               <ImageView fx:id="PPIcon" fitHeight="45.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label fx:id="myPPLabel" text="Label">
+                              <Label fx:id="myPPLabel" style="-fx-padding: 0;" text="2" textFill="WHITE">
                                  <HBox.margin>
-                                    <Insets left="15.0" />
+                                    <Insets left="10.0" />
                                  </HBox.margin>
                                  <font>
-                                    <Font name="Inknut Antiqua Regular" size="16.0" />
+                                    <Font name="Inknut Antiqua Regular" size="30.0" />
                                  </font>
                               </Label>
                            </children>
                         </HBox>
                      </children>
+                     <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox prefHeight="380.0">
+                  <VBox>
                      <children>
-                        <ScrollPane style="-fx-padding: 0; -fx-background-insets: 0; -fx-border-width: 0;" vbarPolicy="NEVER">
+                        <ScrollPane fx:id="buildingsScrollPane" fitToHeight="true" prefHeight="170.0" style="-fx-padding: 0; -fx-background-insets: 0; -fx-border-width: 0; -fx-background-color: transparent;" vbarPolicy="NEVER">
                            <content>
-                              <HBox fx:id="myTribeContainer" prefHeight="180.0" spacing="10.0" />
+                              <HBox fx:id="myBuildingsContainer" prefHeight="170.0" spacing="10.0" />
                            </content>
                            <VBox.margin>
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </ScrollPane>
-                        <ScrollPane style="-fx-padding: 0; -fx-background-insets: 0; -fx-border-width: 0;" vbarPolicy="NEVER">
+                        <ScrollPane fx:id="tribeScrollPane" fitToHeight="true" prefHeight="170.0" style="-fx-padding: 0; -fx-background-insets: 0; -fx-border-width: 0; -fx-background-color: transparent;" vbarPolicy="NEVER">
                            <content>
-                              <HBox fx:id="myBuildingsContainer" prefHeight="180.0" spacing="10.0" />
+                              <HBox fx:id="myTribeContainer" prefHeight="170.0" spacing="10.0" />
                            </content>
                            <VBox.margin>
                               <Insets bottom="10.0" />
@@ -146,7 +170,7 @@
             </HBox>
          </bottom>
          <left>
-            <VBox prefWidth="275.0" BorderPane.alignment="CENTER" />
+            <VBox BorderPane.alignment="CENTER" />
          </left>
       </BorderPane>
       <StackPane fx:id="deckOverlay" prefHeight="150.0" prefWidth="200.0" visible="false">

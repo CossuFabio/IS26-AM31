@@ -141,12 +141,14 @@ public class LocalGameState{
             for (LocalPlayerState p : turnorder)
                 if (!(p == null))
                     return p;
-        }else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE))
+        } else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE)
+                || currentRoundPhase.equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
             for(LocalOfferCard c: board.getOfferTrack())
                 if(!c.isFree())
                     for(LocalPlayerState d: players)
                         if(d.getNickname().equals(c.getPlayer()))
                             return d;
+        }
         return null;
     }
     public List<LocalPlayerState> getTurnorder(){return turnorder;}

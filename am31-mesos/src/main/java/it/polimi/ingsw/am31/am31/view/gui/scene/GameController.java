@@ -14,16 +14,19 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameController extends BaseController {
     @FXML private Label roundLabel;
@@ -43,6 +46,8 @@ public class GameController extends BaseController {
     @FXML private Label myPPLabel;
     @FXML private HBox myTribeContainer;
     @FXML private HBox myBuildingsContainer;
+    @FXML private ScrollPane tribeScrollPane;
+    @FXML private ScrollPane buildingsScrollPane;
     @FXML private ImageView foodIcon;
     @FXML private ImageView PPIcon;
 
@@ -56,8 +61,10 @@ public class GameController extends BaseController {
     private static final String TRACK_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/Track/";
     private static final String TOTEM_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/totem/";
 
-    private double cardWidth = 120; //100;
-    private double cardHeight = 170; //150;
+    private double cardWidth = 120;
+    private double cardHeight = 170;
+
+    private final AtomicBoolean uiRefreshPending = new AtomicBoolean(false);
 
     @FXML
     public void initialize() {
@@ -65,16 +72,52 @@ public class GameController extends BaseController {
         Image ppImg = loadImage(ASSETS_PATH + "pp.png");
         if (foodImg != null) foodIcon.setImage(foodImg);
         if (ppImg != null) PPIcon.setImage(ppImg);
+
+        Platform.runLater(() -> {
+            makeScrollPaneTransparent(tribeScrollPane);
+            makeScrollPaneTransparent(buildingsScrollPane);
+        });
     }
 
+    private void makeScrollPaneTransparent(ScrollPane sp) {
+        sp.getStyleClass().add("transparent-scroll");
+        var viewport = sp.lookup(".viewport");
+        if (viewport != null) viewport.setStyle("-fx-background-color: transparent;");
+    }
 
+    @Subscribe
+    public void onBoardUpdate(BoardUpdateEvent event) {
+        if (uiRefreshPending.compareAndSet(false, true)) {
+            Platform.runLater(() -> {
+                uiRefreshPending.set(false);
+                RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
+                LocalPlayerState acting = localGameState.getPlayerActing();
+                refreshUI(phase, acting);
+            });
+        }
+    }
 
-    private void refreshUI() {
+    @Subscribe
+    public void onGameEnded(GameEndedEvent event) {
+        sceneManager.showEndGame();
+    }
+
+    @Override
+    public void setLocalGameState(LocalGameState localGameState) {
+        super.setLocalGameState(localGameState);
+        Platform.runLater(() -> {
+            RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
+            LocalPlayerState acting = localGameState.getPlayerActing();
+            refreshUI(phase, acting);
+        });
+    }
+
+    private void refreshUI(RoundPhasesEnum phase, LocalPlayerState acting) {
         refreshDeck();
-        refreshTopBar();
-        refreshUpperRow();
-        refreshOfferTrack();
-        refreshLowerRow();
+        refreshTopBar(phase, acting);
+        refreshUpperRow(phase, acting);
+        refreshOfferTrack(phase, acting);
+        refreshLowerRow(phase, acting);
         refreshPlayerPanel();
         refreshMyInfo();
     }
@@ -91,13 +134,14 @@ public class GameController extends BaseController {
         return stream != null ? new Image(stream) : null;
     }
 
-    private void refreshTopBar() {
+    private void refreshTopBar(RoundPhasesEnum phase, LocalPlayerState acting) {
         roundLabel.setText("Round: " + localGameState.getRoundNumber());
         eraLabel.setText("Era: " + localGameState.getEra());
-        LocalPlayerState current = localGameState.getPlayerActing();
-        boolean isMyTurn = current.getNickname().equals(controller.getLocalPlayerUsername());
-        turnLabel.setText(isMyTurn ? "Your Turn" : "Turn: " + current.getNickname());
-        phaseLabel.setText(phaseToString(localGameState.getCurrentRoundPhase()));
+        if (acting != null) {
+            boolean isMyTurn = acting.getNickname().equals(controller.getLocalPlayerUsername());
+            turnLabel.setText(isMyTurn ? "Your Turn" : "Turn: " + acting.getNickname());
+        }
+        phaseLabel.setText(phaseToString(phase));
     }
 
     private String phaseToString(RoundPhasesEnum phase) {
@@ -110,36 +154,33 @@ public class GameController extends BaseController {
         };
     }
 
-    private void refreshUpperRow() {
+    private void refreshUpperRow(RoundPhasesEnum phase, LocalPlayerState acting) {
         upperRowContainer.getChildren().clear();
         for (Card card : localGameState.getBoard().getUpperLine()) {
-            upperRowContainer.getChildren().add(buildCardNode(card, BoardRows.UPPER));
+            upperRowContainer.getChildren().add(buildCardNode(card, BoardRows.UPPER, phase, acting));
         }
     }
 
-    private void refreshOfferTrack() {
-        System.out.println("Offer track size: " + localGameState.getBoard().getOfferTrack().size());
+    private void refreshOfferTrack(RoundPhasesEnum phase, LocalPlayerState acting) {
         offerTrackContainer.getChildren().clear();
         offerTrackContainer.getChildren().add(buildTurnOrderTile());
         for (LocalOfferCard offer : localGameState.getBoard().getOfferTrack()) {
-            offerTrackContainer.getChildren().add(buildOfferTileNode(offer));
+            offerTrackContainer.getChildren().add(buildOfferTileNode(offer, phase, acting));
         }
     }
 
-    private void refreshLowerRow() {
+    private void refreshLowerRow(RoundPhasesEnum phase, LocalPlayerState acting) {
         lowerRowContainer.getChildren().clear();
         for (Card card : localGameState.getBoard().getUnderLine()) {
-            lowerRowContainer.getChildren().add(buildCardNode(card, BoardRows.LOWER));
+            lowerRowContainer.getChildren().add(buildCardNode(card, BoardRows.LOWER, phase, acting));
         }
     }
 
     private void refreshPlayerPanel() {
         playersContainer.getChildren().clear();
         String myNick = controller.getLocalPlayerUsername();
-        for (LocalPlayerState player : localGameState.getPlayers())
-        {
-            if (!player.getNickname().equals(myNick))
-            {
+        for (LocalPlayerState player : localGameState.getPlayers()) {
+            if (!player.getNickname().equals(myNick)) {
                 playersContainer.getChildren().add(buildPlayerCard(player));
             }
         }
@@ -147,46 +188,37 @@ public class GameController extends BaseController {
 
     private void refreshMyInfo() {
         String myNick = controller.getLocalPlayerUsername();
-        System.out.println("refreshMyInfo for: " + myNick);
         LocalPlayerState me = localGameState.getPlayers().stream()
                 .filter(p -> p.getNickname().equals(myNick))
                 .findFirst()
                 .orElse(null);
-        if (me==null) {
-            System.out.println("Player not found!");return;}
-        System.out.println("Tribe size: " + me.getTribe().size());
+        if (me == null) return;
         myFoodLabel.setText(String.valueOf(me.getFood()));
         myPPLabel.setText(String.valueOf(me.getPrestigePoints()));
         myTribeContainer.getChildren().clear();
         for (Card card : me.getTribe()) {
-            myTribeContainer.getChildren().add(buildCardNode(card, null));
+            myTribeContainer.getChildren().add(buildCardNode(card, null, null, null));
         }
-
         myBuildingsContainer.getChildren().clear();
         for (Card card : me.getBuildings()) {
-            myBuildingsContainer.getChildren().add(buildCardNode(card, null));
+            myBuildingsContainer.getChildren().add(buildCardNode(card, null, null, null));
         }
     }
 
-    private StackPane buildCardNode (Card card, BoardRows row) {
+    private StackPane buildCardNode(Card card, BoardRows row, RoundPhasesEnum phase, LocalPlayerState acting) {
         Image img = loadCardImage(card.getCardId());
         ImageView iv = new ImageView(img);
         iv.setFitWidth(cardWidth);
         iv.setFitHeight(cardHeight);
-        //iv.setPreserveRatio(true);
 
         StackPane pane = new StackPane(iv);
-        boolean isMyTurn = localGameState.getPlayerActing().getNickname()
-                .equals(controller.getLocalPlayerUsername());
-        RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
+        boolean isMyTurn = acting != null && acting.getNickname().equals(controller.getLocalPlayerUsername());
         boolean isPickPhase = (phase == RoundPhasesEnum.ACTION_PHASE || phase == RoundPhasesEnum.BONUS_DRAWING_PHASE);
 
-        //if it's my turn and it's pick phase
         if (row != null && isMyTurn && isPickPhase) {
             pane.setStyle("-fx-cursor: hand;");
             pane.setOnMouseClicked(e -> onCardClicked(card, row));
         }
-
         return pane;
     }
 
@@ -196,19 +228,16 @@ public class GameController extends BaseController {
         return img;
     }
 
-    private StackPane buildOfferTileNode (LocalOfferCard offer) {
-        System.out.println("Loading offer: " + TRACK_PATH + offer.getOfferCardId() + ".png -> " + (loadImage(TRACK_PATH + offer.getOfferCardId() + ".png") == null ? "NULL" : "OK"));
+    private StackPane buildOfferTileNode(LocalOfferCard offer, RoundPhasesEnum phase, LocalPlayerState acting) {
         Image img = loadImage(TRACK_PATH + offer.getOfferCardId() + ".png");
         ImageView tileIv = new ImageView(img);
         tileIv.setFitWidth(cardWidth);
         tileIv.setFitHeight(cardHeight);
-        //tileIv.setPreserveRatio(true);
 
         StackPane pane = new StackPane(tileIv);
 
         boolean isFree = offer.getPlayer().equals("CARD_IS_EMPTY");
-        if (!isFree)
-        {
+        if (!isFree) {
             localGameState.getPlayers().stream()
                     .filter(p -> p.getNickname().equals(offer.getPlayer()))
                     .findFirst()
@@ -223,9 +252,8 @@ public class GameController extends BaseController {
                     });
         }
 
-        boolean isMyTurn = localGameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername());
-        if (isMyTurn && localGameState.getCurrentRoundPhase() == RoundPhasesEnum.TOTEM_PLACING && isFree)
-        {
+        boolean isMyTurn = acting != null && acting.getNickname().equals(controller.getLocalPlayerUsername());
+        if (isMyTurn && phase == RoundPhasesEnum.TOTEM_PLACING && isFree) {
             pane.setStyle("-fx-cursor: hand;");
             pane.setOnMouseClicked(e -> onOfferTileClicked(offer));
         }
@@ -233,30 +261,24 @@ public class GameController extends BaseController {
         return pane;
     }
 
-    @Subscribe
-    public void onBoardUpdate(BoardUpdateEvent event) {
-        Platform.runLater(this::refreshUI);
-    }
-
-    @Subscribe
-    public void onGameEnded(GameEndedEvent event) {
-        sceneManager.showEndGame();
-    }
-
     private void onCardClicked(Card card, BoardRows row) {
-        try {
-            controller.sendRequest(new DrawNetworkRequest(card.getCardId(), row));
-        } catch (Exception e) {
-            System.err.println("Draw request failed: " + e.getMessage());
-        }
+        new Thread(() -> {
+            try {
+                controller.sendRequest(new DrawNetworkRequest(card.getCardId(), row));
+            } catch (Exception e) {
+                System.err.println("Draw request failed: " + e.getMessage());
+            }
+        }).start();
     }
 
     private void onOfferTileClicked(LocalOfferCard offer) {
-        try {
-            controller.sendRequest(new TotemNetworkRequest(offer.getOfferCardId()));
-        } catch (Exception e) {
-            System.err.println("Totem request failed: " + e.getMessage());
-        }
+        new Thread(() -> {
+            try {
+                controller.sendRequest(new TotemNetworkRequest(offer.getOfferCardId()));
+            } catch (Exception e) {
+                System.err.println("Totem request failed: " + e.getMessage());
+            }
+        }).start();
     }
 
     private StackPane buildTurnOrderTile() {
@@ -279,7 +301,6 @@ public class GameController extends BaseController {
                 ImageView totemIv = new ImageView(totemImg);
                 totemIv.setFitWidth(20);
                 totemIv.setFitHeight(20);
-
                 StackPane.setMargin(totemIv, new Insets(i * slotHeight, 0, 0, 0));
                 StackPane.setAlignment(totemIv, javafx.geometry.Pos.TOP_CENTER);
                 pane.getChildren().add(totemIv);
@@ -290,45 +311,47 @@ public class GameController extends BaseController {
     }
 
     private VBox buildPlayerCard(LocalPlayerState player) {
-        // Totem + nickname
-        HBox nameRow = new HBox(6);
-        nameRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        HBox nameRow = new HBox(10);
+        nameRow.setAlignment(Pos.CENTER);
 
         Image totemImg = loadImage(TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
         if (totemImg != null) {
             ImageView totemIv = new ImageView(totemImg);
-            totemIv.setFitWidth(24);
-            totemIv.setFitHeight(24);
+            totemIv.setFitWidth(35);
             totemIv.setPreserveRatio(true);
             nameRow.getChildren().add(totemIv);
         }
         Label nameLabel = new Label(player.getNickname());
+        nameLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
         nameRow.getChildren().add(nameLabel);
 
-        // Cibo + PP
-        HBox statsRow = new HBox(10);
-        statsRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        nameRow.setAlignment(Pos.CENTER);
 
         Image foodImg = loadImage(ASSETS_PATH + "food.png");
         if (foodImg != null) {
             ImageView foodIv = new ImageView(foodImg);
-            foodIv.setFitWidth(20);
-            foodIv.setFitHeight(20);
-            statsRow.getChildren().add(foodIv);
+            foodIv.setFitWidth(36);
+            foodIv.setFitHeight(32);
+            nameRow.getChildren().add(foodIv);
         }
-        statsRow.getChildren().add(new Label(String.valueOf(player.getFood())));
+        Label foodLabel = new Label(String.valueOf(player.getFood()));
+        foodLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
+        nameRow.getChildren().add(foodLabel);
 
         Image ppImg = loadImage(ASSETS_PATH + "pp.png");
         if (ppImg != null) {
             ImageView ppIv = new ImageView(ppImg);
-            ppIv.setFitWidth(20);
-            ppIv.setFitHeight(20);
-            statsRow.getChildren().add(ppIv);
+            ppIv.setFitWidth(36);
+            ppIv.setFitHeight(32);
+            nameRow.getChildren().add(ppIv);
         }
-        statsRow.getChildren().add(new Label(String.valueOf(player.getPrestigePoints())));
+        Label ppLabel = new Label(String.valueOf(player.getPrestigePoints()));
+        ppLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
+        nameRow.getChildren().add(ppLabel);
 
         VBox card = new VBox(6);
-        card.getChildren().addAll(nameRow, statsRow);
+        VBox.setMargin(card, new Insets(0, 20, 20, 20));
+        card.getChildren().add(nameRow);
         card.setStyle("-fx-cursor: hand;");
         card.setOnMouseClicked(e -> showTribeViewer(player));
 
@@ -340,12 +363,12 @@ public class GameController extends BaseController {
 
         tribePlayerContainer.getChildren().clear();
         for (Card card : player.getTribe()) {
-            tribePlayerContainer.getChildren().add(buildCardNode(card, null));
+            tribePlayerContainer.getChildren().add(buildCardNode(card, null, null, null));
         }
 
         buildingsPlayerContainer.getChildren().clear();
         for (Card card : player.getBuildings()) {
-            buildingsPlayerContainer.getChildren().add(buildCardNode(card, null));
+            buildingsPlayerContainer.getChildren().add(buildCardNode(card, null, null, null));
         }
 
         deckOverlay.setVisible(true);
@@ -354,11 +377,5 @@ public class GameController extends BaseController {
     @FXML
     private void closeTribeViewer() {
         deckOverlay.setVisible(false);
-    }
-
-    @Override
-    public void setLocalGameState(LocalGameState localGameState) {
-        super.setLocalGameState(localGameState);
-        Platform.runLater(this::refreshUI);
     }
 }

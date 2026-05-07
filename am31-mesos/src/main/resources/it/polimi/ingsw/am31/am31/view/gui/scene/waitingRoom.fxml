@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am31.am31.view.gui.scene.WaitingRoomController">
+   <stylesheets>
+      <URL value="@../assets/style.css" />
+   </stylesheets>
+   <children>
+        <ImageView fx:id="backgroundImage" fitHeight="1080.0" fitWidth="1920.0" opacity="0.8" pickOnBounds="true" preserveRatio="false">
+            <image>
+                <Image url="@../assets/Background.jpg" />
+            </image>
+        </ImageView>
+        <VBox alignment="TOP_CENTER" spacing="15.0">
+            <children>
+                <ImageView fx:id="logoTitle" fitHeight="447.0" fitWidth="993.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../assets/Title.png" />
+                    </image>
+                    <VBox.margin>
+                        <Insets top="250.0" />
+                    </VBox.margin>
+                    <effect>
+                        <DropShadow height="70.0" radius="34.5" spread="0.3" width="70.0" />
+                    </effect>
+                </ImageView>
+            <StackPane>
+               <children>
+                  <VBox fx:id="vbox1" alignment="TOP_CENTER">
+                     <children>
+                        <Button fx:id="gameButton" mnemonicParsing="false" onAction="#handleCreateGame" prefHeight="66.0" prefWidth="500.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Create a game" textAlignment="CENTER">
+                           <font>
+                              <Font name="Inknut Antiqua Regular" size="20.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="50.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="lobbyButton" mnemonicParsing="false" onAction="#handleShowLobbies" prefHeight="66.0" prefWidth="500.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Available lobbies" textAlignment="CENTER">
+                           <font>
+                              <Font name="Inknut Antiqua Regular" size="20.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="vbox2" alignment="TOP_CENTER" visible="false">
+                     <children>
+                        <ComboBox fx:id="playersBox" prefHeight="66.0" prefWidth="500.0" promptText="Choose the number of players" style="-fx-background-color: rgba(255,243,211,1); -fx-font-family: Inknut; -fx-font-size: 24; -fx-text-base-color: #bbbbbb; -fx-cursor: hand;">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <ComboBox fx:id="colorBox" layoutX="720.0" layoutY="10.0" prefHeight="66.0" prefWidth="500.0" promptText="Choose the color of the totem" style="-fx-background-color: rgba(255,243,211,1); -fx-font-family: Inknut Antiqua; -fx-font-size: 24; -fx-text-base-color: #bbbbbb; -fx-cursor: hand;">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="10.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" prefHeight="66.0" prefWidth="250.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Back" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Inknut Antiqua Bold" size="20.0" />
+                                 </font>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                              <Button fx:id="createButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="66.0" prefWidth="250.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Create" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Inknut Antiqua Bold" size="20.0" />
+                                 </font>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <StackPane.margin>
+                        <Insets top="50.0" />
+                     </StackPane.margin>
+                  </VBox>
+                  <VBox fx:id="vbox3" alignment="TOP_CENTER" visible="false" StackPane.alignment="TOP_CENTER">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <children>
+                        <ListView fx:id="lobbyList" maxWidth="-Infinity" prefHeight="200.0" prefWidth="500.0" />
+                        <ComboBox fx:id="joinColorBox" prefWidth="150.0" />
+                        <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="backButton1" mnemonicParsing="false" onAction="#handleBack" prefHeight="66.0" prefWidth="250.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Back" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Inknut Antiqua Bold" size="20.0" />
+                                 </font>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                              <Button fx:id="joinButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleJoin" prefHeight="66.0" prefWidth="250.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Join" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Inknut Antiqua Bold" size="20.0" />
+                                 </font>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                     <StackPane.margin>
+                        <Insets top="50.0" />
+                     </StackPane.margin>
+                  </VBox>
+                  <Label fx:id="waitingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="66.0" prefWidth="500.0" style="-fx-background-color: rgba(255,243,211,1);" textAlignment="CENTER" visible="false">
+                     <font>
+                        <Font name="Inknut Antiqua Regular" size="20.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Label>
+               </children>
+            </StackPane>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

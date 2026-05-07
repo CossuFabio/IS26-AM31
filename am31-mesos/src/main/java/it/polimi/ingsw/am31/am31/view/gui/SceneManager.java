@@ -53,8 +53,12 @@ public class SceneManager {
                 currentController = sceneController;
 
                 stage.setTitle(title);
-                stage.setScene(new Scene(root));
-                stage.show();
+                if (stage.getScene() == null) {
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                } else {
+                    stage.getScene().setRoot(root);
+                }
 
             } catch (IOException e) {
                 System.err.println("Failed to load the FXML file " + path);

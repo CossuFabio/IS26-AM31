@@ -105,6 +105,6 @@ public class GameObserversSet implements ObserverHandler{
 
     @Override
     public void onGameEventResolveUpdate(EventCard c){
-        observers.forEach(o -> onGameEventResolveUpdate(c));
+        observers.forEach(o -> o.onGameEventResolveUpdate(c));
     }
 }

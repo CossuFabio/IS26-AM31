@@ -1,0 +1,9 @@
+.combo-box-popup .list-cell {
+    -fx-background-color: rgba(255,243,211,1);
+    -fx-font-family: "Inknut Antiqua";
+    -fx-font-size: 16;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: rgba(200,180,150,1);
+}

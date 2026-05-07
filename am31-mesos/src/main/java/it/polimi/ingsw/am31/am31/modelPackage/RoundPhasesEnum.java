@@ -9,5 +9,4 @@ public enum RoundPhasesEnum {
     BONUS_DRAWING_PHASE,
     END_TURN,
     GAME_ENDED;
-
 }
