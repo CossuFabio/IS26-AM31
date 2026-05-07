@@ -14,6 +14,7 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -55,8 +56,8 @@ public class GameController extends BaseController {
     private static final String TRACK_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/Track/";
     private static final String TOTEM_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/totem/";
 
-    private static final double CARD_WIDTH = 150;
-    private static final double CARD_HEIGHT = 211;
+    private double cardWidth = 120; //100;
+    private double cardHeight = 170; //150;
 
     @FXML
     public void initialize() {
@@ -64,9 +65,9 @@ public class GameController extends BaseController {
         Image ppImg = loadImage(ASSETS_PATH + "pp.png");
         if (foodImg != null) foodIcon.setImage(foodImg);
         if (ppImg != null) PPIcon.setImage(ppImg);
-        deckImage.setFitWidth(CARD_WIDTH);
-        deckImage.setFitHeight(CARD_HEIGHT);
     }
+
+
 
     private void refreshUI() {
         refreshDeck();
@@ -170,9 +171,9 @@ public class GameController extends BaseController {
     private StackPane buildCardNode (Card card, BoardRows row) {
         Image img = loadCardImage(card.getCardId());
         ImageView iv = new ImageView(img);
-        iv.setFitWidth(CARD_WIDTH);
-        iv.setFitHeight(CARD_HEIGHT);
-        iv.setPreserveRatio(true);
+        iv.setFitWidth(cardWidth);
+        iv.setFitHeight(cardHeight);
+        //iv.setPreserveRatio(true);
 
         StackPane pane = new StackPane(iv);
         boolean isMyTurn = localGameState.getPlayerActing().getNickname()
@@ -199,8 +200,8 @@ public class GameController extends BaseController {
         System.out.println("Loading offer: " + TRACK_PATH + offer.getOfferCardId() + ".png -> " + (loadImage(TRACK_PATH + offer.getOfferCardId() + ".png") == null ? "NULL" : "OK"));
         Image img = loadImage(TRACK_PATH + offer.getOfferCardId() + ".png");
         ImageView tileIv = new ImageView(img);
-        tileIv.setFitWidth(CARD_WIDTH);
-        tileIv.setFitHeight(CARD_HEIGHT);
+        tileIv.setFitWidth(cardWidth);
+        tileIv.setFitHeight(cardHeight);
         //tileIv.setPreserveRatio(true);
 
         StackPane pane = new StackPane(tileIv);
@@ -261,14 +262,14 @@ public class GameController extends BaseController {
     private StackPane buildTurnOrderTile() {
         Image img = loadImage(TRACK_PATH + "turn.png");
         ImageView tileIv = new ImageView(img);
-        tileIv.setFitWidth(CARD_WIDTH);
-        tileIv.setFitHeight(CARD_HEIGHT);
+        tileIv.setFitWidth(cardWidth);
+        tileIv.setFitHeight(cardHeight);
         tileIv.setPreserveRatio(true);
 
         StackPane pane = new StackPane(tileIv);
 
         List<LocalPlayerState> turnOrder = localGameState.getTurnorder();
-        double slotHeight = CARD_HEIGHT / 5;
+        double slotHeight = cardHeight / 5;
 
         for (int i = 0; i < turnOrder.size(); i++) {
             LocalPlayerState player = turnOrder.get(i);
