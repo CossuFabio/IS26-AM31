@@ -8,12 +8,12 @@ import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
 public class NewServerConnectionRequest extends NetworkRequest {
 
-    private String requestedUsername;
-
+    private final String requestedUsername;
+    public static final String METHOD = RequestMethodsConstants.METHOD_NEW_CONNECTION;
 
     @JsonCreator
     public NewServerConnectionRequest(@JsonProperty("requestedUsername") String requestedUsername){
-        super(RequestMethodsConstants.METHOD_NEW_CONNECTION);
+        super(METHOD);
         this.requestedUsername = requestedUsername;
     }
 

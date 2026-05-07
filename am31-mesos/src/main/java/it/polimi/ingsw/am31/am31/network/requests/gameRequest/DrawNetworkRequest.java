@@ -8,6 +8,7 @@ import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
 public class DrawNetworkRequest extends NetworkRequest {
 
+    public static final String METHOD = RequestMethodsConstants.METHOD_DRAW;
 
     private final String cardID;
     private final BoardRows boardRow;
@@ -16,7 +17,7 @@ public class DrawNetworkRequest extends NetworkRequest {
     public DrawNetworkRequest(
             @JsonProperty("cardID") String cardID,
             @JsonProperty("boardRows")BoardRows row){
-        super(RequestMethodsConstants.METHOD_DRAW);
+        super(METHOD);
         this.cardID = cardID;
         this.boardRow = row;
     }
