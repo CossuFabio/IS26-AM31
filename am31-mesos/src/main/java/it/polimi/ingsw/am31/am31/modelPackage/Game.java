@@ -26,8 +26,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import java.io.IOException;
 import java.util.*;
 
+import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.toCollection;
 
 public class Game implements GameObservable {
 
@@ -195,7 +197,7 @@ public class Game implements GameObservable {
                 comparingInt(EventCard::getPriority)
         );
         CountVisitor visitor = new CountVisitor();
-        ArrayList<Card> templine = board.getUnderLine();
+        ArrayList<Card> templine = new ArrayList<>(board.getUnderLine());
 
         int tempevent=0;
         while(!templine.isEmpty()) {

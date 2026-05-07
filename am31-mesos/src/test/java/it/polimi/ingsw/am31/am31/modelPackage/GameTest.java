@@ -1,7 +1,12 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.InvalidPlayersNumberException;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
@@ -9,10 +14,37 @@ import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.Js
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 
+import static java.util.Comparator.comparingInt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameTest {
+
+    @Test
+    void TestShouldResolveEvents() throws IOException {
+        List<OfferCard> track = new ArrayList<OfferCard>();
+        track.add(new OfferCard("A", 2, 1, 1, 2));
+        Board board = new Board(3, track);
+
+        PriorityQueue<EventCard> eventQueue = new PriorityQueue<>(
+                comparingInt(EventCard::getPriority)
+        );
+        CountVisitor visitor = new CountVisitor();
+        ArrayList<Card> templine = new ArrayList<>(board.getUnderLine());
+
+        int tempevent = 0;
+        while (!templine.isEmpty()) {
+            templine.getFirst().acceptVisit(visitor);
+            if (visitor.getEvent() > tempevent) {
+                eventQueue.add((EventCard) templine.getFirst());  //Safe explicit cast to EventCard
+                tempevent = visitor.getEvent();
+            }
+            templine.removeFirst();
+        }
+    }
 
     @Test
     void TestShouldAddPlayer() {

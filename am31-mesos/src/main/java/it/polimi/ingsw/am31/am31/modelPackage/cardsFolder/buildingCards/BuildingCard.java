@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards;
 
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InsufficientFoodException;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
@@ -53,13 +54,17 @@ public class BuildingCard extends Card implements IPickable {
     //Maybe remove the effect string and add an identifier field in the constructor
     @Override
     public String toString(){
-        return "BuildingCard - Era: " + era + " - Prestige points: " + prestigePointsGained + " - Cost: " + cost
-                + " - Effect: " + effect;
+        return "BuildingCard - Era: " + era + " - Prestige points: " + prestigePointsGained + " - Cost: " + cost;
     }
 
     @Override
     public void canPick(Player player) throws InsufficientFoodException {
         if(! (player.getFood() + player.getBuildersDiscount() >= this.cost)) throw new InsufficientFoodException(player.getFood(), player.getBuildersDiscount(), this.cost);
+    }
+
+    @Override
+    public void acceptVisit(TribeVisitor visitor){
+        visitor.visit(this);
     }
 
 

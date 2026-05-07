@@ -17,28 +17,6 @@ public class TUIConfig {
     public static void printCard(Card c) {
         String cardId = c.getCardId();
         if (cardId == null) return;
-
-        if (cardId.startsWith("b")) { // Builders
-            System.out.println(ansi().fg(Ansi.Color.MAGENTA).a(cardId+" "+c).reset());
-            return;
-        } else if (cardId.startsWith("s")) { // Shamans
-            System.out.println(ansi().fg(Ansi.Color.CYAN).a(cardId+" "+c).reset());
-            return;
-        } else if (cardId.startsWith("h")) { // Hunters
-            System.out.println(ansi().fg(Ansi.Color.RED).a(cardId+" "+c).reset());
-            return;
-        } else if (cardId.startsWith("i")) { //inventors
-            System.out.println(ansi().fg(BLUE).a(cardId+" "+c).reset());
-            return;
-        } else if (cardId.startsWith("a")) { //artist
-            System.out.println(ansi().fg(YELLOW).a(cardId+" "+c).reset());
-            return;
-        }
-        else if (cardId.startsWith("f")){ //farmers
-            System.out.println(ansi().fg(GREEN).a(cardId+" "+c).reset());
-            return;
-        }
-        System.out.println((cardId)+" "+c);
-        return ;
+       c.acceptVisit(new TuiPrintVisitor());
     }
 }

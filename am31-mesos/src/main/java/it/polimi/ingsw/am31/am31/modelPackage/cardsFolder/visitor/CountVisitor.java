@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor;
 
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 
@@ -54,6 +55,8 @@ public class CountVisitor implements TribeVisitor{
     public void visit(EventCard event) {
         this.Event++;
     }
+
+    public void visit(BuildingCard building){}
 
     public int getHunters(){return Hcount; }
     public int getFarmers(){return Fcount; }

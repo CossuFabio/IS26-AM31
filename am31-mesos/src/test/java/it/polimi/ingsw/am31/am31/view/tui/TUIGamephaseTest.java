@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.Building
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectIdsConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectsCatalog;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.SustainEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferCardMessage;
@@ -34,6 +35,7 @@ public class TUIGamephaseTest {
         Card h = new Hunter("h1",1,2,true);
         Card f = new Farmer("f1",2,2,3);
         Card i = new Inventor("i1",2,2,IconEnum.BREAD);
+        Card e = new SustainEventCard("e1",1,2);
         BuildingCard bd = new BuildingCard("bd1",1, 2, 3,effects.getEffect(EffectIdsConstants.DOUBLE_BUILDER_ENDGAME));
         ArrayList<LocalOfferCard> track = new ArrayList<>();
         LocalOfferCard a = new LocalOfferCard(new OfferCard("A",1,0,0,2), new OfferCardMessage("A", null,  true));
@@ -41,9 +43,9 @@ public class TUIGamephaseTest {
         track.add(a);
         track.add(b);
 
-        cards.add(i);cards.add(h);cards.add(f);
+        cards.add(i);cards.add(h);cards.add(f);cards.add(bd);
         state.setCardLine(cards, BoardRows.LOWER);
-        cards.add(i);cards.add(bd);
+        cards.add(i);cards.add(e);
         state.setCardLine(cards, BoardRows.UPPER);
         state.setEra(1);
         state.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);

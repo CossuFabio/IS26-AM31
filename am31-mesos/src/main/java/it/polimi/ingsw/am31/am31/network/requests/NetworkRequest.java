@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.network.requests;
 
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
@@ -19,7 +20,8 @@ import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetw
         @JsonSubTypes.Type(value = NewGameNetworkRequest.class, name =  RequestMethodsConstants.METHOD_NEW_GAME),
         @JsonSubTypes.Type(value = ShowLobbyNetworkRequest.class, name = RequestMethodsConstants.METHOD_SHOW_LOBBIES),
         @JsonSubTypes.Type(value = PingNetworkRequest.class, name = RequestMethodsConstants.PING),
-        @JsonSubTypes.Type(value = NewServerConnectionRequest.class, name = RequestMethodsConstants.METHOD_NEW_CONNECTION)
+        @JsonSubTypes.Type(value = NewServerConnectionRequest.class, name = RequestMethodsConstants.METHOD_NEW_CONNECTION),
+        @JsonSubTypes.Type(value = SkipDrawNetworkRequest.class, name = RequestMethodsConstants.METHOD_SKIP_DRAW)
 })
 public abstract class NetworkRequest{
 

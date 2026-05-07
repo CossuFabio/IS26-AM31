@@ -231,7 +231,9 @@ public class TUIGamePhase implements TUIPhase{
                     }
                     case 1: {//row choice
                         if(!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
-                        {System.out.println("Not the time for this");choosingCard = 0;}
+                        {System.out.println("Not the time for this");
+                            choosingCard = 0;
+                            break;}
                         if(!(Integer.parseInt(input) == 1 || Integer.parseInt(input) == 2)) {
                             System.out.println("\nInvalid input\n");
                         }
@@ -243,8 +245,10 @@ public class TUIGamePhase implements TUIPhase{
                     }
                     //break;
                     case 2: {//card or skip choice
-                        if(!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
-                        {System.out.println("Not the time for this");choosingCard = 0;}
+                        if(!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)) {
+                            System.out.println("Not the time for this");
+                            choosingCard = 0;
+                            break;}
                         int temp = Integer.parseInt(boardRowRequest);
                         if (temp == 1) {
                             if (!input.equals("skip")) {
@@ -274,9 +278,9 @@ public class TUIGamePhase implements TUIPhase{
                                 System.out.println("Failed to send request");
                                 System.out.println("Failed to send request");
                             }
-                            choosingCard = 0;
-                            currentstep = TuiGameStep.MAIN;
                         }
+                        choosingCard = 0;
+                        currentstep = TuiGameStep.MAIN;
                         break;
                     }
                 }
@@ -293,7 +297,9 @@ public class TUIGamePhase implements TUIPhase{
                 }
                 currentstep =  TuiGameStep.MAIN;
             break;}
-            default:System.out.println("\nInvalid input\n"); break;
+            default:
+                System.out.println("\nInvalid input\n");
+                break;
         }
         TUI.printScreen();
     }
