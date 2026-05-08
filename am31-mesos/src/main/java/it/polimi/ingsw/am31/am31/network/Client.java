@@ -21,7 +21,7 @@ public class Client {
         String connectionType = "1"; //args[0];
         String viewType = "2"; //args[1];
 
-        //library to display colors, idk if this works, idk if this goes here
+        //library to display colors idk if this goes here
         AnsiConsole.systemInstall();
 
         //Wiring all necessary objects

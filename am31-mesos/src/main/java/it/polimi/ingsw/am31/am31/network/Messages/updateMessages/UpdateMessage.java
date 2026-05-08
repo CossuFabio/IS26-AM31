@@ -29,6 +29,7 @@ import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
         @JsonSubTypes.Type(value = GameCrashUpdate.class,       name = UpdateMethodsConstants.GAME_CRASHED_METHOD),
         @JsonSubTypes.Type(value = SuccessRegistrationUpdate.class,       name = UpdateMethodsConstants.USERNAME_ACCEPTED_METHOD),
         @JsonSubTypes.Type(value = GameStartUpdate.class,       name = UpdateMethodsConstants.GAME_START_UPDATE),
+        @JsonSubTypes.Type(value = GameEventResolveUpdate.class,   name = UpdateMethodsConstants.GAME_EVENT_RESOLVE_UPDATE),
 })
 
 

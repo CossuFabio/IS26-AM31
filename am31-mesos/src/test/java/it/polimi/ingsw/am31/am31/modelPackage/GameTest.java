@@ -1,16 +1,21 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
-import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.InvalidPlayersNumberException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.*;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Hunter;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonTribeCardsSupplier;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -19,35 +24,44 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import static java.util.Comparator.comparingInt;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
-
-    @Test
-    void TestShouldResolveEvents() throws IOException {
-        List<OfferCard> track = new ArrayList<OfferCard>();
-        track.add(new OfferCard("A", 2, 1, 1, 2));
-        Board board = new Board(3, track);
-
-        PriorityQueue<EventCard> eventQueue = new PriorityQueue<>(
-                comparingInt(EventCard::getPriority)
-        );
-        CountVisitor visitor = new CountVisitor();
-        ArrayList<Card> templine = new ArrayList<>(board.getUnderLine());
-
-        int tempevent = 0;
-        while (!templine.isEmpty()) {
-            templine.getFirst().acceptVisit(visitor);
-            if (visitor.getEvent() > tempevent) {
-                eventQueue.add((EventCard) templine.getFirst());  //Safe explicit cast to EventCard
-                tempevent = visitor.getEvent();
-            }
-            templine.removeFirst();
-        }
+    private Game game;
+    private Player player;
+    @BeforeEach
+    void setUp() throws Exception {
+        game = new Game(2, new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()));
+        BuildingCard bd = new BuildingCard("dummy", 1,1,1,null);
+        CharacterCard h = new Hunter("h1",1,2,true);
+        player = new Player("dummy", Color.BLUE);
+        game.getBoard().addUpper(bd);
+        game.getBoard().addUpper(h);
+        game.getBoard().addUpper(h);
+        game.getBoard().addLower(bd);
+        game.getBoard().addLower(h);
+        game.getBoard().addLower(h);
+        game.addPlayer(player);
     }
 
     @Test
-    void TestShouldAddPlayer() {
+    void TestShouldResolveEvents() throws IOException {
+    }
+
+    @Test
+    void TestShouldAddPlayer() throws GameAlreadyStartedException, TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {
+        //test exceptions
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        assertThrows(GameAlreadyStartedException.class, () -> game.addPlayer(player));
+        game.setCurrentRoundPhase(RoundPhasesEnum.GAME_STARTING);
+        assertThrows(UsernameAlreadyTakenException.class, () -> game.addPlayer(player));
+        assertThrows(PlayerColorAlreadyTakenException.class, () -> game.addPlayer(new Player ("dummy2",Color.BLUE)));
+        assertEquals(1,game.getPlayersList().size());
+        //check if the players size increases
+        game.addPlayer(new Player("dummy3",Color.RED));
+        assertEquals(2,game.getPlayersList().size());
+        assertThrows(TooManyPlayersException.class, () -> game.addPlayer(new Player("dummy4",Color.WHITE)));
+        
     }
 
     @Test
@@ -73,15 +87,15 @@ class GameTest {
     @Test
     void TestShouldEndRound() {
     }
-    //TODO RUN this
     @Test
     void TestShouldChangeEra() throws IOException, InvalidPlayersNumberException {
-        Game game = new Game(3, new GameResources(
-                new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()
-        ));
-
-        game.getBoard().addUpper(new BuildingCard("dummy", 1,1,1,null));
-        game.getBoard().addLower(new BuildingCard("dummy", 2,2,2,null));
+//        Game game = new Game(3, new GameResources(
+//                new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()
+//        ));
+//
+//        game.getBoard().addUpper(new BuildingCard("dummy", 1,1,1,null));
+//        game.getBoard().addLower(new BuildingCard("dummy", 2,2,2,null));
+        //added to beforeach
         assertEquals(2, game.getBoard().getUnderBLine().getFirst().getEra());
         assertEquals(1, game.getBoard().getUpperBLine().getFirst().getEra()); //we check if the cards were added
         //change era should move the lower and delete the lower card
@@ -109,5 +123,101 @@ class GameTest {
 
     @Test
     void TestShouldGetBoard() {
+    }
+
+    @Test
+    void TestsetObserverHandler() {
+    }
+
+    @Test
+    void TestaddPlayer() {
+    }
+
+    @Test
+    void TestremovePlayer() {
+    }
+
+    @Test
+    void TestgameStart() {
+    }
+
+    @Test
+    void TestgameEnd() {
+    }
+
+    @Test
+    void TestendRound() {
+    }
+
+    @Test
+    void TestchangeEra() {
+    }
+
+    @Test
+    void TesttotemChoiceAction() {
+    }
+
+    @Test
+    void TestplayerDrawFromUpper() {
+    }
+
+    @Test
+    void TestplayerDrawFromLower() {
+    }
+
+    @Test
+    void TestisGameFinished() {
+    }
+
+    @Test
+    void TestisTotemPlacingPhaseFinished() {
+    }
+
+    @Test
+    void TestisDrawPhaseFinished() {
+    }
+
+    @Test
+    void TestisGameInStartingPhase() {
+    }
+
+    @Test
+    void TestisBonusDrawPhaseFinished() {
+    }
+
+    @Test
+    void TesthasCurrentPlayerFinishedDrawing() {
+    }
+
+    @Test
+    void TestsetUpPlayerActing() {
+    }
+
+    @Test
+    void TestsetUpDrawingPhase() {
+    }
+
+    @Test
+    void TestsetCurrentRoundPhase() {
+    }
+
+    @Test
+    void TestsetNextPlayerDrawing() {
+    }
+
+    @Test
+    void TestsetUpBonusDrawingPhase() {
+    }
+
+    @Test
+    void TestsetUpTotemPlacingPhase() {
+    }
+
+    @Test
+    void TestplayerSkipUpper() {
+    }
+
+    @Test
+    void TestplayerSkipLower() {
     }
 }

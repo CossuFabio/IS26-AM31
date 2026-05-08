@@ -259,7 +259,8 @@ public class Game implements GameObservable {
         this.era++;
         try{
             while(buildingDeck.getNextCardEra()==era) {
-                board.addUpper( buildingDeck.draw());
+                //explicit cast, to be sure they are put in the right line
+                board.addUpper((BuildingCard) buildingDeck.draw());
             }
         }
         catch(EmptyDeckException e){
