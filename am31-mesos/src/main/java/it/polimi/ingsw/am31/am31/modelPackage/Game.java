@@ -26,10 +26,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import java.io.IOException;
 import java.util.*;
 
-import static java.util.Arrays.stream;
+
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingInt;
-import static java.util.stream.Collectors.toCollection;
+
 
 public class Game implements GameObservable {
 
@@ -405,6 +405,11 @@ public class Game implements GameObservable {
         playerActing.editFood(offerCardChosen.getFood());
 
     }
+    // for test
+    public void setRound(int round)
+        {
+        this.roundNumber = round;
+        }
 
     public void setUpDrawingPhase() throws IncorrectMethodCallException{
 

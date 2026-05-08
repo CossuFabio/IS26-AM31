@@ -70,6 +70,10 @@ class GameTest {
 
     @Test
     void TestShouldRemovePlayer() {
+        assertEquals(game.getPlayersList().size(),1);
+        assertEquals(game.getPlayersList().getFirst(),player);
+        game.removePlayer(player);
+        assertEquals(game.getPlayersList().size(),0);
     }
 
     @Test
@@ -88,7 +92,30 @@ class GameTest {
     }
 
     @Test
-    void TestShouldGameEnd() {
+    void TestShouldGameEnd() throws Exception {
+        assertThrows(IncorrectMethodCallException.class, game::gameEnd);
+        player.editPrestigePoints(10);
+        player1.editPrestigePoints(5);
+        game.addPlayer(player1);
+        game.setCurrentRoundPhase(RoundPhasesEnum.END_TURN);
+        game.setRound(GameConstants.ROUNDS_NUMBER);
+        List<Player> result = game.gameEnd();
+        //player, with 10 points, should win
+        assertEquals(result.getFirst(),player);
+        player.editFood(5);
+        player1.editPrestigePoints(5);
+        result = game.gameEnd();
+        //player, with 10 points and more food, wins
+        assertEquals(player.getPrestigePoints(),player1.getPrestigePoints());
+        assertEquals(result.getFirst(),player);
+        player1.editFood(5);
+        result = game.gameEnd();
+        //they should both win
+        assertEquals(player.getFood(),player1.getFood());
+        assertEquals(2, result.size());
+        assertEquals(result.getFirst(),player1);
+        assertEquals(result.get(1),player);
+
     }
 
     @Test
@@ -153,14 +180,6 @@ class GameTest {
     }
 
     @Test
-    void TestgameStart() {
-    }
-
-    @Test
-    void TestgameEnd() {
-    }
-
-    @Test
     void TestendRound() {
     }
 
@@ -182,6 +201,13 @@ class GameTest {
 
     @Test
     void TestisGameFinished() {
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        assertFalse(game.isGameFinished());
+        game.setCurrentRoundPhase(RoundPhasesEnum.END_TURN);
+        assertFalse(game.isGameFinished());
+        //conditons for game finisha are round and round phase
+        game.setRound(GameConstants.ROUNDS_NUMBER);
+        assertTrue(game.isGameFinished());
     }
 
     @Test
