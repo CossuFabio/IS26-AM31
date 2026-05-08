@@ -13,11 +13,15 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -78,7 +82,6 @@ public class WaitingRoomController extends BaseController {
             }
         });
 
-        // Cell factory for lobby list
         lobbyList.setCellFactory(lv -> new javafx.scene.control.ListCell<LobbyDescriptor>() {
             @Override
             protected void updateItem(LobbyDescriptor lobby, boolean empty) {
@@ -86,29 +89,70 @@ public class WaitingRoomController extends BaseController {
                 if (empty || lobby == null) {
                     setGraphic(null);
                     setText(null);
+                    setStyle("-fx-background-color: transparent;");
                 } else {
-                    javafx.scene.layout.HBox cell = new javafx.scene.layout.HBox(20);
-                    cell.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-padding: 10;");
-                    javafx.scene.control.Label id = new javafx.scene.control.Label("Lobby #" + lobby.getId());
-                    javafx.scene.control.Label players = new javafx.scene.control.Label(
-                            "Players: " + (lobby.getnPlayers() - lobby.getFreeSlots()) + "/" + lobby.getnPlayers()
-                    );
+                    boolean isSelected = lobbyList.getSelectionModel().getSelectedItem() != null &&
+                            lobbyList.getSelectionModel().getSelectedItem().getId() == lobby.getId();
+
+                    String border = isSelected
+                            ? "black;"
+                            : "rgba(255,243,211,1);";
+
+                    HBox cell = new HBox(20);
+                    cell.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                    cell.setStyle("-fx-border-color: " + border + " -fx-background-color: rgba(255,243,211,1); -fx-padding: 10;");
+                    cell.setCursor(Cursor.HAND);
+
+                    Label id = new Label("Lobby #" + lobby.getId());
+                    Label players = new Label("Players: " + (lobby.getnPlayers() - lobby.getFreeSlots()) + "/" + lobby.getnPlayers());
                     id.setStyle("-fx-font-family: 'Inknut Antiqua'; -fx-font-size: 14; -fx-text-fill: #3d1f00;");
                     players.setStyle("-fx-font-family: 'Inknut Antiqua'; -fx-font-size: 14; -fx-text-fill: #3d1f00;");
-                    cell.getChildren().addAll(id, players);
+
+                    ComboBox<Color> colorBox = new ComboBox<>();
+                    colorBox.setId("lobbyColorBox");
+                    colorBox.getItems().addAll(lobby.getAvailableColors());
+                    colorBox.setPromptText("Color");
+                    colorBox.setStyle("-fx-font-family: 'Inknut Antiqua'; -fx-font-size: 14;");
+
+                    if (isSelected) {
+                        cell.setEffect(new DropShadow(8, 0, 2, javafx.scene.paint.Color.rgb(61, 31, 0, 0.4)));
+                    } else {
+                        cell.setEffect(null);
+                    }
+
+                    // aggiorna joinColorBox solo quando l'utente sceglie il colore
+                    colorBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+                        if (newVal != null) {
+                            joinColorBox.setValue(newVal);
+                        }
+                    });
+
+                    // click sulla cella seleziona la lobby e resetta il colore
+                    cell.setOnMouseClicked(e -> {
+                        lobbyList.getSelectionModel().select(lobby);
+                        joinColorBox.setValue(null);
+                        colorBox.setValue(null);
+                        lobbyList.refresh();
+                    });
+
+                    Region space1 = new Region();
+                    Region space2 = new Region();
+                    HBox.setHgrow(space1, javafx.scene.layout.Priority.ALWAYS);
+                    HBox.setHgrow(space2, javafx.scene.layout.Priority.ALWAYS);
+
+                    cell.getChildren().addAll(id, space1, players, space2, colorBox);
                     setGraphic(cell);
                     setStyle("-fx-background-color: transparent;");
                 }
             }
         });
 
+// ridisegna le celle quando cambia la selezione
         lobbyList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                joinColorBox.getItems().clear();
-                joinColorBox.getItems().addAll(newVal.getAvailableColors());
-            }
+            lobbyList.refresh();
         });
     }
+
 
     @FXML
     private void handleCreateGame() {
@@ -135,6 +179,10 @@ public class WaitingRoomController extends BaseController {
         vbox2.setVisible(false);
         vbox3.setVisible(false);
         vbox1.setVisible(true);
+
+        joinColorBox.setValue(null);
+        lobbyList.getSelectionModel().clearSelection();
+        lobbyList.refresh();
     }
 
     @FXML

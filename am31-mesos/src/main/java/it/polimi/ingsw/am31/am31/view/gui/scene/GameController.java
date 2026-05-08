@@ -11,18 +11,24 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 import java.io.InputStream;
 import java.util.List;
@@ -56,6 +62,9 @@ public class GameController extends BaseController {
     @FXML private HBox tribePlayerContainer;
     @FXML private HBox buildingsPlayerContainer;
 
+    @FXML private VBox rightPanel;
+    @FXML private VBox leftSpacer;
+
     private static final String CARDS_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/cards/";
     private static final String ASSETS_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/";
     private static final String TRACK_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/Track/";
@@ -72,6 +81,8 @@ public class GameController extends BaseController {
         Image ppImg = loadImage(ASSETS_PATH + "pp.png");
         if (foodImg != null) foodIcon.setImage(foodImg);
         if (ppImg != null) PPIcon.setImage(ppImg);
+
+        leftSpacer.prefWidthProperty().bind(rightPanel.widthProperty());
 
         Platform.runLater(() -> {
             makeScrollPaneTransparent(tribeScrollPane);
@@ -211,11 +222,52 @@ public class GameController extends BaseController {
         iv.setFitWidth(cardWidth);
         iv.setFitHeight(cardHeight);
 
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(3);
+        shadow.setOffsetY(3);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.5));
+
+        DropShadow shadowHover = new DropShadow();
+        shadowHover.setRadius(20);
+        shadowHover.setOffsetX(6);
+        shadowHover.setOffsetY(6);
+        shadowHover.setColor(Color.rgb(0, 0, 0, 0.7));
+
+        iv.setEffect(shadow);
+
         StackPane pane = new StackPane(iv);
+
         boolean isMyTurn = acting != null && acting.getNickname().equals(controller.getLocalPlayerUsername());
         boolean isPickPhase = (phase == RoundPhasesEnum.ACTION_PHASE || phase == RoundPhasesEnum.BONUS_DRAWING_PHASE);
 
         if (row != null && isMyTurn && isPickPhase) {
+
+            pane.setOnMouseEntered(e -> {
+                ScaleTransition scale = new ScaleTransition(Duration.millis(150), pane);
+                scale.setToX(1.08);
+                scale.setToY(1.08);
+
+                TranslateTransition move = new TranslateTransition(Duration.millis(150), pane);
+                move.setToY(-4);
+
+                iv.setEffect(shadowHover);
+
+                new ParallelTransition(scale, move).play();
+            });
+
+            pane.setOnMouseExited(e -> {
+                ScaleTransition scale = new ScaleTransition(Duration.millis(150), pane);
+                scale.setToX(1.0);
+                scale.setToY(1.0);
+
+                TranslateTransition move = new TranslateTransition(Duration.millis(150), pane);
+                move.setToY(0);
+
+                iv.setEffect(shadow);
+
+                new ParallelTransition(scale, move).play();
+            });
             pane.setStyle("-fx-cursor: hand;");
             pane.setOnMouseClicked(e -> onCardClicked(card, row));
         }
