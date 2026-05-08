@@ -14,7 +14,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.Js
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonTribeCardsSupplier;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFactory;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
@@ -121,9 +120,8 @@ public class GamesManager {
             gamePut = true;
 
             NetworkObserver newPlayerObs = new NetworkObserver(view, specReq.getPlayerID());
-            JoinGameNetworkRequest fakeJoinReq = new JoinGameNetworkRequest(specReq.getColor(), id);
-            fakeJoinReq.setPlayerID(specReq.getPlayerID());
-            gameController.handleAddPlayerMessage(fakeJoinReq, newPlayerObs);
+
+            gameController.addPlayer(specReq.getPlayerID(), specReq.getColor(), newPlayerObs);
             //SOSEW
             System.out.println("Created game: " + specReq.getPlayerID());
             success = true;
@@ -150,9 +148,9 @@ public class GamesManager {
             //No validity check required
             DrawNetworkRequest specReq = (DrawNetworkRequest) req;
 
-            String requestorId = req.getPlayerID();
+            String requestorId = specReq.getPlayerID();
             GameController gameController = findGameFromPlayerUsername(requestorId);
-            gameController.handleDraw(specReq);
+            gameController.drawCard(requestorId, specReq.getCardID(), specReq.getBoardRows());
 
 
         }catch(NetworkException e){
@@ -184,7 +182,7 @@ public class GamesManager {
         // - check if a player is not in a game and get success, then the thread is preempted
         // - another request from the same nickname arrives and gets success
         // - now both request can register with the same nickname via playerToGame.put.
-        // This happend because the first check and the but are not atomic operations. Using putIfAbsent makes
+        // This happend because the first check and the second are not atomic operations. Using putIfAbsent makes
         // this operation atomic and saves us.
         // The prior insert is then correct if the insert of the player throws an error via playertogame.remove in catch
         // blocks.
@@ -195,7 +193,8 @@ public class GamesManager {
         }
 
         try {
-            gameToJoin.handleAddPlayerMessage(joinReq, new NetworkObserver(view, joinReq.getPlayerID()));
+
+            gameToJoin.addPlayer(joinReq.getPlayerID(), joinReq.getColor(), new NetworkObserver(view, joinReq.getPlayerID()));
         } catch (GameException e) {
             playerToGame.remove(joinReq.getPlayerID(), gameToJoin);  // rollback and correct
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
@@ -222,7 +221,7 @@ public class GamesManager {
 
             TotemNetworkRequest totemNetworkRequest = (TotemNetworkRequest) req;
             GameController controller = findGameFromPlayerUsername(req.getPlayerID());
-            controller.handleTotemAction(totemNetworkRequest);
+            controller.placeTotem(totemNetworkRequest.getPlayerID(), totemNetworkRequest.getOfferTrackID());
 
         }catch(NetworkException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
@@ -240,7 +239,7 @@ public class GamesManager {
         try{
             SkipDrawNetworkRequest skipReq = (SkipDrawNetworkRequest) req;
             GameController controller = findGameFromPlayerUsername(req.getPlayerID());
-            controller.handleSkip(skipReq);
+            controller.skipDraw(skipReq.getPlayerID(), skipReq.getBoardRow());
         }catch(NetworkException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
         }catch(GameException e){
