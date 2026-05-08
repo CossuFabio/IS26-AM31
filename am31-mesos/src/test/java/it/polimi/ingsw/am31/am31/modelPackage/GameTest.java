@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.*;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.IncorrectMethodCallException;
+import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientPlayersNumberException;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
@@ -9,6 +11,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Charact
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Hunter;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
+import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
@@ -28,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
     private Game game;
-    private Player player;
+    private Player player, player1;
     @BeforeEach
     void setUp() throws Exception {
         game = new Game(2, new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()));
@@ -37,11 +40,12 @@ class GameTest {
         player = new Player("dummy", Color.BLUE);
         game.getBoard().addUpper(bd);
         game.getBoard().addUpper(h);
-        game.getBoard().addUpper(h);
+        game.getBoard().addUpper(h); //add 3 upper and lower
         game.getBoard().addLower(bd);
         game.getBoard().addLower(h);
         game.getBoard().addLower(h);
         game.addPlayer(player);
+        player1= new Player("dummy2", Color.RED);
     }
 
     @Test
@@ -69,7 +73,18 @@ class GameTest {
     }
 
     @Test
-    void TestShouldGameStart() {
+    void TestShouldGameStart() throws Exception {
+        //testing exceptions
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        assertThrows(IncorrectMethodCallException.class, game::gameStart);
+        game.setCurrentRoundPhase(RoundPhasesEnum.GAME_STARTING);
+        assertThrows(InsufficientPlayersNumberException.class, game::gameStart);
+        game.addPlayer(player1);
+        game.gameStart();
+        //check if the number of cards is right
+        assertEquals(3+game.getNumPlayers()+GameConstants.LOWER_LINE_EXTRA_CARDS,game.getBoard().getUnderLine().size());
+        assertEquals( 3+GameConstants.getEraOneBuildings(2)+game.getNumPlayers()+GameConstants.UPPER_LINE_EXTRA_CARDS,game.getBoard().getUpperLine().size());
+        assertEquals(RoundPhasesEnum.TOTEM_PLACING, game.getCurrentRoundPhase());
     }
 
     @Test

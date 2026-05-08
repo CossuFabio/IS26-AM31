@@ -107,7 +107,6 @@ public class Game implements GameObservable {
             observers.onPlayersListUpdate(this);
     }
 
-    //TODO: Test This
     public void gameStart() throws IncorrectMethodCallException, InsufficientPlayersNumberException, EmptyDeckException {
         
         if(currentRoundPhase != RoundPhasesEnum.GAME_STARTING) throw new IncorrectMethodCallException("gameStart", "Game already started");
