@@ -11,6 +11,7 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
+import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -31,10 +32,14 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class GameController extends BaseController {
+    @FXML private StackPane rootStackPane;
     @FXML private Label roundLabel;
     @FXML private Label eraLabel;
     @FXML private Label turnLabel;
@@ -72,6 +77,14 @@ public class GameController extends BaseController {
 
     private double cardWidth = 120;
     private double cardHeight = 170;
+
+    private RoundPhasesEnum lastShownPhase = null;
+    private String lastShownActing = null;
+
+    private Label promptLabel = null;
+
+    private Set<String> previousTribeIds = new HashSet<>();
+    private Set<String> previousBuildingIds = new HashSet<>();
 
     private final AtomicBoolean uiRefreshPending = new AtomicBoolean(false);
 
@@ -131,6 +144,7 @@ public class GameController extends BaseController {
         refreshLowerRow(phase, acting);
         refreshPlayerPanel();
         refreshMyInfo();
+        showPrompt(phase, acting);
     }
 
     private void refreshDeck() {
@@ -206,14 +220,54 @@ public class GameController extends BaseController {
         if (me == null) return;
         myFoodLabel.setText(String.valueOf(me.getFood()));
         myPPLabel.setText(String.valueOf(me.getPrestigePoints()));
+        Set<String> newTribeIds = me.getTribe().stream()
+                .map(Card::getCardId)
+                .collect(Collectors.toSet());
+        Set<String> addedTribeIds = new HashSet<>(newTribeIds);
+        addedTribeIds.removeAll(previousTribeIds);
+        previousTribeIds = newTribeIds;
+
+        Set<String> newBuildingIds = me.getBuildings().stream()
+                .map(Card::getCardId)
+                .collect(Collectors.toSet());
+        Set<String> addedBuildingIds = new HashSet<>(newBuildingIds);
+        addedBuildingIds.removeAll(previousBuildingIds);
+        previousBuildingIds = newBuildingIds;
         myTribeContainer.getChildren().clear();
         for (Card card : me.getTribe()) {
-            myTribeContainer.getChildren().add(buildCardNode(card, null, null, null));
+            StackPane node = buildCardNode(card, null, null, null);
+            if (addedTribeIds.contains(card.getCardId())) {
+                animateCardEntry(node);
+            }
+            myTribeContainer.getChildren().add(node);
         }
+
         myBuildingsContainer.getChildren().clear();
         for (Card card : me.getBuildings()) {
-            myBuildingsContainer.getChildren().add(buildCardNode(card, null, null, null));
+            StackPane node = buildCardNode(card, null, null, null);
+            if (addedBuildingIds.contains(card.getCardId())) {
+                animateCardEntry(node);
+            }
+            myBuildingsContainer.getChildren().add(node);
         }
+    }
+
+    private void animateCardEntry(StackPane node) {
+        node.setOpacity(0);
+        node.setScaleX(0.5);
+        node.setScaleY(0.5);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(400), node);
+        fade.setFromValue(0.0);
+        fade.setToValue(1.0);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(400), node);
+        scale.setFromX(0.5);
+        scale.setFromY(0.5);
+        scale.setToX(1.0);
+        scale.setToY(1.0);
+
+        new ParallelTransition(fade, scale).play();
     }
 
     private StackPane buildCardNode(Card card, BoardRows row, RoundPhasesEnum phase, LocalPlayerState acting) {
@@ -269,7 +323,7 @@ public class GameController extends BaseController {
                 new ParallelTransition(scale, move).play();
             });
             pane.setStyle("-fx-cursor: hand;");
-            pane.setOnMouseClicked(e -> onCardClicked(card, row));
+            pane.setOnMouseClicked(e -> onCardClicked(card, row, pane));
         }
         return pane;
     }
@@ -313,14 +367,26 @@ public class GameController extends BaseController {
         return pane;
     }
 
-    private void onCardClicked(Card card, BoardRows row) {
-        new Thread(() -> {
-            try {
-                controller.sendRequest(new DrawNetworkRequest(card.getCardId(), row));
-            } catch (Exception e) {
-                System.err.println("Draw request failed: " + e.getMessage());
-            }
-        }).start();
+    private void onCardClicked(Card card, BoardRows row, StackPane cardNode) {
+        FadeTransition fade = new FadeTransition(Duration.millis(300), cardNode);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.0);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(300), cardNode);
+        scale.setToX(0.5);
+        scale.setToY(0.5);
+
+        ParallelTransition exit = new ParallelTransition(fade, scale);
+        exit.setOnFinished(e -> {
+            new Thread(() -> {
+                try {
+                    controller.sendRequest(new DrawNetworkRequest(card.getCardId(), row));
+                } catch (Exception ex) {
+                    System.err.println("Draw request failed: " + ex.getMessage());
+                }
+            }).start();
+        });
+        exit.play();
     }
 
     private void onOfferTileClicked(LocalOfferCard offer) {
@@ -363,6 +429,7 @@ public class GameController extends BaseController {
     }
 
     private VBox buildPlayerCard(LocalPlayerState player) {
+        boolean isActing = player.getNickname().equals(localGameState.getPlayerActing().getNickname());
         HBox nameRow = new HBox(10);
         nameRow.setAlignment(Pos.CENTER);
 
@@ -375,6 +442,7 @@ public class GameController extends BaseController {
         }
         Label nameLabel = new Label(player.getNickname());
         nameLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
+        if (isActing) nameLabel.setStyle("-fx-font-weight: bold");
         nameRow.getChildren().add(nameLabel);
 
         nameRow.setAlignment(Pos.CENTER);
@@ -388,6 +456,7 @@ public class GameController extends BaseController {
         }
         Label foodLabel = new Label(String.valueOf(player.getFood()));
         foodLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
+        if (isActing) foodLabel.setStyle("-fx-font-weight: bold");
         nameRow.getChildren().add(foodLabel);
 
         Image ppImg = loadImage(ASSETS_PATH + "pp.png");
@@ -399,7 +468,17 @@ public class GameController extends BaseController {
         }
         Label ppLabel = new Label(String.valueOf(player.getPrestigePoints()));
         ppLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
+        if (isActing) ppLabel.setStyle("-fx-font-weight: bold");
         nameRow.getChildren().add(ppLabel);
+
+        if (isActing)
+        {
+            nameRow.setStyle("-fx-cursor: hand; -fx-border-color: black; -fx-border-width: 2; -fx-padding: 18; -fx-background-color: rgba(235,220,185,1); -fx-font-weight: bold");
+            DropShadow glow = new DropShadow();
+            glow.setColor(Color.BLACK);
+            glow.setRadius(15);
+            nameRow.setEffect(glow);
+        }
 
         VBox card = new VBox(6);
         VBox.setMargin(card, new Insets(0, 20, 20, 20));
@@ -429,5 +508,81 @@ public class GameController extends BaseController {
     @FXML
     private void closeTribeViewer() {
         deckOverlay.setVisible(false);
+    }
+
+    private void showPrompt (RoundPhasesEnum phase, LocalPlayerState acting) {
+        if (acting == null) return;
+        if (phase == lastShownPhase && acting.getNickname().equals(lastShownActing)) return;
+        //if (phase == lastShownPhase && !acting.getNickname().equals(lastShownActing)) rootStackPane.getChildren().remove((promptLabel));
+        //if (phase != lastShownPhase && acting.getNickname().equals(lastShownActing)) rootStackPane.getChildren().remove(promptLabel);
+        //if (phase != lastShownPhase && !acting.getNickname().equals(lastShownActing)) rootStackPane.getChildren().remove(promptLabel);
+        if (!(phase == lastShownPhase && acting.getNickname().equals(lastShownActing))) removePromptWithFade();
+
+        lastShownPhase = phase;
+        lastShownActing = acting.getNickname();
+        //Label label = new Label();
+        String text = null;
+        boolean isMyTurn = acting.getNickname().equals(controller.getLocalPlayerUsername());
+        if (isMyTurn)
+        {
+            promptLabel = new Label();
+            if (phase == RoundPhasesEnum.TOTEM_PLACING)
+            {
+                text = "Place your totem on the Offer Track";
+            }
+            else if (phase == RoundPhasesEnum.ACTION_PHASE)
+            {
+                LocalOfferCard card = localGameState.getBoard().getOfferTrack().stream()
+                        .filter(offer -> offer.getPlayer().equals(acting.getNickname()))
+                        .findFirst()
+                        .orElse(null);
+                if (card != null)
+                {
+                    int cardsFromUp = card.getDrawFromUpper();
+                    int cardsFromDown = card.getDrawFromUnder();
+                    if (cardsFromDown > 0 && cardsFromUp > 0)
+                    {
+                        text = "Draw " + cardsFromUp + " cards from the Upper Line and " + cardsFromDown + " cards from the Under Line";
+                    }
+                    else if (cardsFromDown > 0 && cardsFromUp == 0)
+                    {
+                        text = "Draw " + cardsFromDown + " cards from the Under Line";
+                    }
+                    else if (cardsFromDown == 0 && cardsFromUp > 0)
+                    {
+                        text = "Draw " + cardsFromUp + " cards from the Upper Line";
+                    }
+                }
+            }
+            else if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE)
+            {
+                text = "Draw a card from the Upper Line";
+            }
+            promptLabel.setText(text);
+            promptLabel.setFont(Font.font("Inknut Antiqua Regular", 20));
+            promptLabel.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-padding: 15;");
+            StackPane.setAlignment(promptLabel, javafx.geometry.Pos.BOTTOM_CENTER);
+            StackPane.setMargin(promptLabel, new Insets(0, 0, 250, 0));
+            rootStackPane.getChildren().add(promptLabel);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(400), promptLabel);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        }
+        else {
+            if (promptLabel != null) rootStackPane.getChildren().remove(promptLabel);
+            promptLabel = null;
+        }
+    }
+
+    private void removePromptWithFade() {
+        if (promptLabel == null) return;
+        Label toRemove = promptLabel;
+        promptLabel = null;
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), toRemove);
+        fadeOut.setFromValue(toRemove.getOpacity());
+        fadeOut.setToValue(0.0);
+        fadeOut.setOnFinished(e -> rootStackPane.getChildren().remove(toRemove));
+        fadeOut.play();
     }
 }
