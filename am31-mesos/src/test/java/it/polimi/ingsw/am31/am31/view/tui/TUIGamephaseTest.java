@@ -38,8 +38,11 @@ public class TUIGamephaseTest {
         Card e = new SustainEventCard("e1",1,2);
         BuildingCard bd = new BuildingCard("bd1",1, 2, 3,effects.getEffect(EffectIdsConstants.DOUBLE_BUILDER_ENDGAME));
         ArrayList<LocalOfferCard> track = new ArrayList<>();
-        LocalOfferCard a = new LocalOfferCard(new OfferCard("A",1,0,0,2), new OfferCardMessage("A", null,  true));
-        LocalOfferCard b = new LocalOfferCard(new OfferCard("B",0,1,2,2), new OfferCardMessage("B", null,  true));
+
+
+
+        LocalOfferCard a = new LocalOfferCard("A", null, true, 1, 0, 0);
+        LocalOfferCard b = new LocalOfferCard("B", null, true, 0, 2, 1);
         track.add(a);
         track.add(b);
 

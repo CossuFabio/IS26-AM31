@@ -39,7 +39,7 @@ public class OfferCardMessage {
         return cardId != null && totemPlayerNickname != null;
     }
 
-    @JsonIgnore
+    @JsonProperty("isFree")
     public boolean isFree(){return this.isFree;}
 
 

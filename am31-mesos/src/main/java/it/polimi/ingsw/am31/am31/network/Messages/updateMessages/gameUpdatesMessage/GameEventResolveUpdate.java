@@ -11,9 +11,9 @@ public class GameEventResolveUpdate extends UpdateMessage {
     private final String cardId;
 
     @JsonCreator
-    public GameEventResolveUpdate (@JsonProperty("eventId") String eventId){
+    public GameEventResolveUpdate (@JsonProperty("cardId") String cardId){
         super(UpdateMethodsConstants.GAME_EVENT_RESOLVE_UPDATE);
-        this.cardId = eventId;
+        this.cardId = cardId;
     }
 
     public String getCardId() {return cardId;}

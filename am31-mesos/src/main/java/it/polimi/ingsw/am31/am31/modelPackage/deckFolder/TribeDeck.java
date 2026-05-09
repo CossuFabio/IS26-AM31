@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage.deckFolder;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.CardLoader;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.RitualEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.SustainEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;

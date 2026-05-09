@@ -1,10 +1,7 @@
 package it.polimi.ingsw.am31.am31.controller;
 
 
-import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.CardNotFoundException;
-import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InvalidPickException;
-import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InvalidResourceException;
-import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.OfferCardNotFoundException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
@@ -62,7 +59,7 @@ public class ResourceFinder {
         Card card = cardsRegistry.get(cardId);
 
         if(card == null) throw new CardNotFoundException();
-        if(card.getMinPlayers() > game.getNumPlayers()) throw new InvalidResourceException("Card");
+        if(card.getMinPlayers() > game.getNumPlayers()) throw new InvalidResourceException(InvalidResourceTypeEnum.CARD);
 
 
         return card;
@@ -75,7 +72,7 @@ public class ResourceFinder {
         OfferCard offerCard = offerCardsRegistry.get(offerCardId);
 
         if(offerCard == null) throw new OfferCardNotFoundException();
-        if(offerCard.getMinPlayers() > game.getNumPlayers()) throw new InvalidResourceException("OfferCard");
+        if(offerCard.getMinPlayers() > game.getNumPlayers()) throw new InvalidResourceException(InvalidResourceTypeEnum.OFFER_CARD);
 
         return offerCard;
     }
