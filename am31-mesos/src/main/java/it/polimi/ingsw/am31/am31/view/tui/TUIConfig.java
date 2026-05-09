@@ -8,6 +8,7 @@ public class TUIConfig {
 
     //Useful constants used in TUI
     public static final String GO_BACK_VALUE = "back";
+    public static final String SKIP_VALUE = "skip";
     public static final String GO_BACK_STRING = "[type " + GO_BACK_VALUE + " to go back]";
 
 

@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.exceptions.IllegalActionException;
 import it.polimi.ingsw.am31.am31.exceptions.LobbyException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InvalidDrawException;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InvalidResourceException;
+import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.InvalidResourceTypeEnum;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.GameNoLongerActiveException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
@@ -80,7 +81,7 @@ public class GameController {
             game.playerDrawFromLower(player, ((IPickable)card));
         }
         else{
-            throw new InvalidResourceException("ROW");
+            throw new InvalidResourceException(InvalidResourceTypeEnum.ROW);
         }
 
         advanceAfterDrawOrSkip();
@@ -153,7 +154,7 @@ public class GameController {
 
         if(row == BoardRows.UPPER) game.playerSkipUpper(player);
         else if(row == BoardRows.LOWER) game.playerSkipLower(player);
-        else throw new InvalidResourceException("ROW");
+        else throw new InvalidResourceException(InvalidResourceTypeEnum.ROW);
 
         advanceAfterDrawOrSkip();
     }

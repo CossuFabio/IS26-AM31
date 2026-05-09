@@ -16,6 +16,7 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import org.fusesource.jansi.Ansi;
 
+import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.SKIP_VALUE;
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printCard;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -170,7 +171,7 @@ public class TUIGamePhase implements TUIPhase {
         else if (choosingCard == 1)
             System.out.println("\nChoose a Row to draw from, 1 = upper, 2 = lower");
         else if (choosingCard == 2)
-            System.out.println("\nChoose a cardId or type 'skip'");
+            System.out.println("\nChoose a cardId or type " + TUIConfig.SKIP_VALUE);
     }
 
     @Override
@@ -264,7 +265,7 @@ public class TUIGamePhase implements TUIPhase {
                         }
                         int temp = Integer.parseInt(boardRowRequest);
                         if (temp == 1) {
-                            if (!input.equals("skip")) {
+                            if (!input.equals(TUIConfig.SKIP_VALUE)) {
                                 try {
                                     controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.UPPER));
                                 } catch (Exception e) {
@@ -278,7 +279,7 @@ public class TUIGamePhase implements TUIPhase {
                                 }
                         }
                         if (temp == 2) {
-                            if (!input.equals("skip")) {
+                            if (!input.equals(TUIConfig.SKIP_VALUE)) {
                                 try {
                                     controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.LOWER));
                                 } catch (Exception e) {
