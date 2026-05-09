@@ -25,6 +25,8 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,8 +34,10 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -83,8 +87,9 @@ public class GameController extends BaseController {
 
     private Label promptLabel = null;
 
-    private Set<String> previousTribeIds = new HashSet<>();
-    private Set<String> previousBuildingIds = new HashSet<>();
+    private final Map<String, Image> imageCache = new HashMap<>();
+    private final Map<String, StackPane> tribeNodes = new HashMap<>();
+    private final Map<String, StackPane> buildingNodes = new HashMap<>();
 
     private final AtomicBoolean uiRefreshPending = new AtomicBoolean(false);
 
@@ -155,8 +160,11 @@ public class GameController extends BaseController {
     }
 
     private Image loadImage(String path) {
+        if (imageCache.containsKey(path)) return imageCache.get(path);
         InputStream stream = getClass().getResourceAsStream(path);
-        return stream != null ? new Image(stream) : null;
+        Image img = stream != null ? new Image(stream) : null;
+        imageCache.put(path, img);
+        return img;
     }
 
     private void refreshTopBar(RoundPhasesEnum phase, LocalPlayerState acting) {
@@ -221,35 +229,33 @@ public class GameController extends BaseController {
         if (me == null) return;
         myFoodLabel.setText(String.valueOf(me.getFood()));
         myPPLabel.setText(String.valueOf(me.getPrestigePoints()));
-        Set<String> newTribeIds = me.getTribe().stream()
-                .map(Card::getCardId)
-                .collect(Collectors.toSet());
-        Set<String> addedTribeIds = new HashSet<>(newTribeIds);
-        addedTribeIds.removeAll(previousTribeIds);
-        previousTribeIds = newTribeIds;
+        updateCardContainer(myTribeContainer, me.getTribe(), tribeNodes);
+        updateCardContainer(myBuildingsContainer, me.getBuildings(), buildingNodes);
+    }
 
-        Set<String> newBuildingIds = me.getBuildings().stream()
-                .map(Card::getCardId)
-                .collect(Collectors.toSet());
-        Set<String> addedBuildingIds = new HashSet<>(newBuildingIds);
-        addedBuildingIds.removeAll(previousBuildingIds);
-        previousBuildingIds = newBuildingIds;
-        myTribeContainer.getChildren().clear();
-        for (Card card : me.getTribe()) {
-            StackPane node = buildCardNode(card, null, null, null);
-            if (addedTribeIds.contains(card.getCardId())) {
+    private void updateCardContainer(HBox container, List<Card> cards, Map<String, StackPane> nodeMap) {
+        Set<String> newIds = cards.stream().map(Card::getCardId).collect(Collectors.toSet());
+
+        // rimuove i nodi delle carte non più presenti
+        new HashSet<>(nodeMap.keySet()).stream()
+                .filter(id -> !newIds.contains(id))
+                .forEach(id -> container.getChildren().remove(nodeMap.remove(id)));
+
+        // aggiunge i nodi solo per le carte nuove
+        for (Card card : cards) {
+            if (!nodeMap.containsKey(card.getCardId())) {
+                StackPane node = buildCardNode(card, null, null, null);
+                nodeMap.put(card.getCardId(), node);
                 animateCardEntry(node);
             }
-            myTribeContainer.getChildren().add(node);
         }
 
-        myBuildingsContainer.getChildren().clear();
-        for (Card card : me.getBuildings()) {
-            StackPane node = buildCardNode(card, null, null, null);
-            if (addedBuildingIds.contains(card.getCardId())) {
-                animateCardEntry(node);
-            }
-            myBuildingsContainer.getChildren().add(node);
+        // sincronizza l'ordine con quello ricevuto dal server
+        List<javafx.scene.Node> ordered = cards.stream()
+                .map(c -> (javafx.scene.Node) nodeMap.get(c.getCardId()))
+                .collect(Collectors.toList());
+        if (!container.getChildren().equals(ordered)) {
+            container.getChildren().setAll(ordered);
         }
     }
 
@@ -294,9 +300,25 @@ public class GameController extends BaseController {
         StackPane pane = new StackPane(iv);
 
         boolean isMyTurn = acting != null && acting.getNickname().equals(controller.getLocalPlayerUsername());
-        boolean isPickPhase = (phase == RoundPhasesEnum.ACTION_PHASE || phase == RoundPhasesEnum.BONUS_DRAWING_PHASE);
+        boolean isClickable = false;
+        if (row != null && isMyTurn) {
+            if (card.canBePicked()) {
+                if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
+                    isClickable = (row == BoardRows.UPPER) && canAffordCard(card);
+                } else if (phase == RoundPhasesEnum.ACTION_PHASE) {
+                    LocalOfferCard myOffer = localGameState.getBoard().getOfferTrack().stream()
+                            .filter(o -> !o.isFree() && o.getPlayer().equals(acting.getNickname()))
+                            .findFirst().orElse(null);
+                    if (myOffer != null) {
+                        isClickable = ((row == BoardRows.UPPER && myOffer.getDrawFromUpper() > 0)
+                                   || (row == BoardRows.LOWER && myOffer.getDrawFromUnder() > 0))
+                                   && canAffordCard(card);
+                    }
+                }
+            }
+        }
 
-        if (row != null && isMyTurn && isPickPhase) {
+        if (isClickable) {
 
             pane.setOnMouseEntered(e -> {
                 ScaleTransition scale = new ScaleTransition(Duration.millis(150), pane);
@@ -333,6 +355,17 @@ public class GameController extends BaseController {
         Image img = loadImage(CARDS_PATH + cardId + ".png");
         if (img == null) img = loadImage(CARDS_PATH + "card_back_1.png");
         return img;
+    }
+
+    private boolean canAffordCard(Card card) {
+        LocalPlayerState me = localGameState.getPlayers().stream()
+                .filter(p -> p.getNickname().equals(controller.getLocalPlayerUsername()))
+                .findFirst().orElse(null);
+        if (me == null) return false;
+        int discount = me.getTribe().stream()
+                .mapToInt(Card::getBuildingDiscount)
+                .sum();
+        return card.canAffordWithFood(me.getFood(), discount);
     }
 
     private StackPane buildOfferTileNode(LocalOfferCard offer, RoundPhasesEnum phase, LocalPlayerState acting) {
@@ -436,61 +469,80 @@ public class GameController extends BaseController {
 
     private VBox buildPlayerCard(LocalPlayerState player, LocalPlayerState acting) {
         boolean isActing = acting != null && player.getNickname().equals(acting.getNickname());
-        HBox nameRow = new HBox(10);
-        nameRow.setAlignment(Pos.CENTER);
+
+        HBox row = new HBox(10);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setMaxWidth(Double.MAX_VALUE);
 
         Image totemImg = loadImage(TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
         if (totemImg != null) {
             ImageView totemIv = new ImageView(totemImg);
             totemIv.setFitWidth(35);
             totemIv.setPreserveRatio(true);
-            nameRow.getChildren().add(totemIv);
+            row.getChildren().add(totemIv);
         }
+
         Label nameLabel = new Label(player.getNickname());
         nameLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
         if (isActing) nameLabel.setStyle("-fx-font-weight: bold");
-        nameRow.getChildren().add(nameLabel);
+        row.getChildren().add(nameLabel);
 
-        nameRow.setAlignment(Pos.CENTER);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        row.getChildren().add(spacer);
 
+        HBox foodGroup = new HBox();
+        foodGroup.setAlignment(Pos.CENTER);
         Image foodImg = loadImage(ASSETS_PATH + "food.png");
         if (foodImg != null) {
             ImageView foodIv = new ImageView(foodImg);
-            foodIv.setFitWidth(36);
-            foodIv.setFitHeight(32);
-            nameRow.getChildren().add(foodIv);
+            foodIv.setFitWidth(28);
+            foodIv.setFitHeight(25);
+            foodGroup.getChildren().add(foodIv);
         }
         Label foodLabel = new Label(String.valueOf(player.getFood()));
         foodLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
+        foodLabel.setMinWidth(35);
+        foodLabel.setAlignment(Pos.CENTER);
         if (isActing) foodLabel.setStyle("-fx-font-weight: bold");
-        nameRow.getChildren().add(foodLabel);
+        foodGroup.getChildren().add(foodLabel);
 
+        HBox ppGroup = new HBox();
+        ppGroup.setAlignment(Pos.CENTER);
         Image ppImg = loadImage(ASSETS_PATH + "pp.png");
         if (ppImg != null) {
             ImageView ppIv = new ImageView(ppImg);
-            ppIv.setFitWidth(36);
-            ppIv.setFitHeight(32);
-            nameRow.getChildren().add(ppIv);
+            ppIv.setFitWidth(28);
+            ppIv.setFitHeight(25);
+            ppGroup.getChildren().add(ppIv);
         }
         Label ppLabel = new Label(String.valueOf(player.getPrestigePoints()));
         ppLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
+        ppLabel.setMinWidth(35);
+        ppLabel.setAlignment(Pos.CENTER);
         if (isActing) ppLabel.setStyle("-fx-font-weight: bold");
-        nameRow.getChildren().add(ppLabel);
+        ppGroup.getChildren().add(ppLabel);
 
-        if (isActing)
-        {
-            nameRow.setStyle("-fx-cursor: hand; -fx-border-color: black; -fx-border-width: 2; -fx-padding: 18; -fx-background-color: rgba(235,220,185,1); -fx-font-weight: bold");
+        HBox statsGroup = new HBox(12);
+        statsGroup.setAlignment(Pos.CENTER);
+        statsGroup.getChildren().addAll(foodGroup, ppGroup);
+        row.getChildren().add(statsGroup);
+
+        VBox card = new VBox(6);
+        card.setMaxWidth(Double.MAX_VALUE);
+        VBox.setMargin(card, new Insets(0, 20, 20, 20));
+        card.getChildren().add(row);
+        card.setOnMouseClicked(e -> showTribeViewer(player));
+
+        if (isActing) {
+            card.setStyle("-fx-cursor: hand; -fx-padding: 12; -fx-border-color: black; -fx-border-width: 2; -fx-background-color: rgba(235,220,185,1);");
             DropShadow glow = new DropShadow();
             glow.setColor(Color.BLACK);
             glow.setRadius(15);
-            nameRow.setEffect(glow);
+            card.setEffect(glow);
+        } else {
+            card.setStyle("-fx-cursor: hand; -fx-padding: 12; -fx-border-color: transparent; -fx-border-width: 2;");
         }
-
-        VBox card = new VBox(6);
-        VBox.setMargin(card, new Insets(0, 20, 20, 20));
-        card.getChildren().add(nameRow);
-        card.setStyle("-fx-cursor: hand;");
-        card.setOnMouseClicked(e -> showTribeViewer(player));
 
         return card;
     }

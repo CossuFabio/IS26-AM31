@@ -51,5 +51,8 @@ public abstract class Card {
 
     public boolean canBePicked(){return false; }
 
+    public int getBuildingDiscount() { return 0; }
+
+    public boolean canAffordWithFood(int food, int discount) { return true; }
 
 }
