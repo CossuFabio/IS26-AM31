@@ -38,7 +38,8 @@ public class CardMapper {
             {
                 //once it finds the og offercard c
                 //creates new localOfferCard, with the player inside if needed
-                return new LocalOfferCard(c, msg);
+                return new LocalOfferCard(c.getOfferCardId(), msg.getTotemPlayerNickname(),
+                        msg.isFree(), c.getFood(), c.getDrawFromUpper(), c.getDrawFromUnder() );
             }
         //card not found? exception?
         return null;

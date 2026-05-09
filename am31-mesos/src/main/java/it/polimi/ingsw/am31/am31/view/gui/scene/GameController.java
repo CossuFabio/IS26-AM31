@@ -288,7 +288,7 @@ public class GameController extends BaseController {
 
         StackPane pane = new StackPane(tileIv);
 
-        boolean isFree = offer.getPlayer().equals("CARD_IS_EMPTY");
+        boolean isFree = offer.isFree();
         if (!isFree) {
             localGameState.getPlayers().stream()
                     .filter(p -> p.getNickname().equals(offer.getPlayer()))
