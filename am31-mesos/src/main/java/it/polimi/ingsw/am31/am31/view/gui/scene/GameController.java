@@ -142,7 +142,7 @@ public class GameController extends BaseController {
         refreshUpperRow(phase, acting);
         refreshOfferTrack(phase, acting);
         refreshLowerRow(phase, acting);
-        refreshPlayerPanel();
+        refreshPlayerPanel(acting);
         refreshMyInfo();
         showPrompt(phase, acting);
     }
@@ -175,7 +175,8 @@ public class GameController extends BaseController {
             case ACTION_PHASE        -> "Draw a card";
             case BONUS_DRAWING_PHASE -> "Draw bonus";
             case END_TURN            -> "End turn";
-            default                  -> "";
+            case GAME_STARTING       -> "Game starting...";
+            case GAME_ENDED          -> "Game ended";
         };
     }
 
@@ -201,12 +202,12 @@ public class GameController extends BaseController {
         }
     }
 
-    private void refreshPlayerPanel() {
+    private void refreshPlayerPanel(LocalPlayerState acting) {
         playersContainer.getChildren().clear();
         String myNick = controller.getLocalPlayerUsername();
         for (LocalPlayerState player : localGameState.getPlayers()) {
             if (!player.getNickname().equals(myNick)) {
-                playersContainer.getChildren().add(buildPlayerCard(player));
+                playersContainer.getChildren().add(buildPlayerCard(player, acting));
             }
         }
     }
@@ -336,6 +337,7 @@ public class GameController extends BaseController {
 
     private StackPane buildOfferTileNode(LocalOfferCard offer, RoundPhasesEnum phase, LocalPlayerState acting) {
         Image img = loadImage(TRACK_PATH + offer.getOfferCardId() + ".png");
+        if (img == null) img = loadImage(CARDS_PATH + "card_back_1.png");
         ImageView tileIv = new ImageView(img);
         tileIv.setFitWidth(cardWidth);
         tileIv.setFitHeight(cardHeight);
@@ -361,13 +363,16 @@ public class GameController extends BaseController {
         boolean isMyTurn = acting != null && acting.getNickname().equals(controller.getLocalPlayerUsername());
         if (isMyTurn && phase == RoundPhasesEnum.TOTEM_PLACING && isFree) {
             pane.setStyle("-fx-cursor: hand;");
-            pane.setOnMouseClicked(e -> onOfferTileClicked(offer));
+            pane.setOnMouseClicked(e -> onOfferTileClicked(offer, pane));
         }
 
         return pane;
     }
 
     private void onCardClicked(Card card, BoardRows row, StackPane cardNode) {
+        cardNode.setOnMouseClicked(null);
+        cardNode.setOnMouseEntered(null);
+        cardNode.setOnMouseExited(null);
         FadeTransition fade = new FadeTransition(Duration.millis(300), cardNode);
         fade.setFromValue(1.0);
         fade.setToValue(0.0);
@@ -389,7 +394,8 @@ public class GameController extends BaseController {
         exit.play();
     }
 
-    private void onOfferTileClicked(LocalOfferCard offer) {
+    private void onOfferTileClicked(LocalOfferCard offer, StackPane pane) {
+        pane.setOnMouseClicked(null);
         new Thread(() -> {
             try {
                 controller.sendRequest(new TotemNetworkRequest(offer.getOfferCardId()));
@@ -428,8 +434,8 @@ public class GameController extends BaseController {
         return pane;
     }
 
-    private VBox buildPlayerCard(LocalPlayerState player) {
-        boolean isActing = player.getNickname().equals(localGameState.getPlayerActing().getNickname());
+    private VBox buildPlayerCard(LocalPlayerState player, LocalPlayerState acting) {
+        boolean isActing = acting != null && player.getNickname().equals(acting.getNickname());
         HBox nameRow = new HBox(10);
         nameRow.setAlignment(Pos.CENTER);
 
@@ -512,15 +518,19 @@ public class GameController extends BaseController {
 
     private void showPrompt (RoundPhasesEnum phase, LocalPlayerState acting) {
         if (acting == null) return;
-        if (phase == lastShownPhase && acting.getNickname().equals(lastShownActing)) return;
-        //if (phase == lastShownPhase && !acting.getNickname().equals(lastShownActing)) rootStackPane.getChildren().remove((promptLabel));
-        //if (phase != lastShownPhase && acting.getNickname().equals(lastShownActing)) rootStackPane.getChildren().remove(promptLabel);
-        //if (phase != lastShownPhase && !acting.getNickname().equals(lastShownActing)) rootStackPane.getChildren().remove(promptLabel);
-        if (!(phase == lastShownPhase && acting.getNickname().equals(lastShownActing))) removePromptWithFade();
+        if (phase == lastShownPhase && acting.getNickname().equals(lastShownActing)) {
+            if (phase == RoundPhasesEnum.ACTION_PHASE && promptLabel == null) {
+                // non fare return, lascia che mostri il prompt
+            } else {
+                return;
+            }
+        }
+        rootStackPane.getChildren().remove(promptLabel);
+        //if (!(phase == lastShownPhase && acting.getNickname().equals(lastShownActing))) removePromptWithFade();
 
         lastShownPhase = phase;
         lastShownActing = acting.getNickname();
-        //Label label = new Label();
+
         String text = null;
         boolean isMyTurn = acting.getNickname().equals(controller.getLocalPlayerUsername());
         if (isMyTurn)
@@ -533,9 +543,10 @@ public class GameController extends BaseController {
             else if (phase == RoundPhasesEnum.ACTION_PHASE)
             {
                 LocalOfferCard card = localGameState.getBoard().getOfferTrack().stream()
-                        .filter(offer -> offer.getPlayer().equals(acting.getNickname()))
+                        .filter(offer -> !offer.isFree() && offer.getPlayer().equals(acting.getNickname()))
                         .findFirst()
                         .orElse(null);
+                System.out.println("Card found: " + card);
                 if (card != null)
                 {
                     int cardsFromUp = card.getDrawFromUpper();
@@ -557,6 +568,11 @@ public class GameController extends BaseController {
             else if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE)
             {
                 text = "Draw a card from the Upper Line";
+            }
+
+            if (text == null) {
+                promptLabel = null;
+                return;
             }
             promptLabel.setText(text);
             promptLabel.setFont(Font.font("Inknut Antiqua Regular", 20));
