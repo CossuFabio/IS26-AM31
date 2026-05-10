@@ -11,6 +11,7 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
+import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 
 public class GameController extends BaseController {
     @FXML private StackPane rootStackPane;
@@ -84,10 +86,6 @@ public class GameController extends BaseController {
     @FXML private ScrollPane cardTypeScrollPane;
     @FXML private HBox cardTypeCardsContainer;
 
-    private static final String CARDS_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/cards/";
-    private static final String ASSETS_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/";
-    private static final String TRACK_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/Track/";
-    private static final String TOTEM_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/totem/";
 
     private double cardWidth = 120;
     private double cardHeight = 170;
@@ -111,8 +109,8 @@ public class GameController extends BaseController {
 
     @FXML
     public void initialize() {
-        Image foodImg = loadImage(ASSETS_PATH + "food.png");
-        Image ppImg = loadImage(ASSETS_PATH + "pp.png");
+        Image foodImg = loadImage(PathConstants.ASSETS_PATH + "food.png");
+        Image ppImg = loadImage(PathConstants.ASSETS_PATH + "pp.png");
         if (foodImg != null) foodIcon.setImage(foodImg);
         if (ppImg != null) PPIcon.setImage(ppImg);
 
@@ -184,7 +182,7 @@ public class GameController extends BaseController {
     private void refreshDeck() {
         int era = localGameState.getEra();
         String backName = "card_back_" + era + ".png";
-        Image back = loadImage(CARDS_PATH + backName);
+        Image back = loadImage(PathConstants.CARDS_PATH + backName);
         if (back != null) deckImage.setImage(back);
         if (localGameState.getRoundNumber() == 10) deckImage.setVisible(false);
     }
@@ -265,7 +263,7 @@ public class GameController extends BaseController {
                 .orElse(null);
         if (me == null) return;
         myNickname.getChildren().clear();
-        Image totemImg = loadImage(TOTEM_PATH + me.getColor().name().toLowerCase() + ".png");
+        Image totemImg = loadImage(PathConstants.TOTEM_PATH  + me.getColor().name().toLowerCase() + ".png");
         if (totemImg != null) {
             ImageView totemIv = new ImageView(totemImg);
             totemIv.setFitWidth(35);
@@ -473,8 +471,8 @@ public class GameController extends BaseController {
     }
 
     private Image loadCardImage(String cardId) {
-        Image img = loadImage(CARDS_PATH + cardId + ".png");
-        if (img == null) img = loadImage(CARDS_PATH + "card_back_1.png");
+        Image img = loadImage(PathConstants.CARDS_PATH + cardId + ".png");
+        if (img == null) img = loadImage(PathConstants.CARDS_PATH + "card_back_1.png");
         return img;
     }
 
@@ -492,7 +490,7 @@ public class GameController extends BaseController {
 
     //method to build the single node of the offer card
     private StackPane buildOfferTileNode(LocalOfferCard offer, RoundPhasesEnum phase, LocalPlayerState acting) {
-        Image img = loadImage(TRACK_PATH + offer.getOfferCardId() + ".png");
+        Image img = loadImage(PathConstants.TRACK_PATH + offer.getOfferCardId() + ".png");
         ImageView tileIv = new ImageView(img);
         tileIv.setFitWidth(cardWidth);
         tileIv.setFitHeight(cardHeight);
@@ -507,7 +505,7 @@ public class GameController extends BaseController {
                     .filter(p -> p.getNickname().equals(offer.getPlayer()))
                     .findFirst()
                     .ifPresent(p -> {
-                        Image totemImg = loadImage(TOTEM_PATH + p.getColor().name().toLowerCase() + ".png");
+                        Image totemImg = loadImage(PathConstants.TOTEM_PATH + p.getColor().name().toLowerCase() + ".png");
                         if (totemImg != null) {
                             ImageView totemIv = new ImageView(totemImg);
                             totemIv.setFitHeight(32);
@@ -602,7 +600,7 @@ public class GameController extends BaseController {
     }
 
     private StackPane buildTurnOrderTile(LocalGameState game) {
-        Image img = loadImage(TRACK_PATH + "turn_" + game.getPlayers().size() + ".png");
+        Image img = loadImage(PathConstants.TRACK_PATH + "turn_" + game.getPlayers().size() + ".png");
         ImageView tileIv = new ImageView(img);
         tileIv.setFitWidth(cardWidth);
         tileIv.setFitHeight(cardHeight);
@@ -616,7 +614,7 @@ public class GameController extends BaseController {
         for (int i = 0; i < turnOrder.size(); i++) {
             LocalPlayerState player = turnOrder.get(i);
             if (player == null) continue;
-            Image totemImg = loadImage(TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
+            Image totemImg = loadImage(PathConstants.TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
             if (totemImg != null) {
                 ImageView totemIv = new ImageView(totemImg);
                 totemIv.setFitHeight(32);
@@ -656,7 +654,7 @@ public class GameController extends BaseController {
         row.setAlignment(Pos.CENTER_LEFT);
         row.setMaxWidth(Double.MAX_VALUE);
 
-        Image totemImg = loadImage(TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
+        Image totemImg = loadImage(PathConstants.TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
         if (totemImg != null) {
             ImageView totemIv = new ImageView(totemImg);
             totemIv.setFitWidth(35);
@@ -675,7 +673,7 @@ public class GameController extends BaseController {
 
         HBox foodGroup = new HBox();
         foodGroup.setAlignment(Pos.CENTER);
-        Image foodImg = loadImage(ASSETS_PATH + "food.png");
+        Image foodImg = loadImage(PathConstants.ASSETS_PATH + "food.png");
         if (foodImg != null) {
             ImageView foodIv = new ImageView(foodImg);
             foodIv.setFitWidth(28);
@@ -691,7 +689,7 @@ public class GameController extends BaseController {
 
         HBox ppGroup = new HBox();
         ppGroup.setAlignment(Pos.CENTER);
-        Image ppImg = loadImage(ASSETS_PATH + "pp.png");
+        Image ppImg = loadImage(PathConstants.ASSETS_PATH + "pp.png");
         if (ppImg != null) {
             ImageView ppIv = new ImageView(ppImg);
             ppIv.setFitWidth(28);

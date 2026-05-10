@@ -23,7 +23,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitFarmer() {
-        Farmer farmer = new Farmer("dummy", 1, 2);
+        Farmer farmer = new Farmer("dummy", 1, 2,3);
         CountVisitor visitor = new CountVisitor();
         farmer.acceptVisit(visitor);
         assertEquals(1, visitor.getFarmers());

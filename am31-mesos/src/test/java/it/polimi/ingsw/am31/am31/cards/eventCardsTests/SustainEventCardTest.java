@@ -33,7 +33,7 @@ class SustainEventCardTest {
         //player 1 has no food, should lose 2pp go to -2pp
         players.add(new Player("WHITE", Color.WHITE));
         players.get(2).addCard(new Artist("dummy", 1,2));
-        players.get(2).addCard(new Farmer("dummy", 1,2));
+        players.get(2).addCard(new Farmer("dummy", 1,2,3));
         players.get(2).editFood(5);
         //player 2 has discount, should pay 0 food and have 5
     }
