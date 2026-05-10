@@ -24,7 +24,7 @@ public interface GameObserver {
     void onOfferTrackUpdate(Board board);
     void onTurnOrderUpdate(TurnOrder turnOrder);
     void onGameStartUpdate(Game game);
-    void onGameEndUpdate(List<Player> leaderboard);
+    void onGameEndUpdate(Game game);
     void onGameEventResolveUpdate(EventCard c);
 
     void onGameCrashUpdate();

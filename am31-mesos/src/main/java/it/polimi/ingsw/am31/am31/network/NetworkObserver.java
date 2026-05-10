@@ -142,9 +142,9 @@ public class NetworkObserver implements GameObserver {
     }
 
     @Override
-    public void onGameEndUpdate(List<Player> leaderboard) {
+    public void onGameEndUpdate(Game game) {
         executors.submit(()-> {try{
-            virtualView.receiveUpdate(UpdateFactory.createGameEndUpdate(leaderboard));
+            virtualView.receiveUpdate(UpdateFactory.createGameEndUpdate(game));
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }});

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.cards.eventCardsTests;
 
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Artist;
@@ -51,6 +52,6 @@ class SustainEventCardTest {
     }
     @Test
     void TestShouldGetPriority () {
-        assertEquals(21, card.getPriority());
+        assertEquals(EventCard.PriorityClass.LOW, card.getPriorityClass());
     }
 }

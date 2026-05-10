@@ -17,7 +17,7 @@ public class RitualEventCard extends EventCard {
         super(cardId, era);
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;
-        this.priority = 1+era;
+        this.priorityClass = PriorityClass.HIGH;
     }
 
 

@@ -3,11 +3,7 @@ package it.polimi.ingsw.am31.am31.view.LocalState;
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.network.ClientConfig;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.PlayerMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
-import it.polimi.ingsw.am31.am31.view.tui.TUIConfig;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LeaderBoardEntryUpdate;
 
 
 import java.util.ArrayList;
@@ -27,17 +23,20 @@ public class LocalGameState{
     private final LocalBoardState board;
 
     //Will be fixed to numPlayers size
-    private List<LocalPlayerState> turnorder;
+    private List<LocalPlayerState> turnOrder;
 
     //Will be set to true once the game starts. Will be set to false when resetting LocalGameState
     private boolean isValidState = false;
 
+    //Used only at the end of the game
+    private List<LocalLeaderBoard> leaderboard;
+
     public LocalGameState () {
         //Creations to prevent NullPointersException
-
+        this.leaderboard = new ArrayList<>();
         players = new ArrayList<LocalPlayerState>();
         board = new LocalBoardState();
-        turnorder = new ArrayList<>();
+        turnOrder = new ArrayList<>();
         int roundNumber = 0;
 
         //DUMMY
@@ -103,13 +102,14 @@ public class LocalGameState{
                 p.setTribe(cards);
     }
     public void setTurnOrder(List<LocalPlayerState> newTurnOrder){
-        this.turnorder = newTurnOrder;
+        this.turnOrder = newTurnOrder;
         setPlayerActing(newTurnOrder.getFirst());
     }
 
     public void setPlayerActing(LocalPlayerState p){
         this.playerActing = p;
     }
+    public void setLeaderboard(List<LocalLeaderBoard> leaderboard){this.leaderboard = leaderboard;}
 
     //for testing
     public void addPlayer(LocalPlayerState p){
@@ -121,7 +121,7 @@ public class LocalGameState{
 
         players = new ArrayList<LocalPlayerState>();
         board.reset();
-        turnorder = new ArrayList<>();
+        turnOrder = new ArrayList<>();
         int roundNumber = 0;
 
         //DUMMY
@@ -138,7 +138,7 @@ public class LocalGameState{
     public LocalBoardState getBoard(){return board;}
     public LocalPlayerState getPlayerActing (){
         if(currentRoundPhase.equals(RoundPhasesEnum.TOTEM_PLACING)) {
-            for (LocalPlayerState p : turnorder)
+            for (LocalPlayerState p : turnOrder)
                 if (!(p == null))
                     return p;
         } else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE)
@@ -151,7 +151,12 @@ public class LocalGameState{
         }
         return null;
     }
-    public List<LocalPlayerState> getTurnorder(){return turnorder;}
+    public List<LocalPlayerState> getTurnOrder(){return turnOrder;}
     public List<LocalPlayerState> getPlayers(){return players;}
+    public LocalPlayerState findPlayer(String nickname){
+        return players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().orElse(null);
+    }
+
+    public List<LocalLeaderBoard> getLeaderboard(){return leaderboard; }
 
 }

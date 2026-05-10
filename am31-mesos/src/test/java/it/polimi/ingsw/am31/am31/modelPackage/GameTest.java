@@ -34,18 +34,20 @@ class GameTest {
     private Player player, player1;
     @BeforeEach
     void setUp() throws Exception {
-        game = new Game(2, new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()));
-        BuildingCard bd = new BuildingCard("dummy", 1,1,1,null);
-        CharacterCard h = new Hunter("h1",1,2,true);
+        game = new Game(2, new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new
+                JsonOfferSupplier()));
+        BuildingCard bd1 = new BuildingCard("dummy",  1, 1, 1, null);
+        BuildingCard bd2 = new BuildingCard("dummy2", 2, 2, 2, null);
+        CharacterCard h = new Hunter("h1", 1, 2, true);
         player = new Player("dummy", Color.BLUE);
-        game.getBoard().addUpper(bd);
+        game.getBoard().addUpper(bd1);
         game.getBoard().addUpper(h);
-        game.getBoard().addUpper(h); //add 3 upper and lower
-        game.getBoard().addLower(bd);
+        game.getBoard().addUpper(h);
+        game.getBoard().addLower(bd2);
         game.getBoard().addLower(h);
         game.getBoard().addLower(h);
         game.addPlayer(player);
-        player1= new Player("dummy2", Color.RED);
+        player1 = new Player("dummy2", Color.RED);
     }
 
     @Test
@@ -93,29 +95,35 @@ class GameTest {
 
     @Test
     void TestShouldGameEnd() throws Exception {
+        //gameEnd before game is finished should throw
         assertThrows(IncorrectMethodCallException.class, game::gameEnd);
+
         player.editPrestigePoints(10);
         player1.editPrestigePoints(5);
         game.addPlayer(player1);
         game.setCurrentRoundPhase(RoundPhasesEnum.END_TURN);
         game.setRound(GameConstants.ROUNDS_NUMBER);
-        List<Player> result = game.gameEnd();
-        //player, with 10 points, should win
-        assertEquals(result.getFirst(),player);
+
+        //player has 10pp, player1 has 5pp → player wins alone
+        assertTrue(game.isPlayerWinner(player));
+        assertFalse(game.isPlayerWinner(player1));
+        assertEquals(player, game.getLeaderBoard().getFirst());
+
+        //tie on pp, broken by food: player(10,5) vs player1(10,0) → player still wins
         player.editFood(5);
         player1.editPrestigePoints(5);
-        result = game.gameEnd();
-        //player, with 10 points and more food, wins
-        assertEquals(player.getPrestigePoints(),player1.getPrestigePoints());
-        assertEquals(result.getFirst(),player);
-        player1.editFood(5);
-        result = game.gameEnd();
-        //they should both win
-        assertEquals(player.getFood(),player1.getFood());
-        assertEquals(2, result.size());
-        assertEquals(result.getFirst(),player1);
-        assertEquals(result.get(1),player);
+        assertEquals(player.getPrestigePoints(), player1.getPrestigePoints());
+        assertEquals(player, game.getLeaderBoard().getFirst());
+        assertTrue(game.isPlayerWinner(player));
+        assertFalse(game.isPlayerWinner(player1));
 
+        //full tie on pp + food → both winners, leaderboard size 2
+        player1.editFood(5);
+        List<Player> result = game.getLeaderBoard();
+        assertEquals(player.getFood(), player1.getFood());
+        assertEquals(2, result.size());
+        assertTrue(game.isPlayerWinner(player));
+        assertTrue(game.isPlayerWinner(player1));
     }
 
     @Test
@@ -129,24 +137,21 @@ class GameTest {
     @Test
     void TestShouldEndRound() {
     }
+
     @Test
     void TestShouldChangeEra() throws IOException, InvalidPlayersNumberException {
-//        Game game = new Game(3, new GameResources(
-//                new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new JsonOfferSupplier()
-//        ));
-//
-//        game.getBoard().addUpper(new BuildingCard("dummy", 1,1,1,null));
-//        game.getBoard().addLower(new BuildingCard("dummy", 2,2,2,null));
-        //added to beforeach
+        //pre: setUp put bd1(era=1) in upperBLine, bd2(era=2) in underBLine
         assertEquals(2, game.getBoard().getUnderBLine().getFirst().getEra());
-        assertEquals(1, game.getBoard().getUpperBLine().getFirst().getEra()); //we check if the cards were added
-        //change era should move the lower and delete the lower card
-        game.changeEra();
-         //we check if the cards were moved and removed
-        assertEquals(1, game.getBoard().getUnderBLine().getFirst().getEra());
-        assertEquals(1,game.getBoard().getUnderBLine().size());
-    }
+        assertEquals(1, game.getBoard().getUpperBLine().getFirst().getEra());
 
+        //changeEra: discards underBLine (era=1 buildings), moves upperBLine down,
+        //then refills upper from deck with new-era cards (if any)
+        game.changeEra();
+
+        //bd1(era=1) should now be the (only) under building; old bd2 was discarded
+        assertEquals(1, game.getBoard().getUnderBLine().getFirst().getEra());
+        assertEquals(1, game.getBoard().getUnderBLine().size());
+    }
     @Test
     void TestShouldPlayerChoice() {
     }

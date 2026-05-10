@@ -6,7 +6,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 public class BonusPaintHandlerDecorator extends PaintHandlerDecorator{
 
     public BonusPaintHandlerDecorator(IPaintHandler wrappedHandler){super(wrappedHandler); }
-//TODO TESTING
+
     @Override
     public void handlePaint(Player player, int minimumArtistsNumber, int prestigePointsBonus, int prestigePointsMalus) {
         CountVisitor visitor = new CountVisitor();

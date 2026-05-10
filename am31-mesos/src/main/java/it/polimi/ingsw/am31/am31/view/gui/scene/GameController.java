@@ -610,7 +610,7 @@ public class GameController extends BaseController {
 
         StackPane pane = new StackPane(tileIv);
 
-        List<LocalPlayerState> turnOrder = localGameState.getTurnorder();
+        List<LocalPlayerState> turnOrder = localGameState.getTurnOrder();
         double slotHeight = cardHeight / 5;
 
         for (int i = 0; i < turnOrder.size(); i++) {

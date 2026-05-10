@@ -9,15 +9,15 @@ import java.util.List;
 
 //Notifies the players that the game has ended and sends the leaderboard
 public class EndGameUpdate extends UpdateMessage {
-    //TODO: Should leaderboard also show scores?
-    private final List<PlayerMessage> playersLeaderBoard;
 
-    public EndGameUpdate(@JsonProperty("playersLeaderBoard") List<PlayerMessage> playersList){
+    private final List<LeaderBoardEntryUpdate> playersLeaderBoard;
+
+    public EndGameUpdate(@JsonProperty("playersLeaderBoard") List<LeaderBoardEntryUpdate> playersList){
         super(UpdateMethodsConstants.GAME_END_UPDATE);
         this.playersLeaderBoard = playersList;
     }
 
-    public List<PlayerMessage> getPlayersLeaderBoard() {return playersLeaderBoard;}
+    public List<LeaderBoardEntryUpdate> getPlayersLeaderBoard() {return playersLeaderBoard;}
 
     @Override
     protected boolean checkSpecificValidity() {return playersLeaderBoard != null && !playersLeaderBoard.contains(null);}

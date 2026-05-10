@@ -16,12 +16,7 @@ public class BuildingCard extends Card implements IPickable {
     private final Consumer<Player> effect;
 
 
-    //For generics: check the correct handler then create like this:
-    //              new Building(era, cost, pp, (player) -> {player.addWinRitualEffect(DoubleWinRitualStrategy::new)});
-    //For plain +25 PP building:
-    //  new Building(era, cost, pp, (player) -> player.editPP(25));
 
-    //TODO : ADD IDS TO BUILDINGS WHEN DOING JSON
     public BuildingCard (String cardId, int era, int cost, int prestigePointsGained, Consumer<Player> effect){
         super(cardId, era);
         this.cost = cost;

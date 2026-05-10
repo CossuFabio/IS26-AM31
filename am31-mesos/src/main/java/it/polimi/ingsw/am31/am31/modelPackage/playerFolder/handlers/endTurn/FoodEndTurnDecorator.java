@@ -6,7 +6,7 @@ public class FoodEndTurnDecorator extends EndTurnHandlerDecorator{
 
     public FoodEndTurnDecorator(IEndTurnHandler wrappedHandler){super(wrappedHandler);}
 
-    //TODO REMOVE MAGIC NUMBERS
+
     @Override
     //gets +1 additional food if totem is on first places of Turn Order
     public void handleEndTurn(Player player, int turnOrder, int nPlayers) {

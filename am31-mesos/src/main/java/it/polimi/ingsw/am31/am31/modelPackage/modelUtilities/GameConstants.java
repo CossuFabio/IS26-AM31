@@ -25,8 +25,6 @@ public class GameConstants {
     public static final String FINAL_RITUAL_ID = "re3";
 
 
-    public static final String EMPTY_STRING = "";
-
     public static int getEraOneBuildings(int nPlayers){
         if(nPlayers == 2)
             return 1;
@@ -49,8 +47,6 @@ public class GameConstants {
 
         else return 5;
     }
-
-
 
 
 

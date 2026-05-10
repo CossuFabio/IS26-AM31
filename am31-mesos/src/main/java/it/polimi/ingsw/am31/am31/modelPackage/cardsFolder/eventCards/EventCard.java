@@ -7,9 +7,14 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 import java.util.List;
 
 public abstract class EventCard extends Card {
+
+    public enum PriorityClass {
+        HIGH, LOW
+    }
+
     protected int prestigePointsBonus;
     protected int prestigePointsMalus;
-    protected int priority;
+    protected PriorityClass priorityClass;
 
     protected EventCard(String cardID, int era) {
         super(cardID, era);
@@ -17,8 +22,8 @@ public abstract class EventCard extends Card {
 
     public abstract void resolve(List<Player> players);
 
-    public int getPriority() {
-        return priority;
+    public PriorityClass getPriorityClass() {
+        return priorityClass;
     }
 
     public int getPrestigePointsBonus() {
@@ -32,6 +37,7 @@ public abstract class EventCard extends Card {
     public void acceptVisit(TribeVisitor visitor){
             visitor.visit(this);
         }
+
 
 
 }

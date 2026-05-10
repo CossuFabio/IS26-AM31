@@ -6,68 +6,68 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 
 public class CountVisitor implements TribeVisitor{
 
-    private int Hcount;
-    private int Fcount;
-    private int Scount;
-    private int Bcount;
-    private int Acount;
-    private int Icount;
-    private int Event;
+    private int huntersCount;
+    private int farmersCount;
+    private int shamanCount;
+    private int builderCount;
+    private int artistsCount;
+    private int inventorsCount;
+    private int eventsCount;
 
     public CountVisitor() {
-        Hcount = 0;
-        Fcount =0;
-        Scount = 0;
-        Bcount = 0;
-        Acount = 0;
-        Icount = 0;
-        Event = 0;
+        huntersCount = 0;
+        farmersCount =0;
+        shamanCount = 0;
+        builderCount = 0;
+        artistsCount = 0;
+        inventorsCount = 0;
+        eventsCount = 0;
     }
 
 
     public void visit(Hunter hunter) {
-        this.Hcount++;
+        this.huntersCount++;
     }
 
 
     public void visit(Farmer farmer) {
-        this.Fcount++;
+        this.farmersCount++;
     }
 
     public void visit(Shaman shaman) {
-        this.Scount++;
+        this.shamanCount++;
     }
 
     public void visit(Builder builder) {
-        this.Bcount++;
+        this.builderCount++;
     }
 
 
     public void visit(Artist artist) {
-        this.Acount++;
+        this.artistsCount++;
     }
 
 
     public void visit(Inventor inventor) {
-        this.Icount++;
+        this.inventorsCount++;
     }
 
     public void visit(EventCard event) {
-        this.Event++;
+        this.eventsCount++;
     }
 
     public void visit(BuildingCard building){}
 
-    public int getHunters(){return Hcount; }
-    public int getFarmers(){return Fcount; }
-    public int getShamans(){return Scount; }
-    public int getBuilders(){return Bcount; }
-    public int getInventors(){return Icount; }
-    public int getArtists(){return Acount;}
-    public int getEvent(){return Event;}
+    public int getHunters(){return huntersCount; }
+    public int getFarmers(){return farmersCount; }
+    public int getShamans(){return shamanCount; }
+    public int getBuilders(){return builderCount; }
+    public int getInventors(){return inventorsCount; }
+    public int getArtists(){return artistsCount;}
+    public int getEvent(){return eventsCount;}
 
     public int getTotalCharacters(){
-        return Hcount + Bcount + Scount + Fcount + Icount + Acount;
+        return huntersCount + builderCount + shamanCount + farmersCount + inventorsCount + artistsCount;
     }
 
 }

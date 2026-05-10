@@ -16,7 +16,7 @@ public class SustainEventCard extends EventCard {
         super(cardId, era);
         this.prestigePointsMalus = prestigePointsMalus;
         this.prestigePointsBonus = 0;
-        this.priority = 20+era;
+        this.priorityClass = PriorityClass.LOW;
     }
 
     public void resolve(List<Player> players) {

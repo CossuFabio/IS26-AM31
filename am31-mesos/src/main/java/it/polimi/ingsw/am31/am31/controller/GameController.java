@@ -88,8 +88,8 @@ public class GameController {
 
     }
 
-    //Synchronized probably not necessary TODO: Check this
-    private synchronized void advanceAfterDrawOrSkip() throws GameInvariantException {
+
+    private void advanceAfterDrawOrSkip() throws GameInvariantException {
         if (game.getCurrentRoundPhase() == RoundPhasesEnum.ACTION_PHASE) {
             while(game.hasCurrentPlayerFinishedDrawing() && !game.isDrawPhaseFinished()) {
                 game.setNextPlayerDrawing();
@@ -111,7 +111,6 @@ public class GameController {
 
 
     //-----TOTEM PHASE-----
-    //TODO: Test this
     public synchronized void placeTotem(String playerId, String offerTrackID) throws IllegalActionException, GameInvariantException{
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player player = resourceFinder.getPlayerFromNickname(playerId);
@@ -170,8 +169,8 @@ public class GameController {
      //-----Endgame methods-----
     private synchronized void handleEndGame() throws GameInvariantException{
         if(!isGameStillActive) throw new GameNoLongerActiveException();
-        List<Player> leaderboard = game.gameEnd();
-        observerHandler.onGameEndUpdate(leaderboard);
+        game.gameEnd();
+        observerHandler.onGameEndUpdate(game);
     }
 
     public synchronized int getNumActivePlayers() throws GameInvariantException{

@@ -5,14 +5,13 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 public class DefaultEndTurnHandler implements IEndTurnHandler {
 
 
-    //TODO REMOVE MAGIC NUMBERS
-
-    public DefaultEndTurnHandler() {
-    }
+    public DefaultEndTurnHandler() {}
 
     @Override
     //By default, at the end of the turn the player gains/loses food based on which tile he is placed
     //All bonuses change based on number of players
+    //We prefer to put here this logic, leaving these magic numbers, rather than creating a more complex logic that
+    //implements it
     public void handleEndTurn(Player player, int playerOrder, int nPlayers) {
         if(playerOrder == 0){
             player.editFood(1);
