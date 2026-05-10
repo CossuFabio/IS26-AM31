@@ -96,7 +96,7 @@ public class Board implements GameObservable {
 
 
 
-    //TODO TESTING
+
     //remove method returns true if the array contains the argument and then it gets removed.
     //The !(buildings.remove || tribe.remove) checks if the card was present, if it wasn't the method throws the exception
     public void drawFromUpper(IPickable card) throws CardNotFoundException{

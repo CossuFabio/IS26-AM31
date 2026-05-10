@@ -118,10 +118,14 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     }
 
     @Override
-    public void handleUpdateMessage(EndGameUpdate msg){
-        //TODO: IMPLEMENT THIS
-        //msg contains winners, for now
-        //shows usernames and score? (need to create new PlayerMessage class with player.getScore)
+    public void handleUpdateMessage(EndGameUpdate msg) {
+        List<LocalLeaderBoard> leaderboard = msg.getPlayersLeaderBoard().stream()
+                .map(dtoEntry -> new LocalLeaderBoard(
+                        gameState.findPlayer(dtoEntry.getPlayerNickname()),
+                        dtoEntry.isWinner()))
+                .toList();
+        gameState.setLeaderboard(leaderboard);
+        eventBus.post(new GameEndedEvent());
     }
 
     //player
@@ -152,7 +156,7 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
     @Override
     public void handleUpdateMessage(GameCrashUpdate msg){
-        //TODO: IMPLEMENT THIS
+        eventBus.post(new GameCrashedEvent());
     }
 
     @Override

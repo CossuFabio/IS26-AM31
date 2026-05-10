@@ -8,8 +8,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
-import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
-import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.GamesManager;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.CardLineUpdate;
@@ -22,10 +20,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMe
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class UpdateFactory {
  //PLAYER RELATED UPDATES
@@ -74,7 +69,22 @@ public class UpdateFactory {
         return new GameStartUpdate();
     }
 
-    public static EndGameUpdate createGameEndUpdate(List<Player> leaderboard) {return new EndGameUpdate(leaderboard.stream().map(p -> new PlayerMessage(p.getNickname(), p.getColor())).toList());}
+    public static EndGameUpdate createGameEndUpdate(Game game) {
+
+
+        List<Player> ranking = game.getLeaderBoard();
+
+        List<LeaderBoardEntryUpdate> entries = ranking.stream()
+                .map(p -> new LeaderBoardEntryUpdate(
+                        p.getNickname(),
+                        p.getPrestigePoints(),
+                        p.getFood(),
+                        //Handles the case of more players with same score
+                        game.isPlayerWinner(p)))
+                .toList();
+
+        return new EndGameUpdate(entries);
+    }
 
     //BOARD RELATED UPDATES
     public static OfferTrackUpdate createOfferTrackUpdate(Board board){

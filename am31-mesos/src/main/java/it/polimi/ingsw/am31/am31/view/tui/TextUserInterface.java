@@ -2,10 +2,12 @@ package it.polimi.ingsw.am31.am31.view.tui;
 
 
 import it.polimi.ingsw.am31.am31.network.ClientController;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameCrashUpdate;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.View;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameCrashedEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
@@ -22,7 +24,7 @@ public class TextUserInterface implements View{
 
     private volatile TUIPhase currentPhase;
 
-    private enum Scene {REGISTER, MAIN_MENU, GAME}
+    private enum Scene {REGISTER, MAIN_MENU, GAME, RESULTS}
     private Scene currentScene;
 
     public TextUserInterface (ClientController controller, LocalGameState gameState, IEventBus eventBus){
@@ -80,11 +82,11 @@ public class TextUserInterface implements View{
     }
 
     @Subscribe
-    public void gameEnded(GameEndedEvent e){
-        if(currentScene == Scene.GAME){
-            this.currentScene = Scene.MAIN_MENU;
-            gameState.reset();
-            changePhase(new TUILobby(this, controller));
+    public void gameEnded(GameEndedEvent e) {
+        if(currentScene == Scene.GAME) {
+            this.currentScene = Scene.RESULTS;
+            //GameState does not need to be reset
+            changePhase(new TUIResults(this, controller, gameState));
         }
     }
 
@@ -101,5 +103,14 @@ public class TextUserInterface implements View{
         }
     }
 
+    @Subscribe
+    public void gameCrashed(GameCrashedEvent e){
+        if(currentScene == Scene.GAME){
+            System.out.println("\nGame crashed! Returning to main menu");
+            this.currentScene = Scene.MAIN_MENU;
+            gameState.reset();
+            changePhase(new TUILobby(this, controller));
+        }
+    }
 
 }

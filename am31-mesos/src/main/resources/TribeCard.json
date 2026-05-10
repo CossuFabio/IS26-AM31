@@ -392,68 +392,79 @@
     "cardId" : "f1",
     "type" : "Farmer",
     "era" : 1,
-    "minPlayers" : 2
+    "minPlayers" : 2,
+    "discount" : 3
   },
   {
     "cardId" : "f2",
     "type" : "Farmer",
     "era" : 1,
-    "minPlayers" : 2
+    "minPlayers" : 2,
+    "discount" : 3
   },
   {
     "cardId" : "f3",
     "type" : "Farmer",
     "era" : 1,
-    "minPlayers" : 3
+    "minPlayers" : 3,
+    "discount" : 3
   },
   {
     "cardId" : "f4",
     "type" : "Farmer",
     "era" : 1,
-    "minPlayers" : 5
+    "minPlayers" : 5,
+    "discount" : 3
   },
 
   {
     "cardId" : "f5",
     "type" : "Farmer",
     "era" : 2,
-    "minPlayers" : 2
+    "minPlayers" : 2,
+    "discount" : 3
   },
   {
     "cardId" : "f6",
     "type" : "Farmer",
     "era" : 2,
-    "minPlayers" : 3
+    "minPlayers" : 3,
+    "discount" : 3
   },
   {
     "cardId" : "f7",
     "type" : "Farmer",
     "era" : 2,
-    "minPlayers" : 4
+    "minPlayers" : 4,
+    "discount" : 3
   },
   {
     "cardId" : "f8",
     "type" : "Farmer",
     "era" : 2,
-    "minPlayers" : 5
+    "minPlayers" : 5,
+    "discount" : 3
   },
 
   {"cardId" : "f9",
     "type" : "Farmer",
     "era" : 3,
-    "minPlayers" : 2
+    "minPlayers" : 2,
+    "discount" : 3
   },
   {
     "cardId" : "f10",
     "type" : "Farmer",
     "era" : 3,
-    "minPlayers" : 4
+    "minPlayers" : 4,
+    "discount" : 3
   },
   {
     "cardId" : "f11",
     "type" : "Farmer",
     "era" : 3,
-    "minPlayers" : 5
+    "minPlayers" : 5,
+    "discount" : 3
   },
 
 

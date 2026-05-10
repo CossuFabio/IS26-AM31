@@ -89,7 +89,7 @@ public class GameObserversSet implements ObserverHandler{
     }
     
     @Override
-    public void onGameEndUpdate(List<Player> leaderboard){observers.forEach(o -> o.onGameEndUpdate(leaderboard));}
+    public void onGameEndUpdate(Game game){observers.forEach(o -> o.onGameEndUpdate(game));}
 
     @Override
     public void onGameCrashUpdate() {

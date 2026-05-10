@@ -5,7 +5,6 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameEventResolveUpdate;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
@@ -14,9 +13,9 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEventResolveEvent;
 import org.fusesource.jansi.Ansi;
 
-import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.SKIP_VALUE;
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printCard;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -83,7 +82,7 @@ public class TUIGamePhase implements TUIPhase {
                 " ERA " + gameState.getEra() + " " + gameState.getCurrentRoundPhase()).reset());
         //prints players in order of acting
         System.out.println("\nPLAYERS, in order of action\n");
-        for (LocalPlayerState p : gameState.getTurnorder())
+        for (LocalPlayerState p : gameState.getTurnOrder())
             if (p != null)
                 System.out.println(ansi().a(p.getNickname() + " " + p.getColor()));
         //prints upperline, but only ids
@@ -327,8 +326,8 @@ public class TUIGamePhase implements TUIPhase {
     }
 
     @Subscribe
-    public void handleEventUpdate(GameEventResolveUpdate e) {
-        System.out.println("A game event has been resolved: " + e.getCardId() + "\n");
+    public void handleEventUpdate(GameEventResolveEvent e) {
+        System.out.println("A game event has been resolved: " + e.getCard().getCardId() + "\n");
     }
 
 

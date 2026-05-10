@@ -14,6 +14,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.EventQueueBuilderVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.TribeDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
@@ -28,7 +29,6 @@ import java.util.*;
 
 
 import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparingInt;
 
 
 public class Game implements GameObservable {
@@ -160,10 +160,8 @@ public class Game implements GameObservable {
         currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
         observers.onGameRoundStatusUpdate(this);
     }
-    
 
-    //TODO : Test This - Review
-    public List<Player> gameEnd() throws IncorrectMethodCallException{
+    public void gameEnd() throws IncorrectMethodCallException{
 
         if(!isGameFinished()) throw new IncorrectMethodCallException("gameEnd", "Game not finished!");
 
@@ -171,50 +169,43 @@ public class Game implements GameObservable {
         observers.onGameRoundStatusUpdate(this);
 
         players.forEach(player->{player.resolveEndGame();});
-        List<Player> scores = new  ArrayList<>();
-        for (Player player : players) {
-            scores.add(player);
-        }
-        scores.sort(comparing(Player::getPrestigePoints).thenComparing(Player::getFood));
-        ArrayList<Player> winners = new ArrayList<>();
-        winners.add(scores.removeLast());
-        while(!scores.isEmpty()){
-            Player playerToCompare = scores.removeLast();
-            if(winners.getFirst().getPrestigePoints() == playerToCompare.getPrestigePoints()){
-                if(winners.getFirst().getFood() == playerToCompare.getFood()) {
-                    winners.add(playerToCompare);
-                }
-            }
-        }
-        return winners;
-        //method should then show winners
+
     }
+
+    //You can get the leaderboard at any moment
+    public List<Player> getLeaderBoard(){
+
+        return players.stream()
+                .sorted(Comparator
+                        .comparingInt(Player::getPrestigePoints)
+                        .thenComparingInt(Player::getFood)
+                        .reversed())
+                .toList();
+    }
+
+    public boolean isPlayerWinner(Player p){
+        if(p == null || !players.contains(p)) return false;
+
+        //Sorting the leaderboard is O(1) since the size is limited to 5
+        Player top = getLeaderBoard().getFirst();
+
+        return p.getPrestigePoints() == top.getPrestigePoints()
+                && p.getFood() == top.getFood();
+    }
+
 
     private void resolveEvents(){
 
-        PriorityQueue<EventCard> eventQueue = new PriorityQueue<>(
-                comparingInt(EventCard::getPriority)
-        );
-        CountVisitor visitor = new CountVisitor();
-        ArrayList<Card> templine = new ArrayList<>(board.getUnderLine());
+        EventQueueBuilderVisitor eventVisitor = new EventQueueBuilderVisitor();
+        board.getUnderLine().forEach(card -> card.acceptVisit(eventVisitor));
 
-        int tempevent=0;
-        while(!templine.isEmpty()) {
-            templine.getFirst().acceptVisit(visitor);
-            if (visitor.getEvent() > tempevent)
-            {
-                eventQueue.add((EventCard) templine.getFirst());  //Safe explicit cast to EventCard
-                tempevent=visitor.getEvent();
-            }
-            templine.removeFirst();
-        }
+        List<EventCard> eventCards = eventVisitor.getCompleteQueue();
+        eventCards.forEach(eventCard -> {
+            eventCard.resolve(players);
+            observers.onGameEventResolveUpdate(eventCard);
+        });
 
-        //Cannot use foreach (See documentation)
-        while(!eventQueue.isEmpty()){
-            EventCard temp =eventQueue.poll();
-            temp.resolve(players);
-            observers.onGameEventResolveUpdate(temp);
-        }
+
     }
 
     public void endRound() throws IncorrectMethodCallException{
@@ -250,8 +241,7 @@ public class Game implements GameObservable {
         return temp;
     }
 
-    //TODO: TEST THIS
-    //TODO add changeEraUpdateMessage
+
     public void changeEra(){
         board.moveLowerBuildings();
         //we increase the era, then check if the next card in building deck is the new era -> add it to upperbline.
@@ -359,7 +349,7 @@ public class Game implements GameObservable {
     }
     public boolean isGameInStartingPhase(){return currentRoundPhase == RoundPhasesEnum.GAME_STARTING;}
 
-    //TODO NOT SURE IF CORRECT - REVIEW
+
     public boolean isBonusDrawPhaseFinished() throws IncorrectMethodCallException{
         if (this.currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) {throw new IncorrectMethodCallException("isBonusDrawFinished", "WrongPhase");}
         if(players.stream().noneMatch(player -> player.hasBonusDraw())) return true;
@@ -405,8 +395,8 @@ public class Game implements GameObservable {
         playerActing.editFood(offerCardChosen.getFood());
 
     }
-    // for test
-    public void setRound(int round)
+
+    void setRound(int round)
         {
         this.roundNumber = round;
         }

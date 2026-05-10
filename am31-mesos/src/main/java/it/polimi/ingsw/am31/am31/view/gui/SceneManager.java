@@ -39,6 +39,7 @@ public class SceneManager {
         Platform.runLater( () -> {
             try {
                 if (currentController != null)
+
                     eventBus.unregister(currentController);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
                 Parent root = loader.load();

@@ -22,7 +22,7 @@ class EventCardTest {
 
     @Test
     void TestShouldgetPriority() {
-        assertEquals(21, this.eventCard.getPriority());
+        assertEquals(EventCard.PriorityClass.LOW, this.eventCard.getPriorityClass());
     }
 
     @Test

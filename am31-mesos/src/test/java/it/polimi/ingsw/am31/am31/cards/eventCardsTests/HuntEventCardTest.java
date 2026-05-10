@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard.PriorityClass.HIGH;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HuntEventCardTest {
@@ -31,6 +32,6 @@ class HuntEventCardTest {
     }
     @Test
     void TestShouldTestingGetPriority () {
-        assertEquals(2, eventCard.getPriority());
+        assertEquals(HIGH, eventCard.getPriorityClass());
     }
 }

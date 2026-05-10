@@ -16,8 +16,24 @@ public class Client {
     //main client class
     public static void main(String[] args){
 
-        //TODO: ADD CHECK FOR CORRECT COMMAND LINE PARAMS
 
+        //Uncomment this when submitting project
+
+        /*final String RMI_STRING = "RMI";
+        final String SOCKET_STRING = "SOCKET";
+
+        final String TUI_STRING = "TUI";
+        final String GUI_STRING = "GUI";
+
+        if(args.length != 2 ){
+            System.out.println("Invalid arguments!");
+            System.out.println("First argument: connection type. Type " + RMI_STRING + " or " + SOCKET_STRING);
+            System.out.println("Second argument: view type. Type " + TUI_STRING + " or " + GUI_STRING);
+            return;
+        }*/
+
+
+        //Remove when project is finished and remember to change switch cases values to parametric strings
         String connectionType = "1"; //args[0];
         String viewType = "1"; //args[1];
 
