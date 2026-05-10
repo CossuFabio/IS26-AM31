@@ -5,23 +5,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
 public class Farmer extends CharacterCard {
-    private final int discount;
+
+    private static final int SUSTAIN_DISCOUNT = 3;
+
     @JsonCreator
     public Farmer(
             @JsonProperty("cardId") String cardId,
-            @JsonProperty("era")int era,
-            @JsonProperty("minPlayers")int minPlayers,
-            @JsonProperty("discount") int discount){
-        super(cardId, era,minPlayers);
-        this.discount = discount;
+            @JsonProperty("era") int era,
+            @JsonProperty("minPlayers") int minPlayers
+    ){
+        super(cardId, era, minPlayers);
     }
 
     @Override
     public int getSustainDiscount() {
-        return discount;
+        return SUSTAIN_DISCOUNT;
     }
-
-
 
     @Override
     public void acceptVisit(TribeVisitor visitor) {
@@ -30,6 +29,6 @@ public class Farmer extends CharacterCard {
 
     @Override
     public String toString(){
-        return "CharacterCard type: Farmer - Era: " + era + " - Minimum Players: " + minPlayers + " - Sustain discount: " + discount;
+        return "CharacterCard type: Farmer - Era: " + era + " - Minimum Players: " + minPlayers + " - Sustain discount: " + SUSTAIN_DISCOUNT;
     }
 }

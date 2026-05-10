@@ -33,7 +33,7 @@ public class TUIGamephaseTest {
         List<Card> cards = new ArrayList<>();
         EffectsCatalog effects = new EffectsCatalog();
         Card h = new Hunter("h1",1,2,true);
-        Card f = new Farmer("f1",2,2,3);
+        Card f = new Farmer("f1",2,2);
         Card i = new Inventor("i1",2,2,IconEnum.BREAD);
         Card e = new SustainEventCard("e1",1,2);
         BuildingCard bd = new BuildingCard("bd1",1, 2, 3,effects.getEffect(EffectIdsConstants.DOUBLE_BUILDER_ENDGAME));

@@ -40,11 +40,10 @@ public class DefaultSustainHandler{
             int cannotPay = food - (sizeTribe - fullDiscount); //Negative value
             player.editPrestigePoints(cannotPay*Math.abs(malus)); //Put malus as positive
             player.editFood(-food);
-        }
-        //if sufficient, edit to new value
-        else
-            if(fullDiscount>sizeTribe)
+        } else {
+            if(fullDiscount > sizeTribe)
                 fullDiscount = sizeTribe;
             player.editFood(-(sizeTribe - fullDiscount));
+        }
     }
 }

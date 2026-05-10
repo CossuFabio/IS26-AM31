@@ -482,7 +482,10 @@ public class Game implements GameObservable {
         Player playerWithBonus = players.stream().filter(player -> player.hasBonusDraw()).findFirst().orElse(null);
 
         if(playerWithBonus == null) drawManager.setUp(0, 0);
-        else drawManager.setUp(playerWithBonus.getBonusDrawFromUpper(), playerWithBonus.getBonusDrawFromLower());
+        else {
+            this.playerActing = playerWithBonus;
+            drawManager.setUp(playerWithBonus.getBonusDrawFromUpper(), playerWithBonus.getBonusDrawFromLower());
+        }
 
 
     }

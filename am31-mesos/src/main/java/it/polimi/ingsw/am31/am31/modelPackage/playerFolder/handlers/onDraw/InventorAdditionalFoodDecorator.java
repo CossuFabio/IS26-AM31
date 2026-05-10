@@ -53,8 +53,10 @@ public class InventorAdditionalFoodDecorator extends CardDrawHandlerDecorator{
         try{
             IconEnum currentIcon = ((CharacterCard) card).getIcon();
             if(currentIcon != IconEnum.EMPTY){
-                if(icons.contains(currentIcon)) player.editFood(FOOD_BONUS);
-                else icons.add(currentIcon);
+                if(icons.contains(currentIcon)) {
+                    player.editFood(FOOD_BONUS);
+                    icons.remove(currentIcon);
+                } else icons.add(currentIcon);
             }
         }catch(Exception e){
             //It wasn't a character card => do nothing

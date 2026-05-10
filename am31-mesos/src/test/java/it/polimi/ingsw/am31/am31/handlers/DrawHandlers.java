@@ -80,17 +80,17 @@ public class DrawHandlers {
         assertEquals(initialFood, player.getFood());
 
         //Adding farmers to complete two sets (one hunter missing for the bonus of the third set)
-        player.addCard(new Farmer("dummy", 1, 1,2));
+        player.addCard(new Farmer("dummy", 1, 1));
 
         assertEquals(initialFood + foodBonus, player.getFood());
         int currentFood = initialFood + foodBonus;
 
-        player.addCard(new Farmer("dummy", 1, 1,2));
+        player.addCard(new Farmer("dummy", 1, 1));
         assertEquals(currentFood + foodBonus, player.getFood());
         currentFood += foodBonus;
 
 
-        player.addCard(new Farmer("dummy", 1, 1,2));
+        player.addCard(new Farmer("dummy", 1, 1));
         assertEquals(currentFood, player.getFood());
 
         //Now adding a marked hunter: should add 2 foods for previous hunters + 5 by the decorator
