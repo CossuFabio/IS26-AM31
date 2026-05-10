@@ -19,7 +19,7 @@ public class Client {
         //TODO: ADD CHECK FOR CORRECT COMMAND LINE PARAMS
 
         String connectionType = "1"; //args[0];
-        String viewType = "2"; //args[1];
+        String viewType = "1"; //args[1];
 
         //library to display colors idk if this goes here
         AnsiConsole.systemInstall();
@@ -49,6 +49,13 @@ public class Client {
 
 
         ClientController controller = new ClientController(connection, eventBus);
+
+        //This line sends a disconnection request if the game is closed by the outside
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try { controller.disconnect(); } catch (Exception ignored) {}
+        }));
+
+
         View view = null;
 
 

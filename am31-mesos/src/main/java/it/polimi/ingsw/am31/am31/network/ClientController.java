@@ -9,8 +9,9 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 
 public class ClientController {
+
     private final VirtualServer connection;
-    private boolean connected = true;
+    private volatile boolean connected = true;
 
     private String localPlayerUsername = ClientConfig.UNREGISTERED_CLIENT_ID;
 
@@ -35,7 +36,7 @@ public class ClientController {
                 } catch (Exception e) {
                     System.out.println("Server Error");
                     try {
-                        this.connection.disconnect();
+                        disconnect();
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
@@ -53,6 +54,7 @@ public class ClientController {
     }
 
     public void disconnect() throws Exception {
+        if (!connected) return;
         connected = false;
         this.connection.disconnect();
     }

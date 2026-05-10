@@ -51,6 +51,12 @@ public class TextUserInterface implements View{
                 System.err.println("error: " + e.getMessage());
             }
         }
+        try {
+            controller.disconnect();
+        }catch (Exception ignored) {
+            //We do not care if the disconnection doesn't succeed, the server will handle with at most
+            //15 seconds of delay
+        }
     }
 
     public void printScreen() {
