@@ -19,6 +19,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
@@ -34,13 +35,14 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 public class GameController extends BaseController {
     @FXML private StackPane rootStackPane;
@@ -57,6 +59,7 @@ public class GameController extends BaseController {
 
     @FXML private VBox playersContainer;
 
+    @FXML private HBox myNickname;
     @FXML private Label myFoodLabel;
     @FXML private Label myPPLabel;
     @FXML private HBox myTribeContainer;
@@ -68,11 +71,18 @@ public class GameController extends BaseController {
 
     @FXML private StackPane deckOverlay;
     @FXML private Label ownerName;
+    @FXML private ScrollPane tribePlayerScrollPane;
+    @FXML private ScrollPane buildingsPlayerScrollPane;
     @FXML private HBox tribePlayerContainer;
     @FXML private HBox buildingsPlayerContainer;
 
     @FXML private VBox rightPanel;
     @FXML private VBox leftSpacer;
+
+    @FXML private StackPane cardTypeOverlay;
+    @FXML private Label cardTypeLabel;
+    @FXML private ScrollPane cardTypeScrollPane;
+    @FXML private HBox cardTypeCardsContainer;
 
     private static final String CARDS_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/cards/";
     private static final String ASSETS_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/";
@@ -87,10 +97,16 @@ public class GameController extends BaseController {
 
     private Label promptLabel = null;
 
+    //cache for the images (path + image)
     private final Map<String, Image> imageCache = new HashMap<>();
-    private final Map<String, StackPane> tribeNodes = new HashMap<>();
-    private final Map<String, StackPane> buildingNodes = new HashMap<>();
+    //set of player's tribe card IDs
+    private final Set<String> tribeKnownTypes = new HashSet<>();
+    //set of player's building card IDs
+    private final Set<String> knownBuildingIds = new HashSet<>();
+    //map to keep track of how many cards you have already drawn from each row in the current turn
+    private final Map<BoardRows, Integer> pendingDraws = new HashMap<>();
 
+    //boolean thread-safe used as flag to avoid multiple refresh to UI
     private final AtomicBoolean uiRefreshPending = new AtomicBoolean(false);
 
     @FXML
@@ -100,14 +116,20 @@ public class GameController extends BaseController {
         if (foodImg != null) foodIcon.setImage(foodImg);
         if (ppImg != null) PPIcon.setImage(ppImg);
 
+        //bind the width of the leftSpacer to the right one (the left will be empty)
         leftSpacer.prefWidthProperty().bind(rightPanel.widthProperty());
 
+        //make all the ScrollPane transparent
         Platform.runLater(() -> {
             makeScrollPaneTransparent(tribeScrollPane);
             makeScrollPaneTransparent(buildingsScrollPane);
+            makeScrollPaneTransparent(cardTypeScrollPane);
+            makeScrollPaneTransparent(tribePlayerScrollPane);
+            makeScrollPaneTransparent(buildingsPlayerScrollPane);
         });
     }
 
+    //method to make a ScrollPane transparent (normally doesn't work  due to viewport)
     private void makeScrollPaneTransparent(ScrollPane sp) {
         sp.getStyleClass().add("transparent-scroll");
         var viewport = sp.lookup(".viewport");
@@ -116,12 +138,13 @@ public class GameController extends BaseController {
 
     @Subscribe
     public void onBoardUpdate(BoardUpdateEvent event) {
+        //compareAndSet check if uiRefreshPending is false, if so sets it to true and return true, if not return false
         if (uiRefreshPending.compareAndSet(false, true)) {
             Platform.runLater(() -> {
                 uiRefreshPending.set(false);
                 RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
                 LocalPlayerState acting = localGameState.getPlayerActing();
-                refreshUI(phase, acting);
+                refreshUI(phase, acting,localGameState);
             });
         }
     }
@@ -137,28 +160,36 @@ public class GameController extends BaseController {
         Platform.runLater(() -> {
             RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
             LocalPlayerState acting = localGameState.getPlayerActing();
-            refreshUI(phase, acting);
+            refreshUI(phase, acting, localGameState);
         });
     }
 
-    private void refreshUI(RoundPhasesEnum phase, LocalPlayerState acting) {
+    //method to refresh the UI calling every method to refresh each part of the screen
+    private void refreshUI(RoundPhasesEnum phase, LocalPlayerState acting, LocalGameState gameState) {
+        String myNick = controller.getLocalPlayerUsername();
+        boolean isMyDrawTurn = acting != null && acting.getNickname().equals(myNick)
+                && (phase == RoundPhasesEnum.ACTION_PHASE || phase == RoundPhasesEnum.BONUS_DRAWING_PHASE);
+        if (!isMyDrawTurn) pendingDraws.clear();
         refreshDeck();
         refreshTopBar(phase, acting);
         refreshUpperRow(phase, acting);
-        refreshOfferTrack(phase, acting);
+        refreshOfferTrack(phase, acting, gameState);
         refreshLowerRow(phase, acting);
         refreshPlayerPanel(acting);
         refreshMyInfo();
         showPrompt(phase, acting);
     }
 
+    //method to refresh the deck
     private void refreshDeck() {
         int era = localGameState.getEra();
         String backName = "card_back_" + era + ".png";
         Image back = loadImage(CARDS_PATH + backName);
         if (back != null) deckImage.setImage(back);
+        if (localGameState.getRoundNumber() == 10) deckImage.setVisible(false);
     }
 
+    //method to load an image from a path
     private Image loadImage(String path) {
         if (imageCache.containsKey(path)) return imageCache.get(path);
         InputStream stream = getClass().getResourceAsStream(path);
@@ -167,6 +198,7 @@ public class GameController extends BaseController {
         return img;
     }
 
+    //method to refresh the top bar
     private void refreshTopBar(RoundPhasesEnum phase, LocalPlayerState acting) {
         roundLabel.setText("Round: " + localGameState.getRoundNumber());
         eraLabel.setText("Era: " + localGameState.getEra());
@@ -188,6 +220,7 @@ public class GameController extends BaseController {
         };
     }
 
+    //method to refresh the upper lane
     private void refreshUpperRow(RoundPhasesEnum phase, LocalPlayerState acting) {
         upperRowContainer.getChildren().clear();
         for (Card card : localGameState.getBoard().getUpperLine()) {
@@ -195,14 +228,16 @@ public class GameController extends BaseController {
         }
     }
 
-    private void refreshOfferTrack(RoundPhasesEnum phase, LocalPlayerState acting) {
+    //method to refresh the offer track
+    private void refreshOfferTrack(RoundPhasesEnum phase, LocalPlayerState acting, LocalGameState gameState) {
         offerTrackContainer.getChildren().clear();
-        offerTrackContainer.getChildren().add(buildTurnOrderTile());
+        offerTrackContainer.getChildren().add(buildTurnOrderTile(gameState));
         for (LocalOfferCard offer : localGameState.getBoard().getOfferTrack()) {
             offerTrackContainer.getChildren().add(buildOfferTileNode(offer, phase, acting));
         }
     }
 
+    //method to refresh the lower lane
     private void refreshLowerRow(RoundPhasesEnum phase, LocalPlayerState acting) {
         lowerRowContainer.getChildren().clear();
         for (Card card : localGameState.getBoard().getUnderLine()) {
@@ -210,6 +245,7 @@ public class GameController extends BaseController {
         }
     }
 
+    //method to refresh the player panel on the right
     private void refreshPlayerPanel(LocalPlayerState acting) {
         playersContainer.getChildren().clear();
         String myNick = controller.getLocalPlayerUsername();
@@ -220,6 +256,7 @@ public class GameController extends BaseController {
         }
     }
 
+    //method to refresh all my info (food, pp and deck)
     private void refreshMyInfo() {
         String myNick = controller.getLocalPlayerUsername();
         LocalPlayerState me = localGameState.getPlayers().stream()
@@ -227,39 +264,100 @@ public class GameController extends BaseController {
                 .findFirst()
                 .orElse(null);
         if (me == null) return;
+        myNickname.getChildren().clear();
+        Image totemImg = loadImage(TOTEM_PATH + me.getColor().name().toLowerCase() + ".png");
+        if (totemImg != null) {
+            ImageView totemIv = new ImageView(totemImg);
+            totemIv.setFitWidth(35);
+            totemIv.setPreserveRatio(true);
+            myNickname.getChildren().add(totemIv);
+        }
+        Label nickname = new Label();
+        nickname.setText(myNick);
+        nickname.setStyle("-fx-text-fill: white;");
+        nickname.setFont(Font.font("Inknut Antiqua Regular", 30));
+        myNickname.getChildren().add(nickname);
         myFoodLabel.setText(String.valueOf(me.getFood()));
         myPPLabel.setText(String.valueOf(me.getPrestigePoints()));
-        updateCardContainer(myTribeContainer, me.getTribe(), tribeNodes);
-        updateCardContainer(myBuildingsContainer, me.getBuildings(), buildingNodes);
+        updateStackedContainer(myTribeContainer, me.getTribe(), tribeKnownTypes);
+        updateCardContainer(myBuildingsContainer, me.getBuildings(), knownBuildingIds);
     }
 
-    private void updateCardContainer(HBox container, List<Card> cards, Map<String, StackPane> nodeMap) {
-        Set<String> newIds = cards.stream().map(Card::getCardId).collect(Collectors.toSet());
-
-        // rimuove i nodi delle carte non più presenti
-        new HashSet<>(nodeMap.keySet()).stream()
-                .filter(id -> !newIds.contains(id))
-                .forEach(id -> container.getChildren().remove(nodeMap.remove(id)));
-
-        // aggiunge i nodi solo per le carte nuove
+    private void updateCardContainer(HBox container, List<Card> cards, Set<String> knownIds) {
         for (Card card : cards) {
-            if (!nodeMap.containsKey(card.getCardId())) {
+            //.add return true if the element wasn't present
+            if (knownIds.add(card.getCardId())) {
                 StackPane node = buildCardNode(card, null, null, null);
-                nodeMap.put(card.getCardId(), node);
+                container.getChildren().add(node);
                 animateCardEntry(node);
             }
         }
+    }
 
-        // sincronizza l'ordine con quello ricevuto dal server
-        List<javafx.scene.Node> ordered = cards.stream()
-                .map(c -> (javafx.scene.Node) nodeMap.get(c.getCardId()))
-                .collect(Collectors.toList());
-        if (!container.getChildren().equals(ordered)) {
-            container.getChildren().setAll(ordered);
+    private void updateStackedContainer(HBox container, List<Card> cards, Set<String> knownTypes) {
+        Map<String, List<Card>> grouped = new LinkedHashMap<>();
+        for (Card card : cards) {
+            grouped.computeIfAbsent(card.getClass().getSimpleName(), k -> new ArrayList<>()).add(card);
+        }
+        container.getChildren().clear();
+        container.setPadding(new Insets(0, 14, 0, 0));
+        for (Map.Entry<String, List<Card>> entry : grouped.entrySet()) {
+            Node stackNode = buildCardStackNode(entry.getKey(), entry.getValue());
+            container.getChildren().add(stackNode);
+            if (knownTypes.add(entry.getKey())) {
+                animateCardEntry(stackNode);
+            }
         }
     }
 
-    private void animateCardEntry(StackPane node) {
+    //method for constructing the single node of a set of character cards of the same type
+    private Node buildCardStackNode(String typeName, List<Card> cards) {
+        int n = cards.size();
+        int visualLayers = Math.min(n, 3); //max 3 visible cards
+        StackPane stackPane = new StackPane();
+        stackPane.setAlignment(Pos.CENTER);
+
+        //take the most recent cards
+        List<Card> visible = cards.subList(cards.size() - visualLayers, cards.size());
+        for (int i = 0; i < visualLayers; i++) {
+            int level = visualLayers - 1 - i; // top = 0, middle = 1, back = 2
+            ImageView iv = new ImageView(loadCardImage(visible.get(i).getCardId()));
+            iv.setFitWidth(cardWidth);
+            iv.setFitHeight(cardHeight);
+            iv.setTranslateX(level * 7.0);
+            iv.setTranslateY(level * -3.0);
+
+            DropShadow shadow = new DropShadow();
+            shadow.setRadius(6);
+            shadow.setOffsetX(2);
+            shadow.setOffsetY(2);
+            shadow.setColor(Color.rgb(0, 0, 0, 0.4));
+            iv.setEffect(shadow);
+
+            stackPane.getChildren().add(iv);
+        }
+
+        if (n > 1) {
+            Label badge = new Label(String.valueOf(n));
+            badge.setStyle("-fx-background-color: rgba(40,40,40,0.85); -fx-text-fill: white; -fx-padding: 2 5 2 5; -fx-background-radius: 8;");
+            badge.setFont(Font.font("Inknut Antiqua Regular", 11));
+            StackPane.setAlignment(badge, Pos.TOP_LEFT);
+            StackPane.setMargin(badge, new Insets(4, 4, 0, 0));
+            stackPane.getChildren().add(badge);
+        }
+
+        VBox wrapper = new VBox(4);
+        wrapper.setAlignment(Pos.CENTER);
+        wrapper.getChildren().add(stackPane);
+        wrapper.setStyle("-fx-cursor: hand;");
+
+        List<Card> cardsCopy = new ArrayList<>(cards);
+        wrapper.setOnMouseClicked(e -> showCardTypeViewer(typeName, cardsCopy));
+
+        return wrapper;
+    }
+
+    private void animateCardEntry(Node node) {
         node.setOpacity(0);
         node.setScaleX(0.5);
         node.setScaleY(0.5);
@@ -277,6 +375,21 @@ public class GameController extends BaseController {
         new ParallelTransition(fade, scale).play();
     }
 
+    private void showCardTypeViewer(String typeName, List<Card> cards) {
+        cardTypeLabel.setText(typeName + " (" + cards.size() + ")");
+        cardTypeCardsContainer.getChildren().clear();
+        for (Card card : cards) {
+            cardTypeCardsContainer.getChildren().add(buildCardNode(card, null, null, null));
+        }
+        cardTypeOverlay.setVisible(true);
+    }
+
+    @FXML
+    private void closeCardTypeViewer() {
+        cardTypeOverlay.setVisible(false);
+    }
+
+    //method to build the single node of card
     private StackPane buildCardNode(Card card, BoardRows row, RoundPhasesEnum phase, LocalPlayerState acting) {
         Image img = loadCardImage(card.getCardId());
         ImageView iv = new ImageView(img);
@@ -301,17 +414,25 @@ public class GameController extends BaseController {
 
         boolean isMyTurn = acting != null && acting.getNickname().equals(controller.getLocalPlayerUsername());
         boolean isClickable = false;
+        //if the lane exists and it's my turn
         if (row != null && isMyTurn) {
+            //if the card can be picked
             if (card.canBePicked()) {
                 if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
-                    isClickable = (row == BoardRows.UPPER) && canAffordCard(card);
+                    //true if I haven't drawn from above yet and can afford to draw
+                    isClickable = (row == BoardRows.UPPER)
+                            && pendingDraws.getOrDefault(BoardRows.UPPER, 0) == 0
+                            && canAffordCard(card);
                 } else if (phase == RoundPhasesEnum.ACTION_PHASE) {
                     LocalOfferCard myOffer = localGameState.getBoard().getOfferTrack().stream()
                             .filter(o -> !o.isFree() && o.getPlayer().equals(acting.getNickname()))
                             .findFirst().orElse(null);
                     if (myOffer != null) {
-                        isClickable = ((row == BoardRows.UPPER && myOffer.getDrawFromUpper() > 0)
-                                   || (row == BoardRows.LOWER && myOffer.getDrawFromUnder() > 0))
+                        int usedUpper = pendingDraws.getOrDefault(BoardRows.UPPER, 0); //cards already drawn from up
+                        int usedLower = pendingDraws.getOrDefault(BoardRows.LOWER, 0); //cards already drawn from down
+                        //true if I still have to draw from above/below and I can afford it
+                        isClickable = ((row == BoardRows.UPPER && myOffer.getDrawFromUpper() - usedUpper > 0)
+                                   || (row == BoardRows.LOWER && myOffer.getDrawFromUnder() - usedLower > 0))
                                    && canAffordCard(card);
                     }
                 }
@@ -357,6 +478,7 @@ public class GameController extends BaseController {
         return img;
     }
 
+    //method to calculate if the player can afford to buy a building
     private boolean canAffordCard(Card card) {
         LocalPlayerState me = localGameState.getPlayers().stream()
                 .filter(p -> p.getNickname().equals(controller.getLocalPlayerUsername()))
@@ -368,14 +490,16 @@ public class GameController extends BaseController {
         return card.canAffordWithFood(me.getFood(), discount);
     }
 
+    //method to build the single node of the offer card
     private StackPane buildOfferTileNode(LocalOfferCard offer, RoundPhasesEnum phase, LocalPlayerState acting) {
         Image img = loadImage(TRACK_PATH + offer.getOfferCardId() + ".png");
-        if (img == null) img = loadImage(CARDS_PATH + "card_back_1.png");
         ImageView tileIv = new ImageView(img);
         tileIv.setFitWidth(cardWidth);
         tileIv.setFitHeight(cardHeight);
 
         StackPane pane = new StackPane(tileIv);
+        double slotHeight = cardHeight / 5;
+        double h = cardHeight / 2;
 
         boolean isFree = offer.isFree();
         if (!isFree) {
@@ -386,8 +510,10 @@ public class GameController extends BaseController {
                         Image totemImg = loadImage(TOTEM_PATH + p.getColor().name().toLowerCase() + ".png");
                         if (totemImg != null) {
                             ImageView totemIv = new ImageView(totemImg);
-                            totemIv.setFitWidth(32);
                             totemIv.setFitHeight(32);
+                            totemIv.setPreserveRatio(true);
+                            StackPane.setMargin(totemIv, new Insets(h-slotHeight-32, 0, 0, 0));
+                            StackPane.setAlignment(totemIv, javafx.geometry.Pos.TOP_CENTER);
                             pane.getChildren().add(totemIv);
                         }
                     });
@@ -406,6 +532,27 @@ public class GameController extends BaseController {
         cardNode.setOnMouseClicked(null);
         cardNode.setOnMouseEntered(null);
         cardNode.setOnMouseExited(null);
+
+        pendingDraws.merge(row, 1, Integer::sum);
+
+        // Se questo row è ora esaurito, disabilita immediatamente le carte sorelle
+        if (pendingDraws.getOrDefault(row, 0) >= allowedDrawsFromRow(row)) {
+            HBox sameRow = (row == BoardRows.UPPER) ? upperRowContainer : lowerRowContainer;
+            for (Node child : sameRow.getChildren()) {
+                if (child != cardNode) {
+                    child.setOnMouseClicked(null);
+                    child.setOnMouseEntered(null);
+                    child.setOnMouseExited(null);
+                    child.setStyle("");
+                }
+            }
+        }
+
+        RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
+        LocalPlayerState acting = localGameState.getPlayerActing();
+        if (row == BoardRows.UPPER) refreshLowerRow(phase, acting);
+        else refreshUpperRow(phase, acting);
+
         FadeTransition fade = new FadeTransition(Duration.millis(300), cardNode);
         fade.setFromValue(1.0);
         fade.setToValue(0.0);
@@ -427,6 +574,22 @@ public class GameController extends BaseController {
         exit.play();
     }
 
+    private int allowedDrawsFromRow(BoardRows row) {
+        RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
+        if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
+            return (row == BoardRows.UPPER) ? 1 : 0;
+        }
+        if (phase == RoundPhasesEnum.ACTION_PHASE) {
+            String myNick = controller.getLocalPlayerUsername();
+            return localGameState.getBoard().getOfferTrack().stream()
+                    .filter(o -> !o.isFree() && o.getPlayer().equals(myNick))
+                    .findFirst()
+                    .map(o -> (row == BoardRows.UPPER) ? o.getDrawFromUpper() : o.getDrawFromUnder())
+                    .orElse(0);
+        }
+        return 0;
+    }
+
     private void onOfferTileClicked(LocalOfferCard offer, StackPane pane) {
         pane.setOnMouseClicked(null);
         new Thread(() -> {
@@ -438,8 +601,8 @@ public class GameController extends BaseController {
         }).start();
     }
 
-    private StackPane buildTurnOrderTile() {
-        Image img = loadImage(TRACK_PATH + "turn.png");
+    private StackPane buildTurnOrderTile(LocalGameState game) {
+        Image img = loadImage(TRACK_PATH + "turn_" + game.getPlayers().size() + ".png");
         ImageView tileIv = new ImageView(img);
         tileIv.setFitWidth(cardWidth);
         tileIv.setFitHeight(cardHeight);
@@ -456,9 +619,27 @@ public class GameController extends BaseController {
             Image totemImg = loadImage(TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
             if (totemImg != null) {
                 ImageView totemIv = new ImageView(totemImg);
-                totemIv.setFitWidth(20);
-                totemIv.setFitHeight(20);
-                StackPane.setMargin(totemIv, new Insets(i * slotHeight, 0, 0, 0));
+                totemIv.setFitHeight(32);
+                totemIv.setPreserveRatio(true);
+                if (game.getPlayers().size() == 5)
+                {
+                    StackPane.setMargin(totemIv, new Insets(i * slotHeight, 0, 0, 0));
+                }
+                else if (game.getPlayers().size() == 4)
+                {
+                    StackPane.setMargin(totemIv, new Insets((i+1) * slotHeight-32, 0, 0, 0));
+                }
+                else if (game.getPlayers().size() == 3)
+                {
+                    double h = cardHeight / 4;
+                    StackPane.setMargin(totemIv, new Insets(i * slotHeight + h -32, 0, 0, 0));
+                }
+                else if (game.getPlayers().size() == 2)
+                {
+                    double h = cardHeight / 2;
+                    if (i == 0) StackPane.setMargin(totemIv, new Insets(h-slotHeight-32, 0, 0, 0));
+                    else StackPane.setMargin(totemIv, new Insets(h-32, 0, 0, 0));
+                }
                 StackPane.setAlignment(totemIv, javafx.geometry.Pos.TOP_CENTER);
                 pane.getChildren().add(totemIv);
             }
@@ -467,6 +648,7 @@ public class GameController extends BaseController {
         return pane;
     }
 
+    //method to build the single node of a player shown in the panel on the right
     private VBox buildPlayerCard(LocalPlayerState player, LocalPlayerState acting) {
         boolean isActing = acting != null && player.getNickname().equals(acting.getNickname());
 
@@ -535,7 +717,7 @@ public class GameController extends BaseController {
         card.setOnMouseClicked(e -> showTribeViewer(player));
 
         if (isActing) {
-            card.setStyle("-fx-cursor: hand; -fx-padding: 12; -fx-border-color: black; -fx-border-width: 2; -fx-background-color: rgba(235,220,185,1);");
+            card.setStyle("-fx-cursor: hand; -fx-padding: 12; -fx-border-color: black; -fx-border-width: 2; -fx-background-color: rgba(235,220,185,1); ");
             DropShadow glow = new DropShadow();
             glow.setColor(Color.BLACK);
             glow.setRadius(15);
@@ -598,7 +780,6 @@ public class GameController extends BaseController {
                         .filter(offer -> !offer.isFree() && offer.getPlayer().equals(acting.getNickname()))
                         .findFirst()
                         .orElse(null);
-                System.out.println("Card found: " + card);
                 if (card != null)
                 {
                     int cardsFromUp = card.getDrawFromUpper();

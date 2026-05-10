@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am31.am31.view.gui.scene.EndGameController">
+    <children>
+        <ImageView fx:id="backgroundImage" fitHeight="1080.0" fitWidth="1920.0" opacity="0.9" pickOnBounds="true" preserveRatio="false">
+            <image>
+                <Image url="@../assets/Background.jpg" />
+            </image>
+        </ImageView>
+        <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="400.0" spacing="15.0">
+            <children>
+                <ImageView fx:id="logoTitle" fitHeight="447.0" fitWidth="993.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../assets/Title.png" />
+                    </image>
+                    <VBox.margin>
+                        <Insets top="250.0" />
+                    </VBox.margin>
+                    <effect>
+                        <DropShadow height="70.0" radius="34.5" spread="0.3" width="70.0" />
+                    </effect>
+                </ImageView>
+            <VBox fx:id="rankingBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color: rgba(255,243,211,1);;">
+               <children>
+                  <Label text="Ranking">
+                     <font>
+                        <Font name="Inknut Antiqua Bold" size="36.0" />
+                     </font>
+                     <padding>
+                        <Insets left="100.0" right="100.0" />
+                     </padding>
+                  </Label>
+                  <Separator prefWidth="200.0" />
+               </children>
+               <effect>
+                  <DropShadow />
+               </effect>
+               <VBox.margin>
+                  <Insets top="50.0" />
+               </VBox.margin>
+            </VBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

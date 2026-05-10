@@ -19,7 +19,7 @@
       <URL value="@../assets/style.css" />
    </stylesheets>
    <children>
-        <ImageView fx:id="backgroundImage" fitHeight="1080.0" fitWidth="1920.0" opacity="0.8" pickOnBounds="true" preserveRatio="false">
+        <ImageView fx:id="backgroundImage" fitHeight="1080.0" fitWidth="1920.0" opacity="0.9" pickOnBounds="true" preserveRatio="false">
             <image>
                 <Image url="@../assets/Background.jpg" />
             </image>
