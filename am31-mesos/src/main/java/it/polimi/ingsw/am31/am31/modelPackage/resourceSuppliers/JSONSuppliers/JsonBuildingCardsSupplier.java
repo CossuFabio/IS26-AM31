@@ -11,6 +11,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.IResourceSupplie
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class JsonBuildingCardsSupplier implements IResourceSupplier<List<BuildingCard>> {
@@ -41,7 +42,7 @@ public class JsonBuildingCardsSupplier implements IResourceSupplier<List<Buildin
                     effectsCatalog.getEffect(node.get("effectId").asText())
             ));
         }
-
+        Collections.shuffle(this.resources);
     }
 
     @Override

@@ -58,6 +58,7 @@ public class Game implements GameObservable {
     private ObserverHandler observers;
 
     //Setup
+    //TODO REMOVE IOEXCEPTION
     public Game (int nPlayers, GameResources gameResources) throws IOException, InvalidPlayersNumberException {
 
         roundNumber=0; //set to 1 in gameStart

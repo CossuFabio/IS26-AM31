@@ -5,18 +5,16 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.RitualEvent
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.SustainEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//This class does not care about shuffling the deck, it just filters for minPlayers.
+//This allows us to inject non-shuffled decks for testing
 public class TribeDeck extends Deck {
 
-    public TribeDeck(int nPlayers, List<Card> catalog) throws IOException {
+    public TribeDeck(int nPlayers, List<Card> catalog){
 
     super();
-    //CardLoader loader = new CardLoader();
-    //List<Card> catalog = loader.tribeCardLoader();
 
     //Make the lists of cards
     List<Card> list1 = catalog.stream()
@@ -33,16 +31,11 @@ public class TribeDeck extends Deck {
 
 
 
-    //After making the lists, shuffle and compose in eraDeck.
-    Collections.shuffle(list1);
-    Collections.shuffle(list2);
-    Collections.shuffle(list3);
-
-    this.eraDeck.addAll(list1);
-    this.eraDeck.addAll(list2);
-    this.eraDeck.addAll(list3);
-    this.eraDeck.add(new SustainEventCard(GameConstants.FINAL_SUSTAIN_ID, GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_SUSTAIN_MALUS));
-    this.eraDeck.add(new RitualEventCard( GameConstants.FINAL_RITUAL_ID, GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_RITUAL_MALUS,GameConstants.FINAL_RITUAL_BONUS));
+        this.eraDeck.addAll(list1);
+        this.eraDeck.addAll(list2);
+        this.eraDeck.addAll(list3);
+        this.eraDeck.add(new SustainEventCard(GameConstants.FINAL_SUSTAIN_ID, GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_SUSTAIN_MALUS));
+        this.eraDeck.add(new RitualEventCard( GameConstants.FINAL_RITUAL_ID, GameConstants.FINAL_EVENTS_ERA,GameConstants.FINAL_RITUAL_MALUS,GameConstants.FINAL_RITUAL_BONUS));
     }
 
 
