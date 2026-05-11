@@ -11,20 +11,25 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.PlayersInLobbyChangedEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class WaitingRoomController extends BaseController {
@@ -51,9 +56,13 @@ public class WaitingRoomController extends BaseController {
     @FXML private Button backButton1;
     @FXML private Button joinButton;
     @FXML private ComboBox<Color> joinColorBox;
+    @FXML private StackPane rulesOverlay;
     private int totalPlayers;
+    private int currentSlide = 1;
 
     private List<LobbyDescriptor> currentLobbies;
+    //cache for the images (path + image)
+    private final Map<String, Image> imageCache = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -151,6 +160,12 @@ public class WaitingRoomController extends BaseController {
         lobbyList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             lobbyList.refresh();
         });
+
+        new Thread(() -> {
+            for (int i = 1; i <= 7; i++) {
+                loadImage(PathConstants.RULES_PATH + "rules_" + i + ".png");
+            }
+        }).start();
     }
 
 
@@ -216,6 +231,93 @@ public class WaitingRoomController extends BaseController {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    @FXML
+    private void showRules() {
+        rulesOverlay.getChildren().clear();
+        Region darkBg = new Region();
+        darkBg.setStyle("-fx-background-color: rgba(0,0,0,0.6);");
+        darkBg.setMaxWidth(Double.MAX_VALUE);
+        darkBg.setMaxHeight(Double.MAX_VALUE);
+        darkBg.setOnMouseClicked(e -> closeRules());
+
+
+        VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setMaxWidth(Region.USE_PREF_SIZE);
+        vbox.setMaxHeight(Region.USE_PREF_SIZE);
+
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_1.png");
+        ImageView rulesIv = new ImageView(img);
+        rulesIv.setFitWidth(778);
+        rulesIv.setFitHeight(900);
+
+        HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
+
+        Button back = new Button();
+        back.setPrefWidth(389);
+        back.setPrefHeight(66);
+        back.setText("Back");
+        back.setFont(Font.font("Inknut Antiqua Regular", 20));
+        back.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
+        back.setDisable(true);
+
+        Button next = new Button();
+        next.setPrefWidth(389);
+        next.setPrefHeight(66);
+        next.setText("Next");
+        next.setFont(Font.font("Inknut Antiqua Regular", 20));
+        next.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
+
+        back.setOnAction(e -> backRule(rulesIv, back, next));
+        next.setOnAction(e -> nextRule(rulesIv, back, next));
+
+        buttons.getChildren().addAll(back, next);
+        vbox.getChildren().addAll(rulesIv,buttons);
+        rulesOverlay.getChildren().addAll(darkBg, vbox);
+
+        rulesOverlay.setVisible(true);
+
+    }
+
+    private void backRule(ImageView rulesIv, Button back, Button next) {
+        currentSlide--;
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_" + currentSlide + ".png");
+        rulesIv.setImage(img);
+        next.setDisable(false);
+        if (currentSlide == 1)
+        {
+            back.setDisable(true);
+        }
+    }
+
+    private void nextRule(ImageView rulesIv, Button back, Button next) {
+        currentSlide++;
+
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_" + currentSlide + ".png");
+        rulesIv.setImage(img);
+        back.setDisable(false);
+        if (currentSlide == 7)
+        {
+            next.setDisable(true);
+        }
+    }
+
+    private void closeRules() {
+        rulesOverlay.setVisible(false);
+        rulesOverlay.getChildren().clear();
+        currentSlide = 1;
+    }
+
+    //method to load an image from a path
+    private Image loadImage(String path) {
+        if (imageCache.containsKey(path)) return imageCache.get(path);
+        InputStream stream = getClass().getResourceAsStream(path);
+        Image img = stream != null ? new Image(stream) : null;
+        imageCache.put(path, img);
+        return img;
     }
 
     @Subscribe

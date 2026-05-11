@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
@@ -86,6 +87,10 @@ public class GameController extends BaseController {
     @FXML private ScrollPane cardTypeScrollPane;
     @FXML private HBox cardTypeCardsContainer;
 
+    @FXML private StackPane rulesOverlay;
+
+    private int currentSlide = 1;
+
 
     private double cardWidth = 120;
     private double cardHeight = 170;
@@ -125,6 +130,12 @@ public class GameController extends BaseController {
             makeScrollPaneTransparent(tribePlayerScrollPane);
             makeScrollPaneTransparent(buildingsPlayerScrollPane);
         });
+
+        new Thread(() -> {
+            for (int i = 1; i <= 7; i++) {
+                loadImage(PathConstants.RULES_PATH + "rules_" + i + ".png");
+            }
+        }).start();
     }
 
     //method to make a ScrollPane transparent (normally doesn't work  due to viewport)
@@ -831,5 +842,117 @@ public class GameController extends BaseController {
         fadeOut.setToValue(0.0);
         fadeOut.setOnFinished(e -> rootStackPane.getChildren().remove(toRemove));
         fadeOut.play();
+    }
+
+    @FXML
+    private void showRules() {
+        rulesOverlay.getChildren().clear();
+        Region darkBg = new Region();
+        darkBg.setStyle("-fx-background-color: rgba(0,0,0,0.6);");
+        darkBg.setMaxWidth(Double.MAX_VALUE);
+        darkBg.setMaxHeight(Double.MAX_VALUE);
+        darkBg.setOnMouseClicked(e -> closeRules());
+
+
+        VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setMaxWidth(Region.USE_PREF_SIZE);
+        vbox.setMaxHeight(Region.USE_PREF_SIZE);
+
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_1.png");
+        ImageView rulesIv = new ImageView(img);
+        rulesIv.setFitWidth(778);
+        rulesIv.setFitHeight(900);
+
+        HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
+
+        Button back = new Button();
+        back.setPrefWidth(389);
+        back.setPrefHeight(66);
+        back.setText("Back");
+        back.setFont(Font.font("Inknut Antiqua Regular", 20));
+        back.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
+        back.setDisable(true);
+
+        Button next = new Button();
+        next.setPrefWidth(389);
+        next.setPrefHeight(66);
+        next.setText("Next");
+        next.setFont(Font.font("Inknut Antiqua Regular", 20));
+        next.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
+
+        back.setOnAction(e -> backRule(rulesIv, back, next));
+        next.setOnAction(e -> nextRule(rulesIv, back, next));
+
+        buttons.getChildren().addAll(back, next);
+        vbox.getChildren().addAll(rulesIv,buttons);
+        rulesOverlay.getChildren().addAll(darkBg, vbox);
+
+        rulesOverlay.setVisible(true);
+        rulesOverlay.toFront();
+    }
+
+    @FXML private void showSummaryCards() {
+        rulesOverlay.getChildren().clear();
+        Region darkBg = new Region();
+        darkBg.setStyle("-fx-background-color: rgba(0,0,0,0.6);");
+        darkBg.setMaxWidth(Double.MAX_VALUE);
+        darkBg.setMaxHeight(Double.MAX_VALUE);
+        darkBg.setOnMouseClicked(e -> closeRules());
+
+        HBox summarycards = new HBox();
+        summarycards.setAlignment(Pos.CENTER);
+        summarycards.setMaxWidth(Region.USE_PREF_SIZE);
+        summarycards.setMaxHeight(Region.USE_PREF_SIZE);
+        //summarycards.setStyle("-fx-padding: 60 30 60 30; -fx-border-color: black; -fx-background-color: rgba(255,243,211,1);");
+
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(3);
+        shadow.setOffsetY(3);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.5));
+        summarycards.setEffect(shadow);
+
+        Image img1 = loadImage(PathConstants.RULES_PATH + "summary.png");
+        ImageView summaryIv1 = new ImageView(img1);
+        summaryIv1.setFitWidth(cardWidth*3);
+        summaryIv1.setFitHeight(cardHeight*3);
+        summaryIv1.setEffect(shadow);
+
+        summarycards.getChildren().add(summaryIv1);
+        rulesOverlay.getChildren().addAll(darkBg, summarycards);
+
+        rulesOverlay.setVisible(true);
+        rulesOverlay.toFront();
+    }
+
+    private void backRule(ImageView rulesIv, Button back, Button next) {
+        currentSlide--;
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_" + currentSlide + ".png");
+        rulesIv.setImage(img);
+        next.setDisable(false);
+        if (currentSlide == 1)
+        {
+            back.setDisable(true);
+        }
+    }
+
+    private void nextRule(ImageView rulesIv, Button back, Button next) {
+        currentSlide++;
+
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_" + currentSlide + ".png");
+        rulesIv.setImage(img);
+        back.setDisable(false);
+        if (currentSlide == 7)
+        {
+            next.setDisable(true);
+        }
+    }
+
+    private void closeRules() {
+        rulesOverlay.setVisible(false);
+        rulesOverlay.getChildren().clear();
+        currentSlide = 1;
     }
 }

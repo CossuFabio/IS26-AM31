@@ -171,6 +171,27 @@
                         </ScrollPane>
                      </children>
                   </VBox>
+                  <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <VBox alignment="BOTTOM_CENTER" spacing="20.0">
+                     <children>
+                        <Button fx:id="rulesButton" mnemonicParsing="false" onAction="#showRules" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Rules" textAlignment="CENTER">
+                           <font>
+                              <Font name="Inknut Antiqua Regular" size="20.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                        <Button fx:id="summaryButton" mnemonicParsing="false" onAction="#showSummaryCards" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Summary cards" textAlignment="CENTER">
+                           <font>
+                              <Font name="Inknut Antiqua Regular" size="20.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                     </children>
+                  </VBox>
                </children>
                <BorderPane.margin>
                   <Insets />
@@ -257,5 +278,6 @@
             </VBox>
          </children>
       </StackPane>
+      <StackPane fx:id="rulesOverlay" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" />
    </children>
 </StackPane>
