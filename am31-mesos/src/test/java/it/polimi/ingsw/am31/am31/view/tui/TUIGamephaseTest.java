@@ -56,7 +56,8 @@ public class TUIGamephaseTest {
         LocalPlayerState test1 = new LocalPlayerState("test", Color.BLACK);LocalPlayerState test = new LocalPlayerState("achillefrigeri2",Color.WHITE);
         state.addPlayer(test);state.addPlayer(test1);
         state.setTurnOrder(state.getPlayers());state.setPlayerActing(test1);
-        ClientController cont = new ClientController(null, new ViewEventBus());
+        ViewEventBus eventBus = new ViewEventBus();
+        ClientController cont = new ClientController(null, eventBus);
         cont.setLocalNameTest();
         test1.setTribe(cards);test.setTribe(cards);
         test1.addBuilding(bd);test.addBuilding(bd);
