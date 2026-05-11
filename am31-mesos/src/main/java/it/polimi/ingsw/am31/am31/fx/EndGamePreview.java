@@ -34,6 +34,10 @@ public class EndGamePreview extends Application {
         fakeState.getPlayers().get(1).setPrestigePoints(95);
         fakeState.getPlayers().get(2).setPrestigePoints(80);
 
+        fakeState.getPlayers().get(0).setFood(500);
+        fakeState.getPlayers().get(1).setFood(1000);
+        fakeState.getPlayers().get(2).setFood(20);
+
         fakeState.setLeaderboard(List.of(
                 new LocalLeaderBoard(fakeState.getPlayers().get(0), true),
                 new LocalLeaderBoard(fakeState.getPlayers().get(1), false),
