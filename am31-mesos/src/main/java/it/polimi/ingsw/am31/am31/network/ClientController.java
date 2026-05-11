@@ -86,6 +86,6 @@ public class ClientController {
         localPlayerUsername = "test";
     }
 
-
+    public IEventBus getEventBus() {return eventBus;}
 
 }

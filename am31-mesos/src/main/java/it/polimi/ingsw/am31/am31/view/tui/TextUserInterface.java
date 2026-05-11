@@ -7,10 +7,7 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.View;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameCrashedEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 
 import java.util.Scanner;
 
@@ -107,6 +104,15 @@ public class TextUserInterface implements View{
     public void gameCrashed(GameCrashedEvent e){
         if(currentScene == Scene.GAME){
             System.out.println("\nGame crashed! Returning to main menu");
+            this.currentScene = Scene.MAIN_MENU;
+            gameState.reset();
+            changePhase(new TUILobby(this, controller));
+        }
+    }
+
+    @Subscribe
+    public void returnToLobby(ReturnToLobbyEvent e){
+        if(currentScene == Scene.RESULTS){
             this.currentScene = Scene.MAIN_MENU;
             gameState.reset();
             changePhase(new TUILobby(this, controller));

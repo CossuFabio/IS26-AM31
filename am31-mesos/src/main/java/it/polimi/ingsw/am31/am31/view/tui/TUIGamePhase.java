@@ -152,7 +152,6 @@ public class TUIGamePhase implements TUIPhase {
             for (Card c : p.getBuildings())
                 System.out.println(c.toString());
         }
-
         ansi().reset();
         System.out.println("\nPress 1- go back to MAIN");
     }

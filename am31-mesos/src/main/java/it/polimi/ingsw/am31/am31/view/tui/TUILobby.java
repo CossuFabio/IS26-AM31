@@ -69,7 +69,6 @@ public class TUILobby implements TUIPhase {
     public void handleInput(String input) throws Exception {
         if (input == null || input.isBlank())
             return;
-
         switch (currentStep) {
             case START: {
                 switch (input) {
