@@ -752,6 +752,7 @@ public class GameController extends BaseController {
         }
 
         deckOverlay.setVisible(true);
+        deckOverlay.toFront();
     }
 
     @FXML
@@ -905,7 +906,6 @@ public class GameController extends BaseController {
         summarycards.setAlignment(Pos.CENTER);
         summarycards.setMaxWidth(Region.USE_PREF_SIZE);
         summarycards.setMaxHeight(Region.USE_PREF_SIZE);
-        //summarycards.setStyle("-fx-padding: 60 30 60 30; -fx-border-color: black; -fx-background-color: rgba(255,243,211,1);");
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);

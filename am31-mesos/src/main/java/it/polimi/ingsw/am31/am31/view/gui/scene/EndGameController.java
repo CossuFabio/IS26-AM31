@@ -125,26 +125,4 @@ public class EndGameController extends BaseController {
 
         populateRanking(localGameState.getLeaderboard());
     }
-
-    //for test
-    @FXML
-    public void initialize() {
-        LocalPlayerState simone = new LocalPlayerState("Simone", Color.RED);
-        simone.setPrestigePoints(120);
-        simone.setFood(3);
-
-        LocalPlayerState fabio = new LocalPlayerState("Fabio", Color.BLUE);
-        fabio.setPrestigePoints(95);
-        fabio.setFood(5);
-
-        LocalPlayerState mario = new LocalPlayerState("Mario", Color.YELLOW);
-        mario.setPrestigePoints(80);
-        mario.setFood(2);
-
-        populateRanking(List.of(
-                new LocalLeaderBoard(simone, true),
-                new LocalLeaderBoard(fabio,  false),
-                new LocalLeaderBoard(mario,  false)
-        ));
-    }
 }
