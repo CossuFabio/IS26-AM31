@@ -6,13 +6,18 @@ import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServe
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Screen;
 
 import java.util.List;
 
@@ -24,9 +29,21 @@ public class LoginController extends BaseController{
     @FXML private ImageView backgroundImage;
     @FXML private ImageView logoTitle;
     @FXML private StackPane stackPane;
+    double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+    double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
 
     @FXML
     private void initialize () {
+        Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
+        Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
+        logoTitle.setFitHeight(screenHeight*((double) 447 /1080));
+        logoTitle.setFitWidth(screenWidth*((double) 993 /1920));
+        nicknameField.setPrefWidth(screenWidth*((double) 500 /1920));
+        nicknameField.setPrefHeight(screenHeight*((double) 66 /1080));
+        connectButton.setPrefWidth(screenHeight*((double) 66 /1080));
+        connectButton.setPrefHeight(screenHeight*((double) 66 /1080));
+        VBox.setMargin(logoTitle, new Insets(screenHeight*((double) 250 /1080),0,screenHeight*((double) 50/1080),0));
+
         //disable connect button if nickname field is empty
         connectButton.disableProperty().bind(
                 javafx.beans.binding.Bindings.createBooleanBinding(

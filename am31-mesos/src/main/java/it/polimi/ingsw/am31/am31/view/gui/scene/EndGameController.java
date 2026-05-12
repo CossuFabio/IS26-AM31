@@ -14,10 +14,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
@@ -26,14 +23,18 @@ import java.util.List;
 
 public class EndGameController extends BaseController {
     @FXML VBox rankingBox;
+    @FXML ImageView backgroundImage;
+    @FXML StackPane  stackPane;
 
 
+    @FXML public void initialize() {
+        Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
+        Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
+        backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
+        backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
+    }
 
     private void populateRanking (List<LocalLeaderBoard> ranking) {
-        Font.loadFont(getClass().getResourceAsStream(
-                PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
-        Font.loadFont(getClass().getResourceAsStream(
-                PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
         int i = 1;
         for (LocalLeaderBoard player : ranking) {
 

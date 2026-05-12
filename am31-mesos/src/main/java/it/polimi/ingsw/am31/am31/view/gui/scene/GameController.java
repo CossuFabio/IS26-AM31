@@ -59,6 +59,7 @@ public class GameController extends BaseController {
     @FXML private ImageView deckImage;
 
     @FXML private HBox upperRowContainer;
+    @FXML private HBox middleRowContainer;
     @FXML private HBox offerTrackContainer;
     @FXML private HBox lowerRowContainer;
 
@@ -100,10 +101,10 @@ public class GameController extends BaseController {
     double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
     double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
 
-    private double cardHeight = screenHeight / 6;
-    private double cardWidth = cardHeight*0.7;
-    private double cardHeight2 = screenHeight / 7;
-    private double cardWidth2 = cardHeight2*0.7;
+    private final double cardHeight = screenHeight / 6;
+    private final double cardWidth = cardHeight*0.7;
+    private final double cardHeight2 = screenHeight / 7;
+    private final double cardWidth2 = cardHeight2*0.7;
 
     private RoundPhasesEnum lastShownPhase = null;
     private String lastShownActing = null;
@@ -124,6 +125,8 @@ public class GameController extends BaseController {
 
     @FXML
     public void initialize() {
+        Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
+        Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
         Image foodImg = loadImage(PathConstants.ASSETS_PATH + "food.png");
         Image ppImg = loadImage(PathConstants.ASSETS_PATH + "pp.png");
         if (foodImg != null) foodIcon.setImage(foodImg);
@@ -132,19 +135,29 @@ public class GameController extends BaseController {
         //bind the width of the leftSpacer to the right one (the left will be empty)
         leftSpacer.prefWidthProperty().bind(rightPanel.widthProperty());
 
+        backgroundImage.fitWidthProperty().bind(rootStackPane.widthProperty());
+        backgroundImage.fitHeightProperty().bind(rootStackPane.heightProperty());
+        VBox.setMargin(centerHBox, new Insets(((double) 1 /42)*screenHeight, 0, ((double) 1 /42)*screenHeight, 0));
+        centerHBox.setSpacing(((double) 1 /42)*screenHeight);
+        buildingsScrollPane.setPrefHeight(cardHeight2);
+        tribeScrollPane.setPrefHeight(cardHeight2);
+        VBox.setMargin(tribeScrollPane, new Insets(0,0,screenHeight*((double) 1 /42),0));
+        VBox.setMargin(buildingsScrollPane, new Insets(0,0,screenHeight*((double) 1 /42),0));
+        middleRowContainer.setPrefHeight(cardHeight);
+        roundLabel.setPrefWidth(screenWidth*((double) 300 /1920));
+        eraLabel.setPrefWidth(screenWidth*((double) 300 /1920));
+        turnLabel.setPrefWidth(screenWidth*((double) 300 /1920));
+        phaseLabel.setPrefWidth(screenWidth*((double) 300 /1920));
+
         //make all the ScrollPane transparent
         Platform.runLater(() -> {
-            backgroundImage.fitWidthProperty().bind(rootStackPane.widthProperty());
-            backgroundImage.fitHeightProperty().bind(rootStackPane.heightProperty());
-            VBox.setMargin(centerHBox, new Insets((1/42)*screenHeight, 0, (1/42)*screenHeight, 0));
-            centerHBox.setSpacing((1/42)*screenHeight);
-            buildingsScrollPane.setPrefHeight(cardHeight2);
-            tribeScrollPane.setPrefHeight(cardHeight2);
             makeScrollPaneTransparent(tribeScrollPane);
             makeScrollPaneTransparent(buildingsScrollPane);
             makeScrollPaneTransparent(cardTypeScrollPane);
             makeScrollPaneTransparent(tribePlayerScrollPane);
             makeScrollPaneTransparent(buildingsPlayerScrollPane);
+            buildingsScrollPane.setVisible(true);
+            tribeScrollPane.setVisible(true);
         });
 
         new Thread(() -> {
@@ -227,7 +240,7 @@ public class GameController extends BaseController {
 
     //method to refresh the top bar
     private void refreshTopBar(RoundPhasesEnum phase, LocalPlayerState acting) {
-        topBar.setPrefHeight(screenHeight*(3/42));
+        topBar.setPrefHeight(screenHeight*((double) 3 /42));
         roundLabel.setText("Round: " + localGameState.getRoundNumber());
         eraLabel.setText("Era: " + localGameState.getEra());
         if (acting != null) {
@@ -296,7 +309,7 @@ public class GameController extends BaseController {
         Image totemImg = loadImage(PathConstants.TOTEM_PATH  + me.getColor().name().toLowerCase() + ".png");
         if (totemImg != null) {
             ImageView totemIv = new ImageView(totemImg);
-            totemIv.setFitWidth(35);
+            totemIv.setFitWidth(screenWidth*((double) 35 /1920));
             totemIv.setPreserveRatio(true);
             myNickname.getChildren().add(totemIv);
         }
@@ -528,6 +541,7 @@ public class GameController extends BaseController {
         StackPane pane = new StackPane(tileIv);
         double slotHeight = cardHeight / 5;
         double h = cardHeight / 2;
+        double hTotem = screenHeight * 32 / 1080;
 
         boolean isFree = offer.isFree();
         if (!isFree) {
@@ -538,9 +552,9 @@ public class GameController extends BaseController {
                         Image totemImg = loadImage(PathConstants.TOTEM_PATH + p.getColor().name().toLowerCase() + ".png");
                         if (totemImg != null) {
                             ImageView totemIv = new ImageView(totemImg);
-                            totemIv.setFitHeight(32);
+                            totemIv.setFitHeight(hTotem);
                             totemIv.setPreserveRatio(true);
-                            StackPane.setMargin(totemIv, new Insets(h-slotHeight-32, 0, 0, 0));
+                            StackPane.setMargin(totemIv, new Insets(h-slotHeight-hTotem, 0, 0, 0));
                             StackPane.setAlignment(totemIv, javafx.geometry.Pos.TOP_CENTER);
                             pane.getChildren().add(totemIv);
                         }
@@ -634,12 +648,13 @@ public class GameController extends BaseController {
         ImageView tileIv = new ImageView(img);
         tileIv.setFitWidth(cardWidth);
         tileIv.setFitHeight(cardHeight);
-        tileIv.setPreserveRatio(true);
+        tileIv.setPreserveRatio(false);
 
         StackPane pane = new StackPane(tileIv);
 
         List<LocalPlayerState> turnOrder = localGameState.getTurnOrder();
         double slotHeight = cardHeight / 5;
+        double hTotem = screenHeight * 32 / 1080;
 
         for (int i = 0; i < turnOrder.size(); i++) {
             LocalPlayerState player = turnOrder.get(i);
@@ -647,7 +662,7 @@ public class GameController extends BaseController {
             Image totemImg = loadImage(PathConstants.TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
             if (totemImg != null) {
                 ImageView totemIv = new ImageView(totemImg);
-                totemIv.setFitHeight(32);
+                totemIv.setFitHeight(hTotem);
                 totemIv.setPreserveRatio(true);
                 if (game.getPlayers().size() == 5)
                 {
@@ -655,18 +670,18 @@ public class GameController extends BaseController {
                 }
                 else if (game.getPlayers().size() == 4)
                 {
-                    StackPane.setMargin(totemIv, new Insets((i+1) * slotHeight-32, 0, 0, 0));
+                    StackPane.setMargin(totemIv, new Insets((i+1) * slotHeight-hTotem, 0, 0, 0));
                 }
                 else if (game.getPlayers().size() == 3)
                 {
                     double h = cardHeight / 4;
-                    StackPane.setMargin(totemIv, new Insets(i * slotHeight + h -32, 0, 0, 0));
+                    StackPane.setMargin(totemIv, new Insets(i * slotHeight + h -hTotem, 0, 0, 0));
                 }
                 else if (game.getPlayers().size() == 2)
                 {
                     double h = cardHeight / 2;
-                    if (i == 0) StackPane.setMargin(totemIv, new Insets(h-slotHeight-32, 0, 0, 0));
-                    else StackPane.setMargin(totemIv, new Insets(h-32, 0, 0, 0));
+                    if (i == 0) StackPane.setMargin(totemIv, new Insets(h-slotHeight-hTotem, 0, 0, 0));
+                    else StackPane.setMargin(totemIv, new Insets(h-hTotem, 0, 0, 0));
                 }
                 StackPane.setAlignment(totemIv, javafx.geometry.Pos.TOP_CENTER);
                 pane.getChildren().add(totemIv);
@@ -687,7 +702,7 @@ public class GameController extends BaseController {
         Image totemImg = loadImage(PathConstants.TOTEM_PATH + player.getColor().name().toLowerCase() + ".png");
         if (totemImg != null) {
             ImageView totemIv = new ImageView(totemImg);
-            totemIv.setFitWidth(35);
+            totemIv.setFitWidth(screenWidth * ((double) 35 / 1920));
             totemIv.setPreserveRatio(true);
             row.getChildren().add(totemIv);
         }
@@ -706,13 +721,13 @@ public class GameController extends BaseController {
         Image foodImg = loadImage(PathConstants.ASSETS_PATH + "food.png");
         if (foodImg != null) {
             ImageView foodIv = new ImageView(foodImg);
-            foodIv.setFitWidth(28);
-            foodIv.setFitHeight(25);
+            foodIv.setFitWidth(screenWidth * ((double) 28 / 1920));
+            foodIv.setFitHeight(screenHeight * ((double) 25 / 1080));
             foodGroup.getChildren().add(foodIv);
         }
         Label foodLabel = new Label(String.valueOf(player.getFood()));
         foodLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
-        foodLabel.setMinWidth(35);
+        foodLabel.setMinWidth(screenWidth * ((double) 35 / 1920));
         foodLabel.setAlignment(Pos.CENTER);
         if (isActing) foodLabel.setStyle("-fx-font-weight: bold");
         foodGroup.getChildren().add(foodLabel);
@@ -722,13 +737,13 @@ public class GameController extends BaseController {
         Image ppImg = loadImage(PathConstants.ASSETS_PATH + "pp.png");
         if (ppImg != null) {
             ImageView ppIv = new ImageView(ppImg);
-            ppIv.setFitWidth(28);
-            ppIv.setFitHeight(25);
+            ppIv.setFitWidth(screenWidth * ((double) 28 / 1920));
+            ppIv.setFitHeight(screenHeight * ((double) 25 / 1080));
             ppGroup.getChildren().add(ppIv);
         }
         Label ppLabel = new Label(String.valueOf(player.getPrestigePoints()));
         ppLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
-        ppLabel.setMinWidth(35);
+        ppLabel.setMinWidth(screenWidth * ((double) 35 / 1920));
         ppLabel.setAlignment(Pos.CENTER);
         if (isActing) ppLabel.setStyle("-fx-font-weight: bold");
         ppGroup.getChildren().add(ppLabel);
@@ -840,7 +855,7 @@ public class GameController extends BaseController {
             promptLabel.setFont(Font.font("Inknut Antiqua Regular", 20));
             promptLabel.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-padding: 15;");
             StackPane.setAlignment(promptLabel, javafx.geometry.Pos.BOTTOM_CENTER);
-            StackPane.setMargin(promptLabel, new Insets(0, 0, 250, 0));
+            StackPane.setMargin(promptLabel, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
             rootStackPane.getChildren().add(promptLabel);
             FadeTransition fadeIn = new FadeTransition(Duration.millis(400), promptLabel);
             fadeIn.setFromValue(0.0);
@@ -848,7 +863,7 @@ public class GameController extends BaseController {
             fadeIn.play();
         }
         else {
-            if (promptLabel != null) rootStackPane.getChildren().remove(promptLabel);
+            if (promptLabel != null) removePromptWithFade(); //rootStackPane.getChildren().remove(promptLabel);
             promptLabel = null;
         }
     }
@@ -875,29 +890,30 @@ public class GameController extends BaseController {
 
 
         VBox vbox = new VBox();
+        vbox.setStyle("-fx-background-color: rgba(255,243,211,1);");
         vbox.setAlignment(Pos.CENTER);
         vbox.setMaxWidth(Region.USE_PREF_SIZE);
         vbox.setMaxHeight(Region.USE_PREF_SIZE);
 
         Image img = loadImage(PathConstants.RULES_PATH + "rules_1.png");
         ImageView rulesIv = new ImageView(img);
-        rulesIv.setFitWidth(778);
-        rulesIv.setFitHeight(900);
+        rulesIv.setFitWidth(screenHeight*((double)389/540));
+        rulesIv.setFitHeight(screenHeight*((double) 5 /6));
 
         HBox buttons = new HBox();
         buttons.setAlignment(Pos.CENTER);
 
         Button back = new Button();
-        back.setPrefWidth(389);
-        back.setPrefHeight(66);
+        back.setPrefWidth(screenHeight*((double)389/540)/2);
+        back.setPrefHeight(screenHeight*((double)11/180));
         back.setText("Back");
         back.setFont(Font.font("Inknut Antiqua Regular", 20));
         back.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
         back.setDisable(true);
 
         Button next = new Button();
-        next.setPrefWidth(389);
-        next.setPrefHeight(66);
+        next.setPrefWidth(screenHeight*((double)389/540)/2);
+        next.setPrefHeight(screenHeight*((double)11/180));
         next.setText("Next");
         next.setFont(Font.font("Inknut Antiqua Regular", 20));
         next.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");

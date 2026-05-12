@@ -14,6 +14,7 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationE
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -25,6 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -37,6 +39,7 @@ public class WaitingRoomController extends BaseController {
     @FXML private ImageView backgroundImage;
     @FXML private ImageView logoTitle;
 
+    @FXML private StackPane stackPane;
     // Panel 1 - main menu
     @FXML private VBox vbox1;
     @FXML private Button gameButton;
@@ -57,8 +60,14 @@ public class WaitingRoomController extends BaseController {
     @FXML private Button joinButton;
     @FXML private ComboBox<Color> joinColorBox;
     @FXML private StackPane rulesOverlay;
+    @FXML private Button rulesButton;
+    @FXML private HBox hbox3;
+
     private int totalPlayers;
     private int currentSlide = 1;
+    double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+    double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
+
 
     private List<LobbyDescriptor> currentLobbies;
     //cache for the images (path + image)
@@ -66,10 +75,44 @@ public class WaitingRoomController extends BaseController {
 
     @FXML
     public void initialize() {
+        backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
+        backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
+        Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
+        Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
         //add options to combobox
         playersBox.getItems().addAll(2,3,4,5);
         colorBox.getItems().addAll("Red","Blue","Yellow","White","Black");
 
+        gameButton.setPrefHeight(screenHeight*((double) 66 /1080));
+        gameButton.setPrefWidth(screenWidth*((double) 500 /1920));
+        lobbyButton.setPrefHeight(screenHeight*((double) 66 /1080));
+        lobbyButton.setPrefWidth(screenWidth*((double) 500 /1920));
+        rulesButton.setPrefHeight(screenHeight*((double) 66 /1080));
+        rulesButton.setPrefWidth(screenWidth*((double) 500 /1920));
+        logoTitle.setFitHeight(screenHeight*((double) 447 /1080));
+        logoTitle.setFitWidth(screenWidth*((double) 993 /1920));
+        vbox1.setSpacing(20);
+        playersBox.setPrefWidth(screenWidth*((double) 500 /1920));
+        playersBox.setPrefHeight(screenHeight*((double) 66 /1080));
+        colorBox.setPrefWidth(screenWidth*((double) 500 /1920));
+        colorBox.setPrefHeight(screenHeight*((double) 66 /1080));
+        backButton.setPrefWidth(screenWidth*((double) 250 /1920));
+        backButton.setPrefHeight(screenHeight*((double) 66 /1080));
+        createButton.setPrefWidth(screenWidth*((double) 250 /1920));
+        createButton.setPrefHeight(screenHeight*((double) 66 /1080));
+        lobbyList.setPrefWidth(screenWidth*((double) 500 /1920));
+        lobbyList.setPrefHeight(screenHeight*((double) 200 /1080));
+        joinColorBox.setPrefWidth(screenWidth*((double) 500 /1920));
+        backButton1.setPrefWidth(screenWidth*((double) 250 /1920));
+        backButton1.setPrefHeight(screenHeight*((double) 66 /1080));
+        joinButton.setPrefWidth(screenWidth*((double) 250 /1920));
+        joinButton.setPrefHeight(screenHeight*((double) 66 /1080));
+        hbox3.setPrefWidth(screenWidth*((double) 200 /1920));
+        hbox3.setPrefHeight(screenHeight*((double) 100 /1080));
+        waitingLabel.setPrefWidth(screenWidth*((double) 500 /1920));
+        waitingLabel.setPrefHeight(screenHeight*((double) 66 /1080));
+
+        VBox.setMargin(logoTitle, new Insets(screenHeight*((double) 250 /1080),0,screenHeight*((double) 50/1080),0));
         //disable join button until a lobby and a color are selected
         joinButton.disableProperty().bind(
                 lobbyList.getSelectionModel().selectedItemProperty().isNull()
@@ -244,29 +287,30 @@ public class WaitingRoomController extends BaseController {
 
 
         VBox vbox = new VBox();
+        vbox.setStyle("-fx-background-color: rgba(255,243,211,1);");
         vbox.setAlignment(Pos.CENTER);
         vbox.setMaxWidth(Region.USE_PREF_SIZE);
         vbox.setMaxHeight(Region.USE_PREF_SIZE);
 
         Image img = loadImage(PathConstants.RULES_PATH + "rules_1.png");
         ImageView rulesIv = new ImageView(img);
-        rulesIv.setFitWidth(778);
-        rulesIv.setFitHeight(900);
+        rulesIv.setFitWidth(screenWidth*((double) 778 / 1920));
+        rulesIv.setFitHeight(screenHeight*((double) 778 / 1080));
 
         HBox buttons = new HBox();
         buttons.setAlignment(Pos.CENTER);
 
         Button back = new Button();
-        back.setPrefWidth(389);
-        back.setPrefHeight(66);
+        back.setPrefWidth(screenWidth*((double) 778 / 1920) / 2);
+        back.setPrefHeight(screenHeight*((double) 66 / 1080));
         back.setText("Back");
         back.setFont(Font.font("Inknut Antiqua Regular", 20));
         back.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
         back.setDisable(true);
 
         Button next = new Button();
-        next.setPrefWidth(389);
-        next.setPrefHeight(66);
+        next.setPrefWidth(screenWidth*((double) 778 / 1920) / 2);
+        next.setPrefHeight(screenHeight*((double) 66 / 1080));
         next.setText("Next");
         next.setFont(Font.font("Inknut Antiqua Regular", 20));
         next.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
