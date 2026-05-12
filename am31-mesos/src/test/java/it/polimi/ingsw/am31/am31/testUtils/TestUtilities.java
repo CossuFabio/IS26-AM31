@@ -1,5 +1,6 @@
-package it.polimi.ingsw.am31.am31;
+package it.polimi.ingsw.am31.am31.testUtils;
 
+import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
 import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
@@ -19,4 +20,13 @@ public class TestUtilities {
             throw new RuntimeException("Errore nel caricamento dei JSON nei test", e);
         }
     }
+
+    public Game createGame(int nPlayers){
+        try{
+            return new Game(nPlayers, getJSONGameResources());
+        }catch(Exception ignored){return null; }
+    }
+
+
+
 }

@@ -3,6 +3,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Artist;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
+import it.polimi.ingsw.am31.am31.testUtils.TestUtilities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

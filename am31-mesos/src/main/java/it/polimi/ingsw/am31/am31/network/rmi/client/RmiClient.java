@@ -19,6 +19,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class RmiClient extends UnicastRemoteObject implements VirtualServer, VirtualViewRmi {
@@ -31,6 +33,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     private StateUpdater updater;
     private ErrorHandler errorVisitor;
     private final MessageDispatcher messageDispatcher;
+    private final ExecutorService requestSender;
 
     private boolean usernameSet = false;
 
@@ -46,13 +49,26 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
 
         this.messageDispatcher = messageDispatcher;
 
+        //Makes it Daemon so it closes when the process shuts down
+        this.requestSender = Executors.newSingleThreadExecutor(r -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        });
 
     }
     @Override
     public void sendRequest(NetworkRequest request) throws RemoteException {
+        if (requestSender.isShutdown()) return;
         request.setPlayerID(this.identifier);
-        serverStub.sendRequest(RequestsMapper.serialize(request), this);
-
+        requestSender.submit(() -> {
+            try {
+                serverStub.sendRequest(RequestsMapper.serialize(request), this);
+            } catch (Exception e) {
+                System.err.println("Connection to server lost: " + e.getMessage());
+                try { disconnect(); } catch (Exception ignored) {}
+            }
+        });
     }
 
 
@@ -76,6 +92,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
         try {
             serverStub.disconnect(this.identifier);
             messageDispatcher.shutdown();
+            requestSender.shutdown();
             UnicastRemoteObject.unexportObject(this, true);
         } catch (Exception e) {
             System.err.println("Disconnection failed: " + e.getMessage());
