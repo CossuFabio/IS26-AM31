@@ -1,29 +1,24 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectIdsConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.*;
-import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 import it.polimi.ingsw.am31.am31.view.LocalState.*;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TUIResultsTest {
     private TextUserInterface textUserInterface;
+    private TUIResults results;
 
     @BeforeEach
     public void setup() {
-        LocalGameState state = new LocalGameState();
+        LocalGameState gamestate = new LocalGameState();
         List<Card> cards1 = new ArrayList<>();
         List<Card> cards2 = new ArrayList<>();
         LocalPlayerState test1 = new LocalPlayerState("test", Color.BLACK);
@@ -35,8 +30,8 @@ public class TUIResultsTest {
         Card h2 = new Hunter("h1",1,2,true);
         Card f2 = new Farmer("f1",2,2,3);
         Card i2 = new Inventor("i1",2,2, IconEnum.BREAD);
-        state.addPlayer(test1);
-        state.addPlayer(test2);
+        gamestate.addPlayer(test1);
+        gamestate.addPlayer(test2);
         test1.setPrestigePoints(25);
         test1.setFood(10);
         test2.setPrestigePoints(25);
@@ -53,13 +48,19 @@ public class TUIResultsTest {
             List<LocalLeaderBoard> leaderBoard =  new ArrayList<>();
             leaderBoard.add(winner);
             leaderBoard.add(loser);
-            state.setLeaderboard(leaderBoard);
-            textUserInterface = new TextUserInterface(controller, state, eventBus);
+            gamestate.setLeaderboard(leaderBoard);
+            textUserInterface = new TextUserInterface(controller, gamestate, eventBus);
             textUserInterface.gameEnded(new GameEndedEvent());
+            results = new TUIResults(textUserInterface,controller,gamestate);
     }
 
     @Test
     void testShouldShowResultsScene() {
+       results.drawResults();
+    }
 
+    @Test
+    void testShouldDrawTribes(){
+        results.drawTribes();
     }
 }
