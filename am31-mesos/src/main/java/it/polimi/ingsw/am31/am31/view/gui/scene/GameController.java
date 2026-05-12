@@ -34,6 +34,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 
 import java.io.InputStream;
@@ -48,6 +49,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class GameController extends BaseController {
+    @FXML private VBox centerHBox;
     @FXML private StackPane rootStackPane;
     @FXML private Label roundLabel;
     @FXML private Label eraLabel;
@@ -89,11 +91,19 @@ public class GameController extends BaseController {
 
     @FXML private StackPane rulesOverlay;
 
+    @FXML private ImageView backgroundImage;
+
+    @FXML private HBox topBar;
+
     private int currentSlide = 1;
 
+    double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+    double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
 
-    private double cardWidth = 120;
-    private double cardHeight = 170;
+    private double cardHeight = screenHeight / 6;
+    private double cardWidth = cardHeight*0.7;
+    private double cardHeight2 = screenHeight / 7;
+    private double cardWidth2 = cardHeight2*0.7;
 
     private RoundPhasesEnum lastShownPhase = null;
     private String lastShownActing = null;
@@ -124,6 +134,12 @@ public class GameController extends BaseController {
 
         //make all the ScrollPane transparent
         Platform.runLater(() -> {
+            backgroundImage.fitWidthProperty().bind(rootStackPane.widthProperty());
+            backgroundImage.fitHeightProperty().bind(rootStackPane.heightProperty());
+            VBox.setMargin(centerHBox, new Insets((1/42)*screenHeight, 0, (1/42)*screenHeight, 0));
+            centerHBox.setSpacing((1/42)*screenHeight);
+            buildingsScrollPane.setPrefHeight(cardHeight2);
+            tribeScrollPane.setPrefHeight(cardHeight2);
             makeScrollPaneTransparent(tribeScrollPane);
             makeScrollPaneTransparent(buildingsScrollPane);
             makeScrollPaneTransparent(cardTypeScrollPane);
@@ -195,6 +211,8 @@ public class GameController extends BaseController {
         String backName = "card_back_" + era + ".png";
         Image back = loadImage(PathConstants.CARDS_PATH + backName);
         if (back != null) deckImage.setImage(back);
+        deckImage.setFitWidth(cardWidth);
+        deckImage.setFitHeight(cardHeight);
         if (localGameState.getRoundNumber() == 10) deckImage.setVisible(false);
     }
 
@@ -209,6 +227,7 @@ public class GameController extends BaseController {
 
     //method to refresh the top bar
     private void refreshTopBar(RoundPhasesEnum phase, LocalPlayerState acting) {
+        topBar.setPrefHeight(screenHeight*(3/42));
         roundLabel.setText("Round: " + localGameState.getRoundNumber());
         eraLabel.setText("Era: " + localGameState.getEra());
         if (acting != null) {
@@ -331,8 +350,8 @@ public class GameController extends BaseController {
         for (int i = 0; i < visualLayers; i++) {
             int level = visualLayers - 1 - i; // top = 0, middle = 1, back = 2
             ImageView iv = new ImageView(loadCardImage(visible.get(i).getCardId()));
-            iv.setFitWidth(cardWidth);
-            iv.setFitHeight(cardHeight);
+            iv.setFitWidth(cardWidth2);
+            iv.setFitHeight(cardHeight2);
             iv.setTranslateX(level * 7.0);
             iv.setTranslateY(level * -3.0);
 
@@ -402,8 +421,8 @@ public class GameController extends BaseController {
     private StackPane buildCardNode(Card card, BoardRows row, RoundPhasesEnum phase, LocalPlayerState acting) {
         Image img = loadCardImage(card.getCardId());
         ImageView iv = new ImageView(img);
-        iv.setFitWidth(cardWidth);
-        iv.setFitHeight(cardHeight);
+        iv.setFitWidth(cardWidth2);
+        iv.setFitHeight(cardHeight2);
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);

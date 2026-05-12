@@ -184,7 +184,7 @@ public class Server {
 
 
         //Better explanation for putIfAbsent in the method in GameController that adds a new player
-        if(clients.putIfAbsent(identifier, virtualView) != null){
+        if(clients.putIfAbsent(identifier, virtualView) != null) {
             virtualView.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new UsernameAlreadyInUseException(identifier)));
             return;
         }

@@ -103,14 +103,15 @@ public class TUIResults implements TUIPhase {
         for (LocalLeaderBoard p : gameState.getLeaderboard()) {
             boolean pWon = p.isWinner();
             if (pWon)
-                System.out.println("WINNER:" + p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
+                System.out.println("WINNER: " + p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
             else
                 System.out.println(p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
         }
         System.out.println("Press: \n1 - To go back to Lobby"+"\n2 - To show players' tribes");
     }
 
-    void drawTribes (){                for(LocalPlayerState p : gameState.getPlayers()) {
+    void drawTribes (){
+        for(LocalPlayerState p : gameState.getPlayers()) {
         System.out.println(p.toString());
         for (Card c : p.getTribe())
             System.out.println(c.toString());
