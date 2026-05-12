@@ -189,6 +189,7 @@ public class Server {
             return;
         }
 
+        virtualView.updateLastTime();
         System.out.println("Client " + identifier + " has been added");
 
         try{

@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckExce
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.BuildingDeck;
 import it.polimi.ingsw.am31.am31.modelPackage.deckFolder.Deck;
+import it.polimi.ingsw.am31.am31.testUtils.TestUtilities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
