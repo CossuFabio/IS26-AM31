@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am31.am31.view.gui.scene.GameController">
+<StackPane fx:id="rootStackPane" stylesheets="@../assets/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.am31.am31.view.gui.scene.GameController">
    <children>
       <ImageView fx:id="backgroundImage" opacity="0.9" pickOnBounds="true">
          <image>
@@ -28,25 +28,25 @@
                <children>
                   <Label fx:id="roundLabel" alignment="CENTER" text="Round 1" textAlignment="CENTER">
                      <font>
-                        <Font name="Inknut Antiqua Regular" size="30.0" />
+                        <Font name="Inknut Antiqua Regular" size="18.0" />
                      </font>
                   </Label>
-                  <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Label fx:id="eraLabel" alignment="CENTER" prefWidth="300.0" text="Era 1">
+                  <Separator orientation="VERTICAL" />
+                  <Label fx:id="eraLabel" alignment="CENTER" text="Era 1">
                      <font>
-                        <Font name="Inknut Antiqua Regular" size="30.0" />
+                        <Font name="Inknut Antiqua Regular" size="18.0" />
                      </font>
                   </Label>
-                  <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Label fx:id="turnLabel" alignment="CENTER" prefWidth="300.0" text="Turno Mario">
+                  <Separator orientation="VERTICAL" />
+                  <Label fx:id="turnLabel" alignment="CENTER" text="Turno Mario">
                      <font>
-                        <Font name="Inknut Antiqua Regular" size="30.0" />
+                        <Font name="Inknut Antiqua Regular" size="18.0" />
                      </font>
                   </Label>
-                  <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Label fx:id="phaseLabel" alignment="CENTER" prefWidth="300.0" text="Fase Totem">
+                  <Separator orientation="VERTICAL" />
+                  <Label fx:id="phaseLabel" alignment="CENTER" text="Fase Totem">
                      <font>
-                        <Font name="Inknut Antiqua Regular" size="30.0" />
+                        <Font name="Inknut Antiqua Regular" size="18.0" />
                      </font>
                   </Label>
                </children>
@@ -93,7 +93,7 @@
                <children>
                   <Label text="Players:">
                      <font>
-                        <Font name="Inknut Antiqua Regular" size="36.0" />
+                        <Font name="Inknut Antiqua Regular" size="24.0" />
                      </font>
                      <padding>
                         <Insets left="20.0" right="20.0" />

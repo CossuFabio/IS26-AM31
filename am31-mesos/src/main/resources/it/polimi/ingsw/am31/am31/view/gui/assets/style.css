@@ -1,3 +1,7 @@
+.transparent-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
 .combo-box-popup .list-cell {
     -fx-background-color: rgba(255,243,211,1);
     -fx-font-family: "Inknut Antiqua";

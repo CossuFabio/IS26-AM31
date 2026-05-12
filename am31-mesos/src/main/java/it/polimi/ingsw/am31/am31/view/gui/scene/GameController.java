@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
@@ -103,8 +104,8 @@ public class GameController extends BaseController {
 
     private final double cardHeight = screenHeight / 6;
     private final double cardWidth = cardHeight*0.7;
-    private final double cardHeight2 = screenHeight / 7;
-    private final double cardWidth2 = cardHeight2*0.7;
+//    private final double cardHeight2 = screenHeight / 7;
+//    private final double cardWidth2 = cardHeight2*0.7;
 
     private RoundPhasesEnum lastShownPhase = null;
     private String lastShownActing = null;
@@ -138,27 +139,25 @@ public class GameController extends BaseController {
         backgroundImage.fitWidthProperty().bind(rootStackPane.widthProperty());
         backgroundImage.fitHeightProperty().bind(rootStackPane.heightProperty());
         VBox.setMargin(centerHBox, new Insets(((double) 1 /42)*screenHeight, 0, ((double) 1 /42)*screenHeight, 0));
-        centerHBox.setSpacing(((double) 1 /42)*screenHeight);
-        buildingsScrollPane.setPrefHeight(cardHeight2);
-        tribeScrollPane.setPrefHeight(cardHeight2);
+        centerHBox.setSpacing(((double) 1 /84)*screenHeight);
+        buildingsScrollPane.setPrefHeight(cardHeight);
+        tribeScrollPane.setPrefHeight(cardHeight);
         VBox.setMargin(tribeScrollPane, new Insets(0,0,screenHeight*((double) 1 /42),0));
         VBox.setMargin(buildingsScrollPane, new Insets(0,0,screenHeight*((double) 1 /42),0));
         middleRowContainer.setPrefHeight(cardHeight);
-        roundLabel.setPrefWidth(screenWidth*((double) 300 /1920));
-        eraLabel.setPrefWidth(screenWidth*((double) 300 /1920));
-        turnLabel.setPrefWidth(screenWidth*((double) 300 /1920));
-        phaseLabel.setPrefWidth(screenWidth*((double) 300 /1920));
+        roundLabel.setPrefWidth(screenWidth*((double) 200 /1920));
+        eraLabel.setPrefWidth(screenWidth*((double) 200 /1920));
+        turnLabel.setPrefWidth(screenWidth*((double) 200 /1920));
+        phaseLabel.setPrefWidth(screenWidth*((double) 200 /1920));
+        topBar.setPrefHeight(screenHeight*((double) 2 /42));
 
-        //make all the ScrollPane transparent
-        Platform.runLater(() -> {
-            makeScrollPaneTransparent(tribeScrollPane);
-            makeScrollPaneTransparent(buildingsScrollPane);
-            makeScrollPaneTransparent(cardTypeScrollPane);
-            makeScrollPaneTransparent(tribePlayerScrollPane);
-            makeScrollPaneTransparent(buildingsPlayerScrollPane);
-            buildingsScrollPane.setVisible(true);
-            tribeScrollPane.setVisible(true);
-        });
+        makeScrollPaneTransparent(tribeScrollPane);
+        makeScrollPaneTransparent(buildingsScrollPane);
+        makeScrollPaneTransparent(cardTypeScrollPane);
+        makeScrollPaneTransparent(tribePlayerScrollPane);
+        makeScrollPaneTransparent(buildingsPlayerScrollPane);
+        buildingsScrollPane.setVisible(true);
+        tribeScrollPane.setVisible(true);
 
         new Thread(() -> {
             for (int i = 1; i <= 7; i++) {
@@ -167,11 +166,8 @@ public class GameController extends BaseController {
         }).start();
     }
 
-    //method to make a ScrollPane transparent (normally doesn't work  due to viewport)
     private void makeScrollPaneTransparent(ScrollPane sp) {
         sp.getStyleClass().add("transparent-scroll");
-        var viewport = sp.lookup(".viewport");
-        if (viewport != null) viewport.setStyle("-fx-background-color: transparent;");
     }
 
     @Subscribe
@@ -216,6 +212,34 @@ public class GameController extends BaseController {
         refreshPlayerPanel(acting);
         refreshMyInfo();
         showPrompt(phase, acting);
+        autoSkipIfNeeded(phase, acting);
+    }
+
+    private void autoSkipIfNeeded(RoundPhasesEnum phase, LocalPlayerState acting) {
+        String myNick = controller.getLocalPlayerUsername();
+        if (acting == null || !acting.getNickname().equals(myNick)) return;
+        if (phase != RoundPhasesEnum.ACTION_PHASE && phase != RoundPhasesEnum.BONUS_DRAWING_PHASE) return;
+
+        for (BoardRows row : new BoardRows[]{BoardRows.UPPER, BoardRows.LOWER}) {
+            int allowed = allowedDrawsFromRow(row);
+            int used = pendingDraws.getOrDefault(row, 0);
+            if (allowed - used <= 0) continue;
+
+            List<Card> rowCards = (row == BoardRows.UPPER)
+                    ? localGameState.getBoard().getUpperLine()
+                    : localGameState.getBoard().getUnderLine();
+            boolean anyClickable = rowCards.stream().anyMatch(c -> c.canBePicked() && canAffordCard(c));
+            if (!anyClickable) {
+                BoardRows rowToSkip = row;
+                new Thread(() -> {
+                    try {
+                        controller.sendRequest(new SkipDrawNetworkRequest(rowToSkip));
+                    } catch (Exception e) {
+                        System.err.println("Auto-skip failed: " + e.getMessage());
+                    }
+                }).start();
+            }
+        }
     }
 
     //method to refresh the deck
@@ -240,7 +264,6 @@ public class GameController extends BaseController {
 
     //method to refresh the top bar
     private void refreshTopBar(RoundPhasesEnum phase, LocalPlayerState acting) {
-        topBar.setPrefHeight(screenHeight*((double) 3 /42));
         roundLabel.setText("Round: " + localGameState.getRoundNumber());
         eraLabel.setText("Era: " + localGameState.getEra());
         if (acting != null) {
@@ -363,8 +386,8 @@ public class GameController extends BaseController {
         for (int i = 0; i < visualLayers; i++) {
             int level = visualLayers - 1 - i; // top = 0, middle = 1, back = 2
             ImageView iv = new ImageView(loadCardImage(visible.get(i).getCardId()));
-            iv.setFitWidth(cardWidth2);
-            iv.setFitHeight(cardHeight2);
+            iv.setFitWidth(cardWidth);
+            iv.setFitHeight(cardHeight);
             iv.setTranslateX(level * 7.0);
             iv.setTranslateY(level * -3.0);
 
@@ -434,8 +457,8 @@ public class GameController extends BaseController {
     private StackPane buildCardNode(Card card, BoardRows row, RoundPhasesEnum phase, LocalPlayerState acting) {
         Image img = loadCardImage(card.getCardId());
         ImageView iv = new ImageView(img);
-        iv.setFitWidth(cardWidth2);
-        iv.setFitHeight(cardHeight2);
+        iv.setFitWidth(cardWidth);
+        iv.setFitHeight(cardHeight);
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);
