@@ -1,7 +1,6 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
-import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectIdsConstants;
@@ -10,15 +9,12 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.SustainEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferCardMessage;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.fusesource.jansi.Ansi.*;
-import static org.fusesource.jansi.Ansi.Color.*;
 
 import java.util.ArrayList;
 import java.util.List;

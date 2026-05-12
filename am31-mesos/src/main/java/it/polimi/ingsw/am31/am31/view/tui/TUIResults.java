@@ -37,37 +37,10 @@ public class TUIResults implements TUIPhase {
     public void draw() {
         switch (currentStep) {
             case SHOW_RESULTS: {
-                String localPlayer = controller.getLocalPlayerUsername();
-                //if client won, shows special message
-                if (gameState.getLeaderboard()
-                        .stream()
-                        .anyMatch(s -> s.playerState().getNickname().equals(localPlayer) && s.isWinner()))
-                    System.out.println("YOU WON!");
-                else
-                    System.out.println("GAME ENDED!");
-                System.out.println("RESULTS:");
-                //prints leaderboard
-                for (LocalLeaderBoard p : gameState.getLeaderboard()) {
-                    boolean pWon = p.isWinner();
-                    if (pWon)
-                        System.out.println("WINNER:" + p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
-                    else
-                        System.out.println(p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
-                }
-                System.out.println("Press: \n1 - To go back to Lobby"+"\n2 - To show players' tribes");
-                break;
+                drawResults(); break;
             }
             case SHOW_TRIBES: {
-                for(LocalPlayerState p : gameState.getPlayers()) {
-                    System.out.println(p.toString());
-                    for (Card c : p.getTribe())
-                        System.out.println(c.toString());
-                    for (Card c : p.getBuildings())
-                        System.out.println(c.toString());
-                }
-                ansi().reset();
-                System.out.println("Press 1 to go back to results");
-                break;
+                drawTribes();break;
             }
             case BACK_TO_LOBBY: {
                 System.out.println("Going back to lobby...");
@@ -114,6 +87,38 @@ public class TUIResults implements TUIPhase {
             }
         }
     }
+
+
+    void drawResults (){
+        String localPlayer = controller.getLocalPlayerUsername();
+        //if client won, shows special message
+        if (gameState.getLeaderboard()
+                .stream()
+                .anyMatch(s -> s.playerState().getNickname().equals(localPlayer) && s.isWinner()))
+            System.out.println("YOU WON!");
+        else
+            System.out.println("GAME ENDED!");
+        System.out.println("RESULTS:");
+        //prints leaderboard
+        for (LocalLeaderBoard p : gameState.getLeaderboard()) {
+            boolean pWon = p.isWinner();
+            if (pWon)
+                System.out.println("WINNER:" + p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
+            else
+                System.out.println(p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
+        }
+        System.out.println("Press: \n1 - To go back to Lobby"+"\n2 - To show players' tribes");
+    }
+
+    void drawTribes (){                for(LocalPlayerState p : gameState.getPlayers()) {
+        System.out.println(p.toString());
+        for (Card c : p.getTribe())
+            System.out.println(c.toString());
+        for (Card c : p.getBuildings())
+            System.out.println(c.toString());
+    }
+        ansi().reset();
+        System.out.println("Press 1 to go back to results");}
 
     @Subscribe
     public void handleBoardUpdate(BoardUpdateEvent e) {
