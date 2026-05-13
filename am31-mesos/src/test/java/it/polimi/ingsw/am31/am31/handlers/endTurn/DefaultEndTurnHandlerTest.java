@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultEndTurnHandlerTest {
@@ -12,7 +13,7 @@ class DefaultEndTurnHandlerTest {
     private Player player;
 
     @BeforeEach
-    void setUp() {this.player = new Player("Test", Color.BLACK);}
+    void setUp() {this.player = createPlayer().name("Test").color(Color.BLACK).build();}
 
     @Test
     void shouldHandleEndTurnNoEffect() {

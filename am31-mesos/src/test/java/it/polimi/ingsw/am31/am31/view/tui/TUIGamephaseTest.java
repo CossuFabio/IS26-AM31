@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
+
 
 public class TUIGamephaseTest {
     private TUIGamePhase gamephase;
@@ -28,11 +30,19 @@ public class TUIGamephaseTest {
         LocalGameState state = new LocalGameState();
         List<Card> cards = new ArrayList<>();
         EffectsCatalog effects = new EffectsCatalog();
-        Card h = new Hunter("h1",1,2,true);
-        Card f = new Farmer("f1",2,2,3);
-        Card i = new Inventor("i1",2,2,IconEnum.BREAD);
-        Card e = new SustainEventCard("e1",1,2);
-        BuildingCard bd = new BuildingCard("bd1",1, 2, 3,effects.getEffect(EffectIdsConstants.DOUBLE_BUILDER_ENDGAME));
+
+        Card h = createHunter().cardId("h1").era(1).minPlayers(2).mark(true).build();
+        Card f = createFarmer().cardId("f1").era(2).minPlayers(2).discount(3).build();
+        Card i = createInventor().cardId("i1").era(2).minPlayers(2).icon(IconEnum.BREAD).build();
+        Card e = createSustainEvent()
+                .cardId("e1")
+                .era(1)
+                .prestigePointsMalus(2)
+                .build();
+
+
+        BuildingCard bd = createBuilding().cardId("bd1").era(1).cost(2).prestigePointsGained(3).effect(effects.getEffect(EffectIdsConstants.DOUBLE_BUILDER_ENDGAME)).build();
+
         ArrayList<LocalOfferCard> track = new ArrayList<>();
 
 
@@ -49,7 +59,8 @@ public class TUIGamephaseTest {
         state.setEra(1);
         state.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
         state.setRoundNumber(1);state.setOfferTrack(track);
-        LocalPlayerState test1 = new LocalPlayerState("test", Color.BLACK);LocalPlayerState test = new LocalPlayerState("achillefrigeri2",Color.WHITE);
+        LocalPlayerState test1 = new LocalPlayerState("test", Color.BLACK);
+        LocalPlayerState test = new LocalPlayerState("achillefrigeri2",Color.WHITE);
         state.addPlayer(test);state.addPlayer(test1);
         state.setTurnOrder(state.getPlayers());state.setPlayerActing(test1);
         ViewEventBus eventBus = new ViewEventBus();

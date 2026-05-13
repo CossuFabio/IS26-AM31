@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
@@ -19,8 +20,8 @@ public class BoardTest {
     @BeforeEach
     void setup () throws IOException {
         this.board = new Board(2, TestUtilities.getJSONGameResources().getOfferCards());
-        this.ccard = new Artist("dummy", 1,2);
-        this.bcard = new BuildingCard ("dummy", 1,1,1,null);
+        this.ccard = createArtist().era(1).build();
+        this.bcard = createBuilding().era(1).cost(1).prestigePointsGained(1).build();
     }
     @Test
     void TestShouldAddUpper () {

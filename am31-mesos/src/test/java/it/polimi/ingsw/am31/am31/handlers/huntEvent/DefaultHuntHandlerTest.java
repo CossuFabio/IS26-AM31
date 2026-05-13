@@ -8,6 +8,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.huntEvent.Bo
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.BLACK;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createBuilding;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createHunter;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultHuntHandlerTest {
@@ -15,23 +19,24 @@ class DefaultHuntHandlerTest {
     private Player player;
     private int food;
 
-    private int hunterNumberBeforeMark = 5;
-    private int hunterNumberAfterMark = 10;
+    private final int hunterNumberBeforeMark = 5;
+    private final int hunterNumberAfterMark = 10;
+
     @BeforeEach
     void setUp() {
-        this.player = new Player("Test", Color.BLACK);
+        this.player = createPlayer().name("Test").color(BLACK).build();
 
         for(int i = 0; i<hunterNumberBeforeMark; i++){
-            player.addCard(new Hunter("dummy", 1,2, false));
+            player.addCard(createHunter().mark(false).build());
         }
 
-        player.addCard(new Hunter("dummy", 1,2,  true));
+        player.addCard(createHunter().mark(true).build());
         food = player.getFood();
 
         assertEquals(hunterNumberBeforeMark, food);
 
         for(int i = 0; i<hunterNumberAfterMark - hunterNumberBeforeMark - 1; i++){
-            player.addCard(new Hunter("dummy", 1, 2, false));
+            player.addCard(createHunter().mark(false).build());
         }
 
 
@@ -49,7 +54,8 @@ class DefaultHuntHandlerTest {
     @Test
     void shouldHandleBonusHuntWithHunter() {
 
-        this.player.addCard(new BuildingCard("dummy", 1, 1, 1, (player) -> player.addHuntEffect(BonusHunterHandleDecorator::new)));
+
+        this.player.addCard(createBuilding().cost(1).prestigePointsGained(1).effect(player -> player.addHuntEffect(BonusHunterHandleDecorator::new)).build());
         this.player.resolveHunt(1, 1);
 
         //Bonus handler => +x prestigePoints, +x food (x = number of hunters in tribe)

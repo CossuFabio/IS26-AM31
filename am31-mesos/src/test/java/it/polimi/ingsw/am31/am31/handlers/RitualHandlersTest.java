@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.ritualWin.Do
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RitualHandlersTest {
@@ -17,7 +18,7 @@ public class RitualHandlersTest {
 
     @BeforeEach
     void setUp() {
-        this.player = new Player("Test", Color.BLACK);
+        this.player = createPlayer().name("Test").color(Color.BLACK).build();
     }
 
     @Test

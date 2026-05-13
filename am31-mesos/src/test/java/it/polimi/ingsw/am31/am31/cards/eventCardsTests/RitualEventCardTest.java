@@ -10,8 +10,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.*;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
 import static org.junit.jupiter.api.Assertions.*;
-
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 class RitualEventCardTest {
     private RitualEventCard card;
     private List<Player> players;
@@ -21,18 +23,20 @@ class RitualEventCardTest {
     void setUp() {
         int stars = 2;
         int era = 1;
-        this.shaman = new Shaman("dummy", era,2, stars);
-        this.card= new RitualEventCard("dummy", 1,2,3);
+
+        this.shaman = createShaman().era(era).stars(stars).build();
+        this.card = createRitualEvent().era(1).prestigePointsBonus(3).prestigePointsMalus(2).build();
+
         this.players = new ArrayList<>();
-        players.add(new Player("BLUE", Color.BLUE));
-        players.get(0).addCard(shaman);
-        players.get(0).addCard(shaman);
+        players.add(createPlayer().name("BLUE").color(BLUE).build());
+        players.getFirst().addCard(shaman);
+        players.getFirst().addCard(shaman);
         //should have 4 stars and win and have 3pp
-        players.add(new Player("RED", Color.RED));
+        players.add(createPlayer().name("RED").color(RED).build());
         players.get(1).addCard(shaman);
         //should have 2 stars and keep them
-        players.add(new Player("YELLOW", Color.YELLOW));
-        players.add(new Player("WHITE", Color.WHITE));
+        players.add(createPlayer().name("YELLOW").color(YELLOW).build());
+        players.add(createPlayer().name("WHITE").color(WHITE).build());
         //2 losing players, should both have 0-2 pp
     }
     @Test

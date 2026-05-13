@@ -7,11 +7,14 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.paintEvent.B
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import org.junit.jupiter.api.Test;
 
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createArtist;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createBuilding;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultPaintHandlerTest {
 
-    Player player = new Player("Test", null);
+    Player player = createPlayer().name("Test").build();
 
 
     @Test
@@ -23,7 +26,7 @@ class DefaultPaintHandlerTest {
         int malus = 3;
 
         for(int i = 0; i < minArtist-1; i++){
-            player.addCard(new Artist("dummy", 1, 2));
+            player.addCard(createArtist().era(1).build());
         }
         player.resolvePainters(minArtist, malus, bonus);
         assertEquals(startingPrestige-malus, player.getPrestigePoints());
@@ -39,7 +42,7 @@ class DefaultPaintHandlerTest {
         int malus = 3;
 
         for(int i = 0; i < minArtist; i++){
-            player.addCard(new Artist("dummy", 1, 2));
+            player.addCard(createArtist().era(1).build());
         }
 
         CountVisitor countVisitor = new CountVisitor();
@@ -52,15 +55,14 @@ class DefaultPaintHandlerTest {
 
     @Test
     void shouldHandleBonusFoodWin() {
-
-        player.addCard(new BuildingCard("dummy", 1, 1, 1, (Player player) -> player.addPaintEffect(BonusPaintHandlerDecorator::new)));
+        player.addCard(createBuilding().era(1).cost(1).prestigePointsGained(1).effect((Player player) -> player.addPaintEffect(BonusPaintHandlerDecorator::new)).build());
         int startingPrestige = player.getPrestigePoints();
         int minArtist = 3;
         int bonus = 5;
         int malus = 3;
 
         for(int i = 0; i < minArtist; i++){
-            player.addCard(new Artist("dummy", 1, 2));
+            player.addCard(createArtist().era(1).build());
         }
 
         CountVisitor countVisitor = new CountVisitor();

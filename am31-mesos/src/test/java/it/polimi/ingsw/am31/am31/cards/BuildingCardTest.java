@@ -7,6 +7,9 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.Building
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.BLUE;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createBuilding;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BuildingCardTest {
@@ -14,8 +17,9 @@ class BuildingCardTest {
     private Player player;
     @BeforeEach
     void setUp() {
-        this.card = new BuildingCard ("dummy", 1, 2, 5, (Player player) -> player.increaseStars(3));
-        this.player = new Player("BLUE", Color.BLUE);
+
+        this.card = createBuilding().cost(2).prestigePointsGained(5).effect(player -> player.increaseStars(3)).build();
+        this.player = createPlayer().name("BLUE").color(BLUE).build();
     }
     @Test
     void TestShouldGetPrestigePointsGained() {

@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard.PriorityClass.HIGH;
+import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.BLUE;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createHuntEvent;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createHunter;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HuntEventCardTest {
@@ -18,11 +22,13 @@ class HuntEventCardTest {
     private List<Player> players;
     @BeforeEach
     void setUp() {
-        this.eventCard = new HuntEventCard("dummy", 1,2,3);
+
+        this.eventCard = createHuntEvent().era(1).foodBonus(2).prestigePointsBonus(3).build();
         this.players = new ArrayList<>();
-        players.add(new Player("BLUE", Color.BLUE));
-        players.getFirst().addCard(new Hunter("h1", 1,2,false));
-        players.getFirst().addCard(new Hunter("h1", 1,2,false));
+
+        players.add(createPlayer().name("BLUE").color(BLUE).build());
+        players.getFirst().addCard(createHunter().mark(false).build() );
+        players.getFirst().addCard(createHunter().mark(false).build());
     }
     @Test
     void TestShouldTestingResolve() {

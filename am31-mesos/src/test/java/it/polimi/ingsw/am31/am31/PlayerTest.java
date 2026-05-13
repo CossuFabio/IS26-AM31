@@ -2,14 +2,14 @@ package it.polimi.ingsw.am31.am31;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Hunter;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Inventor;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Shaman;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PlayerTest {
 
@@ -20,9 +20,9 @@ class PlayerTest {
     @BeforeEach
     //This test creates a player
     void createPlayerAndTribe(){
-        this.player = new Player(nickname, color);
-        player.addCard(new Shaman("dummy", 1, 2,3));
-        player.addCard(new Inventor("dummy", 1, 2, IconEnum.ARROW));
+        this.player = createPlayer().name(nickname).color(color).build();
+        player.addCard(createShaman().stars(3).build());
+        player.addCard(createInventor().icon(IconEnum.ARROW).build());
 
     }
 
@@ -90,7 +90,7 @@ class PlayerTest {
 
     @Test
     void addCard() {
-        Hunter h = new Hunter("dummy", 1, 2,false);
+        Hunter h = createHunter().mark(false).build();
         player.addCard(h);
         assertEquals(player.getTribe().contains(h), true);
     }

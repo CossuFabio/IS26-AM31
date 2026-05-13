@@ -6,31 +6,34 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createOfferCard;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OfferCardTest {
     private OfferCard offerCard;
+    private Player player;
 
     @BeforeEach
-    void setUp() {this.offerCard = new OfferCard("dummy", 0, 2, 0, 2);}
+    void setUp() {
+        this.offerCard = createOfferCard().food(0).drawFromUnder(2).drawFromUpper(0).build();
+        this.player = createPlayer().color(Color.BLUE).name("BLUE").build();
+    }
 
     @Test
     void shouldNotBeFree() {
-        Player player = new Player("BLUE", Color.BLUE);
         this.offerCard.setPlayer(player);
         assertFalse(this.offerCard.isFree());
     }
 
     @Test
     void shouldSetPlayer() {
-        Player player = new Player("BLUE", Color.BLUE);
         this.offerCard.setPlayer(player);
         assertEquals(player, this.offerCard.getPlayer());
     }
 
     @Test
     void shouldBeFree() {
-        Player player = new Player("BLUE", Color.BLUE);
         this.offerCard.setPlayer(player);
         this.offerCard.free();
         assertTrue(this.offerCard.isFree());

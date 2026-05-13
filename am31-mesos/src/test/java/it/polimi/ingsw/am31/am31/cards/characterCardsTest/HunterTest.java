@@ -5,26 +5,29 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Hunter;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import org.junit.jupiter.api.Test;
 
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
 import static org.junit.jupiter.api.Assertions.*;
-
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 class HunterTest {
 
-    Hunter hunterNoMark = new Hunter("dummy", 1 ,2,false);
-    Hunter hunterMark = new Hunter("dummy", 2,2,true);
 
+    Hunter hunterNoMark = createHunter().era(1).minPlayers(2).mark(false).build();
+
+
+    Hunter hunterMark = createHunter().era(2).minPlayers(2).mark(true).build();
 
 
     @Test
     void TestShouldGetMark() {
 
-        assertEquals(hunterNoMark.getMark(), false);
-        assertEquals(hunterMark.getMark(), true);
+        assertFalse(hunterNoMark.getMark());
+        assertTrue(hunterMark.getMark());
     }
 
     @Test
     void TestShouldDoOnPick() {
 
-        Player player = new Player("Test", null);
+        Player player = createPlayer().color(null).name("Test").build();
 
         int startingFood = player.getFood();
         int startingPrestigePoints = player.getPrestigePoints();

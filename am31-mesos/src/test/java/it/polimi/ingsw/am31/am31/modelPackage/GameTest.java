@@ -3,14 +3,9 @@ package it.polimi.ingsw.am31.am31.modelPackage;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.IncorrectMethodCallException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientPlayersNumberException;
-import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
-import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Hunter;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
@@ -22,11 +17,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
-import static java.util.Comparator.comparingInt;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createGame;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createBuilding;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createHunter;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
@@ -34,12 +30,11 @@ class GameTest {
     private Player player, player1;
     @BeforeEach
     void setUp() throws Exception {
-        game = new Game(2, new GameResources(new JsonTribeCardsSupplier(), new JsonBuildingCardsSupplier(), new
-                JsonOfferSupplier()));
-        BuildingCard bd1 = new BuildingCard("dummy",  1, 1, 1, null);
-        BuildingCard bd2 = new BuildingCard("dummy2", 2, 2, 2, null);
-        CharacterCard h = new Hunter("h1", 1, 2, true);
-        player = new Player("dummy", Color.BLUE);
+        this.game = createGame(2);
+        BuildingCard bd1 = createBuilding().era(1).cost(1).prestigePointsGained(1).build();
+        BuildingCard bd2 = createBuilding().era(2).cost(2).prestigePointsGained(2).build();
+        CharacterCard h = createHunter().era(1).mark(true).build();
+        player = createPlayer().color(Color.BLUE).name("dummy").build();
         game.getBoard().addUpper(bd1);
         game.getBoard().addUpper(h);
         game.getBoard().addUpper(h);
@@ -47,7 +42,7 @@ class GameTest {
         game.getBoard().addLower(h);
         game.getBoard().addLower(h);
         game.addPlayer(player);
-        player1 = new Player("dummy2", Color.RED);
+        player1 = createPlayer().color(Color.RED).name("dummy2").build();
     }
 
     @Test
@@ -61,12 +56,12 @@ class GameTest {
         assertThrows(GameAlreadyStartedException.class, () -> game.addPlayer(player));
         game.setCurrentRoundPhase(RoundPhasesEnum.GAME_STARTING);
         assertThrows(UsernameAlreadyTakenException.class, () -> game.addPlayer(player));
-        assertThrows(PlayerColorAlreadyTakenException.class, () -> game.addPlayer(new Player ("dummy2",Color.BLUE)));
+        assertThrows(PlayerColorAlreadyTakenException.class, () -> game.addPlayer(createPlayer().color(Color.BLUE).name("dummy2").build()));
         assertEquals(1,game.getPlayersList().size());
         //check if the players size increases
-        game.addPlayer(new Player("dummy3",Color.RED));
+        game.addPlayer(createPlayer().color(Color.RED).name("dummy3").build());
         assertEquals(2,game.getPlayersList().size());
-        assertThrows(TooManyPlayersException.class, () -> game.addPlayer(new Player("dummy4",Color.WHITE)));
+        assertThrows(TooManyPlayersException.class, () -> game.addPlayer(createPlayer().color(Color.WHITE).name("dummy4").build()));
         
     }
 
@@ -210,7 +205,7 @@ class GameTest {
         assertFalse(game.isGameFinished());
         game.setCurrentRoundPhase(RoundPhasesEnum.END_TURN);
         assertFalse(game.isGameFinished());
-        //conditons for game finisha are round and round phase
+        //conditons for game to finish are round and round phase
         game.setRound(GameConstants.ROUNDS_NUMBER);
         assertTrue(game.isGameFinished());
     }

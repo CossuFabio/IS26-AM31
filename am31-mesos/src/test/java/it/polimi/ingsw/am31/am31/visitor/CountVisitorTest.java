@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum.BOAT;
 import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum.values;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CountVisitorTest {
@@ -15,7 +16,7 @@ class CountVisitorTest {
 
     @Test
     void TestVisitHunter() {
-        Hunter hunter = new Hunter("dummy", 1, 2, true);
+        Hunter hunter = createHunter().era(1).mark(true).build();
         CountVisitor visitor = new CountVisitor();
         hunter.acceptVisit(visitor);
         assertEquals(1, visitor.getHunters());
@@ -23,7 +24,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitFarmer() {
-        Farmer farmer = new Farmer("dummy", 1, 2,3);
+        Farmer farmer = createFarmer().era(1).discount(3).build();
         CountVisitor visitor = new CountVisitor();
         farmer.acceptVisit(visitor);
         assertEquals(1, visitor.getFarmers());
@@ -32,7 +33,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitShaman() {
-        Shaman shaman = new Shaman("dummy", 1, 2, 3);
+        Shaman shaman = createShaman().era(1).stars(3).build();
         CountVisitor visitor = new CountVisitor();
         shaman.acceptVisit(visitor);
         assertEquals(1, visitor.getShamans());
@@ -40,7 +41,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitArtist() {
-        Artist artist = new Artist("dummy", 1, 2);
+        Artist artist = createArtist().era(1).minPlayers(2).build();
         CountVisitor visitor = new CountVisitor();
         artist.acceptVisit(visitor);
         assertEquals(1, visitor.getArtists());
@@ -48,7 +49,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitInventor() {
-        Inventor inventor = new Inventor("dummy", 1,2, BOAT);
+        Inventor inventor = createInventor().era(1).icon(BOAT).build();
         CountVisitor visitor = new CountVisitor();
         inventor.acceptVisit(visitor);
         assertEquals(1, visitor.getInventors());
@@ -56,7 +57,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitBuilder() {
-        Builder builder = new Builder("dummy", 1, 2,3, 3);
+        Builder builder = createBuilder().era(1).prestigePoints(3).discount(3).build();
         CountVisitor visitor = new CountVisitor();
         builder.acceptVisit(visitor);
         assertEquals(1, visitor.getBuilders());
@@ -64,7 +65,7 @@ class CountVisitorTest {
 
     @Test
     void testVisitEvent() {
-        EventCard event= new SustainEventCard("dummy", 2,1);
+        EventCard event = createSustainEvent().era(2).prestigePointsMalus(1).build();
         CountVisitor visitor = new CountVisitor();
         event.acceptVisit(visitor);
         assertEquals(1, visitor.getEvent());

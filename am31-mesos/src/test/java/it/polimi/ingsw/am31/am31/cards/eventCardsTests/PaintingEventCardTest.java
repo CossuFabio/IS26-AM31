@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createArtist;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createPaintingEvent;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PaintingEventCardTest {
@@ -19,12 +22,13 @@ class PaintingEventCardTest {
 
     @BeforeEach
     void setUp() {
-        this.eventCard = new PaintingEventCard("dummy", 1, 2, 3, 3);
+        this.eventCard = createPaintingEvent().era(1).minArtist(2).prestigePointsBonus(3).prestigePointsMalus(3).build();
         this.players = new ArrayList<>();
-        players.add(new Player("BLUE", Color.BLUE));
-        players.getFirst().addCard(new Artist("dummy", 1,2));
-        players.getFirst().addCard(new Artist("dummy", 1, 2));
-        players.add(new Player("RED", Color.RED));
+        players.add(createPlayer().name("BLUE").color(Color.BLUE).build());
+        Artist card = createArtist().era(1).minPlayers(2).build();
+        players.getFirst().addCard(card);
+        players.getFirst().addCard(card);
+        players.add(createPlayer().name("RED").color(Color.RED).build());
     }
         @Test
         void TestShouldResolve () {

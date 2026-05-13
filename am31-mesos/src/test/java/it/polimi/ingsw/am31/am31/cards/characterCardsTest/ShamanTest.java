@@ -10,21 +10,26 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShamanTest {
-    private Shaman shaman;
+
     private List<Player> players;
     private final int era = 1;
     private final int stars = 2;
-    private String id = "dummy";
+    Shaman shaman = createShaman().era(era).stars(stars).build();
+
+
     @BeforeEach
     void setUp() {
-        this.shaman = new Shaman(id, era, 2,stars);
+        shaman = createShaman().era(era).minPlayers(2).stars(stars).build();
         this.players = new ArrayList<>();
-        players.add(new Player("BLUE", Color.BLUE));
+        players.add(createPlayer().color(Color.BLUE).name("BLUE").build());
         players.getFirst().addCard(shaman);
     }
+
     @Test
     void TestShouldGetStars() {
         assertEquals(stars, shaman.getStars());

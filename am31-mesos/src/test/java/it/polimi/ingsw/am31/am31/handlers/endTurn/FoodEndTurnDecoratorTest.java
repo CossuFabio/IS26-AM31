@@ -9,15 +9,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FoodEndTurnDecoratorTest {
     private Player player;
-    private Function<IEndTurnHandler, IEndTurnHandler> FoodEndTurnDecorator;
+    private Function<IEndTurnHandler, IEndTurnHandler> foodEndTurnDecorator;
 
     @BeforeEach
     void setUp() {
-        this.player = new Player("Test", Color.BLACK);
+        this.player = createPlayer().name("Test").color(Color.BLACK).build();
     }
 
     @Test

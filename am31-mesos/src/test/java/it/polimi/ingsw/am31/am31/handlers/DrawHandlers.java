@@ -8,11 +8,14 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.onDraw.Inven
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import org.junit.jupiter.api.Test;
 
+import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum.*;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DrawHandlers {
     
-    Player player = new Player("Test", null);
+    Player player = createPlayer().name("Test").build();
 
     @Test
     void drawsShaman(){
@@ -20,12 +23,12 @@ public class DrawHandlers {
         int stars = 2;
         int initialStars = player.getRitualStars();
 
-        player.addCard(new Shaman("dummy", 1, 2,stars));
+        player.addCard(createShaman().stars(stars).build());
 
         assertEquals(player.getRitualStars(), initialStars + stars);
 
 
-        player.addCard(new Shaman("dummy", 1,2, stars));
+        player.addCard(createShaman().stars(stars).build());
 
         assertEquals(player.getRitualStars(), initialStars + stars + stars);
 
@@ -38,11 +41,11 @@ public class DrawHandlers {
 
         int numHuntersNoMark = 3;
         for(int i = 0; i < numHuntersNoMark; i++){
-            player.addCard(new Hunter("dummy", 1,2, false));
+            player.addCard(createHunter().mark(false).build());
         }
         //All hunters are unmarked => no food is added
         assertEquals(player.getFood(), initialFood);
-        player.addCard(new Hunter("dummy", 1,2,true));
+        player.addCard(createHunter().mark(true).build());
 
         assertEquals(initialFood + numHuntersNoMark, player.getFood());
 
@@ -59,38 +62,38 @@ public class DrawHandlers {
         //Initialize the tribe - Farmer missing => incomplete set => no food bonus
 
         //Both hunters unmarked => no food bonus
-        player.addCard(new Hunter("dummy", 1, 2,false));
-        player.addCard(new Hunter("dummy", 1, 2,false));
+        player.addCard(createHunter().mark(false).build());
+        player.addCard(createHunter().mark(false).build());
 
-        player.addCard(new Artist("dummy", 1,2));
-        player.addCard(new Inventor("dummy", 1, 2, IconEnum.ARROW));
-        player.addCard(new Builder("dummy", 1,2,1,1));
-        player.addCard(new Shaman("dummy", 1,2,1));
+        player.addCard(createArtist().build());
+        player.addCard(createInventor().icon(ARROW).build());
+        player.addCard(createBuilder().prestigePoints(1).discount(1).build());
+        player.addCard(createShaman().stars(1).build());
 
-        player.addCard(new Artist("dummy", 1,2));
-        player.addCard(new Inventor("dummy", 1, 2,IconEnum.ARROW));
-        player.addCard(new Builder("dummy", 1,2,1,1));
-        player.addCard(new Shaman("dummy", 1,2,1));
+        player.addCard(createArtist().build());
+        player.addCard(createInventor().icon(ARROW).build());
+        player.addCard(createBuilder().prestigePoints(1).discount(1).build());
+        player.addCard(createShaman().stars(1).build());
 
-        player.addCard(new Artist("dummy", 1,2));
-        player.addCard(new Inventor("dummy", 1, 2,IconEnum.ARROW));
-        player.addCard(new Builder("dummy", 1,2,1,1));
-        player.addCard(new Shaman("dummy", 1,2,1));
+        player.addCard(createArtist().build());
+        player.addCard(createInventor().icon(ARROW).build());
+        player.addCard(createBuilder().prestigePoints(1).discount(1).build());
+        player.addCard(createShaman().stars(1).build());
 
         assertEquals(initialFood, player.getFood());
 
         //Adding farmers to complete two sets (one hunter missing for the bonus of the third set)
-        player.addCard(new Farmer("dummy", 1, 1,2));
+        player.addCard(createFarmer().discount(2).build());
 
         assertEquals(initialFood + foodBonus, player.getFood());
         int currentFood = initialFood + foodBonus;
 
-        player.addCard(new Farmer("dummy", 1, 1,2));
+        player.addCard(createFarmer().discount(2).build());
         assertEquals(currentFood + foodBonus, player.getFood());
         currentFood += foodBonus;
 
 
-        player.addCard(new Farmer("dummy", 1, 1,2));
+        player.addCard(createFarmer().discount(2).build());
         assertEquals(currentFood, player.getFood());
 
         //Now adding a marked hunter: should add 2 foods for previous hunters + 5 by the decorator
@@ -99,7 +102,7 @@ public class DrawHandlers {
         //Expected value before adding the marked one
         currentFood += foodBonus + visitor.getHunters();
 
-        player.addCard(new Hunter("dummy", 1, 2,true));
+        player.addCard(createHunter().mark(true).build());
         assertEquals(currentFood, player.getFood());
 
 
@@ -113,27 +116,27 @@ public class DrawHandlers {
         int currentFood = player.getFood();
 
         //Shouldn't add food: the decorator hasn't been added yet, and it is a finite pair
-        player.addCard(new Inventor("dummy", 1, 2,IconEnum.ARROW));
-        player.addCard(new Inventor("dummy", 1, 2,IconEnum.ARROW));
+        player.addCard(createInventor().icon(ARROW).build());
+        player.addCard(createInventor().icon(ARROW).build());
 
         assertEquals(currentFood, player.getFood());
 
         //Should be counted towards the bonus: the decorator hasn't been added yet, but it doesn't form a pair
-        player.addCard(new Inventor("dummy", 1,2, IconEnum.BAIT));
+        player.addCard(createInventor().icon(BAIT).build());
 
         int ppBuilding = 5;
-        player.addCard(new BuildingCard("dummy", 1, 2, ppBuilding, p -> {p.addDrawEffect(InventorAdditionalFoodDecorator::new);}));
-        //player.addDrawEffect(InventorAdditionalFoodDecorator::new);
+        player.addCard(createBuilding().cost(2).prestigePointsGained(ppBuilding).effect(p -> {p.addDrawEffect(InventorAdditionalFoodDecorator::new);}).build());
+
         int foodBonus = InventorAdditionalFoodDecorator.FOOD_BONUS; //Bonus given by the decorator
 
         //Should add food: this icon has been added before the creation of the decorator
-        player.addCard(new Inventor("dummy", 1,2, IconEnum.BAIT));
+        player.addCard(createInventor().icon(BAIT).build());
 
         assertEquals(foodBonus, player.getFood());
 
         //Should add food: new couple
-        player.addCard(new Inventor("dummy", 1, 2,IconEnum.BREAD));
-        player.addCard(new Inventor("dummy", 1,2, IconEnum.BREAD));
+        player.addCard(createInventor().icon(BREAD).build());
+        player.addCard(createInventor().icon(BREAD).build());
 
         assertEquals(2*foodBonus, player.getFood());
 
