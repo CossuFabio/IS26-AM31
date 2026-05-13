@@ -21,6 +21,8 @@ public class StateErrorUpdater implements ErrorHandler {
 
     }
 
+
+    //There are ErrorCode values not handled because they come from exception already handled by the ClientController
     @Override
     public void handleErrorMessage(ErrorMessage errorMessage){
 
