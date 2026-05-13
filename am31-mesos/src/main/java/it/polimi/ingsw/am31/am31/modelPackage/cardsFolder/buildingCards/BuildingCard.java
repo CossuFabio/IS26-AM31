@@ -10,18 +10,20 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 import java.util.function.Consumer;
 
 public class BuildingCard extends Card implements IPickable {
+
     private final int cost;
     private final int prestigePointsGained;
-    private Player player;
     private final Consumer<Player> effect;
+    private final String description;
 
 
-
-    public BuildingCard (String cardId, int era, int cost, int prestigePointsGained, Consumer<Player> effect){
+    public BuildingCard (String cardId, int era, int cost, int prestigePointsGained,
+            String description, Consumer<Player> effect){
         super(cardId, era);
         this.cost = cost;
         this.prestigePointsGained = prestigePointsGained;
         this.effect = effect;
+        this.description = description;
     }
 
 
@@ -32,6 +34,8 @@ public class BuildingCard extends Card implements IPickable {
     public int getCost() {
         return cost;
     }
+
+    public String getDescription(){return description;}
 
     public void onPick(Player player){
 

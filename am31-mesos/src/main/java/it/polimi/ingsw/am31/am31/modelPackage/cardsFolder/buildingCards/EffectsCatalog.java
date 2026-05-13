@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+//Used to load resources from JSON
 public class EffectsCatalog {
 
     private final Map<String, Consumer<Player>> effects;

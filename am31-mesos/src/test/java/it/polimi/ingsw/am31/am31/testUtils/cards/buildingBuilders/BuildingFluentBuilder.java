@@ -13,6 +13,7 @@ public class BuildingFluentBuilder implements FluentBuilder<BuildingCard> {
     private int cost;
     private int prestigePointsGained;
     private Consumer<Player> effect;
+    private String description;
 
     public BuildingFluentBuilder(){
         reset();
@@ -43,6 +44,11 @@ public class BuildingFluentBuilder implements FluentBuilder<BuildingCard> {
         return this;
     }
 
+    public BuildingFluentBuilder description(String description){
+        this.description = description;
+        return this;
+    }
+
     @Override
     public void reset() {
         this.cardId = "bd1";
@@ -50,11 +56,12 @@ public class BuildingFluentBuilder implements FluentBuilder<BuildingCard> {
         this.cost = 0;
         this.prestigePointsGained = 0;
         this.effect = (p -> {});
+        this.description = "TEST BUILDING";
     }
 
     @Override
     public BuildingCard build() {
-        BuildingCard toReturn = new BuildingCard(cardId, era, cost, prestigePointsGained, effect);
+        BuildingCard toReturn = new BuildingCard(cardId, era, cost, prestigePointsGained, description, effect);
         reset();
         return toReturn;
     }

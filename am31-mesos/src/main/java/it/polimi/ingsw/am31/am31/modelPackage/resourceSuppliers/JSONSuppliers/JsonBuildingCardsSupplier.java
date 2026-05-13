@@ -39,8 +39,9 @@ public class JsonBuildingCardsSupplier implements IResourceSupplier<List<Buildin
                     node.get("era").asInt(),
                     node.get("cost").asInt(),
                     node.get("prestigePointsGained").asInt(),
-                    effectsCatalog.getEffect(node.get("effectId").asText())
-            ));
+                    node.get("description").asText(),
+                    effectsCatalog.getEffect(node.get("effectId").asText()))
+            );
         }
         Collections.shuffle(this.resources);
     }

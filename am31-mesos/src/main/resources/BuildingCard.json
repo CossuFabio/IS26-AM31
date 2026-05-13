@@ -4,152 +4,169 @@
     "era" : 1,
     "cost" : 4,
     "prestigePointsGained" : 3,
-    "effectId" : "GENERAL_ADDITIONAL_FOOD"
+    "effectId" : "GENERAL_ADDITIONAL_FOOD",
+    "description" : "Grants the player 5 food when completing a set of 6 Character cards of different types. The effect does not apply to eventual sets completed before obtaining this card"
   },
   {
     "cardId" : "bd2",
     "era" : 1,
     "cost" : 4,
     "prestigePointsGained" : 4,
-    "effectId" : "FARMER_DISCOUNT_BONUS"
+    "effectId" : "FARMER_DISCOUNT_BONUS",
+    "description" : "Grants the player a discount of 1 food per Farmers in their tribe during Sustainment event"
   },
   {
     "cardId" : "bd3",
     "era" : 1,
     "cost" : 5,
     "prestigePointsGained" : 3,
-    "effectId" : "ARTIST_DISCOUNT_BONUS"
+    "effectId" : "ARTIST_DISCOUNT_BONUS",
+    "description" : "Grants the player a discount of 1 food per Artist in their tribe during Sustainment event"
   },
   {
     "cardId" : "bd4",
     "era" : 1,
     "cost" : 5,
     "prestigePointsGained" : 2,
-    "effectId" : "NO_MALUS_RITUAL_LOSE"
+    "effectId" : "NO_MALUS_RITUAL_LOSE",
+    "description" : "Grants the player immunity to malus during Ritual event"
   },
   {
     "cardId" : "bd5",
     "era" : 1,
     "cost" : 3,
     "prestigePointsGained" : 3,
-    "effectId" : "FOOD_END_TURN"
+    "effectId" : "FOOD_END_TURN",
+    "description" : "Grants the player 1 additional food when placing totem on slot of OrderCard with a food bonus at the end of their turn"
   },
   {
     "cardId" : "bd6",
     "era" : 1,
     "cost" : 3,
     "prestigePointsGained" : 4,
-    "effectId" : "INVENTOR_ADDITIONAL_FOOD"
+    "effectId" : "INVENTOR_ADDITIONAL_FOOD",
+    "description" : "Grants the player 3 food when obtaining two Inventors with the same icon. The effect does not apply to eventual couples obtained before this card"
   },
-
-
 
   {
     "cardId" : "bd7",
     "era" : 2,
     "cost" : 7,
     "prestigePointsGained" : 0,
-    "effectId" : "DOUBLE_WIN_RITUAL"
+    "effectId" : "DOUBLE_WIN_RITUAL",
+    "description" : "Grants the player double prestige points when winning Ritual event without sharing victory with another player"
   },
   {
     "cardId" : "bd8",
     "era" : 2,
     "cost" : 6,
     "prestigePointsGained" : 4,
-    "effectId" : "INCREASE_STARS_3"
+    "effectId" : "INCREASE_STARS_3",
+    "description" : "Grants the player 3 extra ritual stars"
   },
   {
     "cardId" : "bd9",
     "era" : 2,
     "cost" : 7,
     "prestigePointsGained" : 4,
-    "effectId" : "INVENTOR_DISCOUNT_BONUS"
+    "effectId" : "INVENTOR_DISCOUNT_BONUS",
+    "description": "Grants the player a discount of 1 food per Inventor in their tribe during Sustainment event"
   },
   {
     "cardId" : "bd10",
     "era" : 2,
     "cost" : 7,
     "prestigePointsGained" : 2,
-    "effectId" : "BONUS_HUNTER"
+    "effectId" : "BONUS_HUNTER",
+    "description" : "Grants the player 1 extra Food and Prestige Points per Hunter in their Tribe during Hunt Events"
   },
   {
     "cardId" : "bd11",
     "era" : 2,
     "cost" : 6,
     "prestigePointsGained" : 4,
-    "effectId" : "DOUBLE_BUILDER_ENDGAME"
+    "effectId" : "DOUBLE_BUILDER_ENDGAME",
+    "description" : "Grants the player Double the Prestige Points granted by the Builder cards in their Tribe"
   },
   {
     "cardId" : "bd12",
     "era" : 2,
     "cost" : 5,
     "prestigePointsGained" : 6,
-    "effectId" : "BONUS_PAINT"
+    "effectId" : "BONUS_PAINT",
+    "description" : "Grants the player 1 Food per Artist in their Tribe during Painting Events"
   },
   {
     "cardId" : "bd13",
     "era" : 2,
     "cost" : 5,
     "prestigePointsGained" : 6,
-    "effectId" : "CARD_SET_BONUS"
+    "effectId" : "CARD_SET_BONUS",
+    "description" : "Grants the player 6 Prestige Points per set of Six Different Role Characters in your Tribe in EndGame"
   },
-
-
 
   {
     "cardId" : "bd14",
     "era" : 3,
     "cost" : 8,
     "prestigePointsGained" : 8,
-    "effectId" : "HUNTER_PRESTIGE_BONUS"
+    "effectId" : "HUNTER_PRESTIGE_BONUS",
+    "description" : "Grants the player 3 Prestige Points per Hunter in their Tribe in EndGame"
   },
   {
     "cardId" : "bd15",
     "era" : 3,
     "cost" : 7,
     "prestigePointsGained" : 6,
-    "effectId" : "FARMER_PRESTIGE_BONUS"
+    "effectId" : "FARMER_PRESTIGE_BONUS",
+    "description" : "Grants the player 4 Prestige Points per Farmer in their Tribe in EndGame"
   },
   {
     "cardId" : "bd16",
     "era" : 3,
     "cost" : 7,
     "prestigePointsGained" : 4,
-    "effectId" : "SHAMAN_PRESTIGE_BONUS"
+    "effectId" : "SHAMAN_PRESTIGE_BONUS",
+    "description" : "Grants the player 4 Prestige Points per Shaman in their Tribe in EndGame"
   },
   {
     "cardId" : "bd17",
     "era" : 3,
     "cost" : 6,
     "prestigePointsGained" : 3,
-    "effectId" : "BUILDER_PRESTIGE_BONUS"
+    "effectId" : "BUILDER_PRESTIGE_BONUS",
+    "description" : "Grants the player 4 Prestige Points per Builder in their Tribe in EndGame"
   },
   {
     "cardId" : "bd18",
     "era" : 3,
     "cost" : 7,
     "prestigePointsGained" : 4,
-    "effectId" : "ARTIST_PRESTIGE_BONUS"
+    "effectId" : "ARTIST_PRESTIGE_BONUS",
+    "description" : "Grants the player 4 Prestige Points per Artist in their Tribe in EndGame"
   },
   {
     "cardId" : "bd19",
     "era" : 3,
     "cost" : 6,
     "prestigePointsGained" : 6,
-    "effectId" : "INVENTOR_PRESTIGE_BONUS"
+    "effectId" : "INVENTOR_PRESTIGE_BONUS",
+    "description" : "Grants the player 2 Prestige Points per Inventor in their Tribe in EndGame"
   },
   {
     "cardId" : "bd20",
     "era" : 3,
     "cost" : 9,
     "prestigePointsGained" : 3,
-    "effectId" : "ONE_MORE_CARD"
+    "effectId" : "ONE_MORE_CARD",
+    "description" : "Grants the player an extra draw from the UpperRow, at the end of everyone's the action phase"
   },
   {
     "cardId" : "bd21",
     "era" : 3,
     "cost" : 10,
     "prestigePointsGained" : 0,
-    "effectId" : "FLAT_PRESTIGE_POINTS"
+    "effectId" : "FLAT_PRESTIGE_POINTS",
+    "description" : "Grants the player a flat 25 Prestige Points in EndGame"
   }
 ]

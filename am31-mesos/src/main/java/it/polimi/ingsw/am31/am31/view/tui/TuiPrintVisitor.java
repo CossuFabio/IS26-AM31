@@ -4,7 +4,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.Building
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalCardDictionary;
 import org.fusesource.jansi.Ansi;
 
 import static org.fusesource.jansi.Ansi.Color.BLUE;
@@ -60,8 +59,8 @@ public class TuiPrintVisitor implements TribeVisitor {
     @Override
     public void visit(BuildingCard card){ //Buildings with descriptions
         String id = card.getCardId();
-        String description = LocalCardDictionary.getDescription(id);
-     System.out.println(ansi().bg(Ansi.Color.BLUE).fg(Ansi.Color.BLACK).a(id+" "+description).reset());
+        String description = card.getDescription();
+        System.out.println(ansi().bg(Ansi.Color.BLUE).fg(Ansi.Color.BLACK).a(id+" "+description).reset());
 
     }
 }
