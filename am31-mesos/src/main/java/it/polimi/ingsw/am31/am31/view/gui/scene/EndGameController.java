@@ -4,7 +4,11 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalLeaderBoard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ReturnToLobbyEvent;
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
+import it.polimi.ingsw.am31.am31.view.tui.TUILobby;
+import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -173,5 +177,11 @@ public class EndGameController extends BaseController {
         super.setLocalGameState(localGameState);
 
         populateRanking(localGameState.getLeaderboard());
+    }
+
+    @FXML
+    private void returnToLobby() {
+        localGameState.reset();
+        sceneManager.showWaitingRoom();
     }
 }

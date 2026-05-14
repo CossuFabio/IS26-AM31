@@ -202,10 +202,22 @@
             </HBox>
          </bottom>
          <left>
-            <VBox fx:id="leftSpacer" alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
+            <VBox fx:id="leftSpacer" alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="skipButton1" disable="true" mnemonicParsing="false" onAction="#skipDrawFromUpper" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" text="Skip Upper Draw" />
-                  <Button fx:id="skipButton2" disable="true" layoutX="10.0" layoutY="402.0" mnemonicParsing="false" onAction="#skipDrawFromLower" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" text="Skip Lower Draw" />
+                  <Button fx:id="skipButton1" disable="true" ellipsisString="" mnemonicParsing="false" onAction="#skipDrawFromUpper" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▲" wrapText="true">
+                     <font>
+                        <Font name="Inknut Antiqua Regular" size="20.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect></Button>
+                  <Button fx:id="skipButton2" disable="true" ellipsisString="" layoutX="10.0" layoutY="402.0" mnemonicParsing="false" onAction="#skipDrawFromLower" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▼" wrapText="true">
+                     <font>
+                        <Font name="Inknut Antiqua Regular" size="20.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect></Button>
                </children></VBox>
          </left>
       </BorderPane>

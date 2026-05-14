@@ -13,17 +13,19 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameCrashedEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEventResolveEvent;
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
+import it.polimi.ingsw.am31.am31.view.tui.TUILobby;
+import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -129,6 +131,9 @@ public class GameController extends BaseController {
     //boolean thread-safe used as flag to avoid multiple refresh to UI
     private final AtomicBoolean uiRefreshPending = new AtomicBoolean(false);
 
+    private final List<Card> pendingEvents = new ArrayList<>();
+    private boolean showingEvent = false;
+
     @FXML
     public void initialize() {
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
@@ -147,7 +152,7 @@ public class GameController extends BaseController {
         centerHBox.setSpacing(((double) 1 /84)*screenHeight);
         buildingsScrollPane.setPrefHeight(cardHeight);
         tribeScrollPane.setPrefHeight(cardHeight);
-        VBox.setMargin(tribeScrollPane, new Insets(0,0,screenHeight*((double) 1 /42),0));
+        VBox.setMargin(tribeScrollPane, new Insets(0,0,screenHeight*((double) 1 /84),0));
         VBox.setMargin(buildingsScrollPane, new Insets(0,0,screenHeight*((double) 1 /42),0));
         middleRowContainer.setPrefHeight(cardHeight);
         roundLabel.setPrefWidth(screenWidth*((double) 200 /1920));
@@ -193,6 +198,19 @@ public class GameController extends BaseController {
         sceneManager.showEndGame();
     }
 
+    @Subscribe
+    public void onGameCrashed(GameCrashedEvent event) {
+        localGameState.reset();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Interrupted");
+            alert.setHeaderText(null);
+            alert.setContentText("A player disconnected. Returning to main menu.");
+            alert.showAndWait();
+            sceneManager.showWaitingRoom();
+        });
+    }
+
     @Override
     public void setLocalGameState(LocalGameState localGameState) {
         super.setLocalGameState(localGameState);
@@ -220,33 +238,6 @@ public class GameController extends BaseController {
         refreshSkip(phase, acting);
     }
 
-//    private void autoSkipIfNeeded(RoundPhasesEnum phase, LocalPlayerState acting) {
-//        String myNick = controller.getLocalPlayerUsername();
-//        if (acting == null || !acting.getNickname().equals(myNick)) return;
-//        if (phase != RoundPhasesEnum.ACTION_PHASE && phase != RoundPhasesEnum.BONUS_DRAWING_PHASE) return;
-//
-//        for (BoardRows row : new BoardRows[]{BoardRows.UPPER, BoardRows.LOWER}) {
-//            int allowed = allowedDrawsFromRow(row);
-//            int used = pendingDraws.getOrDefault(row, 0);
-//            if (allowed - used <= 0) continue;
-//
-//            List<Card> rowCards = (row == BoardRows.UPPER)
-//                    ? localGameState.getBoard().getUpperLine()
-//                    : localGameState.getBoard().getUnderLine();
-//            boolean anyClickable = rowCards.stream().anyMatch(c -> c.canBePicked() && canAffordCard(c));
-//            if (!anyClickable) {
-//                BoardRows rowToSkip = row;
-//                new Thread(() -> {
-//                    try {
-//                        controller.sendRequest(new SkipDrawNetworkRequest(rowToSkip));
-//                    } catch (Exception e) {
-//                        System.err.println("Auto-skip failed: " + e.getMessage());
-//                    }
-//                }).start();
-//            }
-//        }
-//    }
-
     private void refreshSkip(RoundPhasesEnum phase, LocalPlayerState acting) {
         String myNick = controller.getLocalPlayerUsername();
         boolean isMyTurn = acting != null && acting.getNickname().equals(myNick);
@@ -270,8 +261,9 @@ public class GameController extends BaseController {
         skipButton2.setDisable(!(remainingFromLower > 0 && charactersLowerLine == 0));
     }
 
+    @FXML
     private void skipDrawFromUpper() {
-
+        skipButton1.setDisable(true);
         new Thread(() -> {
                     try {
                         controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.UPPER));
@@ -281,7 +273,9 @@ public class GameController extends BaseController {
                 }).start();
     }
 
+    @FXML
     private void skipDrawFromLower() {
+        skipButton2.setDisable(true);
         new Thread(() -> {
             try {
                 controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.LOWER));
@@ -870,13 +864,12 @@ public class GameController extends BaseController {
         if (acting == null) return;
         if (phase == lastShownPhase && acting.getNickname().equals(lastShownActing)) {
             if (phase == RoundPhasesEnum.ACTION_PHASE && promptLabel == null) {
-                // non fare return, lascia che mostri il prompt
+
             } else {
                 return;
             }
         }
         rootStackPane.getChildren().remove(promptLabel);
-        //if (!(phase == lastShownPhase && acting.getNickname().equals(lastShownActing))) removePromptWithFade();
 
         lastShownPhase = phase;
         lastShownActing = acting.getNickname();
@@ -1009,17 +1002,16 @@ public class GameController extends BaseController {
         darkBg.setMaxHeight(Double.MAX_VALUE);
         darkBg.setOnMouseClicked(e -> closeRules());
 
-        HBox summarycards = new HBox();
-        summarycards.setAlignment(Pos.CENTER);
-        summarycards.setMaxWidth(Region.USE_PREF_SIZE);
-        summarycards.setMaxHeight(Region.USE_PREF_SIZE);
+        HBox summaryCards = new HBox();
+        summaryCards.setAlignment(Pos.CENTER);
+        summaryCards.setMaxWidth(Region.USE_PREF_SIZE);
+        summaryCards.setMaxHeight(Region.USE_PREF_SIZE);
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);
         shadow.setOffsetX(3);
         shadow.setOffsetY(3);
         shadow.setColor(Color.rgb(0, 0, 0, 0.5));
-        summarycards.setEffect(shadow);
 
         Image img1 = loadImage(PathConstants.RULES_PATH + "summary.png");
         ImageView summaryIv1 = new ImageView(img1);
@@ -1027,8 +1019,8 @@ public class GameController extends BaseController {
         summaryIv1.setFitHeight(cardHeight*3);
         summaryIv1.setEffect(shadow);
 
-        summarycards.getChildren().add(summaryIv1);
-        rulesOverlay.getChildren().addAll(darkBg, summarycards);
+        summaryCards.getChildren().add(summaryIv1);
+        rulesOverlay.getChildren().addAll(darkBg, summaryCards);
 
         rulesOverlay.setVisible(true);
         rulesOverlay.toFront();
@@ -1061,5 +1053,77 @@ public class GameController extends BaseController {
         rulesOverlay.setVisible(false);
         rulesOverlay.getChildren().clear();
         currentSlide = 1;
+    }
+
+    @Subscribe
+    public void onGameEventResolved(GameEventResolveEvent event) {
+        Platform.runLater(() -> {
+            pendingEvents.add(event.getCard());
+            if (!showingEvent) showNextEvent();
+        });
+    }
+
+    private void showNextEvent() {
+        if (pendingEvents.isEmpty())
+        {
+            showingEvent = false;
+            return;
+        }
+        showingEvent = true;
+        Card card = pendingEvents.removeFirst();
+
+        VBox vbox = new VBox(20);
+        vbox.setAlignment(Pos.CENTER);
+
+        String id = card.getCardId();
+
+        Label title = new Label("Event resolved:");
+        title.setFont(Font.font("Inknut Antiqua Regular", 32));
+
+        Image img = loadCardImage(id);
+        ImageView iv = new ImageView(img);
+        iv.setFitWidth(cardWidth);
+        iv.setFitHeight(cardHeight);
+        DropShadow shadowCard = new DropShadow();
+        shadowCard.setRadius(10);
+        shadowCard.setOffsetX(3);
+        shadowCard.setOffsetY(3);
+        shadowCard.setColor(Color.rgb(0, 0, 0, 0.5));
+        iv.setEffect(shadowCard);
+
+        Label description = new Label(card.toString());
+        description.setFont(Font.font("Inknut Antiqua Regular", 20));
+
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(10);
+        shadow.setOffsetX(3);
+        shadow.setOffsetY(3);
+        shadow.setColor(Color.rgb(0, 0, 0, 0.5));
+        vbox.setEffect(shadow);
+        vbox.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-padding: 30");
+        vbox.getChildren().addAll(title, iv, description);
+
+        vbox.setMaxWidth(Region.USE_PREF_SIZE);
+        vbox.setMaxHeight(Region.USE_PREF_SIZE);
+        StackPane.setAlignment(vbox, javafx.geometry.Pos.BOTTOM_CENTER);
+        StackPane.setMargin(vbox, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
+        rootStackPane.getChildren().add(vbox);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(400), vbox);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(400), vbox);
+        fadeOut.setToValue(0.0);
+        fadeOut.setOnFinished(f -> {
+            rootStackPane.getChildren().remove(vbox);
+            showNextEvent();
+        });
+
+        fadeIn.setOnFinished(e -> pause.play());
+        pause.setOnFinished(e -> fadeOut.play());
+        fadeIn.play();
     }
 }
