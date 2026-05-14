@@ -5,14 +5,9 @@ import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.IncorrectMeth
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientPlayersNumberException;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Hunter;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonTribeCardsSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

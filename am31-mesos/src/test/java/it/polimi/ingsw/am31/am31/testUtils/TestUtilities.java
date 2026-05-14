@@ -1,10 +1,10 @@
 package it.polimi.ingsw.am31.am31.testUtils;
 
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonTribeCardsSupplier;
+import it.polimi.ingsw.am31.am31.resources.GameResources;
+import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonBuildingCardsSupplier;
+import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonOfferSupplier;
+import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonTribeCardsSupplier;
 import it.polimi.ingsw.am31.am31.testUtils.board.OfferCardFluentBuilder;
 import it.polimi.ingsw.am31.am31.testUtils.player.PlayerFluentBuilder;
 

@@ -76,19 +76,25 @@ public class TUIGamephaseTest {
     }
     @Test
     void TestShouldDrawMain(){
+        //should draw the main screen, 6 upper cards, 4 lower, 2 offers, 2 players
+        //era 1, round 1, totem placing
         gamephase.drawMain();
+        //players has some characters, buildings and events
     }
 
     @Test
     void TestShouldDrawOfferTrack(){
+        //should print the 2 offerCards
         gamephase.drawOffer();
     }
     @Test
     void TestShouldDrawCards (){
+        //should print 6 cards upper and 4 lower
         gamephase.drawCardLines();
     }
     @Test
     void TestShouldDrawPlayers (){
+        //should draw players tribes and stats
         gamephase.drawPlayers();
     }
 }

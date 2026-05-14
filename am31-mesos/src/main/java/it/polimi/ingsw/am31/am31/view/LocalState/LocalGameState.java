@@ -75,7 +75,7 @@ public class LocalGameState{
     public void setRoundNumber(int newRound){
         this.roundNumber=newRound;
     }
-    public void setOfferTrack(ArrayList<LocalOfferCard> offerTrack){
+    public void setOfferTrack(List<LocalOfferCard> offerTrack){
         //updates the offerTrack, after every totem placement
         board.setOfferTrack(offerTrack);
     }

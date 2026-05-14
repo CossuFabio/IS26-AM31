@@ -8,10 +8,10 @@ import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.LobbyNo
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.PlayerAlreadyInGameException;
 import it.polimi.ingsw.am31.am31.exceptions.networkException.BadNetworkRequestException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonBuildingCardsSupplier;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonOfferSupplier;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers.JsonTribeCardsSupplier;
+import it.polimi.ingsw.am31.am31.resources.GameResources;
+import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonBuildingCardsSupplier;
+import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonOfferSupplier;
+import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonTribeCardsSupplier;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFactory;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;

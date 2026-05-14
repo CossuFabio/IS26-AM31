@@ -22,7 +22,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.GameResources;
+import it.polimi.ingsw.am31.am31.resources.GameResources;
 
 import java.io.IOException;
 import java.util.*;

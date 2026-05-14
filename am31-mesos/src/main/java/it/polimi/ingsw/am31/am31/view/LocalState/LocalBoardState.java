@@ -1,16 +1,14 @@
 package it.polimi.ingsw.am31.am31.view.LocalState;
 
-import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LocalBoardState {
-    private ArrayList<LocalOfferCard> offerTrack;
-    private ArrayList<Card> upperLine;
-    private ArrayList<Card> underLine;
+    private List<LocalOfferCard> offerTrack;
+    private List<Card> upperLine;
+    private List<Card> underLine;
     public LocalBoardState (){
         upperLine = new ArrayList<>();
         underLine = new ArrayList<>();
@@ -18,7 +16,7 @@ public class LocalBoardState {
     }
 
 
-    public void setOfferTrack(ArrayList<LocalOfferCard> offerTrack){
+    public void setOfferTrack(List<LocalOfferCard> offerTrack){
         this.offerTrack = offerTrack;
     }
     public void setUpperLine(List<Card> cards){
@@ -38,7 +36,7 @@ public class LocalBoardState {
 
 
     //getters, use by tui and gui
-    public ArrayList<Card> getUpperLine(){return upperLine;}
-    public ArrayList<Card> getUnderLine(){return underLine;}
-    public ArrayList<LocalOfferCard> getOfferTrack (){return offerTrack;}
+    public List<Card> getUpperLine(){return upperLine;}
+    public List<Card> getUnderLine(){return underLine;}
+    public List<LocalOfferCard> getOfferTrack (){return offerTrack;}
 }
