@@ -8,6 +8,7 @@ module it.polimi.ingsw.am31.am31 {
     requires org.fusesource.jansi;
 
 
+
     opens it.polimi.ingsw.am31.am31 to javafx.fxml;
     //exports it.polimi.ingsw.am31.am31;
     exports it.polimi.ingsw.am31.am31.fx;
@@ -32,8 +33,7 @@ module it.polimi.ingsw.am31.am31 {
     opens it.polimi.ingsw.am31.am31.modelPackage.playerFolder to javafx.fxml;
     exports it.polimi.ingsw.am31.am31.modelPackage;
     opens it.polimi.ingsw.am31.am31.modelPackage to javafx.fxml;
-    exports it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers;
-    opens it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers to javafx.fxml;
+    opens it.polimi.ingsw.am31.am31.resources.resourceSuppliers to javafx.fxml;
     exports it.polimi.ingsw.am31.am31.network;
     exports it.polimi.ingsw.am31.am31.network.rmi.server;
     exports it.polimi.ingsw.am31.am31.network.rmi.client;
@@ -66,4 +66,6 @@ module it.polimi.ingsw.am31.am31 {
     exports it.polimi.ingsw.am31.am31.view.tui;
     exports it.polimi.ingsw.am31.am31.view.gui.scene;
     opens it.polimi.ingsw.am31.am31.view.gui.scene to javafx.fxml;
+    exports it.polimi.ingsw.am31.am31.resources.resourceSuppliers;
+
 }

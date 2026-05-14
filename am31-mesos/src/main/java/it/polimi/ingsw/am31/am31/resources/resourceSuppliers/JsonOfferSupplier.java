@@ -1,17 +1,15 @@
-package it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers;
+package it.polimi.ingsw.am31.am31.resources.resourceSuppliers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.ResourcesPaths;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.IResourceSupplier;
+import it.polimi.ingsw.am31.am31.resources.IResourceSupplier;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 public class JsonOfferSupplier implements IResourceSupplier<List<OfferCard>> {
 

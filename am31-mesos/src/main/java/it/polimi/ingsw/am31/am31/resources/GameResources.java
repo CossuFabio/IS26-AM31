@@ -1,10 +1,9 @@
-package it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers;
+package it.polimi.ingsw.am31.am31.resources;
 
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 
-import java.io.IOException;
 import java.util.List;
 
 public class GameResources {

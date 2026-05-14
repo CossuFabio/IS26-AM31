@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.JSONSuppliers;
+package it.polimi.ingsw.am31.am31.resources.resourceSuppliers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectsCatalog;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.ResourcesPaths;
-import it.polimi.ingsw.am31.am31.modelPackage.resourceSuppliers.IResourceSupplier;
+import it.polimi.ingsw.am31.am31.resources.IResourceSupplier;
 
 import java.io.IOException;
 import java.io.InputStream;
