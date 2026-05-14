@@ -16,8 +16,7 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEventResolveEvent;
 import org.fusesource.jansi.Ansi;
 
-import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.print;
-import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printCard;
+import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 
@@ -88,12 +87,13 @@ public class TUIGamePhase implements TUIPhase {
             if (p != null)
                 System.out.println(ansi().a(i++ + "- " + p.getNickname() + " " + p.getColor()));
         //prints upperline, but only ids
-        print(Ansi.Color.DEFAULT,"\n     UPPER LINE:\n\n");
-        for (Card c : gameState.getBoard().getUpperLine()) {
-            System.out.print(" |");
-            print(c, c.getCardId());
-            System.out.print("| ");
-        }
+        print(Ansi.Color.DEFAULT,"\n     UPPER LINE:\n");
+//        for (Card c : gameState.getBoard().getUpperLine()) {
+//            System.out.print(" |");
+//            print(c, c.getCardId());
+//            System.out.print("| ");
+//        }
+        printCardLine(gameState.getBoard().getUpperLine());
         //prints offer track not in detail
         print(Ansi.Color.DEFAULT,"\n\n     OFFER TRACK:\n\n");
         for (LocalOfferCard c : gameState.getBoard().getOfferTrack()) {
@@ -102,7 +102,7 @@ public class TUIGamePhase implements TUIPhase {
                      "|   "));
         }
         //prints lowerline
-        print(Ansi.Color.DEFAULT,"\n\n     LOWER LINE:\n\n");
+        print(Ansi.Color.DEFAULT,"\n\n     LOWER LINE:\n");
         for (Card c : gameState.getBoard().getUnderLine()){
             System.out.print(" |");
         print(c, c.getCardId());
@@ -112,10 +112,10 @@ public class TUIGamePhase implements TUIPhase {
         System.out.println("\n");
         System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "it's your turn" : "it's " + gameState.getPlayerActing().getColor() + " " + gameState.getPlayerActing().getNickname() + "'s turn");
         //prints your own tribe or stats?
-        System.out.println("\nYOUR STATS AND TRIBE:");
+        System.out.println("     YOUR STATS AND TRIBE:");
         for (LocalPlayerState p : gameState.getPlayers())
             if (p.getNickname().equals(controller.getLocalPlayerUsername())) {
-                System.out.println(p);
+                System.out.println("\n"+p+"\n");
                 for (Card c : p.getTribe())
                     printCard(c);
                 for (Card c : p.getBuildings())

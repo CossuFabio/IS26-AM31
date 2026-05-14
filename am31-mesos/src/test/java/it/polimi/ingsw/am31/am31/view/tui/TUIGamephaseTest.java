@@ -79,6 +79,7 @@ public class TUIGamephaseTest {
         //should draw the main screen, 6 upper cards, 4 lower, 2 offers, 2 players
         //era 1, round 1, totem placing
         gamephase.drawMain();
+        //players has some characters, buildings and events
     }
 
     @Test
