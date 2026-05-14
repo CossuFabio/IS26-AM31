@@ -167,7 +167,7 @@ public class Server {
             VirtualView disconnectedClient = clients.remove(id);
             if(disconnectedClient != null) disconnectedClient.forceDisconnect();
 
-            System.out.println(" Client " + id + " has been disconnected");
+            System.out.println("Client " + id + " has been disconnected");
             gamesManager.handleDisconnect(id);
         }catch(Exception e){
             System.err.println(e.getMessage());
@@ -178,7 +178,7 @@ public class Server {
         server.start();
     }
 
-    //method to register a client via his username
+    //Method to register a client via his username
     //Not public!
     void addClient(String identifier, VirtualView virtualView){
 

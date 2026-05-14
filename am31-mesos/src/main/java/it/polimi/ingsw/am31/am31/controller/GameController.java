@@ -171,6 +171,7 @@ public class GameController {
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         game.gameEnd();
         observerHandler.onGameEndUpdate(game);
+        isGameStillActive = false;
     }
 
     public synchronized int getNumActivePlayers() throws GameInvariantException{
@@ -218,5 +219,14 @@ public class GameController {
         game.getPlayersList().forEach(p -> availableColors.remove(p.getColor()));
         return availableColors;
     }
+
+    public synchronized boolean isGameFinished(){
+        return game.isGameFinished();
+    }
+
+    public synchronized List<String> getPlayersId(){
+        return game.getPlayersList().stream().map(Player::getNickname).toList();
+    }
+
 
 }

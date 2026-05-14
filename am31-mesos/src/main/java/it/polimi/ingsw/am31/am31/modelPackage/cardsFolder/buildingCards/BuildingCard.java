@@ -77,6 +77,5 @@ public class BuildingCard extends Card implements IPickable {
         return food + discount >= this.cost;
     }
 
-    @Override
-    public  boolean isCharacter() {return false;}
+
 }

@@ -66,8 +66,19 @@ public class CountVisitor implements TribeVisitor{
     public int getArtists(){return artistsCount;}
     public int getEvent(){return eventsCount;}
 
+
     public int getTotalCharacters(){
         return huntersCount + builderCount + shamanCount + farmersCount + inventorsCount + artistsCount;
+    }
+
+    public void reset(){
+        huntersCount = 0;
+        farmersCount =0;
+        shamanCount = 0;
+        builderCount = 0;
+        artistsCount = 0;
+        inventorsCount = 0;
+        eventsCount = 0;
     }
 
 }

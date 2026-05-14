@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
@@ -252,10 +253,20 @@ public class GameController extends BaseController {
         int remainingFromUpper = allowedDrawsFromRow(BoardRows.UPPER) - pendingDraws.getOrDefault(BoardRows.UPPER, 0);
         int remainingFromLower = allowedDrawsFromRow(BoardRows.LOWER) - pendingDraws.getOrDefault(BoardRows.LOWER, 0);
 
-        int charactersUpperLine = (int) localGameState.getBoard().getUpperLine().stream()
-                .filter(Card::isCharacter).count();
-        int charactersLowerLine = (int) localGameState.getBoard().getUnderLine().stream()
-                .filter(Card::isCharacter).count();
+        CountVisitor countVisitor = new CountVisitor();
+        //localGameState.getBoard().getUpperLine().stream()
+        //                .filter(Card::isCharacter).count();
+        localGameState.getBoard().getUpperLine()
+                .forEach(card -> card.acceptVisit(countVisitor));
+        int charactersUpperLine = countVisitor.getTotalCharacters();
+
+        countVisitor.reset();
+        localGameState.getBoard().getUnderLine()
+                .forEach(card -> card.acceptVisit(countVisitor));
+//        int charactersLowerLine = (int) localGameState.getBoard().getUnderLine().stream()
+//                .filter(Card::isCharacter).count();
+
+        int charactersLowerLine = countVisitor.getTotalCharacters();
 
         skipButton1.setDisable(!(remainingFromUpper > 0 && charactersUpperLine == 0));
         skipButton2.setDisable(!(remainingFromLower > 0 && charactersLowerLine == 0));

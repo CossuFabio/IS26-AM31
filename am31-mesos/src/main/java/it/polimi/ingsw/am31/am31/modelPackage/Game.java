@@ -330,7 +330,6 @@ public class Game implements GameObservable {
 
     //Flags for controller
     public boolean isGameFinished(){
-        //false values are placeholder
         return (roundNumber == GameConstants.ROUNDS_NUMBER && currentRoundPhase == RoundPhasesEnum.END_TURN);
     }
     public boolean isTotemPlacingPhaseFinished() throws IncorrectMethodCallException{

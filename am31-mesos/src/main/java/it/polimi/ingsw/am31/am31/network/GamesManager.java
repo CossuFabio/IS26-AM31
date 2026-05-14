@@ -152,6 +152,7 @@ public class GamesManager {
             GameController gameController = findGameFromPlayerUsername(requestorId);
             gameController.drawCard(requestorId, specReq.getCardID(), specReq.getBoardRows());
 
+            handleGameEnded(gameController);
 
         }catch(NetworkException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
@@ -223,6 +224,8 @@ public class GamesManager {
             GameController controller = findGameFromPlayerUsername(req.getPlayerID());
             controller.placeTotem(totemNetworkRequest.getPlayerID(), totemNetworkRequest.getOfferTrackID());
 
+            handleGameEnded(controller);
+
         }catch(NetworkException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
         }catch(GameException e){
@@ -240,6 +243,9 @@ public class GamesManager {
             SkipDrawNetworkRequest skipReq = (SkipDrawNetworkRequest) req;
             GameController controller = findGameFromPlayerUsername(req.getPlayerID());
             controller.skipDraw(skipReq.getPlayerID(), skipReq.getBoardRow());
+
+            handleGameEnded(controller);
+
         }catch(NetworkException e){
             view.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(e));
         }catch(GameException e){
@@ -251,6 +257,15 @@ public class GamesManager {
         }
     }
 
+    private void handleGameEnded(GameController gameController){
+        //Clears the maps if the game is finished. Drawing
+        if(gameController.isGameFinished()){
+            games.remove(gameController.getGameID());
+            gameController.getPlayersId().forEach(id -> {
+                playerToGame.remove(id);
+            });
+        }
+    }
 
     public void handleDisconnect(String playerID){
 
