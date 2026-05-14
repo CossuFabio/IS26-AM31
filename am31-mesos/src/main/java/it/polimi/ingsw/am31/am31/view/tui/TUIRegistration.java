@@ -5,6 +5,9 @@ import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
+import org.fusesource.jansi.Ansi;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUIRegistration implements TUIPhase {
 
@@ -24,11 +27,15 @@ public class TUIRegistration implements TUIPhase {
     public void draw() {
         switch (currentStep){
             case REGISTRATION: {
-                System.out.println("Enter nickname:");
+                String space = String.format("%16s", " ");
+                System.out.println("|" + space + "WELCOME TO MESOS" + space + "|");
+                System.out.println("--------------------------------------------------");
+                System.out.println(ansi().fg(Ansi.Color.YELLOW).a("\nPlease register your name first!").reset());
+                System.out.println("\n\nEnter nickname:");
                 break;
             }
             case WAIT_REGISTRATION_RESULT: {
-                System.out.println("Waiting for server response");
+                System.out.println("\nWaiting for server response");
                 break;
             }
         }
@@ -45,7 +52,7 @@ public class TUIRegistration implements TUIPhase {
                     controller.sendRequest(new NewServerConnectionRequest(input));
                 } catch (Exception e) {
                     currentStep = TuiRegistrationStep.REGISTRATION;
-                    System.out.println("Error sending request");
+                    System.out.println("\nError sending request");
                     TUI.printScreen();
                 }
                 break;
@@ -60,7 +67,7 @@ public class TUIRegistration implements TUIPhase {
     @Subscribe
     public void failedRegistration(FailedRegistrationEvent e){
         if(currentStep == TuiRegistrationStep.WAIT_REGISTRATION_RESULT){
-            System.out.println("Failed registration: username already in use");
+            System.out.println("\nFailed registration: username already in use");
             currentStep = TuiRegistrationStep.REGISTRATION;
             TUI.printScreen();
         }

@@ -16,6 +16,7 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEventResolveEvent;
 import org.fusesource.jansi.Ansi;
 
+import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.print;
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printCard;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -82,45 +83,50 @@ public class TUIGamePhase implements TUIPhase {
                 " ERA " + gameState.getEra() + " " + gameState.getCurrentRoundPhase()).reset());
         //prints players in order of acting
         System.out.println("\nPLAYERS, in order of action\n");
+        int i = 1;
         for (LocalPlayerState p : gameState.getTurnOrder())
             if (p != null)
-                System.out.println(ansi().a(p.getNickname() + " " + p.getColor()));
+                System.out.println(ansi().a(i++ + "- " + p.getNickname() + " " + p.getColor()));
         //prints upperline, but only ids
-        System.out.println(ansi().a("\nUpperline:"));
-        for (Card c : gameState.getBoard().getUpperLine())
-            System.out.print(ansi().a(" |" + c.getCardId() + "| "));
-
-        //prints offertrack, but only ids? and player inside?
-        System.out.print(ansi().a("\nOffer Track: "));
+        print(Ansi.Color.DEFAULT,"\n     UPPER LINE:\n\n");
+        for (Card c : gameState.getBoard().getUpperLine()) {
+            System.out.print(" |");
+            print(c, c.getCardId());
+            System.out.print("| ");
+        }
+        //prints offer track not in detail
+        print(Ansi.Color.DEFAULT,"\n\n     OFFER TRACK:\n\n");
         for (LocalOfferCard c : gameState.getBoard().getOfferTrack()) {
-            //should this display nicknames or color? or both?
-            String playerNickname = c.isFree() ? "FREE" : c.getPlayer();
-            System.out.print(ansi().a(" |" + c.getOfferCardId() + " " + playerNickname + " F: " + c.getFood() + " UP: " + c.getDrawFromUpper() + " DOWN: " + c.getDrawFromUnder() + "| "));
+            String playerNickname = c.isFree() ? ansi().fgGreen().bgGreen().a("   ").reset().toString() : ansi().fgRed().bgRed().a("o").reset().toString();
+            System.out.print(ansi().a("   |" + c.getOfferCardId() + "  " + playerNickname +
+                     "|   "));
         }
         //prints lowerline
-        System.out.println(ansi().a("\nLower Line: "));
-        for (Card c : gameState.getBoard().getUnderLine())
-            System.out.print(ansi().a(" |" + c.getCardId() + "| "));
-
+        print(Ansi.Color.DEFAULT,"\n\n     LOWER LINE:\n\n");
+        for (Card c : gameState.getBoard().getUnderLine()){
+            System.out.print(" |");
+        print(c, c.getCardId());
+        System.out.print("| ");
+    }
         //prints who's in turn now
         System.out.println("\n");
         System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "it's your turn" : "it's " + gameState.getPlayerActing().getColor() + " " + gameState.getPlayerActing().getNickname() + "'s turn");
         //prints your own tribe or stats?
-        System.out.println("Your stats and tribe:");
+        System.out.println("\nYOUR STATS AND TRIBE:");
         for (LocalPlayerState p : gameState.getPlayers())
             if (p.getNickname().equals(controller.getLocalPlayerUsername())) {
                 System.out.println(p);
                 for (Card c : p.getTribe())
-                    System.out.println(c.toString());
+                    printCard(c);
                 for (Card c : p.getBuildings())
-                    System.out.println(c.toString());
-            }
+                    printCard(c);
+                    }
 
 
         //prints choices
-        System.out.println(ansi().a("\nPress:\n1- for detailed CardLines" +
+        System.out.println("\nPress:\n1- for detailed CardLines" +
                 "\n2- for detailed offerTrack" +
-                "\n3- to look at all tribes"));
+                "\n3- to look at all tribes");
     }
 
 
@@ -157,12 +163,16 @@ public class TUIGamePhase implements TUIPhase {
     }
 
     public void drawCardLines() {
-        System.out.println(ansi().a("Upper line:"));
-        for (Card c : gameState.getBoard().getUpperLine())
-            printCard(c); //prints cards in funny color
-        System.out.println(ansi().a("Lower Line:"));
-        for (Card c : gameState.getBoard().getUnderLine())
+        System.out.println(ansi().a("UPPER LINE:"));
+        for (Card c : gameState.getBoard().getUpperLine()) {
+            System.out.print("\n");
+            printCard(c); //prints cards in their color
+        }
+        System.out.println(ansi().a("LOWER LINE:"));
+        for (Card c : gameState.getBoard().getUnderLine()){
+            System.out.print("\n");
             printCard(c);
+        }
         if (choosingCard == 0)
             System.out.println("\nPress: \n1- Go back to Main" +
                     "\n2- to draw a card");

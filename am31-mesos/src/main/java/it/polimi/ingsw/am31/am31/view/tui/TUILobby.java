@@ -11,6 +11,9 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedJoinLobby;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InvalidColorPickEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.PlayersInLobbyChangedEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
+import org.fusesource.jansi.Ansi;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUILobby implements TUIPhase {
 
@@ -23,6 +26,7 @@ public class TUILobby implements TUIPhase {
 
     private enum TuiLobbyStep {
         START,
+        RULES_EXPLANATION,
         CREATING_GAME,
         SELECT_COLOR,
         JOINING_GAME,
@@ -43,23 +47,32 @@ public class TUILobby implements TUIPhase {
     public void draw() {
         switch (currentStep) {
             case START: {
-                System.out.println("Type:\n1 - Create a game\n2 - Show the current lobbies\n3 - Join a lobby\n");
+                String spaces = String.format("%18s", " ");
+                System.out.println("|"+spaces+"MESOS  LOBBY"+spaces+"|");
+                System.out.println("--------------------------------------------------");
+                System.out.println("\nPlease type:");
+                System.out.println("["+ansi().fg(Ansi.Color.GREEN).a("1").reset() +" - To create a game]\n["+ansi().fg(Ansi.Color.GREEN).a("2").reset() +" - To show the current lobbies]\n["+ansi().fg(Ansi.Color.GREEN).a("3").reset()+" - To join a lobby]\n["+ansi().fg(Ansi.Color.GREEN).a("4").reset()+" - To read the game's rules]\n");
+                break;
+            }
+            case RULES_EXPLANATION: {
+                //TODO: Write this
+                System.out.println(TUIConfig.GO_BACK_STRING + "\n");
                 break;
             }
             case CREATING_GAME: {
-                System.out.println("Enter the number of players (2-5) " + TUIConfig.GO_BACK_STRING + "\n");
+                System.out.println("\nEnter the number of players (2-5) " + TUIConfig.GO_BACK_STRING + "\n");
                 break;
             }
             case SELECT_COLOR: {
-                System.out.println("Choose your totem's color (white, black, red, yellow, blue) " + TUIConfig.GO_BACK_STRING + "\n");
+                System.out.println("\nChoose your totem's color (white, black, red, yellow, blue) " + TUIConfig.GO_BACK_STRING + "\n");
                 break;
             }
             case JOINING_GAME: {
-                System.out.println("Choose a gameId " + TUIConfig.GO_BACK_STRING + "\n");
+                System.out.println("\nChoose a gameId " + TUIConfig.GO_BACK_STRING + "\n");
                 break;
             }
             case WAITING_GAMESTART: {
-                System.out.println("Waiting for the game to Start...\n");
+                System.out.println("\nWaiting for the game to Start...\n");
                 break;
             }
         }
@@ -88,6 +101,11 @@ public class TUILobby implements TUIPhase {
                         TUI.printScreen();
                         break;
                     }
+                    case "4": {
+                        currentStep = TuiLobbyStep.RULES_EXPLANATION;
+                        TUI.printScreen();
+                        break;
+                    }
                     default: {
                         System.out.println("Invalid input!");
                         TUI.printScreen();
@@ -112,7 +130,7 @@ public class TUILobby implements TUIPhase {
                 }
 
                 if (nPlayers < GameConstants.MIN_PLAYERS || nPlayers > GameConstants.MAX_PLAYERS) {
-                    System.out.println("Invalid number!\n");
+                    System.out.println("\nInvalid number!\n");
                     TUI.printScreen();
                     break;
                 }
@@ -132,7 +150,7 @@ public class TUILobby implements TUIPhase {
                 try {
                     gameId = Integer.parseInt(input);
                 } catch (Exception e) {
-                    System.out.println("Invalid input");
+                    System.out.println("\nInvalid input\n");
                     TUI.printScreen();
                     break;
                 }
@@ -153,7 +171,7 @@ public class TUILobby implements TUIPhase {
                 try {
                     color = Color.valueOf(input.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid color\n");
+                    System.out.println("\nInvalid color\n");
                     TUI.printScreen();
                     break;
                 }
@@ -167,23 +185,34 @@ public class TUILobby implements TUIPhase {
                 TUI.printScreen();
                 break;
             }
+            case RULES_EXPLANATION: {
+                if (input.equals(TUIConfig.GO_BACK_VALUE)) {
+                    currentStep = TuiLobbyStep.START;
+                    TUI.printScreen();
+                    break;
+                }
+                else {
+                    System.out.println("\nInvalid input\n");
+                    TUI.printScreen();
+                    break;
+                }
+            }
             case WAITING_GAMESTART: {
                 break;
             }
 
         }
-
-
     }
 
 
     @Subscribe
     public void printLobbies(ShowLobbyEvent e) {
         if(e.getLobbies().isEmpty()){
-            System.out.println("No lobbies available!");
+            System.out.println("\nNo lobbies available!\n");
             TUI.printScreen();
             return;
         }
+        System.out.println("\nLobbies available:\n");
         e.getLobbies().forEach(
                 l -> {
                     System.out.println("Lobby: " + l.getId() + ", Free slots: " + l.getFreeSlots() +
@@ -192,7 +221,7 @@ public class TUILobby implements TUIPhase {
                     l.getAvailableColors().forEach( c->{
                         System.out.print(" "+c);
                     });
-                    System.out.println();
+                    System.out.println("\n");
                 });
         TUI.printScreen();
     }
@@ -211,7 +240,7 @@ public class TUILobby implements TUIPhase {
     public void playersChanged(PlayersInLobbyChangedEvent e) {
         if (currentStep == TuiLobbyStep.WAITING_GAMESTART) {
             System.out.println("Players in lobby changed. New list:\n");
-            e.getPlayers().forEach(p -> System.out.println("Nickname: " + p.getNickname() + ", color: " + p.getColor()));
+            e.getPlayers().forEach(p -> System.out.println(ansi().fg(Ansi.Color.YELLOW).a("Nickname: ").reset() + p.getNickname() + ", color: " + p.getColor()+"\n"));
             TUI.printScreen();
         }
     }

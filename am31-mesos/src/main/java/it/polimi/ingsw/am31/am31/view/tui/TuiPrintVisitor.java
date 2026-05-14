@@ -12,55 +12,51 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 public class TuiPrintVisitor implements TribeVisitor {
 
+    private boolean isBuilding = false;
 
     @Override
     public void visit(Hunter hunter) {  //Hunters
-        String cardId = hunter.getCardId();
-        System.out.println(ansi().fgRed().a(cardId+" "+hunter).reset());
+        //System.out.println(ansi().fgRed().a(cardId+" "+hunter).reset());
+        //this way it only selects the color, and you decide what to write eachtime
+        System.out.print(ansi().fgRed().toString());
     }
 
     @Override
     public void visit(Shaman shaman) {  //Shaman
-        String cardId = shaman.getCardId();
-        System.out.println(ansi().fgCyan().a(cardId+" "+shaman).reset());
+        System.out.print(ansi().fgCyan());
 
     }
 
     @Override
     public void visit(Farmer farmer) { //Farmers
-        String cardId = farmer.getCardId();
-        System.out.println(ansi().fgGreen().a(cardId+" "+farmer).reset());
+        System.out.print(ansi().fgGreen());
     }
 
     @Override
     public void visit(EventCard event) { //Events
-        String cardId = event.getCardId();
-        System.out.println(ansi().bgBright(Ansi.Color.WHITE).fgBlack().a(cardId+" "+event).reset());
-    }
+        System.out.print(ansi().bgBright(Ansi.Color.WHITE).fgBlack());}
 
     @Override
     public void visit(Inventor inventor) { //Inventors
-        String id = inventor.getCardId();
-        System.out.println(ansi().fg(BLUE).a(id+" "+inventor).reset());
+        System.out.print(ansi().fg(BLUE));
     }
 
     @Override
     public void visit(Builder builder) { //Builders
-        String id = builder.getCardId();
-        System.out.println(ansi().fg(Ansi.Color.MAGENTA).a(id+" "+builder).reset());
+
+        System.out.print(ansi().fg(Ansi.Color.MAGENTA));
     }
 
     @Override
     public void visit(Artist artist) { //Artists
-        String id = artist.getCardId();
-        System.out.println(ansi().fg(YELLOW).a(id+" "+artist).reset());
+        System.out.println(ansi().fg(YELLOW));
     }
 
     @Override
     public void visit(BuildingCard card){ //Buildings with descriptions
-        String id = card.getCardId();
-        String description = card.getDescription();
-        System.out.println(ansi().bg(Ansi.Color.BLUE).fg(Ansi.Color.BLACK).a(id+" "+description).reset());
+        isBuilding = true;
+        System.out.print(ansi().bg(Ansi.Color.BLUE).fg(Ansi.Color.BLACK));
 
     }
+    public boolean isBuilding (){return this.isBuilding;}
 }
