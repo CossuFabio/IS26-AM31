@@ -8,6 +8,7 @@ import it.polimi.ingsw.am31.am31.view.View;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
+import org.fusesource.jansi.Ansi;
 
 import java.util.Scanner;
 
@@ -45,6 +46,7 @@ public class TextUserInterface implements View{
         while (scanner.hasNextLine()) {       // Closes the thread when CLI is closed.
             String input = scanner.nextLine();
             try {
+                System.out.println();
                 currentPhase.handleInput(input);
             } catch (Exception e) {
                 System.err.println("error: " + e.getMessage());
@@ -59,7 +61,7 @@ public class TextUserInterface implements View{
     }
 
     public void printScreen() {
-        System.out.println("\n----------------------------------------\n");
+        System.out.println("--------------------------------------------------");
         currentPhase.draw();
     }
 
@@ -93,7 +95,7 @@ public class TextUserInterface implements View{
     @Subscribe
     public void successRegistration(SuccessRegistrationEvent e){
         if(currentScene == Scene.REGISTER){
-            System.out.println("Registered successfully with username " + e.getIdentifier());
+            System.out.println("\nRegistered successfully with username " + ansi().fg(Ansi.Color.GREEN).a(e.getIdentifier()).reset()+ "\n");
             this.currentScene = Scene.MAIN_MENU;
             gameState.reset();
             changePhase(new TUILobby(this, controller));
