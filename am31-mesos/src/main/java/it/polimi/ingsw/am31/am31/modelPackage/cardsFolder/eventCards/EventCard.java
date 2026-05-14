@@ -38,6 +38,6 @@ public abstract class EventCard extends Card {
             visitor.visit(this);
         }
 
-
-
+    @Override
+    public boolean isCharacter() {return false;}
 }

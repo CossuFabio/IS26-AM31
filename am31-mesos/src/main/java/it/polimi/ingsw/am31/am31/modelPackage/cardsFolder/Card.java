@@ -55,4 +55,6 @@ public abstract class Card {
 
     public boolean canAffordWithFood(int food, int discount) { return true; }
 
+    public boolean isCharacter () { return true;}
+
 }

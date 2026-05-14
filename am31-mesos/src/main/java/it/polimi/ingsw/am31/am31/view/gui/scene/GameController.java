@@ -3,6 +3,8 @@ package it.polimi.ingsw.am31.am31.view.gui.scene;
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
@@ -96,6 +98,9 @@ public class GameController extends BaseController {
     @FXML private ImageView backgroundImage;
 
     @FXML private HBox topBar;
+
+    @FXML private Button skipButton1;
+    @FXML private Button skipButton2;
 
     private int currentSlide = 1;
 
@@ -212,34 +217,78 @@ public class GameController extends BaseController {
         refreshPlayerPanel(acting);
         refreshMyInfo();
         showPrompt(phase, acting);
-        autoSkipIfNeeded(phase, acting);
+        refreshSkip(phase, acting);
     }
 
-    private void autoSkipIfNeeded(RoundPhasesEnum phase, LocalPlayerState acting) {
+//    private void autoSkipIfNeeded(RoundPhasesEnum phase, LocalPlayerState acting) {
+//        String myNick = controller.getLocalPlayerUsername();
+//        if (acting == null || !acting.getNickname().equals(myNick)) return;
+//        if (phase != RoundPhasesEnum.ACTION_PHASE && phase != RoundPhasesEnum.BONUS_DRAWING_PHASE) return;
+//
+//        for (BoardRows row : new BoardRows[]{BoardRows.UPPER, BoardRows.LOWER}) {
+//            int allowed = allowedDrawsFromRow(row);
+//            int used = pendingDraws.getOrDefault(row, 0);
+//            if (allowed - used <= 0) continue;
+//
+//            List<Card> rowCards = (row == BoardRows.UPPER)
+//                    ? localGameState.getBoard().getUpperLine()
+//                    : localGameState.getBoard().getUnderLine();
+//            boolean anyClickable = rowCards.stream().anyMatch(c -> c.canBePicked() && canAffordCard(c));
+//            if (!anyClickable) {
+//                BoardRows rowToSkip = row;
+//                new Thread(() -> {
+//                    try {
+//                        controller.sendRequest(new SkipDrawNetworkRequest(rowToSkip));
+//                    } catch (Exception e) {
+//                        System.err.println("Auto-skip failed: " + e.getMessage());
+//                    }
+//                }).start();
+//            }
+//        }
+//    }
+
+    private void refreshSkip(RoundPhasesEnum phase, LocalPlayerState acting) {
         String myNick = controller.getLocalPlayerUsername();
-        if (acting == null || !acting.getNickname().equals(myNick)) return;
-        if (phase != RoundPhasesEnum.ACTION_PHASE && phase != RoundPhasesEnum.BONUS_DRAWING_PHASE) return;
+        boolean isMyTurn = acting != null && acting.getNickname().equals(myNick);
+        boolean isDrawPhase = phase == RoundPhasesEnum.ACTION_PHASE || phase == RoundPhasesEnum.BONUS_DRAWING_PHASE;
 
-        for (BoardRows row : new BoardRows[]{BoardRows.UPPER, BoardRows.LOWER}) {
-            int allowed = allowedDrawsFromRow(row);
-            int used = pendingDraws.getOrDefault(row, 0);
-            if (allowed - used <= 0) continue;
+        if (!isMyTurn || !isDrawPhase) {
+            skipButton1.setDisable(true);
+            skipButton2.setDisable(true);
+            return;
+        }
 
-            List<Card> rowCards = (row == BoardRows.UPPER)
-                    ? localGameState.getBoard().getUpperLine()
-                    : localGameState.getBoard().getUnderLine();
-            boolean anyClickable = rowCards.stream().anyMatch(c -> c.canBePicked() && canAffordCard(c));
-            if (!anyClickable) {
-                BoardRows rowToSkip = row;
-                new Thread(() -> {
+        int remainingFromUpper = allowedDrawsFromRow(BoardRows.UPPER) - pendingDraws.getOrDefault(BoardRows.UPPER, 0);
+        int remainingFromLower = allowedDrawsFromRow(BoardRows.LOWER) - pendingDraws.getOrDefault(BoardRows.LOWER, 0);
+
+        int charactersUpperLine = (int) localGameState.getBoard().getUpperLine().stream()
+                .filter(Card::isCharacter).count();
+        int charactersLowerLine = (int) localGameState.getBoard().getUnderLine().stream()
+                .filter(Card::isCharacter).count();
+
+        skipButton1.setDisable(!(remainingFromUpper > 0 && charactersUpperLine == 0));
+        skipButton2.setDisable(!(remainingFromLower > 0 && charactersLowerLine == 0));
+    }
+
+    private void skipDrawFromUpper() {
+
+        new Thread(() -> {
                     try {
-                        controller.sendRequest(new SkipDrawNetworkRequest(rowToSkip));
+                        controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.UPPER));
                     } catch (Exception e) {
-                        System.err.println("Auto-skip failed: " + e.getMessage());
+                        System.err.println("Skip failed: " + e.getMessage());
                     }
                 }).start();
+    }
+
+    private void skipDrawFromLower() {
+        new Thread(() -> {
+            try {
+                controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.LOWER));
+            } catch (Exception e) {
+                System.err.println("Skip failed: " + e.getMessage());
             }
-        }
+        }).start();
     }
 
     //method to refresh the deck

@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -64,6 +65,12 @@ public class LoginController extends BaseController{
         connectButton.setOnMouseReleased(e -> connectButton.setOpacity(1.0));
         Platform.runLater(() -> nicknameField.getParent().requestFocus());
         stackPane.setOnMouseClicked(e -> stackPane.requestFocus());
+
+        nicknameField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                handleConnect();
+            }
+        });
     }
 
     @FXML private void handleConnect() {
