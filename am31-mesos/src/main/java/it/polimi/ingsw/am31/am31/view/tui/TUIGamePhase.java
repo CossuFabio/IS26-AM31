@@ -78,44 +78,33 @@ public class TUIGamePhase implements TUIPhase {
 
     public void drawMain() {
         //prints the round, phase, and era
-        System.out.println(ansi().fg(Ansi.Color.RED).a("ROUND " + gameState.getRoundNumber() +
+        System.out.println(ansi().fg(Ansi.Color.DEFAULT).a("ROUND " + gameState.getRoundNumber() +
                 " ERA " + gameState.getEra() + " " + gameState.getCurrentRoundPhase()).reset());
-        //prints players in order of acting
-        System.out.println("\nPLAYERS, in order of action\n");
+        //prints players in turn order
+        System.out.println("\nPLAYERS, in order of action");
         int i = 1;
         for (LocalPlayerState p : gameState.getTurnOrder())
             if (p != null)
-                System.out.println(ansi().a(i++ + "- " + p.getNickname() + " " + p.getColor()));
+                print(p,i++ +"- "+p.getNickname()+ " " + p.getColor()+" "+ansi().reset()+"\n");
         //prints upperline, but only ids
         print(Ansi.Color.DEFAULT,"\n     UPPER LINE:\n");
-//        for (Card c : gameState.getBoard().getUpperLine()) {
-//            System.out.print(" |");
-//            print(c, c.getCardId());
-//            System.out.print("| ");
-//        }
         printCardLine(gameState.getBoard().getUpperLine());
+
         //prints offer track not in detail
-        print(Ansi.Color.DEFAULT,"\n\n     OFFER TRACK:\n\n");
-        for (LocalOfferCard c : gameState.getBoard().getOfferTrack()) {
-            String playerNickname = c.isFree() ? ansi().fgGreen().bgGreen().a("   ").reset().toString() : ansi().fgRed().bgRed().a("o").reset().toString();
-            System.out.print(ansi().a("   |" + c.getOfferCardId() + "  " + playerNickname +
-                     "|   "));
-        }
+        print(Ansi.Color.DEFAULT,"\n     OFFER TRACK:\n");
+        printOfferTrack(gameState);
+
         //prints lowerline
-        print(Ansi.Color.DEFAULT,"\n\n     LOWER LINE:\n");
-        for (Card c : gameState.getBoard().getUnderLine()){
-            System.out.print(" |");
-        print(c, c.getCardId());
-        System.out.print("| ");
-    }
+        print(Ansi.Color.DEFAULT,"\n     LOWER LINE:\n");
+        printCardLine(gameState.getBoard().getUnderLine());
         //prints who's in turn now
-        System.out.println("\n");
-        System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "it's your turn" : "it's " + gameState.getPlayerActing().getColor() + " " + gameState.getPlayerActing().getNickname() + "'s turn");
+        if(gameState.getPlayerActing() != null)
+            System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "\n▶ it's your turn" : "\n▶ it's "  + gameState.getPlayerActing().getNickname() +" ["+ gameState.getPlayerActing().getColor() + "] "+ "'s turn");
         //prints your own tribe or stats?
-        System.out.println("     YOUR STATS AND TRIBE:");
+        System.out.println("\n     YOUR STATS AND TRIBE:");
         for (LocalPlayerState p : gameState.getPlayers())
             if (p.getNickname().equals(controller.getLocalPlayerUsername())) {
-                System.out.println("\n"+p+"\n");
+                System.out.println(""+p+"\n");
                 for (Card c : p.getTribe())
                     printCard(c);
                 for (Card c : p.getBuildings())
