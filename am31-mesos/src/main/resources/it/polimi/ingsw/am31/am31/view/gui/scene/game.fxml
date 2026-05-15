@@ -89,7 +89,7 @@
             </VBox>
          </center>
          <right>
-            <VBox fx:id="rightPanel" alignment="TOP_CENTER" maxHeight="-Infinity" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" BorderPane.alignment="CENTER">
+            <VBox fx:id="rightPanel" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" BorderPane.alignment="CENTER">
                <children>
                   <Label text="Players:">
                      <font>
@@ -119,7 +119,7 @@
                <children>
                   <VBox alignment="BOTTOM_CENTER">
                      <children>
-                        <HBox fx:id="myNickname" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
+                        <HBox fx:id="myNickname" alignment="CENTER_LEFT" spacing="10.0" />
                         <HBox alignment="CENTER_LEFT">
                            <children>
                               <ImageView fx:id="foodIcon" fitHeight="45.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
@@ -204,14 +204,14 @@
          <left>
             <VBox fx:id="leftSpacer" alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="skipButton1" disable="true" ellipsisString="" mnemonicParsing="false" onAction="#skipDrawFromUpper" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▲" wrapText="true">
+                  <Button fx:id="skipButton1" disable="true" ellipsisString="" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#skipDrawFromUpper" prefHeight="66.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▲" wrapText="true">
                      <font>
                         <Font name="Inknut Antiqua Regular" size="20.0" />
                      </font>
                      <effect>
                         <DropShadow />
                      </effect></Button>
-                  <Button fx:id="skipButton2" disable="true" ellipsisString="" layoutX="10.0" layoutY="402.0" mnemonicParsing="false" onAction="#skipDrawFromLower" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▼" wrapText="true">
+                  <Button fx:id="skipButton2" disable="true" ellipsisString="" layoutX="10.0" layoutY="402.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#skipDrawFromLower" prefHeight="66.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▼" wrapText="true">
                      <font>
                         <Font name="Inknut Antiqua Regular" size="20.0" />
                      </font>

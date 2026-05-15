@@ -144,6 +144,7 @@ public class GameController extends BaseController {
         if (foodImg != null) foodIcon.setImage(foodImg);
         if (ppImg != null) PPIcon.setImage(ppImg);
 
+        rightPanel.setPrefWidth(screenWidth * 0.15);
         //bind the width of the leftSpacer to the right one (the left will be empty)
         leftSpacer.prefWidthProperty().bind(rightPanel.widthProperty());
 
@@ -790,6 +791,8 @@ public class GameController extends BaseController {
 
         Label nameLabel = new Label(player.getNickname());
         nameLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
+        nameLabel.setMaxWidth(screenWidth * 0.08);
+        nameLabel.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
         if (isActing) nameLabel.setStyle("-fx-font-weight: bold");
         row.getChildren().add(nameLabel);
 
@@ -829,8 +832,9 @@ public class GameController extends BaseController {
         if (isActing) ppLabel.setStyle("-fx-font-weight: bold");
         ppGroup.getChildren().add(ppLabel);
 
-        HBox statsGroup = new HBox(12);
+        VBox statsGroup = new VBox();
         statsGroup.setAlignment(Pos.CENTER);
+        VBox.setMargin(ppGroup, new Insets(-10, 0, 0, 0));
         statsGroup.getChildren().addAll(foodGroup, ppGroup);
         row.getChildren().add(statsGroup);
 

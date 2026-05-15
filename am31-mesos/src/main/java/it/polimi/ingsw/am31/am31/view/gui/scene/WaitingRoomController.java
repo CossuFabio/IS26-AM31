@@ -237,6 +237,7 @@ public class WaitingRoomController extends BaseController {
         vbox2.setVisible(false);
         vbox3.setVisible(false);
         vbox1.setVisible(true);
+        waitingLabel.setVisible(false);
 
         joinColorBox.setValue(null);
         lobbyList.getSelectionModel().clearSelection();
@@ -267,10 +268,18 @@ public class WaitingRoomController extends BaseController {
         LobbyDescriptor selected = lobbyList.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
+        totalPlayers = selected.getnPlayers();
+
         new Thread(() -> {
             try {
                 controller.sendRequest(new JoinGameNetworkRequest(joinColorBox.getValue(), selected.getId()));
-                 } catch (Exception e) {
+                Platform.runLater(() -> {
+                    vbox3.setVisible(false);
+                    waitingLabel.setVisible(true);
+                    int current = localGameState.getPlayers().size();
+                    waitingLabel.setText("Waiting for other players: " + current + "/" + totalPlayers);
+                });
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
