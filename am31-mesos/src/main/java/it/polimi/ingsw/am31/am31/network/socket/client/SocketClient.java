@@ -1,8 +1,10 @@
 package it.polimi.ingsw.am31.am31.network.socket.client;
 
+import it.polimi.ingsw.am31.am31.exceptions.networkException.ConnectionLostException;
 import it.polimi.ingsw.am31.am31.network.ClientConfig;
 import it.polimi.ingsw.am31.am31.network.MessageDispatcher;
 import it.polimi.ingsw.am31.am31.network.Messages.Message;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFactory;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
@@ -14,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SocketClient implements VirtualServer, VirtualViewSocket {
 
@@ -23,6 +26,7 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
     private final BufferedReader input;
     private final MessageDispatcher messageDispatcher;
     private boolean usernameSet = false;
+    private final AtomicBoolean stillConnected = new AtomicBoolean(false);
 
     public SocketClient(String ip, int port,  MessageDispatcher dispatcher) throws Exception{
 
@@ -32,6 +36,7 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
         this.messageDispatcher = dispatcher;
 
         startClientSocket();
+        stillConnected.set(true);
         System.out.println("Connesso al server");
 
     }
@@ -58,13 +63,18 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
 
     @Override
     public void sendRequest(NetworkRequest request){
+        if (!stillConnected.get()) return;
         try{
             request.setPlayerID(identifier);
             String jsonReq = RequestsMapper.serialize(request);
             output.println(jsonReq);
             output.flush();
         } catch (Exception e) {
-            System.out.println("Error sending request");
+            if (stillConnected.compareAndSet(true, false)) {
+                messageDispatcher.submit(ErrorMessageFactory.createErrorMessage(new ConnectionLostException()));
+            }
+            System.err.println("Connection to server lost: " + e.getMessage());
+            try { disconnect(); } catch (Exception ignored) {}
         }
     }
 
