@@ -537,9 +537,7 @@ public class GameController extends BaseController {
             //if the card can be picked
             if (card.canBePicked()) {
                 if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
-                    //true if I haven't drawn from above yet and can afford to draw
-                    isClickable = (row == BoardRows.UPPER)
-                            && pendingDraws.getOrDefault(BoardRows.UPPER, 0) == 0
+                    isClickable = pendingDraws.getOrDefault(row, 0) == 0
                             && canAffordCard(card);
                 } else if (phase == RoundPhasesEnum.ACTION_PHASE) {
                     LocalOfferCard myOffer = localGameState.getBoard().getOfferTrack().stream()
@@ -687,6 +685,12 @@ public class GameController extends BaseController {
                     controller.sendRequest(new DrawNetworkRequest(card.getCardId(), row));
                 } catch (Exception ex) {
                     System.err.println("Draw request failed: " + ex.getMessage());
+                    Platform.runLater(() -> {
+                        pendingDraws.merge(row, -1, Integer::sum);
+                        RoundPhasesEnum p = localGameState.getCurrentRoundPhase();
+                        LocalPlayerState a = localGameState.getPlayerActing();
+                        refreshUI(p, a, localGameState);
+                    });
                 }
             }).start();
         });
@@ -696,7 +700,7 @@ public class GameController extends BaseController {
     private int allowedDrawsFromRow(BoardRows row) {
         RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
         if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
-            return (row == BoardRows.UPPER) ? 1 : 0;
+            return 1;
         }
         if (phase == RoundPhasesEnum.ACTION_PHASE) {
             String myNick = controller.getLocalPlayerUsername();
@@ -1103,7 +1107,7 @@ public class GameController extends BaseController {
         iv.setEffect(shadowCard);
 
         Label description = new Label(card.toString());
-        description.setFont(Font.font("Inknut Antiqua Regular", 20));
+        description.setFont(Font.font("Inknut Antiqua Regular", 16));
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);
@@ -1119,6 +1123,7 @@ public class GameController extends BaseController {
         StackPane.setAlignment(vbox, javafx.geometry.Pos.BOTTOM_CENTER);
         StackPane.setMargin(vbox, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
         rootStackPane.getChildren().add(vbox);
+        vbox.toFront();
 
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), vbox);
         fadeIn.setFromValue(0.0);

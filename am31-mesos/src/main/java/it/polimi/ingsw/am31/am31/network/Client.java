@@ -34,7 +34,7 @@ public class Client {
 
 
         //Remove when project is finished and remember to change switch cases values to parametric strings
-        String connectionType = "1"; //args[0];
+        String connectionType = "2"; //args[0];
         String viewType = "2"; //args[1];
 
         //library to display colors idk if this goes here

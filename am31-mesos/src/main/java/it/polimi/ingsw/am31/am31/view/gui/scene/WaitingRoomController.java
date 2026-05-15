@@ -7,11 +7,9 @@ import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRe
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.PlayersInLobbyChangedEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
+import it.polimi.ingsw.am31.am31.view.tui.TUILobby;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -214,12 +212,14 @@ public class WaitingRoomController extends BaseController {
 
     @FXML
     private void handleCreateGame() {
+        clearErrorLabels();
         vbox1.setVisible(false);
         vbox2.setVisible(true);
     }
 
     @FXML
     private void handleShowLobbies() {
+        clearErrorLabels();
         vbox1.setVisible(false);
         vbox3.setVisible(true);
         // Request lobbies from server
@@ -295,7 +295,7 @@ public class WaitingRoomController extends BaseController {
         Image img = loadImage(PathConstants.RULES_PATH + "rules_1.png");
         ImageView rulesIv = new ImageView(img);
         rulesIv.setFitWidth(screenWidth*((double) 778 / 1920));
-        rulesIv.setFitHeight(screenHeight*((double) 778 / 1080));
+        rulesIv.setFitHeight(screenHeight*((double) 900 / 1080));
 
         HBox buttons = new HBox();
         buttons.setAlignment(Pos.CENTER);
@@ -390,6 +390,38 @@ public class WaitingRoomController extends BaseController {
             int current = localGameState.getPlayers().size();
             waitingLabel.setText("Waiting for other players: " + current + "/" + totalPlayers);
         });
+    }
+
+    @Subscribe
+    public void unableToJoin(FailedJoinLobby e) {
+        Platform.runLater(() -> {
+            handleBack();
+            clearErrorLabels();
+            Label errorPrompt = new Label("Unable to enter Lobby. " + e.getMessage());
+            errorPrompt.setStyle("-fx-text-fill: white");
+            errorPrompt.setFont(Font.font("Inknut Antiqua Regular", 20));
+            errorPrompt.setId("errorLabel");
+            VBox.setMargin(errorPrompt, new Insets(20, 0, 0, 0));
+            vbox1.getChildren().add(errorPrompt);
+        });
+    }
+
+    @Subscribe
+    public void invalidColorSelected(InvalidColorPickEvent e) {
+        Platform.runLater(() -> {
+            handleBack();
+            clearErrorLabels();
+            Label errorPrompt = new Label("Invalid color pick!");
+            errorPrompt.setStyle("-fx-text-fill: white");
+            errorPrompt.setFont(Font.font("Inknut Antiqua Regular", 20));
+            errorPrompt.setId("errorLabel");
+            VBox.setMargin(errorPrompt, new Insets(20, 0, 0, 0));
+            vbox1.getChildren().add(errorPrompt);
+        });
+    }
+
+    private void clearErrorLabels() {
+        vbox1.getChildren().removeIf(n -> "errorLabel".equals(n.getId()));
     }
 
 }
