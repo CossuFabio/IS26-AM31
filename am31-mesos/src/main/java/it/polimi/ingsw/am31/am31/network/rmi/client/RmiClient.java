@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am31.am31.network.rmi.client;
+import it.polimi.ingsw.am31.am31.exceptions.networkException.ConnectionLostException;
 import it.polimi.ingsw.am31.am31.network.ClientConfig;
 import it.polimi.ingsw.am31.am31.network.MessageDispatcher;
+import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFactory;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
 import it.polimi.ingsw.am31.am31.network.ServerConfig;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
@@ -21,6 +23,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class RmiClient extends UnicastRemoteObject implements VirtualServer, VirtualViewRmi {
@@ -34,7 +37,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     private ErrorHandler errorVisitor;
     private final MessageDispatcher messageDispatcher;
     private final ExecutorService requestSender;
-
+    private AtomicBoolean stillConnected = new AtomicBoolean(false);
     private boolean usernameSet = false;
 
     public RmiClient(String ip, int port, MessageDispatcher messageDispatcher) throws RemoteException, NotBoundException {
@@ -55,16 +58,21 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
             t.setDaemon(true);
             return t;
         });
+        stillConnected.set(true);
 
     }
     @Override
     public void sendRequest(NetworkRequest request) throws RemoteException {
-        if (requestSender.isShutdown()) return;
+        if (requestSender.isShutdown() || !stillConnected.get() ) return;
         request.setPlayerID(this.identifier);
         requestSender.submit(() -> {
             try {
+                if (!stillConnected.get()) return;
                 serverStub.sendRequest(RequestsMapper.serialize(request), this);
             } catch (Exception e) {
+                if (stillConnected.compareAndSet(true, false)) {
+                    messageDispatcher.submit(ErrorMessageFactory.createErrorMessage(new ConnectionLostException()));
+                }
                 System.err.println("Connection to server lost: " + e.getMessage());
                 try { disconnect(); } catch (Exception ignored) {}
             }
