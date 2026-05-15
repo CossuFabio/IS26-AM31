@@ -5,8 +5,8 @@ public class ServerConfig {
     public static final int SERVER_PORT_RMI = 1100;
     public static final int SERVER_PORT_SOCKET = 1200;
     public static final String SERVER_NAME = "MesosServer";
-    public static final String SERVER_IP_ADDRESS = "192.168.0.37";
-    //public static final String SERVER_IP_ADDRESS = "79.44.161.226";
+    //public static final String SERVER_IP_ADDRESS = "192.168.0.37";
+    public static final String SERVER_IP_ADDRESS = "79.44.161.226";
 
     public static final int HEARTBEAT_SERVER_INTERVAL = 5000;
     public static final int HEARTBEAT_TIMEOUT = 3*ClientConfig.CLIENT_HEARTBEAT_INTERVAL;

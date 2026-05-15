@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
@@ -15,21 +16,21 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
+import org.fusesource.jansi.Ansi;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 
 public class WaitingRoomController extends BaseController {
@@ -54,12 +55,14 @@ public class WaitingRoomController extends BaseController {
     // Panel 3 - show lobbies
     @FXML private VBox vbox3;
     @FXML private ListView<LobbyDescriptor> lobbyList;
+    @FXML private VBox lobbyWaitingList;
     @FXML private Button backButton1;
     @FXML private Button joinButton;
     @FXML private ComboBox<Color> joinColorBox;
     @FXML private StackPane rulesOverlay;
     @FXML private Button rulesButton;
     @FXML private HBox hbox3;
+    @FXML private VBox vbox4;
 
     private int totalPlayers;
     private int currentSlide = 1;
@@ -109,8 +112,9 @@ public class WaitingRoomController extends BaseController {
         hbox3.setPrefHeight(screenHeight*((double) 100 /1080));
         waitingLabel.setPrefWidth(screenWidth*((double) 500 /1920));
         waitingLabel.setPrefHeight(screenHeight*((double) 66 /1080));
+        lobbyWaitingList.setPrefWidth(screenWidth*((double) 500 /1920));
 
-        VBox.setMargin(logoTitle, new Insets(screenHeight*((double) 250 /1080),0,screenHeight*((double) 50/1080),0));
+        VBox.setMargin(logoTitle, new Insets(screenHeight*((double) 200 /1080),0,screenHeight*((double) 50/1080),0));
         //disable join button until a lobby and a color are selected
         joinButton.disableProperty().bind(
                 lobbyList.getSelectionModel().selectedItemProperty().isNull()
@@ -237,7 +241,7 @@ public class WaitingRoomController extends BaseController {
         vbox2.setVisible(false);
         vbox3.setVisible(false);
         vbox1.setVisible(true);
-        waitingLabel.setVisible(false);
+        vbox4.setVisible(false);
 
         joinColorBox.setValue(null);
         lobbyList.getSelectionModel().clearSelection();
@@ -254,7 +258,7 @@ public class WaitingRoomController extends BaseController {
                 controller.sendRequest(new NewGameNetworkRequest(totalPlayers, color));
                 Platform.runLater(() -> {
                     vbox2.setVisible(false);
-                    waitingLabel.setVisible(true);
+                    vbox4.setVisible(true);
                     waitingLabel.setText("Waiting for players: 1/" + totalPlayers);
                 } );
             } catch (Exception e) {
@@ -275,7 +279,7 @@ public class WaitingRoomController extends BaseController {
                 controller.sendRequest(new JoinGameNetworkRequest(joinColorBox.getValue(), selected.getId()));
                 Platform.runLater(() -> {
                     vbox3.setVisible(false);
-                    waitingLabel.setVisible(true);
+                    vbox4.setVisible(true);
                     int current = localGameState.getPlayers().size();
                     waitingLabel.setText("Waiting for other players: " + current + "/" + totalPlayers);
                 });
@@ -283,6 +287,11 @@ public class WaitingRoomController extends BaseController {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    @Subscribe
+    public void playersChanged(PlayersInLobbyChangedEvent e) {
+
     }
 
     @FXML
@@ -396,8 +405,27 @@ public class WaitingRoomController extends BaseController {
     @Subscribe
     public void onPlayerListUpdate(PlayersInLobbyChangedEvent e) {
         Platform.runLater(() -> {
-            int current = localGameState.getPlayers().size();
-            waitingLabel.setText("Waiting for other players: " + current + "/" + totalPlayers);
+            lobbyWaitingList.getChildren().clear();
+
+            for (LocalPlayerState player : e.getPlayers()) {
+                Label nicknameLabel = new Label("Nickname: " + player.getNickname());
+                nicknameLabel.setStyle("-fx-font-family: 'Inknut Antiqua'; -fx-font-size: 20; -fx-text-fill: black;");
+                nicknameLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
+
+                Label colorLabel = new Label(" | Color: " + player.getColor());
+                colorLabel.setStyle("-fx-font-family: 'Inknut Antiqua'; -fx-font-size: 20; -fx-text-fill: black;");
+                colorLabel.setMinWidth(Region.USE_PREF_SIZE);
+
+                HBox row = new HBox(nicknameLabel, colorLabel);
+                row.setStyle("-fx-padding: 0 10 0 10;");
+                row.setAlignment(Pos.CENTER);
+                row.setPrefHeight(screenHeight*((double) 66 /1080));
+                Separator separator = new Separator();
+                lobbyWaitingList.getChildren().addAll(row, separator);
+            }
+
+            // aggiorna anche il contatore
+            waitingLabel.setText("Waiting for other players: " + e.getPlayers().size() + "/" + totalPlayers);
         });
     }
 

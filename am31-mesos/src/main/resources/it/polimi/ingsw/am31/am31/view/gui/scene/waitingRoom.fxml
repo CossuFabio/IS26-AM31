@@ -157,14 +157,23 @@
                         <Insets />
                      </StackPane.margin>
                   </VBox>
-                  <Label fx:id="waitingLabel" alignment="CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(255,243,211,1);" textAlignment="CENTER" visible="false">
-                     <font>
-                        <Font name="Inknut Antiqua Regular" size="20.0" />
-                     </font>
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                  </Label>
+                  <VBox fx:id="vbox4" alignment="TOP_CENTER" spacing="20.0" visible="false">
+                     <children>
+                        <Label fx:id="waitingLabel" alignment="CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(255,243,211,1);" textAlignment="CENTER">
+                           <font>
+                              <Font name="Inknut Antiqua Regular" size="20.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Label>
+                        <VBox fx:id="lobbyWaitingList" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </VBox>
+                     </children>
+                  </VBox>
                </children>
             </StackPane>
             </children>

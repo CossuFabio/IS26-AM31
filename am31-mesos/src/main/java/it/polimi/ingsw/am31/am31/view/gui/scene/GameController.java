@@ -162,6 +162,7 @@ public class GameController extends BaseController {
         turnLabel.setPrefWidth(screenWidth*((double) 200 /1920));
         phaseLabel.setPrefWidth(screenWidth*((double) 200 /1920));
         topBar.setPrefHeight(screenHeight*((double) 2 /42));
+        myNickname.setMaxWidth(screenWidth*((double)250/1920));
 
         makeScrollPaneTransparent(tribeScrollPane);
         makeScrollPaneTransparent(buildingsScrollPane);

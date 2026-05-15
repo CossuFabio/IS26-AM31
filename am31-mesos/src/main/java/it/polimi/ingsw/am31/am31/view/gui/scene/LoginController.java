@@ -43,7 +43,7 @@ public class LoginController extends BaseController{
         nicknameField.setPrefHeight(screenHeight*((double) 66 /1080));
         connectButton.setPrefWidth(screenHeight*((double) 66 /1080));
         connectButton.setPrefHeight(screenHeight*((double) 66 /1080));
-        VBox.setMargin(logoTitle, new Insets(screenHeight*((double) 250 /1080),0,screenHeight*((double) 50/1080),0));
+        VBox.setMargin(logoTitle, new Insets(screenHeight*((double) 200 /1080),0,screenHeight*((double) 50/1080),0));
 
         //disable connect button if nickname field is empty
         connectButton.disableProperty().bind(

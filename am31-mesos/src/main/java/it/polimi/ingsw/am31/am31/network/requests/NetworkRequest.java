@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.DisconnectNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
@@ -14,6 +15,7 @@ import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetw
 
 
 @JsonSubTypes({
+        @JsonSubTypes.Type(value = DisconnectNetworkRequest.class, name = RequestMethodsConstants.METHOD_DISCONNECT),
         @JsonSubTypes.Type(value = DrawNetworkRequest.class, name = RequestMethodsConstants.METHOD_DRAW),
         @JsonSubTypes.Type(value = TotemNetworkRequest.class, name = RequestMethodsConstants.METHOD_PLACE_TOTEM),
         @JsonSubTypes.Type(value = JoinGameNetworkRequest.class, name = RequestMethodsConstants.METHOD_JOIN_GAME),
