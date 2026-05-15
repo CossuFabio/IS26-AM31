@@ -20,12 +20,18 @@ public class TUIConfig {
     public static final String GO_BACK_STRING = "[type " + GO_BACK_VALUE + " to return to previous screen]";
     public static final int SMALL_CARD_SIZE = 6;
     //offer track sizes
-    public static final int OFFER_CARD_PADDING = 2;
-    public static final String OFFER_CARD_SPACING = "  ";
-    public static final String OFFER_CARD_BORDER = " ";
-    public static final String OFFER_CARD_BOX = "   ";
-    public static final int SMALL_OFFER_CARD_SIZE = OFFER_CARD_PADDING+OFFER_CARD_BOX.length()+OFFER_CARD_BORDER.length()*2+OFFER_CARD_SPACING.length();
+    public static final int SMALL_OFFER_CARD_PADDING = 2;
+    public static final String SMALL_OFFER_CARD_SPACING = "  ";
+    public static final String SMALL_OFFER_CARD_BORDER = " ";
+    public static final String SMALL_OFFER_CARD_BOX = "   ";
+    public static final int SMALL_OFFER_CARD_SIZE = SMALL_OFFER_CARD_PADDING + SMALL_OFFER_CARD_BOX.length()+ SMALL_OFFER_CARD_BORDER.length()*2+ SMALL_OFFER_CARD_SPACING.length();
 
+    //full off.track sizes
+    public static final int OFFER_CARD_PADDING = 3;
+    public static final String OFFER_CARD_BOX = "     ";
+    public static final String OFFER_CARD_BORDER = " ";
+    public static final String OFFER_CARD_SPACING = "  ";
+    public static final int OFFER_CARD_SIZE = OFFER_CARD_PADDING + OFFER_CARD_BOX.length()+ OFFER_CARD_BORDER.length()*2 + OFFER_CARD_SPACING.length();
 
 
 
@@ -117,7 +123,7 @@ public class TUIConfig {
         }
         System.out.println();
         for (Card c : cards) {
-           print( c, printLower(SMALL_CARD_SIZE));
+           print(c, printLower(SMALL_CARD_SIZE));
         }
         System.out.println();
     }
@@ -132,16 +138,16 @@ public class TUIConfig {
         //printing middle part
         for (LocalOfferCard c : cards) {
             //id in 4 chars
-            String fixedId = StringUtils.rightPad(c.getOfferCardId(), OFFER_CARD_PADDING);
+            String fixedId = StringUtils.rightPad(c.getOfferCardId(), SMALL_OFFER_CARD_PADDING);
             //if free prints white box, or green?
             String box;
 
             if (c.isFree())
-                box = ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
+                box = ansi().bg(Ansi.Color.DEFAULT).a(SMALL_OFFER_CARD_BOX).reset().toString();
             else    //if not free, prints box in the players color
                 box = getColor(gamestate.findPlayer(c.getPlayer()))+"   "+ansi().reset().toString();
             //to be aligned, the sum of Box + fixedId + border-space is equal to the small card size
-            System.out.print("┃"+OFFER_CARD_BORDER+fixedId+OFFER_CARD_SPACING+box+OFFER_CARD_BORDER+"┃");
+            System.out.print("┃"+ SMALL_OFFER_CARD_BORDER +fixedId+ SMALL_OFFER_CARD_SPACING +box+ SMALL_OFFER_CARD_BORDER +"┃");
         }
         System.out.println();
         //lower row

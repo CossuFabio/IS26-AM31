@@ -14,7 +14,10 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEventResolveEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.fusesource.jansi.Ansi;
+
+import java.util.List;
 
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -111,7 +114,7 @@ public class TUIGamePhase implements TUIPhase {
                     printCard(c);
                     }
 
-
+        //TODO APPEND EVENTS RESOLVED?
         //prints choices
         System.out.println("\nPress:\n1- for detailed CardLines" +
                 "\n2- for detailed offerTrack" +
@@ -120,23 +123,48 @@ public class TUIGamePhase implements TUIPhase {
 
 
     public void drawOffer() {
-        System.out.println(ansi().a(""));
-        for (LocalOfferCard c : gameState.getBoard().getOfferTrack()) {
-            if (c.getFood() > 0)
-                System.out.println(ansi().a("<" + c.getOfferCardId() + " gives " + c.getFood() + " food "));
-            else
-                System.out.println(ansi().a("<" + c.getOfferCardId() + " gives " + c.getDrawFromUpper() + " up. cards, " + c.getDrawFromUnder() + " down. card. "));
-            if (c.isFree())
-                System.out.println(ansi().a("it's free >\n"));
-            else
-                System.out.println(ansi().a("it's occupied by ") + c.getPlayer() + ">\n");
+        List<LocalOfferCard> cards = gameState.getBoard().getOfferTrack();
+        System.out.println(ansi().reset());
+        //upper side
+        for (LocalOfferCard c : cards)
+            System.out.print(printUpper(OFFER_CARD_SIZE));
+        System.out.println();
+        //middle
+        for (LocalOfferCard c : cards) {
+            String fixedId = StringUtils.rightPad(c.getOfferCardId(), OFFER_CARD_PADDING);
+            System.out.print("┃" + OFFER_CARD_BORDER + fixedId + OFFER_CARD_BORDER + OFFER_CARD_SPACING + OFFER_CARD_BOX + "┃");
         }
+        System.out.println();
+        //middle 2
+        for (LocalOfferCard c : cards)
+            if(c.getFood()>0)
+                System.out.print("┃"+StringUtils.center("Gives "+c.getFood()+"♣",OFFER_CARD_SIZE)+"┃");
+            else System.out.print("┃"+StringUtils.center(StringUtils.repeat("↓", c.getDrawFromUnder())+StringUtils.repeat("↑", c.getDrawFromUpper()),OFFER_CARD_SIZE)+"┃");
+        System.out.println();
+        //middle 3 to draw box
+        for (LocalOfferCard c : cards) {
+            String box = "";
+            if (c.isFree()) box =ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
+            else box = getColor(gameState.findPlayer(c.getPlayer()))+OFFER_CARD_BOX+ansi().reset().toString();
+            System.out.print("┃"+OFFER_CARD_BORDER+OFFER_CARD_SPACING+box+OFFER_CARD_BORDER+OFFER_CARD_SPACING+SMALL_OFFER_CARD_BORDER+"┃");
+
+        }System.out.println();
+        //middle 4 to draw box
+        for (LocalOfferCard c : cards) {
+            String box = "";
+            if (c.isFree()) box =ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
+            else box = getColor(gameState.findPlayer(c.getPlayer()))+OFFER_CARD_BOX+ansi().reset().toString();
+            System.out.print("┃"+OFFER_CARD_BORDER+OFFER_CARD_SPACING+box+OFFER_CARD_BORDER+OFFER_CARD_SPACING+SMALL_OFFER_CARD_BORDER+"┃");
+        }System.out.println();
+        //lower
+        for (LocalOfferCard c : cards)
+            System.out.print(printLower(OFFER_CARD_SIZE));
         if (choosingTotem == 0)
             System.out.println(ansi().a("\nPress:\n1- to go back to MAIN" +
                     "\n2- to place totem on a tile." +
                     "\n3- to go to cards and draw"));
         else
-            System.out.println(ansi().a("\nType the Id of the card you want to place in\n>"));
+            System.out.println("\nType the Id of the card you want to place in\n>");
     }
 
     public void drawPlayers() {
