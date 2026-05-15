@@ -4,7 +4,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCode;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ConnectionLostEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedJoinLobby;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InvalidColorPickEvent;
@@ -45,6 +45,12 @@ public class StateErrorUpdater implements ErrorHandler {
                 eventBus.post(new FailedJoinLobby(errorMessage.getMessage()));
                 break;
             }
+
+            case ErrorCode.CONNECTION_LOST:{
+                eventBus.post(new ConnectionLostEvent());
+                break;
+            }
+
 
             default:
                 break;

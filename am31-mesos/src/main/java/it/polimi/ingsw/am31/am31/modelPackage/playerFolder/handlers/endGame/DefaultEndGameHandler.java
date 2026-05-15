@@ -9,7 +9,6 @@ import java.util.HashSet;
 public class DefaultEndGameHandler implements IEndGameHandler {
 
     private static int PRESTIGE_POINTS_ARTISTS_PAIR = 10;
-    private static int PRESTIGE_POINTS_INVENTORS = 10;
 
     private int artistsBonus(Player player){
 
@@ -31,7 +30,7 @@ public class DefaultEndGameHandler implements IEndGameHandler {
 
         });
 
-        return PRESTIGE_POINTS_INVENTORS * countVisitor.getInventors() * icons.size();
+        return countVisitor.getInventors() * icons.size();
 
     }
 

@@ -29,8 +29,8 @@ public enum ErrorCode {
     //Network errors
     BAD_REQUEST(NETWORK_ERROR),
     USERNAME_ALREADY_IN_USE(NETWORK_ERROR),
-    USERNAME_NOT_REGISTERED(NETWORK_ERROR);
-
+    USERNAME_NOT_REGISTERED(NETWORK_ERROR),
+    CONNECTION_LOST(NETWORK_ERROR); //Detected client-side
 
     //This binds the specific error code to its super type, maintaining this hierarchy lighter than the UpdateMessage
     //and the NetworkUpdate hierarchies because there is no need to carry information inside the ErrorMessage

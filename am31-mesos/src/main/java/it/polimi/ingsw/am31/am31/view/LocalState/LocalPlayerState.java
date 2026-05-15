@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.*;
+import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.print;
+import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printColor;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class LocalPlayerState {
@@ -64,25 +66,7 @@ public class LocalPlayerState {
 
 
     public String toString(){
-        //StringBuilder builder = new StringBuilder(); //
-        //builder.append(nickname);
-        //builder.append(", Color: ");
-        //builder.append(color);
-        //builder.append(", Food");
-        //return builder.toString();
-        switch(color) {
-            case RED:
-                return ansi().fg(Ansi.Color.RED).a("COLOR: RED, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
-            case YELLOW:
-                return ansi().fg(Ansi.Color.YELLOW).a("COLOR: YELLOW, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
-            case BLUE:
-                return ansi().fg(Ansi.Color.BLUE).a("COLOR: BLUE, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
-            case BLACK:
-                return ansi().fg(Ansi.Color.BLACK).bgBright(Ansi.Color.WHITE).a("COLOR: BLACK, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
-            case WHITE:
-                return ansi().fg(Ansi.Color.WHITE).a("COLOR: WHITE, NICKNAME:" + nickname + " FOOD: " + food + " POINTS: " + prestigePoints).reset().toString();
-        }
-        return "";
+        return "NICKNAME: "+nickname+", COLOR: "+color+", FOOD: "+food+", POINTS: "+prestigePoints;
     }
 
 }

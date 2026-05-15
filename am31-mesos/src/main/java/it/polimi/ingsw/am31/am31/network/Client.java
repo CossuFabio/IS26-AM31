@@ -40,6 +40,7 @@ public class Client {
         String connectionType = "2"; //args[0];
         String viewType = "2"; //args[1];
 
+
         //library to display colors idk if this goes here
         AnsiConsole.systemInstall();
 

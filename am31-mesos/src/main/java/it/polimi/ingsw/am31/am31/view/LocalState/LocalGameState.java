@@ -141,7 +141,8 @@ public class LocalGameState{
             for (LocalPlayerState p : turnOrder)
                 if (!(p == null))
                     return p;
-        } else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE)
+        }
+        else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE)
                 || currentRoundPhase.equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
             for(LocalOfferCard c: board.getOfferTrack())
                 if(!c.isFree())
@@ -151,7 +152,9 @@ public class LocalGameState{
         }
         return null;
     }
-    public List<LocalPlayerState> getTurnOrder(){return turnOrder;}
+
+    public List<LocalPlayerState> getTurnOrder(){
+            return turnOrder;}
     public List<LocalPlayerState> getPlayers(){return players;}
     public LocalPlayerState findPlayer(String nickname){
         return players.stream().filter(p -> p.getNickname().equals(nickname)).findFirst().orElse(null);

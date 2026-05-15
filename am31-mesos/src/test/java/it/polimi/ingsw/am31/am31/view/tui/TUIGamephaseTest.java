@@ -45,12 +45,14 @@ public class TUIGamephaseTest {
 
         ArrayList<LocalOfferCard> track = new ArrayList<>();
 
+        LocalPlayerState test1 = new LocalPlayerState("test", Color.BLACK);
+        LocalPlayerState test = new LocalPlayerState("achillefrigeri2",Color.WHITE);
 
-
-        LocalOfferCard a = new LocalOfferCard("A", null, true, 1, 0, 0);
+        LocalOfferCard a = new LocalOfferCard("A", "test", false, 1, 0, 0);
         LocalOfferCard b = new LocalOfferCard("B", null, true, 0, 2, 1);
         track.add(a);
         track.add(b);
+
 
         cards.add(i);cards.add(h);cards.add(f);cards.add(bd);
         state.setCardLine(cards, BoardRows.LOWER);
@@ -59,8 +61,7 @@ public class TUIGamephaseTest {
         state.setEra(1);
         state.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
         state.setRoundNumber(1);state.setOfferTrack(track);
-        LocalPlayerState test1 = new LocalPlayerState("test", Color.BLACK);
-        LocalPlayerState test = new LocalPlayerState("achillefrigeri2",Color.WHITE);
+
         state.addPlayer(test);state.addPlayer(test1);
         state.setTurnOrder(state.getPlayers());state.setPlayerActing(test1);
         ViewEventBus eventBus = new ViewEventBus();
@@ -68,6 +69,7 @@ public class TUIGamephaseTest {
         cont.setLocalNameTest();
         test1.setTribe(cards);test.setTribe(cards);
         test1.addBuilding(bd);test.addBuilding(bd);
+        state.setOfferTrack(track);
         gamephase = new TUIGamePhase(null,cont, state );
     }
     @Test
@@ -78,6 +80,7 @@ public class TUIGamephaseTest {
     void TestShouldDrawMain(){
         //should draw the main screen, 6 upper cards, 4 lower, 2 offers, 2 players
         //era 1, round 1, totem placing
+
         gamephase.drawMain();
         //players has some characters, buildings and events
     }
