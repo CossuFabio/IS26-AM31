@@ -1,12 +1,17 @@
 package it.polimi.ingsw.am31.am31.testUtils;
 
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.resources.GameResources;
 import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonBuildingCardsSupplier;
 import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonOfferSupplier;
 import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonTribeCardsSupplier;
 import it.polimi.ingsw.am31.am31.testUtils.board.OfferCardFluentBuilder;
 import it.polimi.ingsw.am31.am31.testUtils.player.PlayerFluentBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestUtilities {
 
@@ -39,7 +44,20 @@ public class TestUtilities {
         return new OfferCardFluentBuilder();
     }
 
+    public static List<Player> createLobby(int nPlayers){
 
+        List<Player> players = new ArrayList<>();
+        Color[] colors = Color.values();
+        for(int i = 0; i<nPlayers; i++){
+            players.add(
+                    createPlayer()
+                            .name("Player"+i)
+                            .color(colors[i % colors.length]) //Allows to create lobby with >5 players
+                            .build()
+            );
+        }
+        return players;
+    }
 
 
 }

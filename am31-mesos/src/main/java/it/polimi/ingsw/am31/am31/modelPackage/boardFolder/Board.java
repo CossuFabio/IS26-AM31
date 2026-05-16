@@ -81,13 +81,14 @@ public class Board implements GameObservable {
     public List<BuildingCard> getUpperBLine(){return upperBLine.stream().toList();}
     public List<BuildingCard> getUnderBLine(){return underBLine.stream().toList();}
 
-    public ArrayList<Card> getUnderLine() {
+    public List<Card> getUnderLine() {
         ArrayList<Card> result = new ArrayList<Card>();
         result.addAll(underLine);
         result.addAll(underBLine);
         return result;
     }
-    public ArrayList<Card> getUpperLine(){
+
+    public List<Card> getUpperLine(){
         ArrayList<Card> result = new ArrayList<Card>();
         result.addAll(upperLine);
         result.addAll(upperBLine);
