@@ -8,6 +8,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageMapper;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
+import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMapper;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
 
@@ -37,8 +38,8 @@ public class SocketClientHandler implements VirtualView {
         String jsonReq;
         try{
             while((jsonReq = input.readLine()) != null){
-                System.out.println(jsonReq);
                 NetworkRequest req = RequestsMapper.deserialize(jsonReq);
+                if (!req.getType().equals(PingNetworkRequest.METHOD)) System.out.println(jsonReq);
                 //No need to check if it is new connection.
                 mainServer.handleNetworkRequest(req, this);
             }

@@ -14,11 +14,31 @@ import org.fusesource.jansi.AnsiConsole;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Scanner;
 
 public class Client {
     //main client class
     public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
 
+        // 1. IP del server
+        System.out.print("Enter server IP address: ");
+        String serverIp = scanner.nextLine().trim();
+        ServerConfig.SERVER_IP_ADDRESS = serverIp;
+
+        // 2. Tipo di connessione
+        System.out.println("Select connection type:");
+        System.out.println("1 - RMI");
+        System.out.println("2 - Socket");
+        System.out.print("> ");
+        String connectionType = scanner.nextLine().trim();
+
+        // 3. Tipo di view
+        System.out.println("Select view type:");
+        System.out.println("1 - TUI");
+        System.out.println("2 - GUI");
+        System.out.print("> ");
+        String viewType = scanner.nextLine().trim();
 
         //Uncomment this when submitting project
 
@@ -37,8 +57,8 @@ public class Client {
 
 
         //Remove when project is finished and remember to change switch cases values to parametric strings
-        String connectionType = "2"; //args[0];
-        String viewType = "1"; //args[1];
+//        String connectionType = "2"; //args[0];
+//        String viewType = "1"; //args[1];
 
 
         //library to display colors idk if this goes here

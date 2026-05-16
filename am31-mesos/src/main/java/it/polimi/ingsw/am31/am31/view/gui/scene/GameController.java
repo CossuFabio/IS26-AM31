@@ -1106,7 +1106,7 @@ public class GameController extends BaseController {
     public void onGameEventResolved(GameEventResolveEvent event) {
         Platform.runLater(() -> {
             pendingEvents.add(event.getCard());
-            if (!showingEvent) showNextEvent();
+            if (!showingEvent && localGameState.getRoundNumber() != 10) showNextEvent();
         });
     }
 
