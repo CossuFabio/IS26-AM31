@@ -32,13 +32,13 @@ public class TUIConfig {
     public static final String OFFER_CARD_BORDER = " ";
     public static final String OFFER_CARD_SPACING = "  ";
     public static final int OFFER_CARD_SIZE = OFFER_CARD_PADDING + OFFER_CARD_BOX.length()+ OFFER_CARD_BORDER.length()*2 + OFFER_CARD_SPACING.length();
-
+    public static final int CARD_SIZE = 12;
 
 
     //prints the style of a card
     public static void printColor(Card c) {
         if (c == null || c.getCardId() == null) return;
-        c.acceptVisit(new TuiPrintVisitor());
+        c.acceptVisit(new TuiColorVisitor());
     }
 
     public static void printColor(LocalPlayerState p) {
@@ -99,7 +99,7 @@ public class TUIConfig {
     //prints cards details in their color
     public static void printCard(Card c) {
         if (c == null || c.getCardId() == null) return;
-        TuiPrintVisitor visitor = new TuiPrintVisitor();
+        TuiColorVisitor visitor = new TuiColorVisitor();
         c.acceptVisit(visitor);
         System.out.print(c.getCardId() + ":- " + c);
         reset();
@@ -155,6 +155,46 @@ public class TUIConfig {
             print( Ansi.Color.DEFAULT, printLower(SMALL_OFFER_CARD_SIZE));
         }
         System.out.println();
+    }
+    //prints a big version of a card
+    public static void printDetailedCard (Card c) {
+        print(c,printUpper(CARD_SIZE));
+        System.out.println();
+        //3 layers inside
+        c.acceptVisit(new TuiCardPrintVisitor());
+        print(c,printLower(CARD_SIZE));
+        System.out.println();
+    }
+    //prints a big version of a card line
+    public static void printDetailedCardLine (List<Card> cards) {
+        TuiCardPrintVisitor visitor = new TuiCardPrintVisitor();
+        for(Card c : cards) {
+            print(c, printUpper(CARD_SIZE));
+        }System.out.println();
+        //4 layers inside
+        for(Card c:cards) {
+            c.acceptVisit(visitor); //draws the current layer
+        }
+        visitor.nextLayer();
+        System.out.println();
+        for(Card c:cards) {
+            c.acceptVisit(visitor);
+        }
+        visitor.nextLayer();
+        System.out.println();
+        for(Card c:cards) {
+            c.acceptVisit(visitor);
+        }
+        visitor.nextLayer();
+        System.out.println();
+        for(Card c:cards) {
+            c.acceptVisit(visitor);
+        }
+        System.out.println();
+        for(Card c : cards){
+        print(c,printLower(CARD_SIZE));
+        }
+
     }
 
 

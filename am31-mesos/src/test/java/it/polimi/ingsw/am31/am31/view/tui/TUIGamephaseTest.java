@@ -24,7 +24,7 @@ import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 
 public class TUIGamephaseTest {
     private TUIGamePhase gamephase;
-
+   private  LocalGameState state = new LocalGameState();
     @BeforeEach
     void setup() {
         LocalGameState state = new LocalGameState();
@@ -50,9 +50,12 @@ public class TUIGamephaseTest {
 
         LocalOfferCard a = new LocalOfferCard("A", "test", false, 1, 0, 0);
         LocalOfferCard b = new LocalOfferCard("B", null, true, 0, 2, 1);
+        LocalOfferCard c = new LocalOfferCard("C", "achillefrigeri2", false, 0, 0, 2);
+
         track.add(a);
         track.add(b);
-
+        track.add(c);
+        track.add(a);
 
         cards.add(i);cards.add(h);cards.add(f);cards.add(bd);
         state.setCardLine(cards, BoardRows.LOWER);
@@ -87,7 +90,7 @@ public class TUIGamephaseTest {
 
     @Test
     void TestShouldDrawOfferTrack(){
-        //should print the 2 offerCards
+        //should print the 4 offerCards
         gamephase.drawOffer();
     }
     @Test

@@ -2,7 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.*;
 
 public class CountVisitor implements TribeVisitor{
 
@@ -55,8 +55,29 @@ public class CountVisitor implements TribeVisitor{
     public void visit(EventCard event) {
         this.eventsCount++;
     }
+@Override
+    public void visit(BuildingCard building){
+    }
 
-    public void visit(BuildingCard building){}
+    @Override
+    public void visit(HuntEventCard huntEventCard) {
+        this.eventsCount++;
+    }
+
+    @Override
+    public void visit(SustainEventCard sustainEventCard) {
+        this.eventsCount++;
+    }
+
+    @Override
+    public void visit(RitualEventCard ritualEventCard) {
+        this.eventsCount++;
+    }
+
+    @Override
+    public void visit(PaintingEventCard paintingEventCard) {
+        this.eventsCount++;
+    }
 
     public int getHunters(){return huntersCount; }
     public int getFarmers(){return farmersCount; }

@@ -7,6 +7,7 @@ module it.polimi.ingsw.am31.am31 {
     requires java.desktop;
     requires org.fusesource.jansi;
     requires commons.lang3;
+   // requires it.polimi.ingsw.am31.am31;
 
 
     opens it.polimi.ingsw.am31.am31 to javafx.fxml;

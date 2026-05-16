@@ -88,31 +88,31 @@ public class TUIGamePhase implements TUIPhase {
         int i = 1;
         for (LocalPlayerState p : gameState.getTurnOrder())
             if (p != null)
-                print(p,i++ +"- "+p.getNickname()+ " " + p.getColor()+" "+ansi().reset()+"\n");
+                print(p, i++ + "- " + p.getNickname() + " " + p.getColor() + " " + ansi().reset() + "\n");
         //prints upperline, but only ids
-        print(Ansi.Color.DEFAULT,"\n     UPPER LINE:\n");
+        print(Ansi.Color.DEFAULT, "\n     UPPER LINE:\n");
         printCardLine(gameState.getBoard().getUpperLine());
 
         //prints offer track not in detail
-        print(Ansi.Color.DEFAULT,"\n     OFFER TRACK:\n");
+        print(Ansi.Color.DEFAULT, "\n     OFFER TRACK:\n");
         printOfferTrack(gameState);
 
         //prints lowerline
-        print(Ansi.Color.DEFAULT,"\n     LOWER LINE:\n");
+        print(Ansi.Color.DEFAULT, "\n     LOWER LINE:\n");
         printCardLine(gameState.getBoard().getUnderLine());
         //prints who's in turn now
-        if(gameState.getPlayerActing() != null)
-            System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "\n▶ it's your turn" : "\n▶ it's "  + gameState.getPlayerActing().getNickname() +" ["+ gameState.getPlayerActing().getColor() + "] "+ "'s turn");
+        if (gameState.getPlayerActing() != null)
+            System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "\n▶ it's your turn" : "\n▶ it's " + gameState.getPlayerActing().getNickname() + " [" + gameState.getPlayerActing().getColor() + "] " + "'s turn");
         //prints your own tribe or stats?
         System.out.println("\n     YOUR STATS AND TRIBE:");
         for (LocalPlayerState p : gameState.getPlayers())
             if (p.getNickname().equals(controller.getLocalPlayerUsername())) {
-                System.out.println(""+p+"\n");
+                System.out.println("" + p + "\n");
                 for (Card c : p.getTribe())
                     printCard(c);
                 for (Card c : p.getBuildings())
                     printCard(c);
-                    }
+            }
 
         //TODO APPEND EVENTS RESOLVED?
         //prints choices
@@ -137,25 +137,28 @@ public class TUIGamePhase implements TUIPhase {
         System.out.println();
         //middle 2
         for (LocalOfferCard c : cards)
-            if(c.getFood()>0)
-                System.out.print("┃"+StringUtils.center("Gives "+c.getFood()+"♣",OFFER_CARD_SIZE)+"┃");
-            else System.out.print("┃"+StringUtils.center(StringUtils.repeat("↓", c.getDrawFromUnder())+StringUtils.repeat("↑", c.getDrawFromUpper()),OFFER_CARD_SIZE)+"┃");
+            if (c.getFood() > 0)
+                System.out.print("┃" + StringUtils.center("Gives " + c.getFood() + "♣", OFFER_CARD_SIZE) + "┃");
+            else
+                System.out.print("┃" + StringUtils.center(StringUtils.repeat("↓", c.getDrawFromUnder()) + StringUtils.repeat("↑", c.getDrawFromUpper()), OFFER_CARD_SIZE) + "┃");
         System.out.println();
         //middle 3 to draw box
         for (LocalOfferCard c : cards) {
             String box = "";
-            if (c.isFree()) box =ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
-            else box = getColor(gameState.findPlayer(c.getPlayer()))+OFFER_CARD_BOX+ansi().reset().toString();
-            System.out.print("┃"+OFFER_CARD_BORDER+OFFER_CARD_SPACING+box+OFFER_CARD_BORDER+OFFER_CARD_SPACING+SMALL_OFFER_CARD_BORDER+"┃");
+            if (c.isFree()) box = ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
+            else box = getColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
+            System.out.print("┃" + OFFER_CARD_BORDER + OFFER_CARD_SPACING + box + OFFER_CARD_BORDER + OFFER_CARD_SPACING + SMALL_OFFER_CARD_BORDER + "┃");
 
-        }System.out.println();
+        }
+        System.out.println();
         //middle 4 to draw box
         for (LocalOfferCard c : cards) {
             String box = "";
-            if (c.isFree()) box =ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
-            else box = getColor(gameState.findPlayer(c.getPlayer()))+OFFER_CARD_BOX+ansi().reset().toString();
-            System.out.print("┃"+OFFER_CARD_BORDER+OFFER_CARD_SPACING+box+OFFER_CARD_BORDER+OFFER_CARD_SPACING+SMALL_OFFER_CARD_BORDER+"┃");
-        }System.out.println();
+            if (c.isFree()) box = ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
+            else box = getColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
+            System.out.print("┃" + OFFER_CARD_BORDER + OFFER_CARD_SPACING + box + OFFER_CARD_BORDER + OFFER_CARD_SPACING + SMALL_OFFER_CARD_BORDER + "┃");
+        }
+        System.out.println();
         //lower
         for (LocalOfferCard c : cards)
             System.out.print(printLower(OFFER_CARD_SIZE));
@@ -181,15 +184,17 @@ public class TUIGamePhase implements TUIPhase {
 
     public void drawCardLines() {
         System.out.println(ansi().a("UPPER LINE:"));
-        for (Card c : gameState.getBoard().getUpperLine()) {
-            System.out.print("\n");
-            printCard(c); //prints cards in their color
-        }
+        System.out.println();
+            //first without buildings, then buildings with desc
+            printDetailedCardLine(gameState.getBoard().getUpperLineNOB());
+        System.out.println();
+            printDetailedCardLine(gameState.getBoard().getUpperLineB());
+        System.out.println();
         System.out.println(ansi().a("LOWER LINE:"));
-        for (Card c : gameState.getBoard().getUnderLine()){
-            System.out.print("\n");
-            printCard(c);
-        }
+        System.out.println();
+        printDetailedCardLine(gameState.getBoard().getUnderLineNOB());
+        System.out.print("\n");
+        printDetailedCardLine(gameState.getBoard().getUnderLineB());
         if (choosingCard == 0)
             System.out.println("\nPress: \n1- Go back to Main" +
                     "\n2- to draw a card");

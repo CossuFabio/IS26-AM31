@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.List;
@@ -37,5 +38,8 @@ public class PaintingEventCard extends EventCard {
         return "EventCard type: PaintEvent - Era: " + era +
                 " - Minimum number of artists: " + minArtist +
                 " - Prestige points bonus: " + prestigePointsBonus + " - Prestige points malus : " + prestigePointsMalus;
+    }
+    public void acceptVisit(TribeVisitor visitor){
+        visitor.visit(this);
     }
 }
