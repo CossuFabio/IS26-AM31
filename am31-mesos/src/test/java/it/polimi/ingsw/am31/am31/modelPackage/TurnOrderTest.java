@@ -1,6 +1,5 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
-import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EverybodyPlayedException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.IncorrectMethodCallException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerAlreadyInTurnOrderException;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
@@ -10,7 +9,6 @@ import it.polimi.ingsw.am31.am31.testUtils.testObservers.LogObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createLobby;
@@ -231,7 +229,7 @@ class TurnOrderTest {
             testTurnOrder.setPlayerFirstRound(lobby.get(i));
         }
 
-        //Now is ACTION_PHAE
+        //Now is ACTION_PHASE
         assertThrows(IncorrectMethodCallException.class,
                 ()->{
                     testTurnOrder.setPlayerFirstRound(lobby.getFirst());
