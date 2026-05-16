@@ -264,7 +264,7 @@ public class Game implements GameObservable {
     //se non fattibile, lancia eccezione o del player o tessera già presa
     //se finito, turnorder lancia exception, catchata da controller
     //(controller)in tal caso fa setup della TurnDrawManager e assegna cibo della tessera (caso tessera n1).
-    public void totemChoiceAction(Player player, OfferCard offerCard) throws WrongPlayerTurnException, EverybodyPlayedException, OfferTrackTileAlreadyTakenException, WrongRoundPhaseException {
+    public void totemChoiceAction(Player player, OfferCard offerCard) throws WrongPlayerTurnException, IncorrectMethodCallException, OfferTrackTileAlreadyTakenException, WrongRoundPhaseException {
         if(currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) {
             throw new WrongRoundPhaseException();
         }
@@ -273,7 +273,7 @@ public class Game implements GameObservable {
             offerCard.setPlayer(player);
             observers.onOfferTrackUpdate(board);
         }
-            else
+        else
             throw new OfferTrackTileAlreadyTakenException();
         turnOrder.goToNextPlayer();
     }
