@@ -198,7 +198,34 @@ public class GameController extends BaseController {
 
     @Subscribe
     public void onGameEnded(GameEndedEvent event) {
-        sceneManager.showEndGame();
+        Platform.runLater(() -> {
+            rulesOverlay.getChildren().clear();
+
+            Region darkBg = new Region();
+            darkBg.setStyle("-fx-background-color: rgba(0,0,0,0.6);");
+            darkBg.setMaxWidth(Double.MAX_VALUE);
+            darkBg.setMaxHeight(Double.MAX_VALUE);
+
+            Label endLabel = new Label("The game is over! Going to the standings...");
+            endLabel.setFont(Font.font("Inknut Antiqua Regular", 20));
+            endLabel.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-padding: 15;");
+            StackPane.setAlignment(endLabel, Pos.BOTTOM_CENTER);
+            StackPane.setMargin(endLabel, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
+
+            rulesOverlay.getChildren().addAll(darkBg, endLabel);
+            rulesOverlay.toFront();
+            rulesOverlay.setVisible(true);
+
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(400), endLabel);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(3.5));
+            pause.setOnFinished(e -> sceneManager.showEndGame());
+
+            fadeIn.setOnFinished(e -> pause.play());
+            fadeIn.play();
+        });
     }
 
     @Subscribe
