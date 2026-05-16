@@ -1,28 +1,37 @@
 package it.polimi.ingsw.am31.am31;
 
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Hunter;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Shaman;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.RED;
+import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.WHITE;
 import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
 import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
 
     private Player player;
     private final String nickname = "Test";
     private final Color color = Color.BLUE;
-
+    private final int ritualStars = 3;
     @BeforeEach
     //This test creates a player
     void createPlayerAndTribe(){
         this.player = createPlayer().name(nickname).color(color).build();
-        player.addCard(createShaman().stars(3).build());
+        player.addCard(createShaman().stars(ritualStars).build());
         player.addCard(createInventor().icon(IconEnum.ARROW).build());
+
+        player.setObserverHandler(new GameObserversSet());
 
     }
 
@@ -41,18 +50,19 @@ class PlayerTest {
         int bonus = 10;
         int malus = -20;
         int starting = 0;
-        // Controllo iniziale
+
+        //Initial check
         assertEquals(starting, player.getFood(), "Initial value for food: 0");
 
-        // Aggiungo cibo
+        // Adding food
         player.editFood(10);
         assertEquals(bonus, player.getFood(), "Food increased by " + bonus);
 
-        // Tolgo cibo
+        // Removing food
         player.editFood(malus);
         assertEquals(0, player.getFood(), "Food decreased below 0, cannot be negative");
 
-        // Altre modifiche
+        // Other changes
         player.editFood(50);
         player.editFood(-20);
         assertEquals(30, player.getFood(), "Final food must be 30 after increase of 50 and decrease of 20");
@@ -78,7 +88,7 @@ class PlayerTest {
     @Test
     void getRitualStars() {
         //The player has a 3 stars shaman
-        assertEquals(player.getRitualStars(), 3);
+        assertEquals(player.getRitualStars(), ritualStars);
     }
 
     @Test
@@ -95,6 +105,93 @@ class PlayerTest {
         assertEquals(player.getTribe().contains(h), true);
     }
 
+    @Test
+    void bonusDrawUpper(){
+
+        assertEquals(0, player.getBonusDrawFromUpper());
+        assertEquals(0, player.getBonusDrawFromLower());
+        assertFalse(player.hasBonusDraw());
+
+        int upperBonus = 1;
+        player.addBonusDrawFromUpper(upperBonus);
+        assertEquals(upperBonus, player.getBonusDrawFromUpper());
+        assertTrue(player.hasBonusDraw());
+
+
+
+    }
+
+    @Test
+    void bonusDrawLower(){
+
+        assertEquals(0, player.getBonusDrawFromUpper());
+        assertEquals(0, player.getBonusDrawFromLower());
+        assertFalse(player.hasBonusDraw());
+
+        int lowerBonus = 2;
+        player.addBonusDrawFromLower(lowerBonus);
+        assertEquals(lowerBonus, player.getBonusDrawFromLower());
+        assertTrue(player.hasBonusDraw());
+
+    }
+
+    @Test
+    void bonusDrawBoth(){
+
+        assertEquals(0, player.getBonusDrawFromUpper());
+        assertEquals(0, player.getBonusDrawFromLower());
+        assertFalse(player.hasBonusDraw());
+
+        int lowerBonus = 2;
+        int upperBonus = 1;
+        player.addBonusDrawFromLower(lowerBonus);
+        player.addBonusDrawFromUpper(upperBonus);
+        assertEquals(upperBonus, player.getBonusDrawFromUpper());
+        assertEquals(lowerBonus, player.getBonusDrawFromLower());
+        assertTrue(player.hasBonusDraw());
+
+    }
+
+    @Test
+    void utilitiesTest(){
+
+        //Testing equals
+        Player p1 = createPlayer().name("Fede").color(RED).build();
+        Player p2 = createPlayer().name("edeF").build();
+        Player p3 = createPlayer().name("Fede").color(WHITE).build();
+        Shaman shaman = createShaman().build();
+
+        assertNotEquals(p1, p2);
+        assertEquals(p1, p1);
+        assertEquals(p1,p3);
+        assertNotEquals(p2, shaman);
+        assertNotEquals(p1, null);
+
+        //Testing hashcode
+        assertEquals(p1.getNickname().hashCode(), p1.hashCode());
+
+    }
+
+    @Test
+    void getBuildingsTest(){
+
+        BuildingCard b1 = createBuilding().cardId("b1").build();
+        BuildingCard b2 = createBuilding().cardId("b1").build();
+        BuildingCard b3 = createBuilding().cardId("b1").build();
+
+        List<BuildingCard> buildings = List.of(b1, b2,b3);
+
+        buildings.forEach(b -> player.addCard(b));
+        List<BuildingCard> playerBuildings = player.getBuildings();
+
+        assertTrue(
+                buildings.size() == playerBuildings.size() &&
+                        playerBuildings.containsAll(buildings) &&
+                        buildings.containsAll(playerBuildings)
+
+        );
+
+    }
 
 
 

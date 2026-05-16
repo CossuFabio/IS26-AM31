@@ -134,8 +134,7 @@ public class Player implements GameObservable {
         observers.onPlayerTribeUpdate(this);
     }
 
-    public void addCard(BuildingCard card)
-    {
+    public void addCard(BuildingCard card) {
         this.drawHandler.handleDraw(this, card);
         personalBuildingCards.add(card);
         observers.onPlayerNewBuildingEvent(this);
@@ -202,9 +201,6 @@ public class Player implements GameObservable {
         this.paintHandler = decoratorFunc.apply(this.paintHandler);
     }
 
-    public void addEndRoundEffect(Function<IEndRoundHandler, IEndRoundHandler> decoratorFunc){
-        this.endRoundHandler = decoratorFunc.apply(this.endRoundHandler);
-    }
 
     public void addRitualWinEffect(Supplier<IRitualWinStrategy> newStrategy){
         this.ritualWinHandler.setStrategy(newStrategy.get());

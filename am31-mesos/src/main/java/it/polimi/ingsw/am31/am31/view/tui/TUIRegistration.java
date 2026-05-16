@@ -30,6 +30,11 @@ public class TUIRegistration implements TUIPhase {
                 String space = String.format("%16s", " ");
                 System.out.println("|" + space + "WELCOME TO MESOS" + space + "|");
                 System.out.println("--------------------------------------------------");
+                System.out.println("\n[ Thousands of years ago, a new era was beginning for humankind. ]\n" +
+                        "[ The nomadic hunter-gatherers who had laboriously earned their place on Earth organized into small groups, \ndifferentiating social roles, building the first settlements, and initiating a great revolution. ]\n" +
+                        "[ Scientists call this period Mesolithic, and this game talks about those people. ]\n" +
+                        "[ Step into the role of a tribal leader, carefully choose the tasks to entrust to the people joining your tribe,\n" +
+                        "construct specialized buildings, and prepare wisely for the events you will face, guiding your tribe to victory! ]\n");
                 System.out.println(ansi().fg(Ansi.Color.YELLOW).a("\nPlease register your name first!").reset());
                 System.out.println("\n\nEnter nickname:");
                 break;

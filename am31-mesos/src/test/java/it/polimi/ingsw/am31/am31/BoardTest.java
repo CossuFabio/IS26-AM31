@@ -1,15 +1,19 @@
 package it.polimi.ingsw.am31.am31;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Artist;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
+import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.testUtils.TestUtilities;
+import it.polimi.ingsw.am31.am31.testUtils.testObservers.LogObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
+import static it.polimi.ingsw.am31.am31.testUtils.testObservers.LogObserver.createLogObserver;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
@@ -22,6 +26,13 @@ public class BoardTest {
         this.board = new Board(2, TestUtilities.getJSONGameResources().getOfferCards());
         this.ccard = createArtist().era(1).build();
         this.bcard = createBuilding().era(1).cost(1).prestigePointsGained(1).build();
+
+        GameObserversSet obsSet = new GameObserversSet();
+        LogObserver logObs = createLogObserver()
+                .cardLineUpdate()
+                .build();
+        obsSet.addObserver(logObs);
+        board.setObserverHandler(obsSet);
     }
     @Test
     void TestShouldAddUpper () {
@@ -35,13 +46,21 @@ public class BoardTest {
     @Test
     void TestShouldAddLower () {
 
-    }
-    @Test
-    void TestShouldMoveLowerTribes () {
+        assertTrue(board.getUpperLine().isEmpty());
+        Card c1 = createHunter().build();
+        assertFalse(board.getUnderLine().contains(c1));
+        board.addLower(c1);
+        assertTrue(board.getUnderLine().contains(c1));
 
+        BuildingCard b1 = createBuilding().build();
+        assertFalse(board.getUnderLine().contains(b1));
+        assertFalse(board.getUnderBLine().contains(b1));
+        board.addLower(b1);
+        assertTrue(board.getUnderLine().contains(b1));
+        assertTrue(board.getUnderBLine().contains(b1));
     }
     @Test
-    void TestShouldMoveLowerBuildings () {
+    void moveLowerTest() {
 
     }
 
