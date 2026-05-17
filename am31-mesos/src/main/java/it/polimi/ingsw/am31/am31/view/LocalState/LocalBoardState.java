@@ -1,11 +1,13 @@
 package it.polimi.ingsw.am31.am31.view.LocalState;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.view.tui.TuiColorVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocalBoardState {
+public class LocalBoardState
+{
     private List<LocalOfferCard> offerTrack;
     private List<Card> upperLine;
     private List<Card> underLine;
@@ -39,4 +41,20 @@ public class LocalBoardState {
     public List<Card> getUpperLine(){return upperLine;}
     public List<Card> getUnderLine(){return underLine;}
     public List<LocalOfferCard> getOfferTrack (){return offerTrack;}
+    public List<Card> getUpperLineNOB(){
+        TuiColorVisitor visitor = new TuiColorVisitor();
+        return upperLine.stream().filter(carta -> !visitor.checkBuilding(carta)).toList();
+    }
+    public List<Card> getUnderLineNOB(){
+        TuiColorVisitor visitor = new TuiColorVisitor();
+        return underLine.stream().filter(carta -> !visitor.checkBuilding(carta)).toList();
+    }
+    public List<Card> getUpperLineB(){
+        TuiColorVisitor visitor = new TuiColorVisitor();
+        return upperLine.stream().filter(carta -> visitor.checkBuilding(carta)).toList();
+    }
+    public List<Card> getUnderLineB(){
+        TuiColorVisitor visitor = new TuiColorVisitor();
+        return underLine.stream().filter(carta -> visitor.checkBuilding(carta)).toList();
+    }
 }

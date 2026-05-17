@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.List;
@@ -31,4 +32,14 @@ public class HuntEventCard extends EventCard {
         return "EventCard type: HuntEvent - Era: " + era + " - Food bonus per hunter: " + foodBonus + " - Prestige points per hunter: " + prestigePointsBonus;
     }
 
+    public int  getFoodBonus() {
+        return foodBonus;
+    }
+    public int getPrestigePointsBonus() {
+        return prestigePointsBonus;
+    }
+
+    public void acceptVisit(TribeVisitor visitor){
+        visitor.visit(this);
+    }
 }

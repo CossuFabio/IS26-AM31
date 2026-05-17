@@ -2,7 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -56,7 +56,25 @@ public class EventQueueBuilderVisitor implements TribeVisitor{
     }
 
     @Override
-    public void visit(EventCard event) {
+    public void visit(HuntEventCard event) {
+        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
+        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
+    }
+
+    @Override
+    public void visit(SustainEventCard event) {
+        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
+        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
+    }
+
+    @Override
+    public void visit(RitualEventCard event) {
+        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
+        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
+    }
+
+    @Override
+    public void visit(PaintingEventCard event) {
         if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
         else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
     }
@@ -75,7 +93,12 @@ public class EventQueueBuilderVisitor implements TribeVisitor{
 
         return Stream.concat(sortedHighPriority.stream(), sortedLowPriority.stream())
                 .toList();
-
     }
+
+//    @Override
+//    public void visit(EventCard event) {
+//        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
+//        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
+//    }
 
 }

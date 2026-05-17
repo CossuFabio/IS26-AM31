@@ -34,9 +34,9 @@ public abstract class EventCard extends Card {
         return prestigePointsMalus;
     }
 
-    public void acceptVisit(TribeVisitor visitor){
-            visitor.visit(this);
-        }
+//    public void acceptVisit(TribeVisitor visitor){
+//            visitor.visit(this);
+//        }
 
 
 }

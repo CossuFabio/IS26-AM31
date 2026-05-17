@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.List;
@@ -38,6 +39,9 @@ public class RitualEventCard extends EventCard {
             if(player.getRitualStars() == maxStars) player.winRitual(prestigePointsBonus);
         }
 
+    }
+    public void acceptVisit(TribeVisitor visitor){
+        visitor.visit(this);
     }
 
     @Override
