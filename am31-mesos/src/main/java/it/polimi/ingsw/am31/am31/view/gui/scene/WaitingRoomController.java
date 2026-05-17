@@ -305,33 +305,33 @@ public class WaitingRoomController extends BaseController {
 
 
         VBox vbox = new VBox();
-        vbox.setStyle("-fx-background-color: rgba(255,243,211,1);");
+        vbox.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;");
         vbox.setAlignment(Pos.CENTER);
         vbox.setMaxWidth(Region.USE_PREF_SIZE);
         vbox.setMaxHeight(Region.USE_PREF_SIZE);
 
-        Image img = loadImage(PathConstants.RULES_PATH + "rules_1.png");
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_1.jpg");
         ImageView rulesIv = new ImageView(img);
-        rulesIv.setFitWidth(screenWidth*((double) 778 / 1920));
+        rulesIv.setFitWidth(screenWidth*((double) 900 / 1920));
         rulesIv.setFitHeight(screenHeight*((double) 900 / 1080));
 
         HBox buttons = new HBox();
         buttons.setAlignment(Pos.CENTER);
 
         Button back = new Button();
-        back.setPrefWidth(screenWidth*((double) 778 / 1920) / 2);
+        back.setPrefWidth(screenWidth*((double) 900 / 1920) / 2);
         back.setPrefHeight(screenHeight*((double) 66 / 1080));
         back.setText("Back");
         back.setFont(Font.font("Inknut Antiqua Regular", 20));
-        back.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
+        back.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-border-width: 1 1 0 0; -fx-cursor: hand;");
         back.setDisable(true);
 
         Button next = new Button();
-        next.setPrefWidth(screenWidth*((double) 778 / 1920) / 2);
+        next.setPrefWidth(screenWidth*((double) 900 / 1920) / 2);
         next.setPrefHeight(screenHeight*((double) 66 / 1080));
         next.setText("Next");
         next.setFont(Font.font("Inknut Antiqua Regular", 20));
-        next.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;");
+        next.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-border-width: 1 0 0 0;  -fx-cursor: hand;");
 
         back.setOnAction(e -> backRule(rulesIv, back, next));
         next.setOnAction(e -> nextRule(rulesIv, back, next));
@@ -346,7 +346,7 @@ public class WaitingRoomController extends BaseController {
 
     private void backRule(ImageView rulesIv, Button back, Button next) {
         currentSlide--;
-        Image img = loadImage(PathConstants.RULES_PATH + "rules_" + currentSlide + ".png");
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_" + currentSlide + ".jpg");
         rulesIv.setImage(img);
         next.setDisable(false);
         if (currentSlide == 1)
@@ -358,7 +358,7 @@ public class WaitingRoomController extends BaseController {
     private void nextRule(ImageView rulesIv, Button back, Button next) {
         currentSlide++;
 
-        Image img = loadImage(PathConstants.RULES_PATH + "rules_" + currentSlide + ".png");
+        Image img = loadImage(PathConstants.RULES_PATH + "rules_" + currentSlide + ".jpg");
         rulesIv.setImage(img);
         back.setDisable(false);
         if (currentSlide == 7)
