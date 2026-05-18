@@ -18,7 +18,7 @@ public class TUIConfig {
     public static final String GO_BACK_VALUE = "back";
     public static final String SKIP_VALUE = "skip";
     public static final String GO_BACK_STRING = "[type " + GO_BACK_VALUE + " to return to previous screen]";
-    public static final int SMALL_CARD_SIZE = 6;
+    public static final int SMALL_CARD_SIZE = 8;
     //offer track sizes
     public static final int SMALL_OFFER_CARD_PADDING = 2;
     public static final String SMALL_OFFER_CARD_SPACING = "  ";
@@ -32,7 +32,8 @@ public class TUIConfig {
     public static final String OFFER_CARD_BORDER = " ";
     public static final String OFFER_CARD_SPACING = "  ";
     public static final int OFFER_CARD_SIZE = OFFER_CARD_PADDING + OFFER_CARD_BOX.length()+ OFFER_CARD_BORDER.length()*2 + OFFER_CARD_SPACING.length();
-    public static final int CARD_SIZE = 12;
+    public static final int CARD_SIZE = 15;
+    public static final int TURNORDER_SIZE = 25; //can't be under 24
 
 
     //prints the style of a card
@@ -115,15 +116,15 @@ public class TUIConfig {
     //prints the stylized card line the game main screen
     public static void printCardLine(List<Card> cards) {
         for (Card c : cards) {
-            print(c, printUpper(SMALL_CARD_SIZE));
+            print(c, upperBorder(SMALL_CARD_SIZE));
         }
         System.out.println();
         for (Card c : cards) {
-            print(c, printMiddle(c.getCardId(), SMALL_CARD_SIZE) );
+            print(c, insideBorder(c.getCardId(), SMALL_CARD_SIZE) );
         }
         System.out.println();
         for (Card c : cards) {
-           print(c, printLower(SMALL_CARD_SIZE));
+           print(c, lowerBorder(SMALL_CARD_SIZE));
         }
         System.out.println();
     }
@@ -132,7 +133,7 @@ public class TUIConfig {
         List<LocalOfferCard> cards =gamestate.getBoard().getOfferTrack();
         //printing upper side
         for (LocalOfferCard c : cards) {
-            print(Ansi.Color.DEFAULT, printUpper(SMALL_OFFER_CARD_SIZE));
+            print(Ansi.Color.DEFAULT, upperBorder(SMALL_OFFER_CARD_SIZE));
         }
         System.out.println();
         //printing middle part
@@ -152,24 +153,26 @@ public class TUIConfig {
         System.out.println();
         //lower row
         for (LocalOfferCard c : cards) {
-            print( Ansi.Color.DEFAULT, printLower(SMALL_OFFER_CARD_SIZE));
+            print( Ansi.Color.DEFAULT, lowerBorder(SMALL_OFFER_CARD_SIZE));
         }
         System.out.println();
     }
     //prints a big version of a card
     public static void printDetailedCard (Card c) {
-        print(c,printUpper(CARD_SIZE));
+        print(c, upperBorder(CARD_SIZE));
         System.out.println();
         //3 layers inside
         c.acceptVisit(new TuiCardPrintVisitor());
-        print(c,printLower(CARD_SIZE));
+        System.out.println();
+        print(c, lowerBorder(CARD_SIZE));
         System.out.println();
     }
     //prints a big version of a card line
     public static void printDetailedCardLine (List<Card> cards) {
         TuiCardPrintVisitor visitor = new TuiCardPrintVisitor();
         for(Card c : cards) {
-            print(c, printUpper(CARD_SIZE));
+            reset();
+            print(c, upperBorder(CARD_SIZE));
         }System.out.println();
         //4 layers inside
         for(Card c:cards) {
@@ -192,26 +195,134 @@ public class TUIConfig {
         }
         System.out.println();
         for(Card c : cards){
-        print(c,printLower(CARD_SIZE));
+        print(c, lowerBorder(CARD_SIZE));
         }
 
+    }
+    //returns the correct bonus for the specified position with n players
+    public static String turnOrderBonus (int nplayers, int pos) {
+        switch (nplayers) {
+            case 2:             switch(pos){
+                case 1: return "1♣";
+                case 2: return "-1♣/-2♦";
+            } break;
+            case 3:                switch(pos){
+                case 1:return "2♣";
+                case 2:return "";
+                case 3:return "-1♣/♦";
+            }break;
+            case 4:                 switch(pos){
+                case 1:return "2♣";
+                case 2:return "1♣";
+                case 3:return "";
+                case 4:return "-1♣/-2♦";
+            }break;
+                case 5:                switch(pos){
+                    case 1:return"3♣";
+                    case 2:return"1♣";
+                    case 3:return "";
+                    case 4:return "";
+                    case 5:return "-1♣/-2♦";
+                }break;
+        }
+        return "";
+    }
+
+
+
+    //prints the turn order Card, called in the detailed offertrack screen
+    public static void printTurnOrder(LocalGameState gameState, String local){
+    System.out.print(upperBorder(TURNORDER_SIZE));
+    System.out.println();
+    int i = 0;
+    int nplayers = gameState.getPlayers().size();
+    String entry = "";
+    for(LocalPlayerState p : gameState.getTurnOrder()){
+        i++;
+        if(p == null){  //print the string anyway without the player
+            entry = i+"- "+turnOrderBonus(nplayers,i);
+            int total = TURNORDER_SIZE - entry.length();
+            int left = total / 2;
+            int right = total - left;
+
+            String riga = "┃" + " ".repeat(left) + entry + ansi().reset() + " ".repeat(right) + "┃";
+            System.out.println(riga);
+            continue;
+        }
+        else if(p.getNickname().equals(local))
+            entry = i + "- YOU - " + p.getColor()+" "+turnOrderBonus(nplayers,i)+" ";
+        else entry = i + "- " + p.getColor()+" "+turnOrderBonus(nplayers,i)+" ";
+        // counting spaces
+        int total = TURNORDER_SIZE - entry.length();
+        int left = total / 2;
+        int right = total - left;
+
+        String riga = "┃" + " ".repeat(left) + getColor(p) + entry + ansi().reset() + " ".repeat(right) + "┃";
+        System.out.println(riga);
+    }
+    System.out.print(lowerBorder(TURNORDER_SIZE));
+    System.out.println();
+
+
+    }
+
+    public static void printDetailedOfferTrack (LocalGameState gameState) {
+        List<LocalOfferCard> cards = gameState.getBoard().getOfferTrack();
+        System.out.println(ansi().reset());
+        //upper side
+        for (LocalOfferCard c : cards)
+            System.out.print(upperBorder(OFFER_CARD_SIZE));
+        System.out.println();
+        //inside
+        for (LocalOfferCard c : cards) {
+            String fixedId = StringUtils.rightPad(c.getOfferCardId(), OFFER_CARD_PADDING);
+            System.out.print(insideBorder(fixedId+OFFER_CARD_BORDER + OFFER_CARD_BOX,OFFER_CARD_SIZE));
+        }
+        System.out.println();
+        //inside 2
+        for (LocalOfferCard c : cards)
+            if (c.getFood() > 0)
+                System.out.print(insideBorder("Gives " + c.getFood() + "♣", OFFER_CARD_SIZE));
+            else
+                System.out.print(insideBorder((StringUtils.repeat("↓", c.getDrawFromUnder()) + StringUtils.repeat("↑", c.getDrawFromUpper())), OFFER_CARD_SIZE));
+        System.out.println();
+        //inside 3 to draw box
+        for (LocalOfferCard c : cards) {
+            String box = "";
+            if (c.isFree()) box = ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
+            else box = getColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
+            System.out.print("┃" + OFFER_CARD_BORDER + OFFER_CARD_SPACING + box + OFFER_CARD_BORDER + OFFER_CARD_SPACING + SMALL_OFFER_CARD_BORDER + "┃");
+
+        }
+        System.out.println();
+        //inside 4 to draw box
+        for (LocalOfferCard c : cards) {
+            String box = "";
+            if (c.isFree()) box = ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
+            else box = getColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
+            System.out.print("┃" + OFFER_CARD_BORDER + OFFER_CARD_SPACING + box + OFFER_CARD_BORDER + OFFER_CARD_SPACING + SMALL_OFFER_CARD_BORDER + "┃");
+        }
+        System.out.println();
+        //lower
+        for (LocalOfferCard c : cards)
+            System.out.print(lowerBorder(OFFER_CARD_SIZE));
     }
 
 
     //prints the upper side of a card, in the specified size
-    public static String printUpper(int size){
+    public static String upperBorder(int size){
         String midPiece = StringUtils.repeat("━", size);
         return "┏"+ midPiece + "┓";
     }
 
     //prints the lower side of a card, in the specified size
-    public static String printLower(int size){
+    public static String lowerBorder(int size){
         String midPiece = StringUtils.repeat("━", size);
         return "┗"+ midPiece  +"┛";
     }
 
     //prints the string with the right spacing from the borders, in the middle of a card
-    public static String printMiddle(String c, int size){
+    public static String insideBorder(String c, int size){
             return "┃"+ StringUtils.center(c,size," ") + "┃";
     }
 

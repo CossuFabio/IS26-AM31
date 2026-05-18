@@ -19,6 +19,8 @@ import java.util.Scanner;
 public class Client {
     //main client class
     public static void main(String[] args){
+        System.setOut(new java.io.PrintStream(System.out, true, java.nio.charset.StandardCharsets.UTF_8)); //may help avoid tui visualization problems
+        // [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 may want to add this as first comand in powershell
         Scanner scanner = new Scanner(System.in);
 
         // 1. IP del server

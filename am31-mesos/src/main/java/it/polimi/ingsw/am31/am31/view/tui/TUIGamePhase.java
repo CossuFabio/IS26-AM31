@@ -57,7 +57,7 @@ public class TUIGamePhase implements TUIPhase {
                 break;
             }
             case OFFER_DETAIL: {
-                drawOffer();
+                drawOfferTrack();
                 break;
             }
             case PLAYER_DETAIL: {
@@ -69,7 +69,7 @@ public class TUIGamePhase implements TUIPhase {
                 break;
             }
             case TOTEM_PLACE: {
-                drawOffer();
+                drawOfferTrack();
                 break;
             }//modified for card choice
             default: {
@@ -118,82 +118,52 @@ public class TUIGamePhase implements TUIPhase {
         //prints choices
         System.out.println("\nPress:\n1- for detailed CardLines" +
                 "\n2- for detailed offerTrack" +
-                "\n3- to look at all tribes");
+                "\n3- to look at all tribes\n");
     }
 
 
-    public void drawOffer() {
-        List<LocalOfferCard> cards = gameState.getBoard().getOfferTrack();
-        System.out.println(ansi().reset());
-        //upper side
-        for (LocalOfferCard c : cards)
-            System.out.print(printUpper(OFFER_CARD_SIZE));
-        System.out.println();
-        //middle
-        for (LocalOfferCard c : cards) {
-            String fixedId = StringUtils.rightPad(c.getOfferCardId(), OFFER_CARD_PADDING);
-            System.out.print("┃" + OFFER_CARD_BORDER + fixedId + OFFER_CARD_BORDER + OFFER_CARD_SPACING + OFFER_CARD_BOX + "┃");
-        }
-        System.out.println();
-        //middle 2
-        for (LocalOfferCard c : cards)
-            if (c.getFood() > 0)
-                System.out.print("┃" + StringUtils.center("Gives " + c.getFood() + "♣", OFFER_CARD_SIZE) + "┃");
-            else
-                System.out.print("┃" + StringUtils.center(StringUtils.repeat("↓", c.getDrawFromUnder()) + StringUtils.repeat("↑", c.getDrawFromUpper()), OFFER_CARD_SIZE) + "┃");
-        System.out.println();
-        //middle 3 to draw box
-        for (LocalOfferCard c : cards) {
-            String box = "";
-            if (c.isFree()) box = ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
-            else box = getColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
-            System.out.print("┃" + OFFER_CARD_BORDER + OFFER_CARD_SPACING + box + OFFER_CARD_BORDER + OFFER_CARD_SPACING + SMALL_OFFER_CARD_BORDER + "┃");
-
-        }
-        System.out.println();
-        //middle 4 to draw box
-        for (LocalOfferCard c : cards) {
-            String box = "";
-            if (c.isFree()) box = ansi().bg(Ansi.Color.DEFAULT).a(OFFER_CARD_BOX).reset().toString();
-            else box = getColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
-            System.out.print("┃" + OFFER_CARD_BORDER + OFFER_CARD_SPACING + box + OFFER_CARD_BORDER + OFFER_CARD_SPACING + SMALL_OFFER_CARD_BORDER + "┃");
-        }
-        System.out.println();
-        //lower
-        for (LocalOfferCard c : cards)
-            System.out.print(printLower(OFFER_CARD_SIZE));
+    public void drawOfferTrack() {
+        printTurnOrder(gameState, controller.getLocalPlayerUsername());
+        printDetailedOfferTrack(gameState);
         if (choosingTotem == 0)
             System.out.println(ansi().a("\nPress:\n1- to go back to MAIN" +
                     "\n2- to place totem on a tile." +
                     "\n3- to go to cards and draw"));
         else
-            System.out.println("\nType the Id of the card you want to place in\n>");
+            System.out.println("\nType the Id of the card you want to place in\n");
+
     }
 
     public void drawPlayers() {
+        //first all the players with scores
         for (LocalPlayerState p : gameState.getPlayers()) {
             System.out.println(p.toString()); //formatting based on player color
-            for (Card c : p.getTribe())
-                System.out.println(c.toString());
-            for (Card c : p.getBuildings())
-                System.out.println(c.toString());
+        }
+        //then each one with their tribe and buildings
+        for (LocalPlayerState p : gameState.getPlayers()) {
+            System.out.println("\n");
+            print(p,p.getNickname());
+            System.out.println(ansi().reset());
+            printDetailedCardLine(p.getTribe());
+            System.out.println();
+            printDetailedCardLine(p.getBuildings());
         }
         ansi().reset();
-        System.out.println("\nPress 1- go back to MAIN");
+        System.out.println("\nPress 1- go back to MAIN\n");
     }
 
     public void drawCardLines() {
         System.out.println(ansi().a("UPPER LINE:"));
         System.out.println();
-            //first without buildings, then buildings with desc
-            printDetailedCardLine(gameState.getBoard().getUpperLineNOB());
+        //first without buildings, then buildings with desc
+        printDetailedCardLine(gameState.getBoard().getUpperLineNOB());
         System.out.println();
-            printDetailedCardLine(gameState.getBoard().getUpperLineB());
+        printDetailedCardLine(gameState.getBoard().getUpperLineB());
         System.out.println();
         System.out.println(ansi().a("LOWER LINE:"));
         System.out.println();
         printDetailedCardLine(gameState.getBoard().getUnderLineNOB());
-        System.out.print("\n");
+        System.out.println();
         printDetailedCardLine(gameState.getBoard().getUnderLineB());
         if (choosingCard == 0)
             System.out.println("\nPress: \n1- Go back to Main" +
@@ -201,7 +171,7 @@ public class TUIGamePhase implements TUIPhase {
         else if (choosingCard == 1)
             System.out.println("\nChoose a Row to draw from, 1 = upper, 2 = lower");
         else if (choosingCard == 2)
-            System.out.println("\nChoose a cardId or type " + TUIConfig.SKIP_VALUE);
+            System.out.println("\nChoose a cardId / type " + TUIConfig.SKIP_VALUE);
     }
 
     @Override
@@ -282,8 +252,8 @@ public class TUIGamePhase implements TUIPhase {
                             System.out.println("\nInvalid input\n");
                         } else {
                             boardRowRequest = input;
-                            choosingCard = 2;
-                        }
+                           choosingCard = 2;
+                       }
                         break;
                     }
                     //break;
@@ -319,7 +289,6 @@ public class TUIGamePhase implements TUIPhase {
                             try {
                                 controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.LOWER));
                             } catch (Exception e) {
-                                System.out.println("Failed to send request");
                                 System.out.println("Failed to send request");
                             }
                         }

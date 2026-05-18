@@ -6,7 +6,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.Building
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectIdsConstants;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectsCatalog;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.SustainEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
@@ -57,9 +56,13 @@ public class TUIGamephaseTest {
         track.add(c);
         track.add(a);
 
-        cards.add(i);cards.add(h);cards.add(f);cards.add(bd);
+        cards.add(i);cards.add(h);cards.add(f);
+        test1.setTribe(cards);test.setTribe(cards);
+
+
+        cards.add(bd);
         state.setCardLine(cards, BoardRows.LOWER);
-        cards.add(i);cards.add(e);
+        cards.add(i);cards.add(e);cards.add(createHuntEvent().build() );
         state.setCardLine(cards, BoardRows.UPPER);
         state.setEra(1);
         state.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
@@ -70,7 +73,6 @@ public class TUIGamephaseTest {
         ViewEventBus eventBus = new ViewEventBus();
         ClientController cont = new ClientController(null, eventBus);
         cont.setLocalNameTest();
-        test1.setTribe(cards);test.setTribe(cards);
         test1.addBuilding(bd);test.addBuilding(bd);
         state.setOfferTrack(track);
         gamephase = new TUIGamePhase(null,cont, state );
@@ -91,7 +93,7 @@ public class TUIGamephaseTest {
     @Test
     void TestShouldDrawOfferTrack(){
         //should print the 4 offerCards
-        gamephase.drawOffer();
+        gamephase.drawOfferTrack();
     }
     @Test
     void TestShouldDrawCards (){
@@ -100,7 +102,9 @@ public class TUIGamephaseTest {
     }
     @Test
     void TestShouldDrawPlayers (){
+
         //should draw players tribes and stats
+
         gamephase.drawPlayers();
     }
 }
