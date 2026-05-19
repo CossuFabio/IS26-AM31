@@ -174,11 +174,6 @@ public class Server {
         }
     }
     public static void main(String[] args) throws RemoteException {
-        if (args.length >= 3) {
-            ServerConfig.SERVER_IP_ADDRESS = args[0];
-            ServerConfig.SERVER_PORT_RMI = Integer.parseInt(args[1]);
-            ServerConfig.SERVER_PORT_SOCKET = Integer.parseInt(args[2]);
-        }
         Server server = new Server();
         server.start();
     }

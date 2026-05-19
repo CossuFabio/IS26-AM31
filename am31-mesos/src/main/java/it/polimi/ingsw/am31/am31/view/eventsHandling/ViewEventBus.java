@@ -33,8 +33,11 @@ public class ViewEventBus implements IEventBus {
     public void post(ViewEvent event) {
         for(Object subscriber : subscribers){
 
-
-            for(Method method : subscriber.getClass().getDeclaredMethods()){
+            //getDeclaredMethods cerca solo i metodi dichiarati fisicamente nella classe concreta che stai ispezionando, senza guardare le sue superclassi.
+            //noi usiamo il metodo onConnectionLost(ConnectionLostEvent event) nella classe BaseController (astratta) cosi che in ogni
+            //scena del gioco se crasha il server arriva l'allert. getMethods risale la gerarchia e restituisce tutti i metodi pubblici
+            //anche delle superclassi
+            for(Method method : subscriber.getClass().getMethods()){
 
                 Annotation annot =  method.getAnnotation(Subscribe.class);
 

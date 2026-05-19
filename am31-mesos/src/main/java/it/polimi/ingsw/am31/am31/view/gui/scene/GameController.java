@@ -88,9 +88,6 @@ public class GameController extends BaseController {
     @FXML private HBox tribePlayerContainer;
     @FXML private HBox buildingsPlayerContainer;
 
-    @FXML private VBox rightPanel;
-    @FXML private VBox leftSpacer;
-
     @FXML private StackPane cardTypeOverlay;
     @FXML private Label cardTypeLabel;
     @FXML private ScrollPane cardTypeScrollPane;
@@ -104,6 +101,13 @@ public class GameController extends BaseController {
 
     @FXML private Button skipButton1;
     @FXML private Button skipButton2;
+    @FXML private Button playersButton;
+    @FXML private Button rulesButton;
+    @FXML private Button summaryButton;
+
+    @FXML private StackPane playerOverlay;
+
+    @FXML private VBox playersPanel;
 
     private int currentSlide = 1;
 
@@ -112,8 +116,6 @@ public class GameController extends BaseController {
 
     private final double cardHeight = screenHeight / 6;
     private final double cardWidth = cardHeight*0.7;
-//    private final double cardHeight2 = screenHeight / 7;
-//    private final double cardWidth2 = cardHeight2*0.7;
 
     private RoundPhasesEnum lastShownPhase = null;
     private String lastShownActing = null;
@@ -144,10 +146,8 @@ public class GameController extends BaseController {
         if (foodImg != null) foodIcon.setImage(foodImg);
         if (ppImg != null) PPIcon.setImage(ppImg);
 
-        rightPanel.setPrefWidth(screenWidth * 0.15);
-        //bind the width of the leftSpacer to the right one (the left will be empty)
-        leftSpacer.prefWidthProperty().bind(rightPanel.widthProperty());
 
+        rulesButton.prefWidthProperty().bind(summaryButton.widthProperty());
         backgroundImage.fitWidthProperty().bind(rootStackPane.widthProperty());
         backgroundImage.fitHeightProperty().bind(rootStackPane.heightProperty());
         VBox.setMargin(centerHBox, new Insets(((double) 1 /42)*screenHeight, 0, ((double) 1 /42)*screenHeight, 0));
@@ -162,7 +162,25 @@ public class GameController extends BaseController {
         turnLabel.setPrefWidth(screenWidth*((double) 200 /1920));
         phaseLabel.setPrefWidth(screenWidth*((double) 200 /1920));
         topBar.setPrefHeight(screenHeight*((double) 2 /42));
+
+        skipButton1.setPrefHeight(screenHeight*((double) 2 /42));
+        skipButton1.setPrefWidth(screenWidth*0.10);
+        skipButton1.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
+
+        skipButton2.setPrefHeight(screenHeight*((double) 2 /42));
+        skipButton2.setPrefWidth(screenWidth*0.10);
+        skipButton2.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
+
+        playersButton.setPrefHeight(screenHeight*((double) 2 /42));
+        playersButton.setPrefWidth(screenWidth*0.10);
+        playersButton.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
+
+        rulesButton.setPrefHeight(screenHeight*((double) 2 /42));
+        summaryButton.setPrefHeight(screenHeight*((double) 2 /42));
+        rulesButton.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
+        summaryButton.setStyle(summaryButton.getStyle() + " -fx-padding: 0 15 0 15;");
         myNickname.setMaxWidth(screenWidth*((double)250/1920));
+        playersPanel.setPrefWidth(screenWidth*0.4);
 
         makeScrollPaneTransparent(tribeScrollPane);
         makeScrollPaneTransparent(buildingsScrollPane);
@@ -256,7 +274,7 @@ public class GameController extends BaseController {
         String myNick = controller.getLocalPlayerUsername();
         boolean isMyDrawTurn = acting != null && acting.getNickname().equals(myNick)
                 && (phase == RoundPhasesEnum.ACTION_PHASE || phase == RoundPhasesEnum.BONUS_DRAWING_PHASE);
-        if (!isMyDrawTurn) pendingDraws.clear();
+        if (!isMyDrawTurn || phase != lastShownPhase) pendingDraws.clear();
         refreshDeck();
         refreshTopBar(phase, acting);
         refreshUpperRow(phase, acting);
@@ -645,7 +663,7 @@ public class GameController extends BaseController {
         StackPane pane = new StackPane(tileIv);
         double slotHeight = cardHeight / 5;
         double h = cardHeight / 2;
-        double hTotem = screenHeight * 32 / 1080;
+        double hTotem = screenHeight * 28 / 1080;
 
         boolean isFree = offer.isFree();
         if (!isFree) {
@@ -764,7 +782,7 @@ public class GameController extends BaseController {
 
         List<LocalPlayerState> turnOrder = localGameState.getTurnOrder();
         double slotHeight = cardHeight / 5;
-        double hTotem = screenHeight * 32 / 1080;
+        double hTotem = screenHeight * 28 / 1080;
 
         for (int i = 0; i < turnOrder.size(); i++) {
             LocalPlayerState player = turnOrder.get(i);
@@ -828,8 +846,9 @@ public class GameController extends BaseController {
         HBox.setHgrow(spacer, Priority.ALWAYS);
         row.getChildren().add(spacer);
 
-        HBox foodGroup = new HBox();
-        foodGroup.setAlignment(Pos.CENTER);
+        HBox foodGroup = new HBox(10);
+        foodGroup.setAlignment(Pos.CENTER_LEFT);
+        foodGroup.setPrefWidth(100);
         Image foodImg = loadImage(PathConstants.ASSETS_PATH + "food.png");
         if (foodImg != null) {
             ImageView foodIv = new ImageView(foodImg);
@@ -840,12 +859,12 @@ public class GameController extends BaseController {
         Label foodLabel = new Label(String.valueOf(player.getFood()));
         foodLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
         foodLabel.setMinWidth(screenWidth * ((double) 35 / 1920));
-        foodLabel.setAlignment(Pos.CENTER);
+        //foodLabel.setAlignment(Pos.CENTER);
         if (isActing) foodLabel.setStyle("-fx-font-weight: bold");
         foodGroup.getChildren().add(foodLabel);
 
-        HBox ppGroup = new HBox();
-        ppGroup.setAlignment(Pos.CENTER);
+        HBox ppGroup = new HBox(10);
+        ppGroup.setAlignment(Pos.CENTER_LEFT);
         Image ppImg = loadImage(PathConstants.ASSETS_PATH + "pp.png");
         if (ppImg != null) {
             ImageView ppIv = new ImageView(ppImg);
@@ -856,14 +875,15 @@ public class GameController extends BaseController {
         Label ppLabel = new Label(String.valueOf(player.getPrestigePoints()));
         ppLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
         ppLabel.setMinWidth(screenWidth * ((double) 35 / 1920));
-        ppLabel.setAlignment(Pos.CENTER);
+        //ppLabel.setAlignment(Pos.CENTER);
         if (isActing) ppLabel.setStyle("-fx-font-weight: bold");
         ppGroup.getChildren().add(ppLabel);
 
-        VBox statsGroup = new VBox();
-        statsGroup.setAlignment(Pos.CENTER);
-        VBox.setMargin(ppGroup, new Insets(-10, 0, 0, 0));
-        statsGroup.getChildren().addAll(foodGroup, ppGroup);
+        HBox statsGroup = new HBox();
+        //HBox.setMargin(ppGroup, new Insets(-10, 0, 0, 0));
+        Region space3 = new Region();
+        HBox.setHgrow(space3, Priority.ALWAYS);
+        statsGroup.getChildren().addAll(foodGroup, space3, ppGroup);
         row.getChildren().add(statsGroup);
 
         VBox card = new VBox(6);
@@ -1173,5 +1193,16 @@ public class GameController extends BaseController {
         fadeIn.setOnFinished(e -> pause.play());
         pause.setOnFinished(e -> fadeOut.play());
         fadeIn.play();
+    }
+
+    @FXML
+    private void showPlayers () {
+        playerOverlay.setVisible(true);
+        playerOverlay.toFront();
+    }
+
+    @FXML
+    private void closeShowPlayers() {
+        playerOverlay.setVisible(false);
     }
 }

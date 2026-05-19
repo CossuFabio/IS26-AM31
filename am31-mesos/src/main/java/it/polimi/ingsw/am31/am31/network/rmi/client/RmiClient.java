@@ -44,6 +44,10 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
 
         super(port);
 
+//        Il responseTimeout serve solo in casi più estremi come cavo staccato, WiFi caduto, ... dove la connessione TCP rimane tecnicamente "aperta" ma i pacchetti non arrivano mai. In quel caso senza timeout RMI
+//        aspetterebbe indefinitamente. Spegnendo il server normalmente invece non serve.
+        System.setProperty("sun.rmi.transport.tcp.responseTimeout", "5000");
+
         //connects to registry
         Registry registry = LocateRegistry.getRegistry(ip,ServerConfig.SERVER_PORT_RMI);
         this.serverStub = (VirtualServerRmi) registry.lookup(ServerConfig.SERVER_NAME);

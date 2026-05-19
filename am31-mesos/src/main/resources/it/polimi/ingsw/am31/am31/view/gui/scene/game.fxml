@@ -24,6 +24,16 @@
       </ImageView>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <top>
+            <HBox alignment="TOP_CENTER">
+               <Button fx:id="rulesButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#showRules" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Rules" textAlignment="CENTER">
+                  <font>
+                     <Font name="Inknut Antiqua Regular" size="18.0" />
+                  </font>
+                  <effect>
+                     <DropShadow />
+                  </effect>
+               </Button>
+               <Region HBox.hgrow="ALWAYS" />
             <HBox fx:id="topBar" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" spacing="50.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" BorderPane.alignment="CENTER">
                <children>
                   <Label fx:id="roundLabel" alignment="CENTER" text="Round 1" textAlignment="CENTER">
@@ -57,6 +67,16 @@
                   <DropShadow />
                </effect>
             </HBox>
+               <Region HBox.hgrow="ALWAYS" />
+               <Button fx:id="summaryButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#showSummaryCards" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Summary card" textAlignment="CENTER">
+                  <font>
+                     <Font name="Inknut Antiqua Regular" size="18.0" />
+                  </font>
+                  <effect>
+                     <DropShadow />
+                  </effect>
+               </Button>
+            </HBox>
          </top>
          <center>
             <VBox fx:id="centerHBox" alignment="CENTER" BorderPane.alignment="CENTER">
@@ -89,30 +109,7 @@
             </VBox>
          </center>
          <right>
-            <VBox fx:id="rightPanel" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;" BorderPane.alignment="CENTER">
-               <children>
-                  <Label text="Players:">
-                     <font>
-                        <Font name="Inknut Antiqua Regular" size="24.0" />
-                     </font>
-                     <padding>
-                        <Insets left="20.0" right="20.0" />
-                     </padding>
-                  </Label>
-                  <Separator prefWidth="200.0">
-                     <padding>
-                        <Insets bottom="20.0" />
-                     </padding>
-                  </Separator>
-                  <VBox fx:id="playersContainer" />
-               </children>
-               <BorderPane.margin>
-                  <Insets top="25.0" />
-               </BorderPane.margin>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </VBox>
+            <VBox alignment="CENTER" spacing="20.0" />
          </right>
          <bottom>
             <HBox BorderPane.alignment="CENTER">
@@ -174,17 +171,25 @@
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <VBox alignment="BOTTOM_CENTER" spacing="20.0">
                      <children>
-                        <Button fx:id="rulesButton" mnemonicParsing="false" onAction="#showRules" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Rules" textAlignment="CENTER">
+                        <Button fx:id="skipButton1" disable="true" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#skipDrawFromUpper" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▲" wrapText="true">
                            <font>
-                              <Font name="Inknut Antiqua Regular" size="20.0" />
+                              <Font name="Inknut Antiqua Regular" size="18.0" />
                            </font>
                            <effect>
                               <DropShadow />
                            </effect>
                         </Button>
-                        <Button fx:id="summaryButton" mnemonicParsing="false" onAction="#showSummaryCards" prefHeight="66.0" prefWidth="200.0" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Summary cards" textAlignment="CENTER">
+                        <Button fx:id="skipButton2" disable="true" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#skipDrawFromLower" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▼" wrapText="true">
                            <font>
-                              <Font name="Inknut Antiqua Regular" size="20.0" />
+                              <Font name="Inknut Antiqua Regular" size="18.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                        <Button fx:id="playersButton" ellipsisString="" layoutX="10.0" layoutY="98.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#showPlayers" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Players" wrapText="true">
+                           <font>
+                              <Font name="Inknut Antiqua Regular" size="18.0" />
                            </font>
                            <effect>
                               <DropShadow />
@@ -202,23 +207,7 @@
             </HBox>
          </bottom>
          <left>
-            <VBox fx:id="leftSpacer" alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button fx:id="skipButton1" disable="true" ellipsisString="" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#skipDrawFromUpper" prefHeight="66.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▲" wrapText="true">
-                     <font>
-                        <Font name="Inknut Antiqua Regular" size="20.0" />
-                     </font>
-                     <effect>
-                        <DropShadow />
-                     </effect></Button>
-                  <Button fx:id="skipButton2" disable="true" ellipsisString="" layoutX="10.0" layoutY="402.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#skipDrawFromLower" prefHeight="66.0" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▼" wrapText="true">
-                     <font>
-                        <Font name="Inknut Antiqua Regular" size="20.0" />
-                     </font>
-                     <effect>
-                        <DropShadow />
-                     </effect></Button>
-               </children></VBox>
+            <VBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER" />
          </left>
       </BorderPane>
       <StackPane fx:id="cardTypeOverlay" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false">
@@ -294,6 +283,31 @@
             </VBox>
          </children>
       </StackPane>
+      <StackPane fx:id="playerOverlay" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false">
+         <children>
+            <Region onMouseClicked="#closeShowPlayers" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(0,0,0,0.6);;" />
+         <VBox fx:id="playersPanel" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black;">
+            <children>
+               <Label text="Players:">
+                  <font>
+                     <Font name="Inknut Antiqua Regular" size="24.0" />
+                  </font>
+                  <padding>
+                     <Insets left="20.0" right="20.0" />
+                  </padding>
+               </Label>
+               <Separator prefWidth="200.0">
+                  <padding>
+                     <Insets bottom="20.0" />
+                  </padding>
+               </Separator>
+               <VBox fx:id="playersContainer" />
+            </children>
+            <effect>
+               <DropShadow />
+            </effect>
+         </VBox>
+         </children></StackPane>
       <StackPane fx:id="rulesOverlay" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" />
    </children>
 </StackPane>

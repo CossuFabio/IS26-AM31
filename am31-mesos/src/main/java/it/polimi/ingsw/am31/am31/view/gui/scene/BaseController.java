@@ -3,10 +3,13 @@ package it.polimi.ingsw.am31.am31.view.gui.scene;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ConnectionLostEvent;
 import it.polimi.ingsw.am31.am31.view.gui.SceneManager;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
-//implementa LocalObserver perchè ogni controller deve reagire agli eventi per aggiornare la propria schermata
-public abstract class BaseController{
+public abstract class BaseController {
     protected ClientController controller;
     protected LocalGameState localGameState;
     protected SceneManager sceneManager;
@@ -24,5 +27,17 @@ public abstract class BaseController{
         this.sceneManager = sceneManager;
     }
 
-    public void setEventBus (IEventBus eventBus) { this.eventBus = eventBus; }
+    public void setEventBus(IEventBus eventBus) { this.eventBus = eventBus; }
+
+    @Subscribe
+    public void onConnectionLost(ConnectionLostEvent event) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Connection Lost");
+            alert.setHeaderText(null);
+            alert.setContentText("Connection to the server was lost.");
+            alert.showAndWait();
+            Platform.exit();
+        });
+    }
 }

@@ -56,7 +56,11 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
             }catch(Exception e){
                 System.err.println(e.getMessage());
             }
-
+            //se readline del while restituisce null perche il server crasha lancio connectionlostexception, prima terminava senza lanciare nulla
+            //avevamo coperto solo il caso in cui il client chiede qualcosa e non riceve riposta (in sendRequest) e non se è fermo (tipo nel menu) e il server crasha
+            if (stillConnected.compareAndSet(true, false)) {
+                messageDispatcher.submit(ErrorMessageFactory.createErrorMessage(new ConnectionLostException()));
+            }
 
         }).start();
     }
