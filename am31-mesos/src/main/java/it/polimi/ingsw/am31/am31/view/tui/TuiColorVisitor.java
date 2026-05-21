@@ -50,7 +50,7 @@ public class TuiColorVisitor implements TribeVisitor {
 
     @Override
     public void visit(Artist artist) { //Artists
-        System.out.println(ansi().fg(YELLOW));
+        System.out.print(ansi().fg(YELLOW));
         isBuilding = false;
     }
 
