@@ -27,8 +27,6 @@ public class Board implements GameObservable {
 
     public Board(int numPlayers, List<OfferCard> offerCardsCatalog) throws IOException {
 
-
-
         this.offerTrack = (ArrayList<OfferCard>) offerCardsCatalog.stream().filter(c -> c.getMinPlayers() <= numPlayers)
                 .collect(Collectors.toList());
 

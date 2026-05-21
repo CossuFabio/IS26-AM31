@@ -124,6 +124,7 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     public void handleUpdateMessage(GameEventResolveUpdate msg) {
         try{
             eventBus.post(new GameEventResolveEvent(translator.retrieveCard(msg.getCardId())));
+            gameState.addSolvedEvent(translator.retrieveCard(msg.getCardId()));
         }catch(IllegalStateException ignored){}
 
     }

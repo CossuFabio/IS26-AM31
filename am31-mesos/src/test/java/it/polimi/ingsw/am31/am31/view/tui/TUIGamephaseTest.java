@@ -67,7 +67,7 @@ public class TUIGamephaseTest {
         state.setEra(1);
         state.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
         state.setRoundNumber(1);state.setOfferTrack(track);
-
+        state.addSolvedEvent(createHuntEvent().build()); state.addSolvedEvent(createSustainEvent().build());
         state.addPlayer(test);state.addPlayer(test1);
         state.setTurnOrder(state.getPlayers());state.setPlayerActing(test1);
         ViewEventBus eventBus = new ViewEventBus();
@@ -106,5 +106,10 @@ public class TUIGamephaseTest {
         //should draw players tribes and stats
 
         gamephase.drawPlayers();
+    }
+    @Test
+    void TestShouldDrawEventsSolved (){
+        //should print sus first, then hunt.
+        gamephase.drawEventsSolved();
     }
 }

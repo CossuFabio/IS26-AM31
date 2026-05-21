@@ -9,15 +9,11 @@ import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEventResolveEvent;
-import org.apache.commons.lang3.StringUtils;
 import org.fusesource.jansi.Ansi;
-
-import java.util.List;
 
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -26,7 +22,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 public class TUIGamePhase implements TUIPhase {
 
 
-    private enum TuiGameStep {MAIN, PLAYER_DETAIL, CARDLINE_DETAIL, OFFER_DETAIL, TOTEM_PLACE}
+    private enum TuiGameStep {MAIN, PLAYER_DETAIL, CARDLINE_DETAIL, OFFER_DETAIL, TOTEM_PLACE, EVENTS_SOLVED}
 
     private TuiGameStep currentstep;
     private LocalGameState gameState;
@@ -71,12 +67,21 @@ public class TUIGamePhase implements TUIPhase {
             case TOTEM_PLACE: {
                 drawOfferTrack();
                 break;
+            }
+            case EVENTS_SOLVED: {
+                drawEventsSolved();
+                break;
             }//modified for card choice
             default: {
                 currentstep = TuiGameStep.MAIN;
                 break;
             }
         }
+    }
+
+    public void drawEventsSolved() {
+        System.out.println("      LAST EVENTS SOLVED, press any key - to go back   \n");
+    printDetailedCardLine(gameState.getEventsSolved());
     }
 
     public void drawMain() {
@@ -113,8 +118,6 @@ public class TUIGamePhase implements TUIPhase {
                 for (Card c : p.getBuildings())
                     printCard(c);
             }
-
-        //TODO APPEND EVENTS RESOLVED?
         //prints choices
         System.out.println("\nPress:\n1- for detailed CardLines" +
                 "\n2- for detailed offerTrack" +
@@ -178,6 +181,10 @@ public class TUIGamePhase implements TUIPhase {
     public void handleInput(String input) throws Exception {
         //to handle the input we use both the model phase and the currentstep.
         switch (currentstep) {
+            case EVENTS_SOLVED: {
+                if (!input.equals(""))
+                    currentstep = TuiGameStep.MAIN;
+            } break;
             case MAIN: {
                 if (Integer.parseInt(input) > 4 || Integer.parseInt(input) < 1)
                     break; //ignores invalid input
@@ -229,7 +236,7 @@ public class TUIGamePhase implements TUIPhase {
                                 currentstep = TuiGameStep.MAIN;
                                 break;
                             case 2:
-                                if (gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
+                                if (gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)||gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE))
                                     choosingCard = 1;
                                 else {
                                     System.out.println("Not the time for this");
@@ -243,7 +250,7 @@ public class TUIGamePhase implements TUIPhase {
                         break;
                     }
                     case 1: {//row choice
-                        if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)) {
+                        if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)||gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
                             System.out.println("Not the time for this");
                             choosingCard = 0;
                             break;
@@ -258,7 +265,7 @@ public class TUIGamePhase implements TUIPhase {
                     }
                     //break;
                     case 2: {//card or skip choice
-                        if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)) {
+                        if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)||gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
                             System.out.println("Not the time for this");
                             choosingCard = 0;
                             break;
@@ -327,7 +334,9 @@ public class TUIGamePhase implements TUIPhase {
 
     @Subscribe
     public void handleEventUpdate(GameEventResolveEvent e) {
-        System.out.println("A game event has been resolved: " + e.getCard().getCardId() + "\n");
+        System.out.println("A game event has been resolved: " + e.getCard().getCardId()+ "\n");
+        currentstep = TuiGameStep.EVENTS_SOLVED;
+        TUI.printScreen();
     }
 
 

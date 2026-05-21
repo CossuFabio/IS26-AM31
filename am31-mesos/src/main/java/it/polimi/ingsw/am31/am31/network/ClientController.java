@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetw
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ConnectionLostEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 
 public class ClientController {
@@ -25,9 +26,9 @@ public class ClientController {
     }
 
     public void ping() {
-        Thread pingThread = new Thread (() -> {
-            while(connected) {
-                try{
+        Thread pingThread = new Thread(() -> {
+            while (connected) {
+                try {
                     Thread.sleep(ClientConfig.CLIENT_HEARTBEAT_INTERVAL);
                     NetworkRequest ping = new PingNetworkRequest();
                     this.connection.sendRequest(ping);
@@ -63,8 +64,8 @@ public class ClientController {
         return connected;
     }
 
-    public synchronized void setLocalPlayerUsername(String identifier){
-        if(!usernameSet){
+    public synchronized void setLocalPlayerUsername(String identifier) {
+        if (!usernameSet) {
             usernameSet = true;
             this.localPlayerUsername = identifier;
             connection.setIdentifier(identifier);
@@ -73,19 +74,29 @@ public class ClientController {
     }
 
 
-    public synchronized String getLocalPlayerUsername(){
+    public synchronized String getLocalPlayerUsername() {
         return localPlayerUsername;
     }
 
     @Subscribe
-    public void usernameAccepted(SuccessRegistrationEvent e){
+    public void usernameAccepted(SuccessRegistrationEvent e) {
         setLocalPlayerUsername(e.getIdentifier());
     }
 
-    public void setLocalNameTest () {
+    public void setLocalNameTest() {
         localPlayerUsername = "test";
     }
 
-    public IEventBus getEventBus() {return eventBus;}
+    public IEventBus getEventBus() {
+        return eventBus;
+    }
 
+    @Subscribe
+    public void connectionLost(ConnectionLostEvent e) {
+        try {
+            this.disconnect();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 }

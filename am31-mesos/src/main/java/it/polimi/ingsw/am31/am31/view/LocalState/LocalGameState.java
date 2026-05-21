@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31.view.LocalState;
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LeaderBoardEntryUpdate;
 
 
@@ -21,7 +22,7 @@ public class LocalGameState{
     private int roundNumber;
     private List<LocalPlayerState> players;
     private final LocalBoardState board;
-
+    private List<Card> eventsSolved;
     //Will be fixed to numPlayers size
     private List<LocalPlayerState> turnOrder;
 
@@ -38,7 +39,7 @@ public class LocalGameState{
         board = new LocalBoardState();
         turnOrder = new ArrayList<>();
         int roundNumber = 0;
-
+        eventsSolved = new ArrayList<Card>();
         //DUMMY
         playerActing = new LocalPlayerState("dummy", RED);
         currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
@@ -132,6 +133,9 @@ public class LocalGameState{
 
 
     //getters, used by TUI / GUI to draw
+    public List<Card> getEventsSolved(){
+        return eventsSolved;
+    }
     public RoundPhasesEnum getCurrentRoundPhase(){return currentRoundPhase;}
     public int getRoundNumber(){return roundNumber;}
     public int getEra(){return era;}
@@ -151,6 +155,10 @@ public class LocalGameState{
                             return d;
         }
         return null;
+    }
+    //adds the last event solved on top of the list.
+    public void addSolvedEvent(Card e){
+        eventsSolved.addFirst(e); 
     }
 
     public List<LocalPlayerState> getTurnOrder(){
