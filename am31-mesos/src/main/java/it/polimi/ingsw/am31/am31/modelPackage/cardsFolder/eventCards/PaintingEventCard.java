@@ -20,7 +20,6 @@ public class PaintingEventCard extends EventCard {
             @JsonProperty("prestigePointsBonus") int prestigePointsBonus){
         super(cardId, era);
         this.minArtist = minArtist;
-        this.priorityClass = PriorityClass.HIGH;
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = prestigePointsMalus;
     }

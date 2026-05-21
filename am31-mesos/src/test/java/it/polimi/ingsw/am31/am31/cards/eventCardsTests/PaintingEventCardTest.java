@@ -41,8 +41,5 @@ class PaintingEventCardTest {
         void TestShouldGetMinArtist () {
         assertEquals(2, eventCard.getMinArtist());
         }
-        @Test
-        void TestShouldGetPriority () {
-        assertEquals(EventCard.PriorityClass.HIGH, eventCard.getPriorityClass());
-        }
+
     }

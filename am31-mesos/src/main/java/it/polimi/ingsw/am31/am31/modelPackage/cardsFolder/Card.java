@@ -36,7 +36,8 @@ public abstract class Card {
     public int getEra () {
         return era;
     }
-    public void acceptVisit(TribeVisitor visitor){}
+
+    public abstract void acceptVisit(TribeVisitor visitor);
 
 
     public int getMinPlayers() {
@@ -44,7 +45,7 @@ public abstract class Card {
     }
     public String getCardId(){return this.cardId; }
 
-    public boolean equals(Card card){return this.cardId.equals(card.cardId);  }
+    public boolean equals(Card card){return this.cardId.equals(card.cardId); }
 
 
     public abstract String toString();

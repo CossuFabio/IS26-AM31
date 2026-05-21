@@ -20,7 +20,6 @@ public class HuntEventCard extends EventCard {
         this.foodBonus = foodBonus;
         this.prestigePointsBonus = prestigePointsBonus;
         this.prestigePointsMalus = 0;
-        this.priorityClass = PriorityClass.HIGH;
     }
 
     public void resolve(List<Player> players) {
@@ -34,9 +33,6 @@ public class HuntEventCard extends EventCard {
 
     public int  getFoodBonus() {
         return foodBonus;
-    }
-    public int getPrestigePointsBonus() {
-        return prestigePointsBonus;
     }
 
     public void acceptVisit(TribeVisitor visitor){

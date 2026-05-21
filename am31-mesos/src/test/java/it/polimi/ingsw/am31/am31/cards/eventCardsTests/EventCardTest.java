@@ -22,10 +22,6 @@ class EventCardTest {
         //no sense in testing generic resolve (?)
     }
 
-    @Test
-    void TestShouldgetPriority() {
-        assertEquals(EventCard.PriorityClass.LOW, this.eventCard.getPriorityClass());
-    }
 
     @Test
     void TestShouldgetPrestigePointsBonus() {

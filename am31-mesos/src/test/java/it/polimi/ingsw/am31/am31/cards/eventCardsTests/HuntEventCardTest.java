@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard.PriorityClass.HIGH;
 import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.BLUE;
 import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
 import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.createHuntEvent;
@@ -35,9 +34,5 @@ class HuntEventCardTest {
         assertEquals(players.getFirst().getFood(),0);
         eventCard.resolve(players);
         assertEquals(players.getFirst().getFood(),4);
-    }
-    @Test
-    void TestShouldTestingGetPriority () {
-        assertEquals(HIGH, eventCard.getPriorityClass());
     }
 }

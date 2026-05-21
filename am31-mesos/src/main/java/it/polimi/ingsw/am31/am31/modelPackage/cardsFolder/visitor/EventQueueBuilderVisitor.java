@@ -57,26 +57,22 @@ public class EventQueueBuilderVisitor implements TribeVisitor{
 
     @Override
     public void visit(HuntEventCard event) {
-        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
-        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
+        highPriorityQueue.add(event);
     }
 
     @Override
     public void visit(SustainEventCard event) {
-        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
-        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
+        lowPriorityQueue.add(event);
     }
 
     @Override
     public void visit(RitualEventCard event) {
-        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
-        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
+        highPriorityQueue.add(event);
     }
 
     @Override
     public void visit(PaintingEventCard event) {
-        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
-        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
+        highPriorityQueue.add(event);
     }
 
     public List<EventCard> getCompleteQueue(){
@@ -94,11 +90,5 @@ public class EventQueueBuilderVisitor implements TribeVisitor{
         return Stream.concat(sortedHighPriority.stream(), sortedLowPriority.stream())
                 .toList();
     }
-
-//    @Override
-//    public void visit(EventCard event) {
-//        if(event.getPriorityClass() == EventCard.PriorityClass.HIGH) highPriorityQueue.add(event);
-//        else if(event.getPriorityClass() == EventCard.PriorityClass.LOW) lowPriorityQueue.add(event);
-//    }
 
 }

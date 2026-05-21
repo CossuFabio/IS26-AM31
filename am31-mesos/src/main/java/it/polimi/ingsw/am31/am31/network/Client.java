@@ -89,8 +89,7 @@ public class Client {
 
                         //Sets the RMI hostname correctly in the System Properties
                         System.setProperty("java.rmi.server.hostname",
-                                ds.getLocalAddress().getHostAddress());
-
+                                InetAddress.getLocalHost().getHostAddress()); //ds.getLocalAddress().getHostAddress());
                         System.out.println("IP USED: " + System.getProperty("java.rmi.server.hostname"));
                     }
                     connection = new RmiClient(ServerConfig.SERVER_IP_ADDRESS, ClientConfig.CLIENT_PORT, messageDispatcher);

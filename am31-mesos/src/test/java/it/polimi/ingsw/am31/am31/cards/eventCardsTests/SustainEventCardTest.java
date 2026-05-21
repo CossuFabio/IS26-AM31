@@ -53,8 +53,4 @@ class SustainEventCardTest {
         assertEquals(0,players.get(2).getPrestigePoints());
 
     }
-    @Test
-    void TestShouldGetPriority () {
-        assertEquals(EventCard.PriorityClass.LOW, card.getPriorityClass());
-    }
 }
