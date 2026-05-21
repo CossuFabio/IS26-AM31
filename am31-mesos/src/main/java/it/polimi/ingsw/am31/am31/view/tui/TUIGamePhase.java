@@ -161,13 +161,15 @@ public class TUIGamePhase implements TUIPhase {
         //first without buildings, then buildings with desc
         printDetailedCardLine(gameState.getBoard().getUpperLineNOB());
         System.out.println();
-        printDetailedCardLine(gameState.getBoard().getUpperLineB());
+        for(Card c: gameState.getBoard().getUpperLineB())
+         printDetailedCard(c);
         System.out.println();
         System.out.println(ansi().a("LOWER LINE:"));
         System.out.println();
         printDetailedCardLine(gameState.getBoard().getUnderLineNOB());
         System.out.println();
-        printDetailedCardLine(gameState.getBoard().getUnderLineB());
+        for(Card c: gameState.getBoard().getUnderLineB())
+            printDetailedCard(c);
         if (choosingCard == 0)
             System.out.println("\nPress: \n1- Go back to Main" +
                     "\n2- to draw a card");

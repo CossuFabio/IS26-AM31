@@ -159,11 +159,17 @@ public class TUIConfig {
     }
     //prints a big version of a card
     public static void printDetailedCard (Card c) {
-        print(c, upperBorder(CARD_SIZE));
+        TuiCardPrintVisitor visitor = new TuiCardPrintVisitor();
+
+            reset();
+            print(c, upperBorder(CARD_SIZE));
         System.out.println();
-        //3 layers inside
-        c.acceptVisit(new TuiCardPrintVisitor());
-        System.out.println();
+        //4 layers inside
+        for(int i=0;i<4;i++) {
+            c.acceptVisit(visitor); //draws the current layer
+            visitor.nextLayer();
+            System.out.println();
+        }
         print(c, lowerBorder(CARD_SIZE));
         System.out.println();
     }
