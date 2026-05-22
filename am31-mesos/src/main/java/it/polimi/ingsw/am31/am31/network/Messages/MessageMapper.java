@@ -19,7 +19,7 @@ public class MessageMapper {
     public static String serialize(Message request){
         try{
             String result = mapper.writeValueAsString(request);
-            System.out.println(result);
+            //System.out.println(result);
             return result;
         }catch(JsonProcessingException e){
             System.err.println(e);

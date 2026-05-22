@@ -39,7 +39,7 @@ public class SocketClientHandler implements VirtualView {
         try{
             while((jsonReq = input.readLine()) != null){
                 NetworkRequest req = RequestsMapper.deserialize(jsonReq);
-                if (!req.getType().equals(PingNetworkRequest.METHOD)) System.out.println(jsonReq);
+                //if (!req.getType().equals(PingNetworkRequest.METHOD)) System.out.println(jsonReq);
                 //No need to check if it is new connection.
                 mainServer.handleNetworkRequest(req, this);
             }

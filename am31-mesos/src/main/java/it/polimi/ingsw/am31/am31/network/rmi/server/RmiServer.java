@@ -53,7 +53,7 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
                 return;
             }
             NetworkRequest req = RequestsMapper.deserialize(request);
-            System.out.println("Received: " + request);
+            //System.out.println("Received: " + request);
             mainServer.handleNetworkRequest(req, requestor);
         } catch (Exception e) {
             System.err.println(e);

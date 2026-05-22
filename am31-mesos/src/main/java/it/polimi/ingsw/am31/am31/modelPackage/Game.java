@@ -200,7 +200,11 @@ public class Game implements GameObservable {
         EventQueueBuilderVisitor eventVisitor = new EventQueueBuilderVisitor();
         board.getUnderLine().forEach(card -> card.acceptVisit(eventVisitor));
 
+        if(roundNumber == GameConstants.ROUNDS_NUMBER)
+            board.getUpperLine().forEach(card -> card.acceptVisit(eventVisitor));
+
         List<EventCard> eventCards = eventVisitor.getCompleteQueue();
+
         eventCards.forEach(eventCard -> {
             eventCard.resolve(players);
             observers.onGameEventResolveUpdate(eventCard);
@@ -215,8 +219,6 @@ public class Game implements GameObservable {
 
         this.currentRoundPhase = RoundPhasesEnum.END_TURN;
         observers.onGameRoundStatusUpdate(this);
-        //Players handle the end of the round
-        players.forEach(player -> player.resolveEndRound());
         resolveEvents();
         board.moveLowerTribes();
         try{

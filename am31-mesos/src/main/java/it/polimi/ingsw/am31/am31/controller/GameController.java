@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.controller;
 
+import it.polimi.ingsw.am31.am31.DebugObserver;
 import it.polimi.ingsw.am31.am31.exceptions.GameInvariantException;
 import it.polimi.ingsw.am31.am31.exceptions.IllegalActionException;
 import it.polimi.ingsw.am31.am31.exceptions.LobbyException;
@@ -37,6 +38,7 @@ public class GameController {
         this.resourceFinder = new ResourceFinder(game);
         observerHandler = new GameObserversSet();
         game.setObserverHandler(observerHandler);
+        observerHandler.addObserver(new DebugObserver());
         this.gameID = gameID;
     }
 

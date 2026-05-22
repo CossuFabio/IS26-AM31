@@ -1,15 +1,12 @@
 package it.polimi.ingsw.am31.am31.modelPackage.playerFolder;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObservable;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endGame.DefaultEndGameHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endGame.IEndGameHandler;
-import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endRound.DefaultEndRoundHandler;
-import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endRound.IEndRoundHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endTurn.DefaultEndTurnHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endTurn.IEndTurnHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.huntEvent.DefaultHuntHandler;
@@ -47,7 +44,7 @@ public class Player implements GameObservable {
     private IPaintHandler paintHandler;
     private final RitualLoseHandler ritualLoseHandler;
     private final RitualWinHandler ritualWinHandler;
-    private IEndRoundHandler endRoundHandler;
+
 
     private int bonusDrawFromUpper;
     private int bonusDrawFromLower;
@@ -71,7 +68,6 @@ public class Player implements GameObservable {
         this.paintHandler = new DefaultPaintHandler();
         this.ritualLoseHandler = new RitualLoseHandler();
         this.ritualWinHandler = new RitualWinHandler();
-        this.endRoundHandler = new DefaultEndRoundHandler();
 
         bonusDrawFromLower = 0;
         bonusDrawFromUpper = 0;
@@ -172,7 +168,7 @@ public class Player implements GameObservable {
         endGameHandler.handleEndGame(this);
     }
 
-    public void resolveEndRound(){endRoundHandler.handleEndRound(this);}
+
 
     // Each addEffect method takes as parameter the constructor of the decorator for the correct handler
     // and passes it the current handler that will be wrapped with the new decorator
