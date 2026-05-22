@@ -6,7 +6,10 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 //classe che fa il setup iniziale e mostra la prima schermata, non gestisce eventi, non modifica la UI
 public class GUIView extends Application {
@@ -33,6 +36,7 @@ public class GUIView extends Application {
         stage.setMinWidth(javafx.stage.Screen.getPrimary().getBounds().getWidth());
         stage.setMinHeight(javafx.stage.Screen.getPrimary().getBounds().getHeight());
 
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "icon.png"))));
 
         //Callback invoked when pressing X button on the window
         stage.setOnCloseRequest(e -> {

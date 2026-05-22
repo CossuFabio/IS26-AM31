@@ -27,7 +27,7 @@
             <HBox alignment="TOP_CENTER">
                <Button fx:id="rulesButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#showRules" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Rules" textAlignment="CENTER">
                   <font>
-                     <Font name="Inknut Antiqua Regular" size="18.0" />
+                     <Font name="Inknut Antiqua Regular" size="14.0" />
                   </font>
                   <effect>
                      <DropShadow />
@@ -68,9 +68,9 @@
                </effect>
             </HBox>
                <Region HBox.hgrow="ALWAYS" />
-               <Button fx:id="summaryButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#showSummaryCards" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Summary card" textAlignment="CENTER">
+               <Button fx:id="summaryButton" alignment="CENTER" mnemonicParsing="false" onAction="#showSummaryCards" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Summary cards" textAlignment="CENTER">
                   <font>
-                     <Font name="Inknut Antiqua Regular" size="18.0" />
+                     <Font name="Inknut Antiqua Regular" size="14.0" />
                   </font>
                   <effect>
                      <DropShadow />
@@ -169,27 +169,27 @@
                      </children>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox alignment="BOTTOM_CENTER" spacing="20.0">
+                  <VBox alignment="BOTTOM_RIGHT" spacing="20.0">
                      <children>
-                        <Button fx:id="skipButton1" disable="true" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#skipDrawFromUpper" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▲" wrapText="true">
+                        <Button fx:id="skipButton1" disable="true" ellipsisString="" mnemonicParsing="false" onAction="#skipDrawFromUpper" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▲" wrapText="true">
                            <font>
-                              <Font name="Inknut Antiqua Regular" size="18.0" />
+                              <Font name="Inknut Antiqua Regular" size="14.0" />
                            </font>
                            <effect>
                               <DropShadow />
                            </effect>
                         </Button>
-                        <Button fx:id="skipButton2" disable="true" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#skipDrawFromLower" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▼" wrapText="true">
+                        <Button fx:id="skipButton2" disable="true" ellipsisString="" mnemonicParsing="false" onAction="#skipDrawFromLower" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Skip ▼" wrapText="true">
                            <font>
-                              <Font name="Inknut Antiqua Regular" size="18.0" />
+                              <Font name="Inknut Antiqua Regular" size="14.0" />
                            </font>
                            <effect>
                               <DropShadow />
                            </effect>
                         </Button>
-                        <Button fx:id="playersButton" ellipsisString="" layoutX="10.0" layoutY="98.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#showPlayers" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Players" wrapText="true">
+                        <Button fx:id="playersButton" ellipsisString="" layoutX="10.0" layoutY="98.0" mnemonicParsing="false" onAction="#showPlayers" style="-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-cursor: hand;" text="Players" wrapText="true">
                            <font>
-                              <Font name="Inknut Antiqua Regular" size="18.0" />
+                              <Font name="Inknut Antiqua Regular" size="14.0" />
                            </font>
                            <effect>
                               <DropShadow />

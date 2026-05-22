@@ -14,7 +14,7 @@ public class DefaultEndGameHandler implements IEndGameHandler {
 
         CountVisitor countVisitor = new CountVisitor();
         player.getTribe().forEach(card -> card.acceptVisit(countVisitor));
-        return PRESTIGE_POINTS_ARTISTS_PAIR * countVisitor.getArtists()/2;
+        return PRESTIGE_POINTS_ARTISTS_PAIR * (countVisitor.getArtists() / 2);
 
     }
 

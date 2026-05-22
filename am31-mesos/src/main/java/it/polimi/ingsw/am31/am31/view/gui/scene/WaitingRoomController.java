@@ -101,12 +101,12 @@ public class WaitingRoomController extends BaseController {
         backButton.setPrefHeight(screenHeight*((double) 66 /1080));
         createButton.setPrefWidth(screenWidth*((double) 250 /1920));
         createButton.setPrefHeight(screenHeight*((double) 66 /1080));
-        lobbyList.setPrefWidth(screenWidth*((double) 500 /1920));
-        lobbyList.setPrefHeight(screenHeight*((double) 200 /1080));
+        lobbyList.setPrefWidth(screenWidth*((double) 800 /1920)); //old 500
+        lobbyList.setPrefHeight(screenHeight*((double) 250 /1080)); //old 200
         joinColorBox.setPrefWidth(screenWidth*((double) 500 /1920));
-        backButton1.setPrefWidth(screenWidth*((double) 250 /1920));
+        backButton1.setPrefWidth(screenWidth*((double) 400 /1920));
         backButton1.setPrefHeight(screenHeight*((double) 66 /1080));
-        joinButton.setPrefWidth(screenWidth*((double) 250 /1920));
+        joinButton.setPrefWidth(screenWidth*((double) 400 /1920));
         joinButton.setPrefHeight(screenHeight*((double) 66 /1080));
         hbox3.setPrefWidth(screenWidth*((double) 200 /1920));
         hbox3.setPrefHeight(screenHeight*((double) 100 /1080));
@@ -408,7 +408,7 @@ public class WaitingRoomController extends BaseController {
             lobbyWaitingList.getChildren().clear();
 
             for (LocalPlayerState player : e.getPlayers()) {
-                Label nicknameLabel = new Label("Nickname: " + player.getNickname());
+                Label nicknameLabel = new Label(player.getNickname());
                 nicknameLabel.setStyle("-fx-font-family: 'Inknut Antiqua'; -fx-font-size: 20; -fx-text-fill: black;");
                 nicknameLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
 

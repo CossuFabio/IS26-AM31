@@ -19,7 +19,7 @@
       <URL value="@../assets/style.css" />
    </stylesheets>
    <children>
-      <ImageView fx:id="backgroundImage" opacity="0.9" pickOnBounds="true">
+      <ImageView fx:id="backgroundImage" pickOnBounds="true">
             <image>
                 <Image url="@../assets/Background.jpg" />
             </image>
@@ -127,7 +127,7 @@
                         <DropShadow />
                      </effect>
                      <children>
-                        <ListView fx:id="lobbyList" maxWidth="-Infinity" />
+                        <ListView fx:id="lobbyList" maxHeight="-Infinity" maxWidth="-Infinity" />
                         <ComboBox fx:id="joinColorBox" managed="false" style="-fx-background-color: rgba(255,243,211,1);" visible="false">
                            <VBox.margin>
                               <Insets bottom="20.0" />

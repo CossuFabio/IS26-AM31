@@ -165,20 +165,20 @@ public class GameController extends BaseController {
 
         skipButton1.setPrefHeight(screenHeight*((double) 2 /42));
         skipButton1.setPrefWidth(screenWidth*0.10);
-        skipButton1.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
+//        skipButton1.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
 
         skipButton2.setPrefHeight(screenHeight*((double) 2 /42));
         skipButton2.setPrefWidth(screenWidth*0.10);
-        skipButton2.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
+//        skipButton2.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
 
         playersButton.setPrefHeight(screenHeight*((double) 2 /42));
         playersButton.setPrefWidth(screenWidth*0.10);
-        playersButton.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
+//        playersButton.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
 
         rulesButton.setPrefHeight(screenHeight*((double) 2 /42));
         summaryButton.setPrefHeight(screenHeight*((double) 2 /42));
-        rulesButton.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
-        summaryButton.setStyle(summaryButton.getStyle() + " -fx-padding: 0 15 0 15;");
+//        rulesButton.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
+//        summaryButton.setStyle(summaryButton.getStyle() + " -fx-padding: 0 15 0 15;");
         myNickname.setMaxWidth(screenWidth*((double)250/1920));
         playersPanel.setPrefWidth(screenWidth*0.4);
 
@@ -1069,7 +1069,7 @@ public class GameController extends BaseController {
         darkBg.setMaxHeight(Double.MAX_VALUE);
         darkBg.setOnMouseClicked(e -> closeRules());
 
-        HBox summaryCards = new HBox();
+        HBox summaryCards = new HBox(20);
         summaryCards.setAlignment(Pos.CENTER);
         summaryCards.setMaxWidth(Region.USE_PREF_SIZE);
         summaryCards.setMaxHeight(Region.USE_PREF_SIZE);
@@ -1080,13 +1080,20 @@ public class GameController extends BaseController {
         shadow.setOffsetY(3);
         shadow.setColor(Color.rgb(0, 0, 0, 0.5));
 
-        Image img1 = loadImage(PathConstants.RULES_PATH + "summary.png");
+        Image img1 = loadImage(PathConstants.RULES_PATH + "summary_1.png");
         ImageView summaryIv1 = new ImageView(img1);
         summaryIv1.setFitWidth(cardWidth*3);
         summaryIv1.setFitHeight(cardHeight*3);
         summaryIv1.setEffect(shadow);
-
         summaryCards.getChildren().add(summaryIv1);
+
+        Image img2 = loadImage(PathConstants.RULES_PATH + "summary_2.png");
+        ImageView summaryIv2 = new ImageView(img2);
+        summaryIv2.setFitWidth(cardWidth*3);
+        summaryIv2.setFitHeight(cardHeight*3);
+        summaryIv2.setEffect(shadow);
+        summaryCards.getChildren().add(summaryIv2);
+
         rulesOverlay.getChildren().addAll(darkBg, summaryCards);
 
         rulesOverlay.setVisible(true);
