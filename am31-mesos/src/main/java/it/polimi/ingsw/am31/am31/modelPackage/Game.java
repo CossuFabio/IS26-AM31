@@ -194,8 +194,9 @@ public class Game implements GameObservable {
                 && p.getFood() == top.getFood();
     }
 
-
-    private void resolveEvents(){
+//why private?
+    //private void resolveEvents(){
+        public void resolveEvents(){
 
         EventQueueBuilderVisitor eventVisitor = new EventQueueBuilderVisitor();
         board.getUnderLine().forEach(card -> card.acceptVisit(eventVisitor));

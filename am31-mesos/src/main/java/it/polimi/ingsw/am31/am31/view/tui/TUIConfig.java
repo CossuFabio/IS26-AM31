@@ -215,7 +215,7 @@ public class TUIConfig {
             case 3:                switch(pos){
                 case 1:return "2♣";
                 case 2:return "";
-                case 3:return "-1♣/♦";
+                case 3:return "-1♣/-2♦";
             }break;
             case 4:                 switch(pos){
                 case 1:return "2♣";
