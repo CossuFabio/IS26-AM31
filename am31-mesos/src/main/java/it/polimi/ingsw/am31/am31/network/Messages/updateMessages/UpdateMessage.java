@@ -8,6 +8,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.Ca
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
@@ -31,6 +32,7 @@ import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
         @JsonSubTypes.Type(value = GameStartUpdate.class,       name = UpdateMethodsConstants.GAME_START_UPDATE),
         @JsonSubTypes.Type(value = GameEventResolveUpdate.class,   name = UpdateMethodsConstants.GAME_EVENT_RESOLVE_UPDATE),
         @JsonSubTypes.Type(value = EndGameUpdate.class,   name = UpdateMethodsConstants.GAME_END_UPDATE),
+        @JsonSubTypes.Type(value = PlayerBonusDrawUpdate.class,   name = UpdateMethodsConstants.PLAYER_BONUS_DRAW_METHOD)
 })
 
 

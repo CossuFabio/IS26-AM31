@@ -477,7 +477,9 @@ public class Game implements GameObservable {
         if(playerWithBonus == null) drawManager.setUp(0, 0);
         else {
             this.playerActing = playerWithBonus;
-            drawManager.setUp(playerWithBonus.getBonusDrawFromUpper(), playerWithBonus.getBonusDrawFromLower());
+            //This is also hard coded, but in the current status of Mesos only one player can have that building, and the
+            //effects says that draws only 1 from top.
+            drawManager.setUp(1, 0);
         }
 
 

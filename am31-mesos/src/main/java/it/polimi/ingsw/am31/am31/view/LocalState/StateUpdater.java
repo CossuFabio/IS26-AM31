@@ -8,6 +8,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.Ca
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
@@ -189,5 +190,12 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     @Override
     public void handleUpdateMessage(SuccessRegistrationUpdate msg) {
         eventBus.post(new SuccessRegistrationEvent(msg.getUsername()));
+    }
+
+    @Override
+    public void handleUpdateMessage(PlayerBonusDrawUpdate msg) {
+        String playerNickname = msg.getPlayerNickname();
+        boolean hasBonusDraw = msg.hasBonusDraw();
+        gameState.updatePlayerBonusDraw(playerNickname, hasBonusDraw);
     }
 }

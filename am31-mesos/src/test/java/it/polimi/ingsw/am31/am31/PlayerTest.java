@@ -106,53 +106,6 @@ class PlayerTest {
     }
 
     @Test
-    void bonusDrawUpper(){
-
-        assertEquals(0, player.getBonusDrawFromUpper());
-        assertEquals(0, player.getBonusDrawFromLower());
-        assertFalse(player.hasBonusDraw());
-
-        int upperBonus = 1;
-        player.addBonusDrawFromUpper(upperBonus);
-        assertEquals(upperBonus, player.getBonusDrawFromUpper());
-        assertTrue(player.hasBonusDraw());
-
-
-
-    }
-
-    @Test
-    void bonusDrawLower(){
-
-        assertEquals(0, player.getBonusDrawFromUpper());
-        assertEquals(0, player.getBonusDrawFromLower());
-        assertFalse(player.hasBonusDraw());
-
-        int lowerBonus = 2;
-        player.addBonusDrawFromLower(lowerBonus);
-        assertEquals(lowerBonus, player.getBonusDrawFromLower());
-        assertTrue(player.hasBonusDraw());
-
-    }
-
-    @Test
-    void bonusDrawBoth(){
-
-        assertEquals(0, player.getBonusDrawFromUpper());
-        assertEquals(0, player.getBonusDrawFromLower());
-        assertFalse(player.hasBonusDraw());
-
-        int lowerBonus = 2;
-        int upperBonus = 1;
-        player.addBonusDrawFromLower(lowerBonus);
-        player.addBonusDrawFromUpper(upperBonus);
-        assertEquals(upperBonus, player.getBonusDrawFromUpper());
-        assertEquals(lowerBonus, player.getBonusDrawFromLower());
-        assertTrue(player.hasBonusDraw());
-
-    }
-
-    @Test
     void utilitiesTest(){
 
         //Testing equals
@@ -193,6 +146,12 @@ class PlayerTest {
 
     }
 
+    @Test
+    void bonusDraw() {
+        assertFalse(player.hasBonusDraw());
+        player.addBonusDraw();
+        assertTrue(player.hasBonusDraw());
+    }
 
 
 }

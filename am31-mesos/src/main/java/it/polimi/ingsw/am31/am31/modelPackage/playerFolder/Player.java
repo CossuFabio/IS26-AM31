@@ -46,8 +46,7 @@ public class Player implements GameObservable {
     private final RitualWinHandler ritualWinHandler;
 
 
-    private int bonusDrawFromUpper;
-    private int bonusDrawFromLower;
+    private boolean bonusDraw;
 
     private ObserverHandler observers;
 
@@ -69,8 +68,8 @@ public class Player implements GameObservable {
         this.ritualLoseHandler = new RitualLoseHandler();
         this.ritualWinHandler = new RitualWinHandler();
 
-        bonusDrawFromLower = 0;
-        bonusDrawFromUpper = 0;
+        // Related to building number 20
+        bonusDraw = false;
 
         //Prevents NullPointerException but must be set from game when creating new player!
         this.observers = new GameObserversSet();
@@ -206,14 +205,16 @@ public class Player implements GameObservable {
         this.ritualLoseHandler.setStrategy(newStrategy.get());
     }
 
-    public boolean hasBonusDraw(){return bonusDrawFromLower > 0 || bonusDrawFromUpper > 0 ; }
+    public boolean hasBonusDraw(){
+        return bonusDraw;
+    }
 
-    public void addBonusDrawFromUpper(int drawBonus){ this.bonusDrawFromUpper += drawBonus; }
-
-    public void addBonusDrawFromLower(int drawBonus){ this.bonusDrawFromLower += drawBonus; }
-
-    public int getBonusDrawFromUpper(){ return this.bonusDrawFromUpper; }
-    public int getBonusDrawFromLower(){ return this.bonusDrawFromLower; }
+    // No need to pass a boolean to set if the bonus is true or false, the only case when this method is called
+    // is when the bonus is added
+    public void addBonusDraw(){
+        this.bonusDraw = true;
+        observers.onPlayerBonusDrawUpdate(this);
+    }
 
     @Override
     public boolean equals(Object player){

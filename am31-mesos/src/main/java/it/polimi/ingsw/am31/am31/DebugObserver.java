@@ -37,11 +37,13 @@ public class DebugObserver implements GameObserver {
     private final boolean logGameEndUpdate;
     private final boolean logGameEventResolveUpdate;
     private final boolean logGameCrashUpdate;
+    private final boolean logPlayerBonusDraw;
 
     private Map<Player, Integer>  oldPP = new HashMap<>();
     private Map<Player, Integer>  oldFood = new HashMap<>();
 
 
+    //Select needed
     public DebugObserver() {
         logBuildingsUpdate = false;
         logScoresUpdate = true;
@@ -55,6 +57,7 @@ public class DebugObserver implements GameObserver {
         logGameEndUpdate = false;
         logGameEventResolveUpdate = true;
         logGameCrashUpdate = false;
+        logPlayerBonusDraw = false;
     }
 
 
@@ -209,5 +212,13 @@ public class DebugObserver implements GameObserver {
     @Override
     public String getIdentifier() {
         return "TestIdentifier";
+    }
+
+    @Override
+    public void onPlayerBonusDrawUpdate(Player player) {
+        if(!logPlayerBonusDraw) return;
+        printSeparator();
+        System.out.println("Player " + player.getNickname() + " now has bonus draw");
+        printSeparator();
     }
 }

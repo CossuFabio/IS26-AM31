@@ -101,6 +101,11 @@ public class GameObserversSet implements ObserverHandler{
     public String getIdentifier(){return "GameObserverSet";}
 
     @Override
+    public void onPlayerBonusDrawUpdate(Player player) {
+        observers.forEach(o -> o.onPlayerBonusDrawUpdate(player));
+    }
+
+    @Override
     public void notifyRemoveMe(){/*Nothing to do*/}
 
     @Override

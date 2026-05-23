@@ -15,6 +15,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.Of
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
@@ -127,5 +128,10 @@ public class UpdateFactory {
     public static GameEventResolveUpdate createGameEventResolveUpdate (EventCard event){
         return new GameEventResolveUpdate(event.getCardId());
     }
+
+    public static PlayerBonusDrawUpdate createPlayerBonusDrawUpdate(Player player){
+        return new PlayerBonusDrawUpdate(player.getNickname(), player.hasBonusDraw());
+    }
+
 
 }

@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.Ca
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
@@ -31,6 +32,8 @@ public interface IUpdateVisitor {
     void handleUpdateMessage(GameCrashUpdate msg);
 
     void handleUpdateMessage(SuccessRegistrationUpdate msg);
+
+    void handleUpdateMessage(PlayerBonusDrawUpdate msg);
 
 }
 

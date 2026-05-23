@@ -16,6 +16,7 @@ public class LogObserverBuilder implements FluentBuilder<LogObserver> {
     private boolean logGameEndUpdate;
     private boolean logGameCrashUpdate;
     private boolean logGameEventResolveUpdate;
+    private boolean logPlayerBonusDraw;
 
     boolean isLogBuildingsUpdate() {
         return logBuildingsUpdate;
@@ -65,6 +66,8 @@ public class LogObserverBuilder implements FluentBuilder<LogObserver> {
         return logGameEventResolveUpdate;
     }
 
+    boolean isLogPlayerBonusDraw(){return logPlayerBonusDraw; }
+
     LogObserverBuilder() {
         reset();
     }
@@ -84,6 +87,7 @@ public class LogObserverBuilder implements FluentBuilder<LogObserver> {
         logGameEndUpdate = false;
         logGameEventResolveUpdate = false;
         logGameCrashUpdate = false;
+        logPlayerBonusDraw = false;
     }
 
     public LogObserverBuilder buildingsUpdate() {
@@ -145,6 +149,12 @@ public class LogObserverBuilder implements FluentBuilder<LogObserver> {
         logGameCrashUpdate = true;
         return this;
     }
+
+    public LogObserverBuilder playerBonusDrawUpdate(){
+        logPlayerBonusDraw = true;
+        return this;
+    }
+
 
     @Override
     public LogObserver build() {

@@ -21,6 +21,7 @@ public class LocalPlayerState {
     private String nickname;
     private List<Card> tribe;
     private List<Card> buildings;
+    private boolean hasBonusDraw;
 
     public LocalPlayerState(String nickname, Color color){
         this.nickname = nickname;
@@ -29,6 +30,7 @@ public class LocalPlayerState {
         food = 0;
         tribe = new ArrayList<>();
         buildings = new ArrayList<>();
+        hasBonusDraw = false;
     }
    //useless public void setColor(){}
    //useless public void setNickname(){}
@@ -68,5 +70,11 @@ public class LocalPlayerState {
     public String toString(){
         return "NICKNAME: "+nickname+", COLOR: "+color+", FOOD: "+food+", POINTS: "+prestigePoints;
     }
+
+    public void setBonusDraw(boolean hasBonusDraw){
+        this.hasBonusDraw = hasBonusDraw;
+    }
+
+    public boolean hasBonusDraw(){return hasBonusDraw; }
 
 }

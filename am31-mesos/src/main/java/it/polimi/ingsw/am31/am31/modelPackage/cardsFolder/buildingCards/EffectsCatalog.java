@@ -71,7 +71,7 @@ public class EffectsCatalog {
 
         effects.put(EffectIdsConstants.INVENTOR_PRESTIGE_BONUS, player -> player.addEndGameEffect(InventorPrestigeBonusDecorator::new));
 
-        effects.put(EffectIdsConstants.ONE_MORE_CARD, player -> player.addBonusDrawFromUpper(1));
+        effects.put(EffectIdsConstants.ONE_MORE_CARD, player -> player.addBonusDraw());
 
         effects.put(EffectIdsConstants.FLAT_PRESTIGE_POINTS, player -> player.addEndGameEffect(FlatPrestigePointsDecorator::new));
     }

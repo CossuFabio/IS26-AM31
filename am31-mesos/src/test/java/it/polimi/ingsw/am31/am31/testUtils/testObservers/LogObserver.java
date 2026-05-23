@@ -35,6 +35,7 @@ public class LogObserver implements GameObserver {
     private final boolean logGameEndUpdate;
     private final boolean logGameEventResolveUpdate;
     private final boolean logGameCrashUpdate;
+    private final boolean logPlayerBonusDraw;
 
     public LogObserver() {
         logBuildingsUpdate = true;
@@ -49,6 +50,7 @@ public class LogObserver implements GameObserver {
         logGameEndUpdate = true;
         logGameEventResolveUpdate = true;
         logGameCrashUpdate = true;
+        logPlayerBonusDraw = true;
     }
 
 
@@ -70,6 +72,7 @@ public class LogObserver implements GameObserver {
         logGameEndUpdate = builder.isLogGameEndUpdate();
         logGameEventResolveUpdate = builder.isLogGameEventResolveUpdate();
         logGameCrashUpdate = builder.isLogGameCrashUpdate();
+        logPlayerBonusDraw = builder.isLogPlayerBonusDraw();
     }
 
 
@@ -210,5 +213,13 @@ public class LogObserver implements GameObserver {
     @Override
     public String getIdentifier() {
         return "TestIdentifier";
+    }
+
+    @Override
+    public void onPlayerBonusDrawUpdate(Player player) {
+        if(!logPlayerBonusDraw) return;
+        printSeparator();
+        System.out.println("Player " + player.getNickname() + " now has bonus draw");
+        printSeparator();
     }
 }

@@ -14,7 +14,7 @@ public class UpdateMethodsConstants {
     public final static String PLAYER_SCORES_UPDATE_METHOD    = "PlayerUpdateScores";
     public final static String PLAYER_TRIBES_UPDATE_METHOD    = "PlayerUpdateTribes";
     public final static String PLAYER_BUILDINGS_UPDATE_METHOD = "PlayerUpdateBuildings";
-
+    public final static String PLAYER_BONUS_DRAW_METHOD = "PlayerBonusDrawUpdate";
 
     //Board methods
     public final static String BOARD_OFFERCARD_UPDATE_METHOD = "BoardUpdateOfferCard";

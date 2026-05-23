@@ -30,4 +30,6 @@ public interface GameObserver {
     void onGameCrashUpdate();
 
     String getIdentifier();
+
+    void onPlayerBonusDrawUpdate(Player player);
 }

@@ -102,6 +102,14 @@ public class LocalGameState{
             if(p.getNickname().equals(id))
                 p.setTribe(cards);
     }
+
+    public void updatePlayerBonusDraw(String playerId, boolean hasBonus){
+        for(LocalPlayerState p : players)
+            if(p.getNickname().equals(playerId))
+                p.setBonusDraw(hasBonus);
+    }
+
+
     public void setTurnOrder(List<LocalPlayerState> newTurnOrder){
         this.turnOrder = newTurnOrder;
         setPlayerActing(newTurnOrder.getFirst());
@@ -137,22 +145,29 @@ public class LocalGameState{
         return eventsSolved;
     }
     public RoundPhasesEnum getCurrentRoundPhase(){return currentRoundPhase;}
+
     public int getRoundNumber(){return roundNumber;}
+
     public int getEra(){return era;}
+
     public LocalBoardState getBoard(){return board;}
+
     public LocalPlayerState getPlayerActing (){
         if(currentRoundPhase.equals(RoundPhasesEnum.TOTEM_PLACING)) {
             for (LocalPlayerState p : turnOrder)
                 if (!(p == null))
                     return p;
         }
-        else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE)
-                || currentRoundPhase.equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
+        else if (currentRoundPhase.equals(RoundPhasesEnum.ACTION_PHASE)) {
             for(LocalOfferCard c: board.getOfferTrack())
                 if(!c.isFree())
                     for(LocalPlayerState d: players)
                         if(d.getNickname().equals(c.getPlayer()))
                             return d;
+        }
+
+        else if(currentRoundPhase.equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)){
+            return players.stream().filter(LocalPlayerState::hasBonusDraw).findFirst().orElse(null);
         }
         return null;
     }

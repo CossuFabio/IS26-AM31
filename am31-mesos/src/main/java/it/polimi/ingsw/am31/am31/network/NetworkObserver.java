@@ -9,7 +9,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateFactory;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,6 +27,16 @@ public class NetworkObserver implements GameObserver {
     @Override
     public String getIdentifier(){
         return identifier;
+    }
+
+    @Override
+    public void onPlayerBonusDrawUpdate(Player player) {
+        executors.submit(()->{
+            try {
+                virtualView.receiveUpdate(UpdateFactory.createPlayerBonusDrawUpdate(player));
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }});
     }
 
     @Override
