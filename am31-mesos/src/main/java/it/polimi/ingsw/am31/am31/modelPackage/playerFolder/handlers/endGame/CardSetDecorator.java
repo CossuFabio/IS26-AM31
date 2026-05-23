@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CardSetDecorator extends EndGameHandlerDecorator {
 
-    private final static int PRESTIGE_POINTS_BONUS = 6;
+    public final static int PRESTIGE_POINTS_BONUS = 6;
 
     public CardSetDecorator(IEndGameHandler handler) { super(handler);}
 

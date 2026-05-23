@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 public class DefaultEndGameHandler implements IEndGameHandler {
 
-    private static int PRESTIGE_POINTS_ARTISTS_PAIR = 10;
+    public static final int PRESTIGE_POINTS_ARTISTS_PAIR = 10;
 
     private int artistsBonus(Player player){
 

@@ -5,7 +5,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
 public class InventorPrestigeBonusDecorator extends EndGameHandlerDecorator {
 
-    private static int PRESTIGE_POINTS_BONUS = 2;
+    public static final int PRESTIGE_POINTS_BONUS = 2;
 
     public InventorPrestigeBonusDecorator(IEndGameHandler handler) {super(handler); }
 

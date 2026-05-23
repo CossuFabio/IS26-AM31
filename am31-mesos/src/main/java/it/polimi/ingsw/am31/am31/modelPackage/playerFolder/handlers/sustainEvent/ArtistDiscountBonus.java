@@ -5,7 +5,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
 public class ArtistDiscountBonus implements ISustainDiscountCharacter{
 
-    private static int DISCOUNT_GIVEN = 1;
+    public static final int DISCOUNT_GIVEN = 1;
 
     public ArtistDiscountBonus(){}
 
