@@ -78,7 +78,7 @@
                   </VBox>
                   <VBox fx:id="vbox2" alignment="TOP_CENTER" visible="false">
                      <children>
-                        <ComboBox fx:id="playersBox" promptText="Choose the number of players" style="-fx-background-color: rgba(255,243,211,1); -fx-font-family: Inknut; -fx-font-size: 24; -fx-text-base-color: #bbbbbb; -fx-cursor: hand;">
+                        <ComboBox fx:id="playersBox" promptText="Choose the number of players" style="-fx-background-color: rgba(255,243,211,1); -fx-font-family: Inknut; -fx-font-size: 20; -fx-text-base-color: #bbbbbb; -fx-cursor: hand;">
                            <effect>
                               <DropShadow />
                            </effect>
@@ -86,7 +86,7 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <ComboBox fx:id="colorBox" layoutX="720.0" layoutY="10.0" promptText="Choose the color of the totem" style="-fx-background-color: rgba(255,243,211,1); -fx-font-family: Inknut Antiqua; -fx-font-size: 24; -fx-text-base-color: #bbbbbb; -fx-cursor: hand;">
+                        <ComboBox fx:id="colorBox" layoutX="720.0" layoutY="10.0" promptText="Choose the color of the totem" style="-fx-background-color: rgba(255,243,211,1); -fx-font-family: Inknut Antiqua; -fx-font-size: 20; -fx-text-base-color: #bbbbbb; -fx-cursor: hand;">
                            <effect>
                               <DropShadow />
                            </effect>

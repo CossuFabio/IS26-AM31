@@ -136,6 +136,7 @@ public class GameController extends BaseController {
 
     private final List<Card> pendingEvents = new ArrayList<>();
     private boolean showingEvent = false;
+    private VBox currentEventVbox = null;
 
     @FXML
     public void initialize() {
@@ -227,8 +228,8 @@ public class GameController extends BaseController {
             Label endLabel = new Label("The game is over! Going to the standings...");
             endLabel.setFont(Font.font("Inknut Antiqua Regular", 20));
             endLabel.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-padding: 15;");
-            StackPane.setAlignment(endLabel, Pos.BOTTOM_CENTER);
-            StackPane.setMargin(endLabel, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
+            StackPane.setAlignment(endLabel, Pos.CENTER);
+//            StackPane.setMargin(endLabel, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
 
             endLabel.setOpacity(0.0);
             rulesOverlay.getChildren().addAll(darkBg, endLabel);
@@ -992,6 +993,7 @@ public class GameController extends BaseController {
             StackPane.setMargin(promptLabel, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
             promptLabel.setOpacity(0.0);
             rootStackPane.getChildren().add(promptLabel);
+            if (currentEventVbox != null) currentEventVbox.toFront();
             FadeTransition fadeIn = new FadeTransition(Duration.millis(400), promptLabel);
             fadeIn.setFromValue(0.0);
             fadeIn.setToValue(1.0);
@@ -1186,18 +1188,20 @@ public class GameController extends BaseController {
         StackPane.setMargin(vbox, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
         vbox.setOpacity(0.0);
         rootStackPane.getChildren().add(vbox);
+        currentEventVbox = vbox;
         vbox.toFront();
 
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), vbox);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        PauseTransition pause = new PauseTransition(Duration.seconds(2.5));
 
         FadeTransition fadeOut = new FadeTransition(Duration.millis(400), vbox);
         fadeOut.setToValue(0.0);
         fadeOut.setOnFinished(f -> {
             rootStackPane.getChildren().remove(vbox);
+            currentEventVbox = null;
             showNextEvent();
         });
 
