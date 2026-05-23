@@ -1,11 +1,14 @@
 package it.polimi.ingsw.am31.am31.handlers;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectIdsConstants;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectsCatalog;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.onDraw.GeneralAdditionalFoodDecorator;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.onDraw.InventorAdditionalFoodDecorator;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
+import it.polimi.ingsw.am31.am31.testUtils.emptyHandlers.EmptyDrawHandler;
 import org.junit.jupiter.api.Test;
 
 import static it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.IconEnum.*;
@@ -142,5 +145,27 @@ public class DrawHandlers {
 
 
     }
+
+    @Test
+    void inventorsEmptyIconTest(){
+
+        Player owner = createPlayer().build();
+        owner.addCard(createInventor().icon(null).build());
+        owner.addCard(createArtist().build());
+        owner.addDrawEffect(InventorAdditionalFoodDecorator::new);
+
+        int startingFood = owner.getFood();
+
+        owner.addCard(createInventor().icon(EMPTY).build());
+        assertEquals(startingFood, owner.getFood());
+
+        owner.addCard(createInventor().icon(EMPTY).build());
+        assertEquals(startingFood, owner.getFood());
+
+    }
+
+
+
+
 
 }

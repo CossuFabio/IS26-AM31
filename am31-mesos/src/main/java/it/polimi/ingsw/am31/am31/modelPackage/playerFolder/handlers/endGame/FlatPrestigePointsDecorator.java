@@ -4,7 +4,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 public class FlatPrestigePointsDecorator extends EndGameHandlerDecorator {
 
-    private static int PRESTIGE_POINTS_BONUS = 25;
+    public static final int PRESTIGE_POINTS_BONUS = 25;
 
     public FlatPrestigePointsDecorator(IEndGameHandler handler) {super(handler); }
 

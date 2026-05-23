@@ -55,19 +55,15 @@ public class EffectsCatalog {
 
 
         // ===== ERA 3 =====
-        effects.put(EffectIdsConstants.HUNTER_PRESTIGE_BONUS,
-                player -> player.addEndGameEffect(HunterPrestigeBonusDecorator::new));
+        effects.put(EffectIdsConstants.HUNTER_PRESTIGE_BONUS, player -> player.addEndGameEffect(HunterPrestigeBonusDecorator::new));
 
         effects.put(EffectIdsConstants.FARMER_PRESTIGE_BONUS, player -> player.addEndGameEffect(FarmerPrestigeBonusDecorator::new));
 
-        effects.put(EffectIdsConstants.SHAMAN_PRESTIGE_BONUS,
-                player -> player.addEndGameEffect(ShamanPrestigeBonusDecorator::new));
+        effects.put(EffectIdsConstants.SHAMAN_PRESTIGE_BONUS, player -> player.addEndGameEffect(ShamanPrestigeBonusDecorator::new));
 
-        effects.put(EffectIdsConstants.BUILDER_PRESTIGE_BONUS,
-                player -> player.addEndGameEffect(BuilderPrestigeBonusDecorator::new));
+        effects.put(EffectIdsConstants.BUILDER_PRESTIGE_BONUS, player -> player.addEndGameEffect(BuilderPrestigeBonusDecorator::new));
 
-        effects.put(EffectIdsConstants.ARTIST_PRESTIGE_BONUS,
-                player -> player.addEndGameEffect(ArtistPrestigeBonusDecorator::new));
+        effects.put(EffectIdsConstants.ARTIST_PRESTIGE_BONUS, player -> player.addEndGameEffect(ArtistPrestigeBonusDecorator::new));
 
         effects.put(EffectIdsConstants.INVENTOR_PRESTIGE_BONUS, player -> player.addEndGameEffect(InventorPrestigeBonusDecorator::new));
 

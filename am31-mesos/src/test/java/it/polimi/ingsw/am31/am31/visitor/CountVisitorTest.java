@@ -71,5 +71,5 @@ class CountVisitorTest {
         assertEquals(1, visitor.getEvent());
     }
 
-    //We skipped testing the getters methods
+
 }
