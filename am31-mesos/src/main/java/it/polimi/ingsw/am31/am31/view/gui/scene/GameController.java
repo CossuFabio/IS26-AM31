@@ -230,6 +230,7 @@ public class GameController extends BaseController {
             StackPane.setAlignment(endLabel, Pos.BOTTOM_CENTER);
             StackPane.setMargin(endLabel, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
 
+            endLabel.setOpacity(0.0);
             rulesOverlay.getChildren().addAll(darkBg, endLabel);
             rulesOverlay.toFront();
             rulesOverlay.setVisible(true);
@@ -315,7 +316,9 @@ public class GameController extends BaseController {
 
         int charactersLowerLine = countVisitor.getTotalCharacters();
 
-        skipButton1.setDisable(!(remainingFromUpper > 0 && charactersUpperLine == 0));
+        skipButton1.setDisable(!(remainingFromUpper > 0 &&
+                ( (charactersUpperLine == 0 && phase == RoundPhasesEnum.ACTION_PHASE) ||
+                        (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE) )));
         skipButton2.setDisable(!(remainingFromLower > 0 && charactersLowerLine == 0));
     }
 
@@ -415,9 +418,7 @@ public class GameController extends BaseController {
         playersContainer.getChildren().clear();
         String myNick = controller.getLocalPlayerUsername();
         for (LocalPlayerState player : localGameState.getPlayers()) {
-            if (!player.getNickname().equals(myNick)) {
                 playersContainer.getChildren().add(buildPlayerCard(player, acting));
-            }
         }
     }
 
@@ -584,7 +585,8 @@ public class GameController extends BaseController {
             //if the card can be picked
             if (card.canBePicked()) {
                 if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
-                    isClickable = pendingDraws.getOrDefault(row, 0) == 0
+                    isClickable = row == BoardRows.UPPER &&
+                            pendingDraws.getOrDefault(row, 0) == 0
                             && canAffordCard(card);
                 } else if (phase == RoundPhasesEnum.ACTION_PHASE) {
                     LocalOfferCard myOffer = localGameState.getBoard().getOfferTrack().stream()
@@ -746,11 +748,14 @@ public class GameController extends BaseController {
 
     private int allowedDrawsFromRow(BoardRows row) {
         RoundPhasesEnum phase = localGameState.getCurrentRoundPhase();
-        if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE) {
+        String myNick = controller.getLocalPlayerUsername();
+        LocalPlayerState acting = localGameState.getPlayerActing();
+        if (acting == null) return 0;
+        boolean hasBonusDraw = acting.hasBonusDraw();
+        if (phase == RoundPhasesEnum.BONUS_DRAWING_PHASE && row == BoardRows.UPPER && hasBonusDraw) {
             return 1;
         }
         if (phase == RoundPhasesEnum.ACTION_PHASE) {
-            String myNick = controller.getLocalPlayerUsername();
             return localGameState.getBoard().getOfferTrack().stream()
                     .filter(o -> !o.isFree() && o.getPlayer().equals(myNick))
                     .findFirst()
@@ -930,11 +935,8 @@ public class GameController extends BaseController {
     private void showPrompt (RoundPhasesEnum phase, LocalPlayerState acting) {
         if (acting == null) return;
         if (phase == lastShownPhase && acting.getNickname().equals(lastShownActing)) {
-            if (phase == RoundPhasesEnum.ACTION_PHASE && promptLabel == null) {
-
-            } else {
-                return;
-            }
+            boolean promptWasRemoved = phase == RoundPhasesEnum.ACTION_PHASE && promptLabel == null;
+            if (!promptWasRemoved) return;
         }
         rootStackPane.getChildren().remove(promptLabel);
 
@@ -988,6 +990,7 @@ public class GameController extends BaseController {
             promptLabel.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-padding: 15;");
             StackPane.setAlignment(promptLabel, javafx.geometry.Pos.BOTTOM_CENTER);
             StackPane.setMargin(promptLabel, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
+            promptLabel.setOpacity(0.0);
             rootStackPane.getChildren().add(promptLabel);
             FadeTransition fadeIn = new FadeTransition(Duration.millis(400), promptLabel);
             fadeIn.setFromValue(0.0);
@@ -1165,8 +1168,8 @@ public class GameController extends BaseController {
         shadowCard.setColor(Color.rgb(0, 0, 0, 0.5));
         iv.setEffect(shadowCard);
 
-        Label description = new Label(card.toString());
-        description.setFont(Font.font("Inknut Antiqua Regular", 16));
+//        Label description = new Label(card.toString());
+//        description.setFont(Font.font("Inknut Antiqua Regular", 16));
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);
@@ -1175,12 +1178,13 @@ public class GameController extends BaseController {
         shadow.setColor(Color.rgb(0, 0, 0, 0.5));
         vbox.setEffect(shadow);
         vbox.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-padding: 30");
-        vbox.getChildren().addAll(title, iv, description);
+        vbox.getChildren().addAll(title, iv);
 
         vbox.setMaxWidth(Region.USE_PREF_SIZE);
         vbox.setMaxHeight(Region.USE_PREF_SIZE);
         StackPane.setAlignment(vbox, javafx.geometry.Pos.BOTTOM_CENTER);
         StackPane.setMargin(vbox, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
+        vbox.setOpacity(0.0);
         rootStackPane.getChildren().add(vbox);
         vbox.toFront();
 
