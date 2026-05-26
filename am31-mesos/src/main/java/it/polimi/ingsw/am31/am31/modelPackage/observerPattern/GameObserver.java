@@ -6,6 +6,8 @@ import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
+
 import java.util.List;
 
 public interface GameObserver {
@@ -24,7 +26,7 @@ public interface GameObserver {
     void onOfferTrackUpdate(Board board);
     void onTurnOrderUpdate(TurnOrder turnOrder);
     void onGameStartUpdate(Game game);
-    void onGameEndUpdate(Game game);
+    void onGameEndUpdate(Game game, List<GlobalRankingEntry> globalRanking);
     void onGameEventResolveUpdate(EventCard c);
 
     void onGameCrashUpdate();

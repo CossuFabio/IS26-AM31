@@ -29,10 +29,10 @@ public class DataBaseConnectionFactory {
         try (stream) {
             properties.load(stream);
             initialize(
-                    properties.getProperty("dbUrl"),
-                    properties.getProperty("dbUsername"),
-                    properties.getProperty("dbPassword"),
-                    properties.getProperty("dbDriver")
+                    properties.getProperty("db.url"),
+                    properties.getProperty("db.username"),
+                    properties.getProperty("db.password"),
+                    properties.getProperty("db.driver")
             );
         }
 

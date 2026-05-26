@@ -70,8 +70,7 @@ public class UpdateFactory {
         return new GameStartUpdate();
     }
 
-    public static EndGameUpdate createGameEndUpdate(Game game) {
-
+    public static EndGameUpdate createGameEndUpdate(Game game, List<GlobalRankingEntry> globalRanking) {
 
         List<Player> ranking = game.getLeaderBoard();
 
@@ -84,7 +83,7 @@ public class UpdateFactory {
                         game.isPlayerWinner(p)))
                 .toList();
 
-        return new EndGameUpdate(entries);
+        return new EndGameUpdate(entries, globalRanking);
     }
 
     //BOARD RELATED UPDATES

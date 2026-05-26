@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.database;
 
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -89,8 +90,10 @@ public class LeaderBoardDAO {
 
 
         }catch(Exception e){
+            System.err.println("LeaderBoardDAO: failed to insert scores — " + e.getMessage());
             try{
                 connection.rollback();
+                connection.setAutoCommit(true);
             }catch(Exception ignored){}
         }
 
@@ -102,7 +105,7 @@ public class LeaderBoardDAO {
      * @return
      * @throws SQLException
      */
-    public List<LeaderBoardBean> getLeaderBoardPosition(List<Player> players) throws SQLException {
+    public List<GlobalRankingEntry> getLeaderBoardPosition(List<Player> players) throws SQLException {
 
         if(players.isEmpty()) return new ArrayList<>();
 
@@ -112,24 +115,32 @@ public class LeaderBoardDAO {
         }
         questionMarks.deleteCharAt(questionMarks.length()-1); // Remove last comma
 
-        List<LeaderBoardBean> leaderBoard = new ArrayList<>();
+        List<GlobalRankingEntry> leaderBoard = new ArrayList<>();
         String getLeaderBoardQueryString = """
                 
                 SELECT player_username, total_prestige_points, total_food, games_played, player_rank
                 FROM leaderboard 
                 WHERE num_players = ? 
-                AND player_username IN (?)
+                AND player_username IN (%s)
                                 
-                """;
+                """.formatted(questionMarks);
 
         try(PreparedStatement statement = connection.prepareStatement(getLeaderBoardQueryString)){
 
             statement.setInt(1, players.size());
-            statement.setString(2, questionMarks.toString());
+            for(int i = 0; i < players.size(); i++){
+                statement.setString(2 + i, players.get(i).getNickname());
+            }
 
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
-
+                leaderBoard.add(new GlobalRankingEntry(
+                        rs.getString("player_username"),
+                        rs.getInt("total_prestige_points"),
+                        rs.getInt("total_food"),
+                        rs.getInt("games_played"),
+                        rs.getInt("player_rank")
+                ));
 
             }
 
@@ -140,4 +151,4 @@ public class LeaderBoardDAO {
 
     }
 
-    }
+}

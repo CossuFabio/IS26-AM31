@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.network;
 
+import it.polimi.ingsw.am31.am31.database.DataBaseConnectionFactory;
 import it.polimi.ingsw.am31.am31.exceptions.networkException.BadNetworkRequestException;
 import it.polimi.ingsw.am31.am31.exceptions.networkException.UsernameAlreadyInUseException;
 import it.polimi.ingsw.am31.am31.exceptions.networkException.UsernameNotRegisteredException;
@@ -11,6 +12,8 @@ import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServe
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
 import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
+
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
@@ -97,7 +100,6 @@ public class Server {
 
     public void start() {
         final String serverName = ServerConfig.SERVER_NAME;
-        //Rmi server  launch
 
         try{
             System.out.println("Server starting on ip: " + InetAddress.getLocalHost().getHostAddress());
@@ -105,6 +107,16 @@ public class Server {
             System.out.println("Unable to setup server");
         }
 
+        // Database factory initialization
+        try{
+            DataBaseConnectionFactory.initialize();
+            System.out.println("DataBase connection factory initialized!");
+        }catch(IOException | ClassNotFoundException e){
+            System.err.println("Unable to initialize DataBase connection factory: " + e.getMessage());
+        }
+
+
+        //Rmi server  launch
         Thread rmiThread = new Thread(() -> {
             try {
                 new RmiServer(serverName, ServerConfig.SERVER_PORT_RMI, this).start();

@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 
 import java.util.List;
 import java.util.Optional;
@@ -89,7 +90,7 @@ public class GameObserversSet implements ObserverHandler{
     }
     
     @Override
-    public void onGameEndUpdate(Game game){observers.forEach(o -> o.onGameEndUpdate(game));}
+    public void onGameEndUpdate(Game game, List<GlobalRankingEntry> globalRanking){observers.forEach(o -> o.onGameEndUpdate(game, globalRanking));}
 
     @Override
     public void onGameCrashUpdate() {

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.am31.am31.controller;
 
 import it.polimi.ingsw.am31.am31.DebugObserver;
+import it.polimi.ingsw.am31.am31.database.DataBaseConnectionFactory;
+import it.polimi.ingsw.am31.am31.database.LeaderBoardDAO;
 import it.polimi.ingsw.am31.am31.exceptions.GameInvariantException;
 import it.polimi.ingsw.am31.am31.exceptions.IllegalActionException;
 import it.polimi.ingsw.am31.am31.exceptions.LobbyException;
@@ -19,7 +21,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserversSet;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.ObserverHandler;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +32,7 @@ import java.util.List;
 public class GameController {
 
     private final ResourceFinder resourceFinder;
-    private Game game;
+    private final Game game;
     private final ObserverHandler observerHandler;
     private final Integer gameID;
 
@@ -172,7 +177,18 @@ public class GameController {
     private synchronized void handleEndGame() throws GameInvariantException{
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         game.gameEnd();
-        observerHandler.onGameEndUpdate(game);
+        List<GlobalRankingEntry> dbLeaderBoardEntries = new ArrayList<>();
+        try(Connection connection = DataBaseConnectionFactory.getNewConnection()){
+
+            LeaderBoardDAO leaderBoardDAO = new LeaderBoardDAO(connection);
+            leaderBoardDAO.insertScores(game.getPlayersList());
+            dbLeaderBoardEntries = leaderBoardDAO.getLeaderBoardPosition(game.getPlayersList());
+
+
+        }catch(SQLException e){
+            System.out.println("Unable to query database!");
+        }
+        observerHandler.onGameEndUpdate(game, dbLeaderBoardEntries);
         isGameStillActive = false;
     }
 

@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LeaderBoardEntryUpdate;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 
 
 import java.util.ArrayList;
@@ -31,10 +32,12 @@ public class LocalGameState{
 
     //Used only at the end of the game
     private List<LocalLeaderBoard> leaderboard;
+    private List<GlobalRankingEntry> globalRanking;
 
     public LocalGameState () {
         //Creations to prevent NullPointersException
         this.leaderboard = new ArrayList<>();
+        this.globalRanking = new ArrayList<>();
         players = new ArrayList<LocalPlayerState>();
         board = new LocalBoardState();
         turnOrder = new ArrayList<>();
@@ -119,6 +122,8 @@ public class LocalGameState{
         this.playerActing = p;
     }
     public void setLeaderboard(List<LocalLeaderBoard> leaderboard){this.leaderboard = leaderboard;}
+    public void setGlobalRanking(List<GlobalRankingEntry> globalRanking){this.globalRanking = globalRanking;}
+    public List<GlobalRankingEntry> getGlobalRanking(){return globalRanking;}
 
     //for testing
     public void addPlayer(LocalPlayerState p){
