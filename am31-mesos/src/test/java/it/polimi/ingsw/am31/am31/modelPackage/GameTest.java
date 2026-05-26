@@ -1,8 +1,10 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
+import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.IncorrectMethodCallException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientPlayersNumberException;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
@@ -16,22 +18,22 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createGame;
-import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.createPlayer;
+import static it.polimi.ingsw.am31.am31.testUtils.TestUtilities.*;
 import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
     private Game game;
     private Player player, player1;
+    private CharacterCard h ;
+
     @BeforeEach
     void setUp() throws Exception {
         this.game = createGame(2);
         BuildingCard bd1 = createBuilding().era(1).cost(1).prestigePointsGained(1).build();
         BuildingCard bd2 = createBuilding().era(2).cost(2).prestigePointsGained(2).build();
-        CharacterCard h = createHunter().era(1).mark(true).build();
+        h = createHunter().era(1).mark(true).build();
         player = createPlayer().color(Color.BLUE).name("dummy").build();
-       // player = new Player("dummy", Color.BLUE);
         game.getBoard().addUpper(bd1);
         game.getBoard().addUpper(h);
         game.getBoard().addUpper(h);
@@ -39,13 +41,14 @@ class GameTest {
         game.getBoard().addLower(h);
         game.getBoard().addLower(h);
         game.addPlayer(player);
-       // player1 = new Player("dummy2",Color.RED);
         player1 = createPlayer().color(Color.RED).name("dummy2").build();
         //the setup makes a blue player, a red player, a game with 2 players, a board with 3 cards Up and 3 under
     }
 
     @Test
     void TestShouldResolveEvents() throws Exception {
+
+
         game.addPlayer(player1);
         assertEquals(0,player1.getFood());
         player1.editPrestigePoints(5);
@@ -105,10 +108,10 @@ class GameTest {
 
     @Test
     void TestShouldRemovePlayer() {
-        assertEquals(game.getPlayersList().size(),1);
+        assertEquals(1, game.getPlayersList().size());
         assertEquals(game.getPlayersList().getFirst(),player);
         game.removePlayer(player);
-        assertEquals(game.getPlayersList().size(),0);
+        assertEquals(0, game.getPlayersList().size());
     }
 
     @Test
@@ -160,15 +163,20 @@ class GameTest {
     }
 
     @Test
-    void TestShouldResetGame() {
-    }
-
-    @Test
-    void TestShouldStartRound() {
-    }
-
-    @Test
     void TestShouldEndRound() {
+
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        //not the time for ending the round
+        assertThrows(IncorrectMethodCallException.class, game::endRound);
+        game.setCurrentRoundPhase(RoundPhasesEnum.BONUS_DRAWING_PHASE);
+        //no player has bonus draw- , goes to endturn
+        game.endRound();
+        assertEquals(RoundPhasesEnum.END_TURN,game.getCurrentRoundPhase());
+        //cards added upper, 3 upper moved lower
+        assertEquals(game.getBoard().getUpperLine().size(), GameConstants.UPPER_LINE_EXTRA_CARDS+ game.getNumPlayers());
+        assertEquals(3, game.getBoard().getUnderLine().size());
+
+
     }
 
     @Test
@@ -185,48 +193,83 @@ class GameTest {
         assertEquals(1, game.getBoard().getUnderBLine().getFirst().getEra());
         assertEquals(1, game.getBoard().getUnderBLine().size());
     }
+
     @Test
-    void TestShouldPlayerChoice() {
+    void TestShouldPlayerDrawFromUpper() throws Exception {
+//            BuildingCard bd1 = createBuilding().era(1).cost(1).prestigePointsGained(1).build();
+//           CharacterCard h = createHunter().era(1).mark(true).build();
+        // 2 h 1 bd1 are upper
+
+        game.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
+        //not the time for drawing
+        assertThrows(WrongRoundPhaseException.class, () -> game.playerDrawFromUpper(null,null));
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE); //or BONUS DRAWING
+        //player acting hasnt been set yet
+        assertThrows(WrongPlayerTurnException.class, () -> game.playerDrawFromUpper(player,h));
+        game.setUpPlayerActing(player,createOfferCard().build());
+        //player has no draws to make
+        assertThrows(InvalidDrawException.class, () -> game.playerDrawFromUpper(player,h));
+        game.setUpPlayerActing(player1,createOfferCard().drawFromUpper(1).build());
+        //now it should draw
+        assertFalse(player1.getTribe().contains(h));
+        game.playerDrawFromUpper(player1,h);
+        assertTrue(player1.getTribe().contains(h));
+        assertTrue(game.getBoard().getUpperLine().contains(h)); //board had 2, still has one
+        //and the player has drawn one as well
+        game.setUpPlayerActing(player1,createOfferCard().drawFromUpper(1).build());
+        game.playerDrawFromUpper(player1,h);
+        assertFalse(game.getBoard().getUpperLine().contains(h)); // now no hunters left
+
     }
 
     @Test
-    void TestShouldPlayerDrawFromUpper() {
+    void TestShouldPlayerDrawFromLower()throws Exception {
+        // 2 h 1 bd2 are in the lower line
+
+        game.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
+        //not the time for drawing
+        assertThrows(WrongRoundPhaseException.class, () -> game.playerDrawFromLower(null,null));
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE); //or BONUS DRAWING
+        //player acting hasnt been set yet
+        assertThrows(WrongPlayerTurnException.class, () -> game.playerDrawFromLower(player,h));
+        game.setUpPlayerActing(player,createOfferCard().build());
+        //player has no draws to make
+        assertThrows(InvalidDrawException.class, () -> game.playerDrawFromLower(player,h));
+        game.setUpPlayerActing(player1,createOfferCard().drawFromUnder(1).build());
+        //now it should draw
+        assertFalse(player1.getTribe().contains(h));
+        game.playerDrawFromLower(player1,h);
+        assertTrue(player1.getTribe().contains(h));
+        assertTrue(game.getBoard().getUnderLine().contains(h)); //board had 2, still has one
+        //and the player has drawn one as well
+        game.setUpPlayerActing(player1,createOfferCard().drawFromUnder(1).build());
+        game.playerDrawFromLower(player1,h);
+        assertFalse(game.getBoard().getUnderLine().contains(h)); // now no hunters left
+
     }
 
-    @Test
-    void TestShouldPlayerDrawFromTop() {
-    }
 
     @Test
-    void TestShouldGetTurnOrder() {
-    }
-
-    @Test
-    void TestShouldGetBoard() {
-    }
-
-    @Test
-    void TestsetObserverHandler() {
-    }
-
-    @Test
-    void TestaddPlayer() {
-    }
-
-    @Test
-    void TestremovePlayer() {
-    }
-
-    @Test
-    void TestendRound() {
-    }
-
-    @Test
-    void TestchangeEra() {
-    }
-
-    @Test
-    void TesttotemChoiceAction() {
+    void TestTotemChoiceAction() throws Exception {
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        //not the time for totem placing
+        assertThrows(WrongRoundPhaseException.class, () -> game.totemChoiceAction(null,null));
+        game.setCurrentRoundPhase(RoundPhasesEnum.GAME_STARTING);
+        game.addPlayer(player1);
+        game.gameStart();
+        //player acting hasnt been set
+        assertEquals(RoundPhasesEnum.TOTEM_PLACING, game.getCurrentRoundPhase());
+        assertThrows(WrongPlayerTurnException.class, () -> game.totemChoiceAction(createPlayer().build(),null));
+        //player acting selected randomly between player1 and player
+        Player actingPlayer = game.getPlayerActingTotemPhase();
+        OfferCard c = createOfferCard().build();
+        c.setPlayer(createPlayer().build());
+        //offer card already taken
+        assertThrows(OfferTrackTileAlreadyTakenException.class, () -> game.totemChoiceAction(actingPlayer,c));
+        c.free();
+        game.totemChoiceAction(actingPlayer,c);
+        //sets next player
+        assertNotEquals(game.getTurnOrder().getPlayerActing(),actingPlayer);
     }
 
     @Test

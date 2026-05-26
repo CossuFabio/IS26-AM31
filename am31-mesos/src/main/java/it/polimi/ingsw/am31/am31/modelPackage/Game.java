@@ -4,7 +4,6 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;
-import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EverybodyPlayedException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.IncorrectMethodCallException;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientPlayersNumberException;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
@@ -27,8 +26,6 @@ import it.polimi.ingsw.am31.am31.resources.GameResources;
 import java.io.IOException;
 import java.util.*;
 
-
-import static java.util.Comparator.comparing;
 
 
 public class Game implements GameObservable {
@@ -399,7 +396,7 @@ public class Game implements GameObservable {
 
     }
 
-    void setRound(int round)
+    protected void setRound(int round)
         {
         this.roundNumber = round;
         }
@@ -426,7 +423,7 @@ public class Game implements GameObservable {
 
     }
 
-    public void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){
+    protected void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){
         this.currentRoundPhase = currentRoundPhase;
         observers.onGameRoundStatusUpdate(this);
     }
