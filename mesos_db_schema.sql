@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `mesos_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `mesos_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `mesos_db`;
 -- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
@@ -15,7 +15,7 @@ USE `mesos_db`;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+-- /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Table structure for table `games`
@@ -30,7 +30,7 @@ CREATE TABLE `games` (
   `num_players` int NOT NULL,
   PRIMARY KEY (`game_id`),
   CONSTRAINT `games_chk_1` CHECK (((`num_players` >= 2) and (`num_players` <= 5)))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `participation` (
   PRIMARY KEY (`game_id`,`player_username`),
   CONSTRAINT `fk_participation_game` FOREIGN KEY (`game_id`) REFERENCES `games` (`game_id`) ON UPDATE CASCADE,
   CONSTRAINT `participation_chk_1` CHECK ((`food` >= 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +86,7 @@ CREATE TABLE `participation` (
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `leaderboard` AS with `stats` as (select `participation`.`player_username` AS `player_username`,sum(`participation`.`prestige_points`) AS `total_prestige_points`,sum(`participation`.`food`) AS `total_food`,`games`.`num_players` AS `num_players`,count(distinct `participation`.`game_id`) AS `games_played` from (`participation` join `games` on((`games`.`game_id` = `participation`.`game_id`))) group by `participation`.`player_username`,`games`.`num_players`) select `stats_outer`.`player_username` AS `player_username`,`stats_outer`.`total_prestige_points` AS `total_prestige_points`,`stats_outer`.`total_food` AS `total_food`,`stats_outer`.`games_played` AS `games_played`,`stats_outer`.`num_players` AS `num_players`,(select (count(distinct `stats_inner`.`player_username`) + 1) from `stats` `stats_inner` where ((`stats_outer`.`num_players` = `stats_inner`.`num_players`) and ((`stats_outer`.`total_prestige_points` < `stats_inner`.`total_prestige_points`) or ((`stats_outer`.`total_prestige_points` = `stats_inner`.`total_prestige_points`) and (`stats_outer`.`total_food` < `stats_inner`.`total_food`)) or ((`stats_outer`.`total_prestige_points` = `stats_inner`.`total_prestige_points`) and (`stats_outer`.`total_food` = `stats_inner`.`total_food`) and (`stats_outer`.`games_played` < `stats_inner`.`games_played`)) or ((`stats_outer`.`total_prestige_points` = `stats_inner`.`total_prestige_points`) and (`stats_outer`.`total_food` = `stats_inner`.`total_food`) and (`stats_outer`.`games_played` = `stats_inner`.`games_played`) and (`stats_outer`.`player_username` < `stats_inner`.`player_username`))))) AS `player_rank` from `stats` `stats_outer` */;
@@ -101,6 +101,6 @@ CREATE TABLE `participation` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+-- /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2026-05-25 23:04:07

@@ -3,8 +3,12 @@ package it.polimi.ingsw.am31.am31.database;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class LeaderBoardDAO {
 
     private final Connection connection;
@@ -34,17 +38,42 @@ public class LeaderBoardDAO {
             if(affectedRows != 1) throw new SQLException();
 
             ResultSet keysSet = statement.getGeneratedKeys();
-            keysSet.next();
 
+            if (!keysSet.next()) throw new SQLException("No generated key returned");
             return keysSet.getInt(1);
-
         }
 
 
 
     }
 
+    private void insertScores(int gameId, List<Player> players) throws SQLException {
 
+        String insertScoresQueryString = """
+                
+                INSERT INTO participation (game_id, player_username, prestige_points, food)
+                
+                VALUES (?, ?, ?, ?)
+                
+                """;
+
+        try(PreparedStatement statement = connection.prepareStatement(insertScoresQueryString)){
+
+            for(Player player : players){
+                statement.setInt(1, gameId);
+                statement.setString(2, player.getNickname());
+                statement.setInt(3, player.getPrestigePoints());
+                statement.setInt(4, player.getFood());
+
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+
+        }
+
+
+    }
 
     public void insertScores(List<Player> players){
 
@@ -52,11 +81,13 @@ public class LeaderBoardDAO {
 
             connection.setAutoCommit(false);
 
-            Integer gameKey = insertGame(players.size());
-
+            int gameKey = insertGame(players.size());
+            insertScores(gameKey, players);
 
             connection.commit();
             connection.setAutoCommit(true);
+
+
         }catch(Exception e){
             try{
                 connection.rollback();
@@ -65,5 +96,48 @@ public class LeaderBoardDAO {
 
     }
 
+    /**
+     *
+     * @param players
+     * @return
+     * @throws SQLException
+     */
+    public List<LeaderBoardBean> getLeaderBoardPosition(List<Player> players) throws SQLException {
 
-}
+        if(players.isEmpty()) return new ArrayList<>();
+
+        StringBuilder questionMarks = new StringBuilder();
+        for(Player player : players){
+            questionMarks.append("?,");
+        }
+        questionMarks.deleteCharAt(questionMarks.length()-1); // Remove last comma
+
+        List<LeaderBoardBean> leaderBoard = new ArrayList<>();
+        String getLeaderBoardQueryString = """
+                
+                SELECT player_username, total_prestige_points, total_food, games_played, player_rank
+                FROM leaderboard 
+                WHERE num_players = ? 
+                AND player_username IN (?)
+                                
+                """;
+
+        try(PreparedStatement statement = connection.prepareStatement(getLeaderBoardQueryString)){
+
+            statement.setInt(1, players.size());
+            statement.setString(2, questionMarks.toString());
+
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+
+
+            }
+
+        }
+
+        return leaderBoard;
+
+
+    }
+
+    }
