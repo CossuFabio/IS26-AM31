@@ -8,6 +8,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 
 import java.util.List;
 
@@ -183,7 +184,7 @@ public class LogObserver implements GameObserver {
     }
 
     @Override
-    public void onGameEndUpdate(Game game) {
+    public void onGameEndUpdate(Game game, List<GlobalRankingEntry> globalRankingEntries) {
         if (!logGameEndUpdate) return;
         printSeparator();
         System.out.println("[Game ended]\nLeaderboard: ");
@@ -191,6 +192,9 @@ public class LogObserver implements GameObserver {
             System.out.println(p.getNickname() + "(" + p.getColor() + ")," +
                     " PrestigePoints: " + p.getPrestigePoints() + ", Food: " + p.getFood());
         });
+        globalRankingEntries.forEach( entry ->
+                System.out.println("Player: " + entry.getPlayerNickname() + ", ranking: " + entry.getRank())
+        );
         printSeparator();
     }
 
