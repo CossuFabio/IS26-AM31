@@ -8,7 +8,9 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.observerPattern.GameObserver;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateFactory;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -151,9 +153,9 @@ public class NetworkObserver implements GameObserver {
     }
 
     @Override
-    public void onGameEndUpdate(Game game) {
+    public void onGameEndUpdate(Game game, List<GlobalRankingEntry> globalRanking) {
         executors.submit(()-> {try{
-            virtualView.receiveUpdate(UpdateFactory.createGameEndUpdate(game));
+            virtualView.receiveUpdate(UpdateFactory.createGameEndUpdate(game, globalRanking));
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }});

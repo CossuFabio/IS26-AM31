@@ -138,6 +138,7 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
                         dtoEntry.isWinner()))
                 .toList();
         gameState.setLeaderboard(leaderboard);
+        gameState.setGlobalRanking(msg.getGlobalRanking());
         eventBus.post(new GameEndedEvent());
     }
 

@@ -124,6 +124,7 @@ public class TextUserInterface implements View{
     @Subscribe
     public void connectionLost(ConnectionLostEvent e){
         System.out.println("Lost connection with server!");
+        System.exit(0);
     }
 
 }
