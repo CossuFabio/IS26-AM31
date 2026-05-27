@@ -16,3 +16,44 @@
     -fx-background-color: rgba(255,243,211,1);
     -fx-border-color: rgba(0,0,0,1);
 }
+.table-column {
+    -fx-alignment: CENTER;
+    -fx-font-family: "Inknut Antiqua Regular";
+    -fx-font-size: 16;
+    -fx-background-color: rgba(255,243,211,1);
+}
+.table-view .column-header {
+    -fx-background-color:  rgba(235,220,185,1);
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: black;
+}
+.table-view {
+    -fx-background-color: rgba(255,243,211,1);
+}
+
+.table-row-cell {
+    -fx-border-color: transparent transparent black transparent;
+    -fx-background-color: rgba(255,243,211,1);
+}
+
+.table-row-cell:selected {
+    -fx-background-color: rgba(235,220,185,1);
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: black;
+    -fx-background-color: rgba(235,220,185,1);
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:current-player {
+    -fx-background-color: rgba(235,220,185,1);
+    -fx-font-family: "Inknut Antiqua Bold";
+    -fx-font-size: 16;
+}
+
+.table-row-cell:current-player .table-cell {
+    -fx-background-color: rgba(235,220,185,1);
+    -fx-font-family: "Inknut Antiqua Bold";
+    -fx-font-size: 16;
+}

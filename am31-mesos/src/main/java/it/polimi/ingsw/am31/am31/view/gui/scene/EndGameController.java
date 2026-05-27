@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.view.gui.scene;
 
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
+import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalLeaderBoard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
@@ -10,16 +11,20 @@ import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
 import it.polimi.ingsw.am31.am31.view.tui.TUILobby;
 import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;
 import javafx.animation.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 
 import java.io.InputStream;
@@ -29,13 +34,52 @@ public class EndGameController extends BaseController {
     @FXML VBox rankingBox;
     @FXML ImageView backgroundImage;
     @FXML StackPane  stackPane;
+    @FXML Button backButton;
+    @FXML Label globalPosition;
+    @FXML Button globalRanking;
+    @FXML StackPane globalRankingOverlay;
+    @FXML TableView <GlobalRankingEntry> rankingTable;
+    @FXML TableColumn <GlobalRankingEntry, Integer> rankColumn;
+    @FXML TableColumn <GlobalRankingEntry, String> nicknameColumn;
+    @FXML TableColumn <GlobalRankingEntry, Integer> gamesColumn;
+    @FXML TableColumn <GlobalRankingEntry, Integer> foodColumn;
+    @FXML TableColumn <GlobalRankingEntry, Integer> PPColumn;
+    @FXML Label tableTitle;
 
+    double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+    double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
 
     @FXML public void initialize() {
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
         backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
         backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
+        rankingBox.setPrefWidth(screenWidth * (double) 600 /1920);
+        backButton.setPrefWidth(screenWidth * (double) 300 /1920);
+        globalPosition.setPrefWidth(screenWidth * (double) 600 /1920);
+        globalRanking.setPrefWidth(screenWidth * (double) 300 /1920);
+        tableTitle.setPrefWidth(screenWidth * (double) 1000 / 1920);
+        tableTitle.setStyle("-fx-border-color: black; -fx-border-width: 0 0 1 0; -fx-background-color: rgba(255,243,211,1);");
+        rankingTable.setPrefHeight(screenHeight* (double) 600 / 1080);
+        rankingTable.setPrefWidth(screenWidth * (double) 1000 / 1920);
+
+        rankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));
+        nicknameColumn.setCellValueFactory(new PropertyValueFactory<>("playerNickname"));
+        gamesColumn.setCellValueFactory(new PropertyValueFactory<>("gamesPlayed"));
+        foodColumn.setCellValueFactory(new PropertyValueFactory<>("totalFood"));
+        PPColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrestigePoints"));
+
+
+        PseudoClass currentPlayer = PseudoClass.getPseudoClass("current-player");
+
+        rankingTable.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(GlobalRankingEntry item, boolean empty) {
+                super.updateItem(item, empty);
+                boolean isCurrentPlayer = item != null && item.getPlayerNickname().equals(controller.getLocalPlayerUsername());
+                pseudoClassStateChanged(currentPlayer, isCurrentPlayer);
+            }
+        });
     }
 
     private void populateRanking (List<LocalLeaderBoard> ranking) {
@@ -65,6 +109,8 @@ public class EndGameController extends BaseController {
             Label nickname = new Label();
             nickname.setText(player.playerState().getNickname());
             nickname.setFont(Font.font("Inknut Antiqua Regular", 16));
+            nickname.setMaxWidth(screenWidth * (double) 150 / 1920);
+            nickname.setTextOverrun(OverrunStyle.ELLIPSIS);
             if (player.isWinner()) nickname.setStyle("-fx-font-weight: bold;");
             name.getChildren().add(nickname);
 
@@ -177,11 +223,46 @@ public class EndGameController extends BaseController {
         super.setLocalGameState(localGameState);
 
         populateRanking(localGameState.getLeaderboard());
+        String myNick = controller.getLocalPlayerUsername();
+        int rank = localGameState.getGlobalRanking().stream()
+                .filter(g -> g.getPlayerNickname().equals(myNick))
+                .findFirst()
+                .map(GlobalRankingEntry::getRank)
+                .orElse(-1);
+        if (rank != -1)
+        {
+            globalPosition.setText("Global position: #" + rank + "/" + localGameState.getGlobalRanking().size());
+        }
+        else
+        {
+            globalPosition.setText("Player not found in global ranking");
+        }
     }
 
     @FXML
     private void returnToLobby() {
         localGameState.reset();
         sceneManager.showWaitingRoom();
+    }
+
+    @FXML
+    private void showGlobalRanking() {
+//        globalRankingOverlay.getChildren().clear();
+//        Region darkBg = new Region();
+//        darkBg.setStyle("-fx-background-color: rgba(0,0,0,0.6);");
+//        darkBg.setMaxWidth(Double.MAX_VALUE);
+//        darkBg.setMaxHeight(Double.MAX_VALUE);
+//        darkBg.setOnMouseClicked(e -> closeGlobalRanking());
+
+        ObservableList<GlobalRankingEntry> rankingData = FXCollections.observableArrayList(localGameState.getGlobalRanking());
+        rankingTable.setItems(rankingData);
+//        globalRankingOverlay.getChildren().addAll(darkBg);
+
+        globalRankingOverlay.setVisible(true);
+    }
+
+    @FXML
+    private void closeGlobalRanking() {
+        globalRankingOverlay.setVisible(false);
     }
 }

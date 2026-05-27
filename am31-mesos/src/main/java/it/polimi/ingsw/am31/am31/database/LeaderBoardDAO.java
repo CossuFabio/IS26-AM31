@@ -151,4 +151,32 @@ public class LeaderBoardDAO {
 
     }
 
+
+    //this board show all the players on the db, not just those currently in the game
+    public List<GlobalRankingEntry> getFullLeaderBoard(int numPlayers) throws SQLException {
+
+        List<GlobalRankingEntry> leaderBoard = new ArrayList<>();
+        String query = """
+            SELECT player_username, total_prestige_points, total_food, games_played, player_rank
+            FROM leaderboard
+            WHERE num_players = ?
+            ORDER BY player_rank ASC
+            """;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, numPlayers);
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                leaderBoard.add(new GlobalRankingEntry(
+                        rs.getString("player_username"),
+                        rs.getInt("total_prestige_points"),
+                        rs.getInt("total_food"),
+                        rs.getInt("games_played"),
+                        rs.getInt("player_rank")
+                ));
+            }
+        }
+        return leaderBoard;
+    }
 }
