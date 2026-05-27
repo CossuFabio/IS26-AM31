@@ -3,9 +3,6 @@ package it.polimi.ingsw.am31.am31.view.gui.scene;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
-import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
@@ -229,7 +226,7 @@ public class WaitingRoomController extends BaseController {
         // Request lobbies from server
         new Thread(() -> {
             try {
-                controller.sendRequest(new ShowLobbyNetworkRequest());
+                controller.requestShowLobbies();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -255,7 +252,7 @@ public class WaitingRoomController extends BaseController {
 
         new Thread(() -> {
             try {
-                controller.sendRequest(new NewGameNetworkRequest(totalPlayers, color));
+                controller.requestNewGame(totalPlayers, color);
                 Platform.runLater(() -> {
                     vbox2.setVisible(false);
                     vbox4.setVisible(true);
@@ -276,7 +273,7 @@ public class WaitingRoomController extends BaseController {
 
         new Thread(() -> {
             try {
-                controller.sendRequest(new JoinGameNetworkRequest(joinColorBox.getValue(), selected.getId()));
+                controller.requestJoinGame(joinColorBox.getValue(), selected.getId());
                 Platform.runLater(() -> {
                     vbox3.setVisible(false);
                     vbox4.setVisible(true);

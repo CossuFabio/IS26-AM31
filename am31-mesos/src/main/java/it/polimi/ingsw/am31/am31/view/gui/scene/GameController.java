@@ -6,9 +6,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
-import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
@@ -328,7 +325,7 @@ public class GameController extends BaseController {
         skipButton1.setDisable(true);
         new Thread(() -> {
                     try {
-                        controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.UPPER));
+                        controller.requestSkip(BoardRows.UPPER);
                     } catch (Exception e) {
                         System.err.println("Skip failed: " + e.getMessage());
                     }
@@ -340,7 +337,7 @@ public class GameController extends BaseController {
         skipButton2.setDisable(true);
         new Thread(() -> {
             try {
-                controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.LOWER));
+                controller.requestSkip(BoardRows.LOWER);
             } catch (Exception e) {
                 System.err.println("Skip failed: " + e.getMessage());
             }
@@ -732,7 +729,7 @@ public class GameController extends BaseController {
         exit.setOnFinished(e -> {
             new Thread(() -> {
                 try {
-                    controller.sendRequest(new DrawNetworkRequest(card.getCardId(), row));
+                    controller.requestDraw(card.getCardId(), row);
                 } catch (Exception ex) {
                     System.err.println("Draw request failed: " + ex.getMessage());
                     Platform.runLater(() -> {
@@ -770,7 +767,7 @@ public class GameController extends BaseController {
         pane.setOnMouseClicked(null);
         new Thread(() -> {
             try {
-                controller.sendRequest(new TotemNetworkRequest(offer.getOfferCardId()));
+                controller.requestTotemPlacement(offer.getOfferCardId());
             } catch (Exception e) {
                 System.err.println("Totem request failed: " + e.getMessage());
             }

@@ -2,7 +2,6 @@ package it.polimi.ingsw.am31.am31.view.gui.scene;
 
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
 import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
-import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
@@ -81,7 +80,7 @@ public class LoginController extends BaseController{
         new Thread( () -> {
             try {
 //                controller.setLocalPlayerUsername(nickname);
-                controller.sendRequest(new NewServerConnectionRequest(nickname));
+                controller.requestServerConnection(nickname);
             } catch (Exception e) {
                 Platform.runLater( () -> {
                     errorLabel.setText("Connection failed: " + e.getMessage());
