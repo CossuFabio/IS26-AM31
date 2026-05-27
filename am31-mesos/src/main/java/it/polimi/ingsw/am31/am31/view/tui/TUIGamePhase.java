@@ -5,9 +5,6 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
@@ -276,13 +273,13 @@ public class TUIGamePhase implements TUIPhase {
                         if (temp == 1) {
                             if (!input.equals(TUIConfig.SKIP_VALUE)) {
                                 try {
-                                    controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.UPPER));
+                                    controller.requestDraw(input.toLowerCase(), BoardRows.UPPER);
                                 } catch (Exception e) {
                                     System.out.println("Failed to send request");
                                 }
                             } else
                                 try {
-                                    controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.UPPER));
+                                    controller.requestSkip(BoardRows.UPPER);
                                 } catch (Exception e) {
                                     System.out.println("Failed to send request");
                                 }
@@ -290,13 +287,13 @@ public class TUIGamePhase implements TUIPhase {
                         if (temp == 2) {
                             if (!input.equals(TUIConfig.SKIP_VALUE)) {
                                 try {
-                                    controller.sendRequest(new DrawNetworkRequest(input.toLowerCase(), BoardRows.LOWER));
+                                    controller.requestDraw(input.toLowerCase(), BoardRows.LOWER);
                                 } catch (Exception e) {
                                     System.out.println("Failed to send request");
                                 }
                             }
                             try {
-                                controller.sendRequest(new SkipDrawNetworkRequest(BoardRows.LOWER));
+                                controller.requestSkip(BoardRows.LOWER);
                             } catch (Exception e) {
                                 System.out.println("Failed to send request");
                             }
@@ -312,7 +309,7 @@ public class TUIGamePhase implements TUIPhase {
             case TOTEM_PLACE: {
                 //input should be an offer card Id (letter A to G)
                 try {
-                    controller.sendRequest(new TotemNetworkRequest(input.toUpperCase()));
+                    controller.requestTotemPlacement(input.toUpperCase());
                     System.out.println("Successfully requested totem"); //for testing
                     choosingTotem = 0;
                 } catch (Exception e) {

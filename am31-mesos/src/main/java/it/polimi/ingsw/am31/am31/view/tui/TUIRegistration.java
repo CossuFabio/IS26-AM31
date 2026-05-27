@@ -2,7 +2,6 @@ package it.polimi.ingsw.am31.am31.view.tui;
 
 
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
 import org.fusesource.jansi.Ansi;
@@ -54,7 +53,7 @@ public class TUIRegistration implements TUIPhase {
             case REGISTRATION: {
                 try {
                     currentStep = TuiRegistrationStep.WAIT_REGISTRATION_RESULT;
-                    controller.sendRequest(new NewServerConnectionRequest(input));
+                    controller.requestServerConnection(input);
                 } catch (Exception e) {
                     currentStep = TuiRegistrationStep.REGISTRATION;
                     System.out.println("\nError sending request");

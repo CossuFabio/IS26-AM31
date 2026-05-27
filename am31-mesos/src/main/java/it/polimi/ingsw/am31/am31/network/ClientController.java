@@ -1,7 +1,16 @@
 package it.polimi.ingsw.am31.am31.network;
 
 
+import it.polimi.ingsw.am31.am31.controller.BoardRows;
+import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
+import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
 import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
 import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
@@ -50,10 +59,6 @@ public class ClientController {
         pingThread.start();
     }
 
-    public void sendRequest(NetworkRequest request) throws Exception {
-        this.connection.sendRequest(request);
-    }
-
     public void disconnect() throws Exception {
         if (!connected) return;
         connected = false;
@@ -71,6 +76,41 @@ public class ClientController {
             connection.setIdentifier(identifier);
             ping();
         }
+    }
+
+    public void requestServerConnection(String playerUsername) throws Exception {
+        NetworkRequest req = new NewServerConnectionRequest(playerUsername);
+        this.connection.sendRequest(req);
+    }
+
+    public void requestShowLobbies() throws Exception {
+        NetworkRequest req = new ShowLobbyNetworkRequest();
+        this.connection.sendRequest(req);
+    }
+
+    public void requestNewGame(int nPlayers, Color color) throws Exception {
+        NetworkRequest req = new NewGameNetworkRequest(nPlayers, color);
+        this.connection.sendRequest(req);
+    }
+
+    public void requestJoinGame(Color color, int gameId) throws Exception{
+        NetworkRequest req = new JoinGameNetworkRequest(color, gameId);
+        this.connection.sendRequest(req);
+    }
+
+    public void requestDraw(String cardId, BoardRows row) throws Exception {
+        NetworkRequest req = new DrawNetworkRequest(cardId, row);
+        this.connection.sendRequest(req);
+    }
+
+    public void requestSkip(BoardRows row) throws Exception {
+        NetworkRequest req = new SkipDrawNetworkRequest(row);
+        this.connection.sendRequest(req);
+    }
+
+    public void requestTotemPlacement(String totemId) throws Exception {
+        NetworkRequest req = new TotemNetworkRequest(totemId);
+        this.connection.sendRequest(req);
     }
 
 
