@@ -99,12 +99,6 @@ public class LeaderBoardDAO {
 
     }
 
-    /**
-     *
-     * @param players
-     * @return
-     * @throws SQLException
-     */
     public List<GlobalRankingEntry> getLeaderBoardPosition(List<Player> players) throws SQLException {
 
         if(players.isEmpty()) return new ArrayList<>();

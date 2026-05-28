@@ -18,3 +18,4 @@ build/
 
 *.txt
 am31-mesos/src/main/java/it/polimi/ingsw/am31/am31/database/database.properties
+am31-mesos/src/main/resources/database.properties

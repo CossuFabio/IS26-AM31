@@ -183,8 +183,7 @@ public class GameController {
             LeaderBoardDAO leaderBoardDAO = new LeaderBoardDAO(connection);
             leaderBoardDAO.insertScores(game.getPlayersList());
             dbLeaderBoardEntries = leaderBoardDAO.getFullLeaderBoard(game.getPlayersList().size());
-            //this board shows only the current players
-            //dbLeaderBoardEntries = leaderBoardDAO.getLeaderBoardPosition(game.getPlayersList());
+            DataBaseConnectionFactory.closeConnection(connection);
 
 
         }catch(SQLException e){
