@@ -18,16 +18,18 @@ import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 public class TUIResultsTest {
     private TextUserInterface textUserInterface;
     private TUIResults results;
-
+    private LocalGameState gamestate;
+    LocalPlayerState test1 ;
+    LocalPlayerState test2 ;
     @BeforeEach
     public void setup() {
-        LocalGameState gamestate = new LocalGameState();
+        gamestate = new LocalGameState();
 
         List<Card> cards1 = new ArrayList<>();
         List<Card> cards2 = new ArrayList<>();
 
-        LocalPlayerState test1 = new LocalPlayerState("test", Color.BLACK);
-        LocalPlayerState test2 = new LocalPlayerState("test2",Color.WHITE);
+         test1 = new LocalPlayerState("test", Color.BLACK);
+         test2 = new LocalPlayerState("test2",Color.WHITE);
 
         Card h = createHunter().cardId("h1").era(1).minPlayers(2).mark(true).build();
         Card f = createFarmer().cardId("f1").era(2).minPlayers(2).discount(3).build();
@@ -58,7 +60,7 @@ public class TUIResultsTest {
             controller.setLocalNameTest();
             LocalLeaderBoard winner = new LocalLeaderBoard(test1, true);
             LocalLeaderBoard loser = new LocalLeaderBoard(test2, false);
-            List<LocalLeaderBoard> leaderBoard =  new ArrayList<>();
+        List<LocalLeaderBoard> leaderBoard =  new ArrayList<>();
             leaderBoard.add(winner);
             leaderBoard.add(loser);
             gamestate.setLeaderboard(leaderBoard);
@@ -69,6 +71,13 @@ public class TUIResultsTest {
 
     @Test
     void testShouldShowResultsScene() {
+        //prints YOU WON message
+       results.drawResults();
+       List<LocalLeaderBoard> leaderBoard = new ArrayList<>();
+       leaderBoard.add(new LocalLeaderBoard(test2,true));
+       leaderBoard.add(new LocalLeaderBoard(test1,false));
+       gamestate.setLeaderboard(leaderBoard);
+       //prints GAME ENDED
        results.drawResults();
     }
 

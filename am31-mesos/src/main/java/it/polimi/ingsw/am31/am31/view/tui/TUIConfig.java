@@ -14,6 +14,10 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUIConfig {
 
+    //symbols
+    public static final String FOOD = "♣";
+    public static final String POINTS = "♦";
+
     //Useful constants used in TUI
     public static final String GO_BACK_VALUE = "back";
     public static final String SKIP_VALUE = "skip";
@@ -23,18 +27,18 @@ public class TUIConfig {
     public static final int SMALL_OFFER_CARD_PADDING = 2;
     public static final String SMALL_OFFER_CARD_SPACING = "  ";
     public static final String SMALL_OFFER_CARD_BORDER = " ";
-    public static final String SMALL_OFFER_CARD_BOX = "   ";
+    public static final String SMALL_OFFER_CARD_BOX = "ooo";
     public static final int SMALL_OFFER_CARD_SIZE = SMALL_OFFER_CARD_PADDING + SMALL_OFFER_CARD_BOX.length()+ SMALL_OFFER_CARD_BORDER.length()*2+ SMALL_OFFER_CARD_SPACING.length();
 
     //full off.track sizes
     public static final int OFFER_CARD_PADDING = 3;
-    public static final String OFFER_CARD_BOX = "     ";
+    public static final String OFFER_CARD_BOX = "ooooo";
     public static final String OFFER_CARD_BORDER = " ";
     public static final String OFFER_CARD_SPACING = "  ";
     public static final int OFFER_CARD_SIZE = OFFER_CARD_PADDING + OFFER_CARD_BOX.length()+ OFFER_CARD_BORDER.length()*2 + OFFER_CARD_SPACING.length();
     public static final int CARD_SIZE = 15;
     public static final int TURNORDER_SIZE = 25; //can't be under 24
-
+    public static final int RESULT_TITLE_SIZE = 18;
 
     //prints the style of a card
     public static void printColor(Card c) {
@@ -42,6 +46,10 @@ public class TUIConfig {
         c.acceptVisit(new TuiColorVisitor());
     }
 
+    /**
+     * <p>Prints the p player hansi color</p>
+     * @param p
+     */
     public static void printColor(LocalPlayerState p) {
         if (p == null ) return;
         switch(p.getColor()) {
@@ -57,6 +65,12 @@ public class TUIConfig {
                 System.out.print(ansi().fg(Ansi.Color.BLACK).bg(Ansi.Color.WHITE).toString()); break;
         }
     }
+
+    /**
+     * <p>Returns the hansi code for the player p color</p>
+     * @param p
+     * @return
+     */
     public static String getColor(LocalPlayerState p) {
         if (p == null ) return null;
         switch(p.getColor()) {
@@ -120,7 +134,7 @@ public class TUIConfig {
         }
         System.out.println();
         for (Card c : cards) {
-            print(c, insideBorder(c.getCardId(), SMALL_CARD_SIZE) );
+            print(c, centeredInsideBorder(c.getCardId(), SMALL_CARD_SIZE) );
         }
         System.out.println();
         for (Card c : cards) {
@@ -282,15 +296,15 @@ public class TUIConfig {
         //inside
         for (LocalOfferCard c : cards) {
             String fixedId = StringUtils.rightPad(c.getOfferCardId(), OFFER_CARD_PADDING);
-            System.out.print(insideBorder(fixedId+OFFER_CARD_BORDER + OFFER_CARD_BOX,OFFER_CARD_SIZE));
+            System.out.print(centeredInsideBorder(fixedId+OFFER_CARD_BORDER + OFFER_CARD_BOX,OFFER_CARD_SIZE));
         }
         System.out.println();
         //inside 2
         for (LocalOfferCard c : cards)
             if (c.getFood() > 0)
-                System.out.print(insideBorder("Gives " + c.getFood() + "♣", OFFER_CARD_SIZE));
+                System.out.print(centeredInsideBorder("Gives " + c.getFood() + "♣", OFFER_CARD_SIZE));
             else
-                System.out.print(insideBorder((StringUtils.repeat("↓", c.getDrawFromUnder()) + StringUtils.repeat("↑", c.getDrawFromUpper())), OFFER_CARD_SIZE));
+                System.out.print(centeredInsideBorder((StringUtils.repeat("↓", c.getDrawFromUnder()) + StringUtils.repeat("↑", c.getDrawFromUpper())), OFFER_CARD_SIZE));
         System.out.println();
         //inside 3 to draw box
         for (LocalOfferCard c : cards) {
@@ -323,13 +337,37 @@ public class TUIConfig {
 
     //prints the lower side of a card, in the specified size
     public static String lowerBorder(int size){
+
         String midPiece = StringUtils.repeat("━", size);
         return "┗"+ midPiece  +"┛";
     }
 
-    //prints the string with the right spacing from the borders, in the middle of a card
-    public static String insideBorder(String c, int size){
+    //prints a string with the right spacing from the borders, in the middle of a card
+    public static String centeredInsideBorder(String c, int size){
             return "┃"+ StringUtils.center(c,size," ") + "┃";
     }
+    public static String insideBorder(String c, int size){
+        if(c.length()>size)
+            c = c.substring(0, size);
+        int leftPad = (size-c.length())/2;
+        return "┃"+" ".repeat(leftPad)+c+" ".repeat(size-c.length()-leftPad)+ "┃";
+
+    }
+//my first attempt at a javadoc annotation
+    /**
+     * <p>Prints the String c, centered inside a border of size "size", in the color "color"</p>
+     * @param c
+     * @param size
+     * @param color
+     * @return
+     */
+    public static String coloredInsideBorder(String c, int size, Ansi.Color color){
+        if(c.length()>size)
+            c = c.substring(0, size);
+        int leftPad = (size-c.length())/2;
+            return "┃"+" ".repeat(leftPad)+ansi().fg(color)+c+ansi().reset()+" ".repeat(size-c.length()-leftPad)+ "┃";
+    }
+
+    //
 
 }

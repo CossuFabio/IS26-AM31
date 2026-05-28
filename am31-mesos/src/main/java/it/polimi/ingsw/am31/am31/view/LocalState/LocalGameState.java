@@ -129,6 +129,7 @@ public class LocalGameState{
     public void addPlayer(LocalPlayerState p){
         players.add(p);
     }
+
     public void reset(){
 
         isValidState = false;

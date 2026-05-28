@@ -9,9 +9,12 @@ import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ReturnToLobbyEvent;
+import org.apache.commons.lang3.StringUtils;
+import org.fusesource.jansi.Ansi;
 
 import java.util.List;
 
+import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUIResults implements TUIPhase {
@@ -91,22 +94,38 @@ public class TUIResults implements TUIPhase {
 
     void drawResults (){
         String localPlayer = controller.getLocalPlayerUsername();
+        String fixedMessage = "";
+        System.out.println(upperBorder(RESULT_TITLE_SIZE));
         //if client won, shows special message
         if (gameState.getLeaderboard()
                 .stream()
-                .anyMatch(s -> s.playerState().getNickname().equals(localPlayer) && s.isWinner()))
-            System.out.println("YOU WON!");
-        else
-            System.out.println("GAME ENDED!");
+                .anyMatch(s -> s.playerState().getNickname().equals(localPlayer) && s.isWinner())){
+            fixedMessage = "YOU WON";
+
+            System.out.println(coloredInsideBorder(fixedMessage,RESULT_TITLE_SIZE, Ansi.Color.GREEN));
+        }
+        else {
+            fixedMessage ="GAME ENDED";
+            System.out.println(coloredInsideBorder(fixedMessage,RESULT_TITLE_SIZE, Ansi.Color.GREEN));
+        }System.out.println(lowerBorder(RESULT_TITLE_SIZE));
+
         System.out.println("RESULTS:");
         //prints leaderboard
         for (LocalLeaderBoard p : gameState.getLeaderboard()) {
             boolean pWon = p.isWinner();
+            String score = "";
             if (pWon)
-                System.out.println("WINNER: " + p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
+                score = "WINNER: ";
+            score = score + getColor(p.playerState()) + p.playerState().getNickname() + ansi().reset() + " | " + p.playerState().getPrestigePoints() + POINTS+" "+ p.playerState().getFood() + FOOD;
+            int size = score.length()+20;
+            System.out.println(upperBorder(size));
+            if (pWon)
+                System.out.println(insideBorder(score,size));
             else
-                System.out.println(p.playerState().getNickname() + " | " + p.playerState().getPrestigePoints() + " Prestige Points and " + p.playerState().getFood() + " food |");
+                System.out.println(score);
+            System.out.println(lowerBorder(size));
         }
+        System.out.println();
         System.out.println("Press: \n1 - To go back to Lobby"+"\n2 - To show players' tribes");
     }
 
