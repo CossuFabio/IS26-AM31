@@ -1,10 +1,10 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages.serverMessages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
 public class SuccessRegistrationUpdate extends UpdateMessage {
 

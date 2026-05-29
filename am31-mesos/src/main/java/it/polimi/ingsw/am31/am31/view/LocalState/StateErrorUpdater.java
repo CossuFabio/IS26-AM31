@@ -1,8 +1,8 @@
-package it.polimi.ingsw.am31.am31.view.LocalState;
+package it.polimi.ingsw.am31.am31.view.localState;
 
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCode;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCode;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.ErrorHandler;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ConnectionLostEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedJoinLobby;

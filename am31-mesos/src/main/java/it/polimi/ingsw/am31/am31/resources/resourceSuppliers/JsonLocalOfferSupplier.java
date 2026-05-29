@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.ResourcesPaths;
 import it.polimi.ingsw.am31.am31.resources.IResourceSupplier;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
+import it.polimi.ingsw.am31.am31.view.localState.LocalOfferCard;
 
 import java.io.IOException;
 import java.io.InputStream;

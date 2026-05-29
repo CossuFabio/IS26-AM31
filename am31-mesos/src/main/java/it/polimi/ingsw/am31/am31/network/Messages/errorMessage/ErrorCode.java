@@ -1,6 +1,6 @@
-package it.polimi.ingsw.am31.am31.network.Messages.errorMessage;
+package it.polimi.ingsw.am31.am31.network.messages.errorMessage;
 
-import static it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCategory.*;
+import static it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCategory.*;
 
 //Used for  higher granularity filtering
 public enum ErrorCode {

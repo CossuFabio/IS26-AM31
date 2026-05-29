@@ -1,6 +1,5 @@
 package it.polimi.ingsw.am31.am31.view.eventsHandling.events;
 
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEvent;
 
 public class SuccessRegistrationEvent extends ViewEvent {

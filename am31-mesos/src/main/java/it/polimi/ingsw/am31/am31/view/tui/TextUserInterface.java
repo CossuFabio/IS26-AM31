@@ -2,8 +2,7 @@ package it.polimi.ingsw.am31.am31.view.tui;
 
 
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameCrashUpdate;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.View;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;

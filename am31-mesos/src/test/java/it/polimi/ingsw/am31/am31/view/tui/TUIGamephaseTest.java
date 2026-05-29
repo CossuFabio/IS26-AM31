@@ -8,9 +8,9 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectsC
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalOfferCard;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
+import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.localState.LocalOfferCard;
+import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ public class TUIGamephaseTest {
 
         Card h = createHunter().cardId("h1").era(1).minPlayers(2).mark(true).build();
         Card f = createFarmer().cardId("f1").era(2).minPlayers(2).discount(3).build();
-        Card i = createInventor().cardId("i1").era(2).minPlayers(2).icon(IconEnum.BREAD).build();
+        Card i = createShaman().cardId("i1").era(2).minPlayers(2).stars(3).build();
         Card e = createSustainEvent()
                 .cardId("e1")
                 .era(1)
@@ -97,7 +97,7 @@ public class TUIGamephaseTest {
     }
     @Test
     void TestShouldDrawCards (){
-        //should print 6 cards upper and 4 lower
+        //should print 7 cards upper and 4 lower
         gamephase.drawCardLines();
     }
     @Test

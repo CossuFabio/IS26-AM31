@@ -1,15 +1,11 @@
-package it.polimi.ingsw.am31.am31.view.LocalState;
+package it.polimi.ingsw.am31.am31.view.localState;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
-import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.*;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
-import org.fusesource.jansi.Ansi;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color.*;
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.print;
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.printColor;
 import static org.fusesource.jansi.Ansi.ansi;

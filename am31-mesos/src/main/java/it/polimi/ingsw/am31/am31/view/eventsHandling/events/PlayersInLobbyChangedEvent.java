@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.view.eventsHandling.events;
 
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
+import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEvent;
 
 import java.util.List;

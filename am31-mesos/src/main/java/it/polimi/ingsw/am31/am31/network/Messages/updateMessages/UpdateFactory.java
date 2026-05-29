@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages;
 
 import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.controller.GameController;
@@ -10,16 +10,16 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.EventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.GamesManager;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.CardLineUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferCardMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.CardLineUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.OfferCardMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.OfferTrackUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.TurnOrderUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.*;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
 import java.util.*;
 

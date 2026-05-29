@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.network;
 
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 
 public interface VirtualView {
     //methods called by server on its clients, to send them updates and such

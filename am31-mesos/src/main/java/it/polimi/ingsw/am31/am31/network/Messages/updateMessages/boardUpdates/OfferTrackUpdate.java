@@ -1,16 +1,16 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
 import java.util.List;
 
 public class OfferTrackUpdate extends UpdateMessage {
 
-    private final List<it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferCardMessage> offerTrack;
+    private final List<it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.OfferCardMessage> offerTrack;
 
     @JsonCreator
     public OfferTrackUpdate(@JsonProperty("offerTrack") List<OfferCardMessage> offerTrack){

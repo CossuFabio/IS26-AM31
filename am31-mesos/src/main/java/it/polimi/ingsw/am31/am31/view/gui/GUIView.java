@@ -2,7 +2,7 @@ package it.polimi.ingsw.am31.am31.view.gui;
 
 
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import javafx.application.Application;
 import javafx.application.Platform;

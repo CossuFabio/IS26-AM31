@@ -1,11 +1,11 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.PlayerMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.PlayerMessage;
 
 import java.util.List;
 

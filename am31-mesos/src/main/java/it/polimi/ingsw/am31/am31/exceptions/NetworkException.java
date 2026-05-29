@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.exceptions;
 
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCategory;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorCode;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCategory;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCode;
 
 public abstract class NetworkException extends Exception {
 

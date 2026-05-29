@@ -3,14 +3,13 @@ package it.polimi.ingsw.am31.am31.network.socket.client;
 import it.polimi.ingsw.am31.am31.exceptions.networkException.ConnectionLostException;
 import it.polimi.ingsw.am31.am31.network.ClientConfig;
 import it.polimi.ingsw.am31.am31.network.MessageDispatcher;
-import it.polimi.ingsw.am31.am31.network.Messages.Message;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFactory;
+import it.polimi.ingsw.am31.am31.network.messages.Message;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessageFactory;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.DisconnectNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.NewServerConnectionRequest;
-import it.polimi.ingsw.am31.am31.network.Messages.MessageMapper;
+import it.polimi.ingsw.am31.am31.network.messages.MessageMapper;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

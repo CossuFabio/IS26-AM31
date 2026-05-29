@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.network.Messages.errorMessage;
+package it.polimi.ingsw.am31.am31.network.messages.errorMessage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages;
 
 public class UpdateMethodsConstants {
 

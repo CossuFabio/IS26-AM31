@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.view.LocalState;
+package it.polimi.ingsw.am31.am31.view.localState;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.view.tui.TuiColorVisitor;

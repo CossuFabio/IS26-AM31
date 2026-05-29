@@ -1,10 +1,10 @@
 package it.polimi.ingsw.am31.am31.network.rmi.server;
 
 import it.polimi.ingsw.am31.am31.network.VirtualView;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageMapper;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMapper;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessageMapper;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMapper;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 
 import java.rmi.RemoteException;
 

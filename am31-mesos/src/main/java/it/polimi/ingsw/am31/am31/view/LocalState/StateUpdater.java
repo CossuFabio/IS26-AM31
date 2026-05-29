@@ -1,23 +1,22 @@
-package it.polimi.ingsw.am31.am31.view.LocalState;
+package it.polimi.ingsw.am31.am31.view.localState;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateHandler;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.CardLineUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateHandler;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.CardLineUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.OfferTrackUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.TurnOrderUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.*;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StateUpdater implements IUpdateVisitor, UpdateHandler{

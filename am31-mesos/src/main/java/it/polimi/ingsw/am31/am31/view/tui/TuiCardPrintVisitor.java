@@ -36,9 +36,15 @@ public class TuiCardPrintVisitor implements TribeVisitor
     @Override
     public void visit(Shaman c) {
         switch(layer){
-            case 1: print(c, centeredInsideBorder(" "+c.getCardId()+" "+"SHAMAN ",CARD_SIZE));break;
+            case 1: print(c, centeredInsideBorder(" "+c.getCardId()+" "+"SHAMAN ",CARD_SIZE));
+                break;
 
-            case 2: print(c, centeredInsideBorder(StringUtils.repeat("★",c.getStars()),CARD_SIZE));break;
+            case 2:
+                switch (c.getStars()) { //hardcoded correction because of visual issue
+                    case 2:print(c, centeredInsideBorder(StringUtils.repeat("★", c.getStars()), CARD_SIZE-1));break;
+                    case 3:print(c, centeredInsideBorder(StringUtils.repeat("★", c.getStars()), CARD_SIZE-1));break;
+                    default:print(c, centeredInsideBorder(StringUtils.repeat("★", c.getStars()), CARD_SIZE));break;
+                }break;
 
             case 3:print(c, centeredInsideBorder("",CARD_SIZE));break;
 

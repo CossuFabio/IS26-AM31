@@ -1,10 +1,9 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
 public class GameStartUpdate extends UpdateMessage {
 

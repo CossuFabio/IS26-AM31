@@ -1,10 +1,10 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
-import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.*;
-import it.polimi.ingsw.am31.am31.view.LocalState.*;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
+import it.polimi.ingsw.am31.am31.view.localState.*;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,8 +81,28 @@ public class TUIResultsTest {
        results.drawResults();
     }
 
+
     @Test
     void testShouldDrawTribes(){
+        //both players have 4 cards, white and black player.
         results.drawTribes();
+
+    }
+
+    @Test
+    void testShouldDrawLeaderBoard(){
+        List<GlobalRankingEntry> ranking = new ArrayList<>();
+        GlobalRankingEntry e1 = new GlobalRankingEntry("0034",0034,34,34,34);
+        GlobalRankingEntry e2 = new GlobalRankingEntry("FedePoci",100,25,20,2);
+        GlobalRankingEntry e3 = new GlobalRankingEntry("Sinner",1000,2,100,1);
+        //if someone has unrealistic values, it gets corrected
+        GlobalRankingEntry cheater = new GlobalRankingEntry("CheaterWithVeryLongNameeeeeeee",1000000000,20000,1000000,1000000);
+
+        ranking.add(e1);
+        ranking.add(e2);
+        ranking.add(e3);
+        ranking.add(cheater);
+        gamestate.setGlobalRanking(ranking);
+        results.drawLeaderboard();
     }
 }

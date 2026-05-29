@@ -2,9 +2,9 @@ package it.polimi.ingsw.am31.am31.network;
 
 import it.polimi.ingsw.am31.am31.network.rmi.client.RmiClient;
 import it.polimi.ingsw.am31.am31.network.socket.client.SocketClient;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.StateErrorUpdater;
-import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
+import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.localState.StateErrorUpdater;
+import it.polimi.ingsw.am31.am31.view.localState.StateUpdater;
 import it.polimi.ingsw.am31.am31.view.View;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;

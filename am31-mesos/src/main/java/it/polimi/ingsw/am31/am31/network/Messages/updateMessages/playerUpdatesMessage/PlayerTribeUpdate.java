@@ -1,10 +1,10 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMethodsConstants;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
 import java.util.List;
 

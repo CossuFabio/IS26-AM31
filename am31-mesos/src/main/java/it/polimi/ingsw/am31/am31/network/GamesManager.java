@@ -12,7 +12,7 @@ import it.polimi.ingsw.am31.am31.resources.GameResources;
 import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonBuildingCardsSupplier;
 import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonOfferSupplier;
 import it.polimi.ingsw.am31.am31.resources.resourceSuppliers.JsonTribeCardsSupplier;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageFactory;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessageFactory;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.SkipDrawNetworkRequest;
@@ -20,8 +20,8 @@ import it.polimi.ingsw.am31.am31.network.requests.gameRequest.TotemNetworkReques
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.JoinGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.NewGameNetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.lobbyRequest.ShowLobbyNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateFactory;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateFactory;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
 
 import java.io.IOException;
 import java.util.Map;

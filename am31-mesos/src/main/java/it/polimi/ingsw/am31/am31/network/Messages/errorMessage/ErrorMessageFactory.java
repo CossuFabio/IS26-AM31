@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.network.Messages.errorMessage;
+package it.polimi.ingsw.am31.am31.network.messages.errorMessage;
 
 import it.polimi.ingsw.am31.am31.exceptions.GameException;
 import it.polimi.ingsw.am31.am31.exceptions.NetworkException;

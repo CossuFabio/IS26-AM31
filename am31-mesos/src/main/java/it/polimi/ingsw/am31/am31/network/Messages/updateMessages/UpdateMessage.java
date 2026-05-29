@@ -1,19 +1,18 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages;
 
 
 import com.fasterxml.jackson.annotation.*;
-import it.polimi.ingsw.am31.am31.network.Messages.IMessageVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.Message;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.CardLineUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.OfferTrackUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates.TurnOrderUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.*;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
-import it.polimi.ingsw.am31.am31.view.LocalState.StateUpdater;
+import it.polimi.ingsw.am31.am31.network.messages.IMessageVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.Message;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.CardLineUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.OfferTrackUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.TurnOrderUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.*;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerBonusDrawUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerBuildingsUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerScoresUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "updateType")
 

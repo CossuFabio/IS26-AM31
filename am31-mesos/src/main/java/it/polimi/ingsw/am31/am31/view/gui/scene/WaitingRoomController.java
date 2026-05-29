@@ -1,13 +1,11 @@
 package it.polimi.ingsw.am31.am31.view.gui.scene;
 
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
+import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
-import it.polimi.ingsw.am31.am31.view.tui.TUILobby;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -20,7 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
-import org.fusesource.jansi.Ansi;
 
 import java.io.InputStream;
 import java.util.HashMap;

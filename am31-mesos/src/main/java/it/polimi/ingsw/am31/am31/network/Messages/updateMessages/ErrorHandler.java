@@ -1,6 +1,6 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages;
 
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessage;
 
 public interface ErrorHandler {
     void handleErrorMessage(ErrorMessage message);

@@ -1,16 +1,13 @@
-package it.polimi.ingsw.am31.am31.network.Messages;
+package it.polimi.ingsw.am31.am31.network.messages;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageMapper;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMapper;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessageMapper;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMapper;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 
 
 public class MessageMapper {

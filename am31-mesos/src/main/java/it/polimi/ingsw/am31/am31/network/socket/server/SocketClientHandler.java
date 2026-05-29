@@ -1,16 +1,13 @@
 package it.polimi.ingsw.am31.am31.network.socket.server;
 
-import it.polimi.ingsw.am31.am31.network.Messages.Message;
-import it.polimi.ingsw.am31.am31.network.Messages.MessageMapper;
+import it.polimi.ingsw.am31.am31.network.messages.Message;
+import it.polimi.ingsw.am31.am31.network.messages.MessageMapper;
 import it.polimi.ingsw.am31.am31.network.Server;
 import it.polimi.ingsw.am31.am31.network.VirtualView;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessageMapper;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessage;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
-import it.polimi.ingsw.am31.am31.network.requests.transportLayerRequest.PingNetworkRequest;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMapper;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 
 import java.io.*;
 import java.net.Socket;

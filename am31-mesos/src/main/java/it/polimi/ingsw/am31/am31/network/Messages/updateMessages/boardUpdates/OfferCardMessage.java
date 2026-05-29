@@ -1,9 +1,8 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.boardUpdates;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.IUpdateVisitor;
 
 //The only purpose of this class is encapsulating the state of an offerTrack before sending to the client
 public class OfferCardMessage {

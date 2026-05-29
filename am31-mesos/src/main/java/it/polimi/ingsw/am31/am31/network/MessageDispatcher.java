@@ -1,11 +1,11 @@
 package it.polimi.ingsw.am31.am31.network;
 
-import it.polimi.ingsw.am31.am31.network.Messages.IMessageVisitor;
-import it.polimi.ingsw.am31.am31.network.Messages.Message;
-import it.polimi.ingsw.am31.am31.network.Messages.errorMessage.ErrorMessage;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.ErrorHandler;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateHandler;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.UpdateMessage;
+import it.polimi.ingsw.am31.am31.network.messages.IMessageVisitor;
+import it.polimi.ingsw.am31.am31.network.messages.Message;
+import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorMessage;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.ErrorHandler;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateHandler;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

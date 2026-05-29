@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.database;
 
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 
 import java.sql.*;
 import java.util.ArrayList;

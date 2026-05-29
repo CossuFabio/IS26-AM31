@@ -1,9 +1,9 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages;
 
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameRoundStatusUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GameStartUpdate;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.GameRoundStatusUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.GameStartUpdate;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.LobbyDescriptor;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.ShowLobbyUpdate;
 
 public class UpdateVisitor {
     public UpdateVisitor(){

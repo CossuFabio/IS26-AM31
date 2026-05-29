@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage;
+package it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

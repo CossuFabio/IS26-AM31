@@ -1,30 +1,39 @@
 package it.polimi.ingsw.am31.am31.view.tui;
 
+
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.LeaderBoardEntryUpdate;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalLeaderBoard;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
+import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.localState.LocalLeaderBoard;
+import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ReturnToLobbyEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.fusesource.jansi.Ansi;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
+import static java.lang.Math.min;
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * <h>Tui Results</h>
+ * <p>Class for drawing the Results screen after a game, implemented in CLI</p>
+ */
 public class TUIResults implements TUIPhase {
 
 
 
-    private enum TuiResultsStep {SHOW_RESULTS, SHOW_TRIBES, BACK_TO_LOBBY}
+    private enum TuiResultsStep {SHOW_RESULTS, SHOW_TRIBES, GLOBAL_LEADERBOARD, BACK_TO_LOBBY}
 
     private TuiResultsStep currentStep;
-    private LocalGameState gameState;
+    private final LocalGameState gameState;
     private final ClientController controller;
     private final TextUserInterface TUI;
 
@@ -49,8 +58,14 @@ public class TUIResults implements TUIPhase {
                 System.out.println("Going back to lobby...");
                 break;
             }
+            case GLOBAL_LEADERBOARD: {
+                drawLeaderboard();
+                break;
+            }
         }
     }
+
+
 
     @Override
     public void handleInput(String input) {
@@ -66,6 +81,11 @@ public class TUIResults implements TUIPhase {
                     }
                     case "2": {
                         currentStep = TuiResultsStep.SHOW_TRIBES;
+                        TUI.printScreen();
+                        break;
+                    }
+                    case "3": {
+                        currentStep = TuiResultsStep.GLOBAL_LEADERBOARD;
                         TUI.printScreen();
                         break;
                     }
@@ -85,14 +105,26 @@ public class TUIResults implements TUIPhase {
                 TUI.printScreen();
                 break;
             }
+            case GLOBAL_LEADERBOARD: {
+                if(input.equals("1"))
+                    currentStep = TuiResultsStep.SHOW_RESULTS;
+                if(input.equals("2"))
+                    currentStep = TuiResultsStep.BACK_TO_LOBBY;
+                else
+                    System.out.println("Invalid input!");
+                TUI.printScreen();
+                break;
+            }
             case BACK_TO_LOBBY: {
                 break;
             }
         }
     }
 
-
-    void drawResults (){
+    /**
+     * <p>Draws the results screen, with every players' points and the winner(s)</p>
+     */
+    protected void drawResults (){
         String localPlayer = controller.getLocalPlayerUsername();
         String fixedMessage = "";
         System.out.println(upperBorder(RESULT_TITLE_SIZE));
@@ -116,30 +148,68 @@ public class TUIResults implements TUIPhase {
             String score = "";
             if (pWon)
                 score = "WINNER: ";
-            score = score + getColor(p.playerState()) + p.playerState().getNickname() + ansi().reset() + " | " + p.playerState().getPrestigePoints() + POINTS+" "+ p.playerState().getFood() + FOOD;
-            int size = score.length()+20;
+            score = score + p.playerState().getNickname()  + " | " + p.playerState().getPrestigePoints() + POINTS+" "+ p.playerState().getFood() + FOOD;
+            int size = score.length()+RESULT_TITLE_SIZE;
             System.out.println(upperBorder(size));
-            if (pWon)
-                System.out.println(insideBorder(score,size));
-            else
-                System.out.println(score);
+            System.out.println(centeredInsideBorder(score,size));
             System.out.println(lowerBorder(size));
         }
         System.out.println();
-        System.out.println("Press: \n1 - To go back to Lobby"+"\n2 - To show players' tribes");
+        System.out.println("Press: \n1 - To go back to Lobby"+"\n2 - To show players' tribes\n3 - To go to Global Leaderboard");
     }
 
-    void drawTribes (){
-        for(LocalPlayerState p : gameState.getPlayers()) {
-        System.out.println(p.toString());
-        for (Card c : p.getTribe())
-            System.out.println(c.toString());
-        for (Card c : p.getBuildings())
-            System.out.println(c.toString());
-    }
-        ansi().reset();
-        System.out.println("Press 1 to go back to results");}
+    /**
+     * <p>Draws every players' tribe, with their scores</p>
+     */
+    protected void drawTribes (){
+        printOrderdTribe(gameState);
+        System.out.println("\nPress:\n1 - To go back to results");}
 
+    /**
+     * <p>Draws the leaderboard of all players that have played a game.</p>
+     */
+    protected void drawLeaderboard() {
+        int col = 5; //number of GlobalRankingEntry attributes
+        int colsize = RANKING_COL_SIZE; //arbitrary
+
+        String top = "┌" + ("─".repeat(colsize) +"┬").repeat(col-1) + "─".repeat(colsize)+ "┐";
+        String mid = "├" + ("─".repeat(colsize) +"┼").repeat(col-1) + "─".repeat(colsize)+ "┤";
+        String bot = "└" + ("─".repeat(colsize) +"┴").repeat(col-1) + "─".repeat(colsize)+ "┘";
+        List<GlobalRankingEntry> ranking = gameState.getGlobalRanking();
+       System.out.println(top);
+       //table head
+        System.out.println("│"+
+                StringUtils.center("RANK",colsize) +"│"+
+                StringUtils.center("NICKNAME",colsize)+"│"+
+                StringUtils.center("FOOD",colsize)+"│"+
+                StringUtils.center("POINTS",colsize) +"│"+
+                StringUtils.center("N. OF GAMES",colsize)+"│");
+        System.out.println(mid);
+        for(int i=0;i<ranking.size();i++){
+            GlobalRankingEntry e = ranking.get(i);
+            //to avoid visualization problems
+            String nick = e.getPlayerNickname();
+            if (e.getPlayerNickname().length() > colsize)
+                nick =  e.getPlayerNickname().substring(0, colsize);
+            int food = min(999,e.getTotalFood());
+            int pts = min(5000,e.getTotalPrestigePoints());
+            int games = min(100000,e.getGamesPlayed());
+            int rank = min(999999,e.getRank());
+            //Prints the inside of a line
+           System.out.println("│"+
+                   StringUtils.center(Integer.toString(rank),colsize) +"│"+
+                   StringUtils.center(nick,colsize)+"│"+
+                   StringUtils.center(Integer.toString(food),colsize)+"│"+
+                   StringUtils.center(Integer.toString(pts),colsize) +"│"+
+                   StringUtils.center(Integer.toString(games),colsize)+"│");
+           if(i+1<ranking.size())
+                   System.out.println(mid);
+           else break;
+        }
+        System.out.println(bot);
+
+        System.out.println("\nType:\n1 - Go back to Results\n2 - Go back to Lobby");
+    }
     @Subscribe
     public void handleBoardUpdate(BoardUpdateEvent e) {
         TUI.printScreen();

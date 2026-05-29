@@ -1,4 +1,4 @@
-package it.polimi.ingsw.am31.am31.network.Messages;
+package it.polimi.ingsw.am31.am31.network.messages;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

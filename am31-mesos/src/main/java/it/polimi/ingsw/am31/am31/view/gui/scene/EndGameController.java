@@ -1,15 +1,9 @@
 package it.polimi.ingsw.am31.am31.view.gui.scene;
 
-import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
-import it.polimi.ingsw.am31.am31.network.Messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalGameState;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalLeaderBoard;
-import it.polimi.ingsw.am31.am31.view.LocalState.LocalPlayerState;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ReturnToLobbyEvent;
+import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
+import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.localState.LocalLeaderBoard;
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
-import it.polimi.ingsw.am31.am31.view.tui.TUILobby;
-import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;
 import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
