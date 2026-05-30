@@ -417,12 +417,19 @@ public class TUIConfig {
 
     //prints a string with the right spacing from the borders, in the middle of a card
     public static String centeredInsideBorder(String c, int size){
-            return "┃"+ StringUtils.center(c,size," ") + "┃";
+        if(c.length()>size)
+            c=c.substring(0,size); //if too long, truncate
+        int length = c.codePointCount(0, c.length());
+        int leftPad = (size-length)/2;
+ //       return "┃"+ StringUtils.center(c,size," ") + "┃"; modified but didn't fix the half spacing issue
+        return "┃"+" ".repeat(leftPad)+c+" ".repeat(size-length-leftPad)+ "┃";
+
     }
 
 //my first attempt at a javadoc annotation
     /**
-     * <p>Prints the String c, centered inside a border of size "size", in the color "color"</p>
+     * <p>Prints the String c, centered inside a border of size "size",The string is in the color "color"
+     * while the border is the default color</p>
      * @param c
      * @param size
      * @param color

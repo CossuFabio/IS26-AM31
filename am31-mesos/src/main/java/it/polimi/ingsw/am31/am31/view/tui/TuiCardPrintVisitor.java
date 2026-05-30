@@ -14,7 +14,7 @@ public class TuiCardPrintVisitor implements TribeVisitor
 
     public void nextLayer(){this.layer++;}
 
-    //prints the detailed inside of a card, for the tui
+    //prints the details inside a card, for the tui
 
     @Override
     public void visit(Hunter c) {

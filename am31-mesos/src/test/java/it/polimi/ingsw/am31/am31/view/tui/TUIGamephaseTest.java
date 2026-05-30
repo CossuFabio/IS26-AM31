@@ -8,6 +8,8 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectsC
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientController;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InGameErrorEvent;
 import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.localState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
@@ -23,10 +25,11 @@ import static it.polimi.ingsw.am31.am31.testUtils.cards.CardTestUtils.*;
 
 public class TUIGamephaseTest {
     private TUIGamePhase gamephase;
-   private  LocalGameState state = new LocalGameState();
+    private ViewEventBus eventBus = new ViewEventBus();
+    private  LocalGameState state = new LocalGameState();
+    private TextUserInterface TUI;
     @BeforeEach
     void setup() {
-        LocalGameState state = new LocalGameState();
         List<Card> cards = new ArrayList<>();
         EffectsCatalog effects = new EffectsCatalog();
 
@@ -70,12 +73,11 @@ public class TUIGamephaseTest {
         state.addSolvedEvent(createHuntEvent().build()); state.addSolvedEvent(createSustainEvent().build());
         state.addPlayer(test);state.addPlayer(test1);
         state.setTurnOrder(state.getPlayers());state.setPlayerActing(test1);
-        ViewEventBus eventBus = new ViewEventBus();
         ClientController cont = new ClientController(null, eventBus);
         cont.setLocalNameTest();
         test1.addBuilding(bd);test.addBuilding(bd);
         state.setOfferTrack(track);
-        gamephase = new TUIGamePhase(null,cont, state );
+        gamephase = new TUIGamePhase(new TextUserInterface(cont,state,eventBus),cont, state );
     }
     @Test
     void TestShouldDraw (){
@@ -85,9 +87,15 @@ public class TUIGamephaseTest {
     void TestShouldDrawMain(){
         //should draw the main screen, 6 upper cards, 4 lower, 2 offers, 2 players
         //era 1, round 1, totem placing
-
+        //players have some characters, buildings and events
         gamephase.drawMain();
-        //players has some characters, buildings and events
+        state.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE); //should show cards to draw
+        state.getPlayers().get(0).addBuilding(createBuilding().cardId("bd20").build());
+        //if bonus phase, should display a player has the bonus draw
+        gamephase.drawMain();
+        state.setCurrentRoundPhase(RoundPhasesEnum.BONUS_DRAWING_PHASE);
+        gamephase.drawMain();
+
     }
 
     @Test
