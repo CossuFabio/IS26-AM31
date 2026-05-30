@@ -64,7 +64,16 @@ public class Game implements GameObservable {
     private ObserverHandler observers;
 
     //Setup
-    //TODO REMOVE IOEXCEPTION
+    /**
+     * Creates a new game for nPlayers players.
+     * Game resources (decks, offer cards) are injected via {@link GameResources},
+     * allowing tests to supply controlled card sets without touching the file system.
+     *
+     * @param nPlayers number of players (between MIN_PLAYERS and MAX_PLAYERS)
+     * @param gameResources the card and offer-tile data to use for this game
+     * @throws InvalidPlayersNumberException if nPlayers is out of range
+     * @throws IOException if game resources cannot be loaded
+     */
     public Game (int nPlayers, GameResources gameResources) throws IOException, InvalidPlayersNumberException {
 
         roundNumber=0; //set to 1 in gameStart
@@ -417,7 +426,7 @@ public class Game implements GameObservable {
 
     /**
      * Returns whether the bonus-draw phase is over.
-     * Returns {@code true} immediately if no player owns the bonus-draw building.
+     * Returns true immediately if no player owns the bonus-draw building.
      *
      * @throws IncorrectMethodCallException if not in the bonus-draw phase
      */

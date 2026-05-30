@@ -23,7 +23,7 @@ import static java.lang.Math.min;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
- * <h>Tui Results</h>
+ * TUI Results
  * <p>Class for drawing the Results screen after a game, implemented in CLI</p>
  */
 public class TUIResults implements TUIPhase {

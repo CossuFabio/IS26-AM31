@@ -90,7 +90,7 @@ public class Player implements GameObservable {
     }
 
     /**
-     * Adds {@code valFood} to the player's food supply (pass negative to consume).
+     * Adds valFood to the player's food supply (pass negative to consume).
      * Result is clamped to 0; food cannot go negative.
      *
      * @param valFood amount to add or subtract
@@ -108,7 +108,7 @@ public class Player implements GameObservable {
     }
 
     /**
-     * Adds {@code valPP} to the player's prestige points (pass negative to subtract).
+     * Adds valPP to the player's prestige points (pass negative to subtract).
      * Unlike food, prestige points can go negative.
      *
      * @param valPP amount to add or subtract
@@ -128,14 +128,21 @@ public class Player implements GameObservable {
         return ritualStars;
     }
 
+    /**
+     * Increases player's ritual stars.
+     * @param starsToAdd must be greater than zero. If it isn't, the method return with no side effects
+     */
     public void increaseRitualStars(int starsToAdd) {
+        if(starsToAdd < 0) return;
         ritualStars += starsToAdd;
     }
 
+    /** Returns a defensive copy of the player's character card list. */
     public ArrayList<CharacterCard> getTribe() {
         return new ArrayList<CharacterCard>(personalTribeCards);
     }
 
+    /** Returns a defensive copy of the player's building card list. */
     public ArrayList<BuildingCard> getBuildings() {
         return new ArrayList<BuildingCard>(personalBuildingCards);
     }
@@ -162,6 +169,9 @@ public class Player implements GameObservable {
         observers.onPlayerNewBuildingEvent(this);
     }
 
+    /**
+     * Returns the total building cost discount provided by all builder cards in the tribe.
+     */
     public int getBuildersDiscount(){
         return this.personalTribeCards.stream().mapToInt(card -> card.getBuildingDiscount()).sum();
     }

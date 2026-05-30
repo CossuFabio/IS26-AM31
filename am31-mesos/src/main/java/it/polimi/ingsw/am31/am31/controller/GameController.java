@@ -30,20 +30,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Thread-safe controller that orchestrates the round flow of a {@link Game}.
- * Every public method is {@code synchronized}, serialising concurrent player requests.
- * Phase transitions (action phase → bonus draw → end of round → totem placing)
- * are driven internally; callers only invoke game-action methods such as
- * {@link #drawCard}, {@link #skipDraw}, and {@link #placeTotem}.
- *
- * <p>Public methods accept string identifiers (player nicknames, card IDs, offer-tile IDs)
- * rather than domain objects because requests arrive over the network as serialised strings.
- * {@link ResourceFinder} resolves those identifiers to the actual model objects before
- * any model method is called.</p>
- *
- * <p>When the game ends, scores are persisted to the leaderboard database and
- * the controller marks itself inactive, causing any subsequent call to throw
- * {@link it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.GameNoLongerActiveException}.</p>
+ * Thread-safe controller that manages the game flow for a single game of Mesos.
+ * All public methods are synchronized. Phase transitions are handled internally.
+ * Public methods accept string identifiers resolved to domain objects via {@link ResourceFinder}.
+ * isGameStillActive is checked at the start of every method so threads waiting on the lock
+ * after the game ends will fail fast instead of operating on a terminated game.
  */
 public class GameController {
 
@@ -66,6 +57,15 @@ public class GameController {
     public Integer getGameID(){return this.gameID; }
 
     //-----External commands handling-----
+    /**
+     * Adds a player to the lobby. Starts the game automatically when the lobby is full.
+     *
+     * @param playerNickname nickname of the player
+     * @param color chosen totem color
+     * @param obs observer for this player
+     * @throws LobbyException if nickname/color already taken or lobby is full
+     * @throws GameInvariantException if a game invariant is violated
+     */
     public synchronized void addPlayer(String playerNickname, Color color, GameObserver obs) throws LobbyException, GameInvariantException {
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player newPlayer = new Player(playerNickname, color);
@@ -88,6 +88,15 @@ public class GameController {
     }
 
 
+    /**
+     * Draws a card from the given row for the acting player.
+     *
+     * @param playerId nickname of the player
+     * @param cardId id of the card
+     * @param row UPPER or LOWER
+     * @throws IllegalActionException if the draw is not allowed
+     * @throws GameInvariantException if a game invariant is violated
+     */
     public synchronized void drawCard(String playerId, String cardId, BoardRows row) throws IllegalActionException, GameInvariantException{
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player player = resourceFinder.getPlayerFromNickname(playerId);
@@ -134,6 +143,14 @@ public class GameController {
 
 
     //-----TOTEM PHASE-----
+    /**
+     * Places the player's totem on the chosen offer tile.
+     *
+     * @param playerId nickname of the player
+     * @param offerTrackID id of the offer tile
+     * @throws IllegalActionException if the placement is not allowed
+     * @throws GameInvariantException if a game invariant is violated
+     */
     public synchronized void placeTotem(String playerId, String offerTrackID) throws IllegalActionException, GameInvariantException{
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         Player player = resourceFinder.getPlayerFromNickname(playerId);
@@ -169,6 +186,14 @@ public class GameController {
         if(game.isBonusDrawPhaseFinished()) startEndGamePhase();
     }
 
+    /**
+     * Skips the draw from the given row for the acting player.
+     *
+     * @param playerId nickname of the player
+     * @param row UPPER or LOWER
+     * @throws IllegalActionException if the skip is not allowed
+     * @throws GameInvariantException if a game invariant is violated
+     */
     public synchronized void skipDraw(String playerId, BoardRows row) throws IllegalActionException,
             GameInvariantException {
         if(!isGameStillActive) throw new GameNoLongerActiveException();
@@ -220,6 +245,13 @@ public class GameController {
 
     //Happens when a player disconnects. Returns true if the Game was still in starting phase and the lobby isn't
     //empty after the last disconnection
+    /**
+     * Handles a player disconnection. If the game has not started, removes the player from the lobby.
+     * If the game is running, crashes it for all remaining players.
+     * Returns true if the game is still active, false if it was terminated.
+     *
+     * @param playerID nickname of the disconnected player
+     */
     public synchronized boolean handleDisconnection(String playerID){
 
         observerHandler.removeObserver(playerID);
