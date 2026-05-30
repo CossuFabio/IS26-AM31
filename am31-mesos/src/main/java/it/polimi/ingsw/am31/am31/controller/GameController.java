@@ -29,6 +29,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Thread-safe controller that orchestrates the round flow of a {@link Game}.
+ * Every public method is {@code synchronized}, serialising concurrent player requests.
+ * Phase transitions (action phase → bonus draw → end of round → totem placing)
+ * are driven internally; callers only invoke game-action methods such as
+ * {@link #drawCard}, {@link #skipDraw}, and {@link #placeTotem}.
+ *
+ * <p>Public methods accept string identifiers (player nicknames, card IDs, offer-tile IDs)
+ * rather than domain objects because requests arrive over the network as serialised strings.
+ * {@link ResourceFinder} resolves those identifiers to the actual model objects before
+ * any model method is called.</p>
+ *
+ * <p>When the game ends, scores are persisted to the leaderboard database and
+ * the controller marks itself inactive, causing any subsequent call to throw
+ * {@link it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.GameNoLongerActiveException}.</p>
+ */
 public class GameController {
 
     private final ResourceFinder resourceFinder;

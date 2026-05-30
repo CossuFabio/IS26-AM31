@@ -28,6 +28,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Represents a player in a game of Mesos.
+ * Game event resolution (sustenance, hunt, ritual, end-of-turn, end-game) is handled
+ * by a set of pluggable handlers that building cards can extend via the decorator pattern.
+ */
 public class Player implements GameObservable {
     private final Color color;
     private int food;
@@ -84,6 +89,12 @@ public class Player implements GameObservable {
         return color;
     }
 
+    /**
+     * Adds {@code valFood} to the player's food supply (pass negative to consume).
+     * Result is clamped to 0; food cannot go negative.
+     *
+     * @param valFood amount to add or subtract
+     */
     public void editFood(int valFood) {
 
         int newFood = this.food + valFood;
@@ -96,6 +107,12 @@ public class Player implements GameObservable {
         return food;
     }
 
+    /**
+     * Adds {@code valPP} to the player's prestige points (pass negative to subtract).
+     * Unlike food, prestige points can go negative.
+     *
+     * @param valPP amount to add or subtract
+     */
     public void editPrestigePoints(int valPP) {
         int oldPP = getPrestigePoints();
         int newPP = oldPP + valPP;
@@ -111,7 +128,7 @@ public class Player implements GameObservable {
         return ritualStars;
     }
 
-    public void increaseStars(int starsToAdd) {
+    public void increaseRitualStars(int starsToAdd) {
         ritualStars += starsToAdd;
     }
 
@@ -123,12 +140,22 @@ public class Player implements GameObservable {
         return new ArrayList<BuildingCard>(personalBuildingCards);
     }
 
+    /**
+     * Adds a character card to the player's tribe, triggering any active draw effects.
+     *
+     * @param card the card to add
+     */
     public void addCard(CharacterCard card) {
         this.drawHandler.handleDraw(this, card);
         personalTribeCards.add(card);
         observers.onPlayerTribeUpdate(this);
     }
 
+    /**
+     * Adds a building card to the player's tribe, triggering any active draw effects.
+     *
+     * @param card the card to add
+     */
     public void addCard(BuildingCard card) {
         this.drawHandler.handleDraw(this, card);
         personalBuildingCards.add(card);
@@ -172,35 +199,74 @@ public class Player implements GameObservable {
     // Each addEffect method takes as parameter the constructor of the decorator for the correct handler
     // and passes it the current handler that will be wrapped with the new decorator
 
+    /**
+     * Wraps the current end-of-turn handler with a new decorator.
+     * Called when a building card modifies the end-of-turn behaviour.
+     *
+     * @param decoratorFunc function that takes the current handler and returns the decorated one
+     */
     public void addEndTurnEffect(Function<IEndTurnHandler, IEndTurnHandler> decoratorFunc){
         this.endTurnHandler = decoratorFunc.apply(this.endTurnHandler);
     }
 
+    /**
+     * Wraps the current end-game handler with a new decorator.
+     *
+     * @param decoratorFunc function that takes the current handler and returns the decorated one
+     */
     public void addEndGameEffect(Function<IEndGameHandler, IEndGameHandler> decoratorFunc){
         this.endGameHandler = decoratorFunc.apply(this.endGameHandler);
     }
 
+    /**
+     * Wraps the current hunt-event handler with a new decorator.
+     *
+     * @param decoratorFunc function that takes the current handler and returns the decorated one
+     */
     public void addHuntEffect(Function<IHuntHandler, IHuntHandler> decoratorFunc){
         this.huntHandler = decoratorFunc.apply(this.huntHandler);
     }
 
+    /**
+     * Wraps the current card-draw handler with a new decorator.
+     *
+     * @param decoratorFunc function that takes the current handler and returns the decorated one
+     */
     public void addDrawEffect(Function<IDrawHandler, IDrawHandler> decoratorFunc){
         this.drawHandler = decoratorFunc.apply(this.drawHandler);
     }
 
+    /**
+     * Wraps the sustain event handler with a new decorator.
+     *
+     * @param newBonus function that takes the current handler and returns the decorated one
+     */
     public void addSustainBonus(Supplier<ISustainDiscountCharacter> newBonus){
         this.sustainHandler.addSustainDiscountEffect(newBonus.get());
     }
 
+    /**
+     * Wraps the current paintings handler with a new decorator.
+     *
+     * @param decoratorFunc function that takes the current handler and returns the decorated one
+     */
     public void addPaintEffect(Function<IPaintHandler, IPaintHandler> decoratorFunc){
         this.paintHandler = decoratorFunc.apply(this.paintHandler);
     }
 
-
+    /**
+     * Change the behavior of the player when winning the ritual event
+     * @param newStrategy Constructor of the new Strategy for winning ritual
+     */
     public void addRitualWinEffect(Supplier<IRitualWinStrategy> newStrategy){
         this.ritualWinHandler.setStrategy(newStrategy.get());
     }
-    
+
+
+    /**
+     * Change the behavior of the player when losing the ritual event
+     * @param newStrategy Constructor of the new Strategy for losing ritual
+     */
     public void addRitualLoseEffect(Supplier<IRitualLoseStrategy> newStrategy){
         this.ritualLoseHandler.setStrategy(newStrategy.get());
     }
@@ -211,6 +277,10 @@ public class Player implements GameObservable {
 
     // No need to pass a boolean to set if the bonus is true or false, the only case when this method is called
     // is when the bonus is added
+    /**
+     * Permanently grants this player the bonus draw ability.
+     * Called once when the player acquires the bonus-draw building card.
+     */
     public void addBonusDraw(){
         this.bonusDraw = true;
         observers.onPlayerBonusDrawUpdate(this);

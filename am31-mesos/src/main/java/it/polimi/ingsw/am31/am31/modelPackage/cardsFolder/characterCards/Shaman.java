@@ -23,7 +23,7 @@ public class Shaman extends CharacterCard {
 
     @Override
     public void onPick(Player player){
-        player.increaseStars(this.stars);
+        player.increaseRitualStars(this.stars);
     }
     @Override
     public void acceptVisit(TribeVisitor visitor) {

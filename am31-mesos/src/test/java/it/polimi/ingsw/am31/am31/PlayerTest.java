@@ -92,9 +92,9 @@ class PlayerTest {
     }
 
     @Test
-    void increaseStars() {
+    void increaseRitualStars() {
         int stars = player.getRitualStars();
-        player.increaseStars(1);
+        player.increaseRitualStars(1);
         assertEquals(stars + 1, player.getRitualStars());
     }
 

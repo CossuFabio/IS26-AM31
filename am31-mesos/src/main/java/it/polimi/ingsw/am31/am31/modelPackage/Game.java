@@ -28,6 +28,15 @@ import java.util.*;
 
 
 
+/**
+ * Model class representing a running game of Mesos.
+ * Holds all game state (board, players, decks, current phase) and exposes
+ * state-mutating operations that enforce phase pre-conditions, throwing checked
+ * exceptions on violation.
+ *
+ * <p>Observers registered via {@link #setObserverHandler} are notified of every
+ * state change.</p>
+ */
 public class Game implements GameObservable {
 
     //Game attributes
@@ -88,6 +97,15 @@ public class Game implements GameObservable {
         players.forEach(p -> p.setObserverHandler(observers));
     }
 
+    /**
+     * Adds a player to the lobby. Only valid before the game has started.
+     *
+     * @param player the player to add
+     * @throws GameAlreadyStartedException if the game has already started
+     * @throws TooManyPlayersException if the lobby is already full
+     * @throws UsernameAlreadyTakenException if the nickname is already in use
+     * @throws PlayerColorAlreadyTakenException if the chosen color is already taken
+     */
     public void addPlayer(Player player) throws GameAlreadyStartedException, TooManyPlayersException, UsernameAlreadyTakenException, PlayerColorAlreadyTakenException {
         if(currentRoundPhase != RoundPhasesEnum.GAME_STARTING) throw new GameAlreadyStartedException();
         if(players.stream().anyMatch(inGamePlayer -> inGamePlayer.getNickname().equals(player.getNickname()))) throw new UsernameAlreadyTakenException();
@@ -105,6 +123,16 @@ public class Game implements GameObservable {
             observers.onPlayersListUpdate(this);
     }
 
+
+    /**
+     * Starts the game: randomises the first-round turn order, distributes starting food,
+     * fills the board lines, and transitions to {@link RoundPhasesEnum#TOTEM_PLACING}.
+     * Requires all expected players to be in the lobby.
+     *
+     * @throws IncorrectMethodCallException if the game has already started
+     * @throws InsufficientPlayersNumberException if not all players have joined yet
+     * @throws EmptyDeckException if the tribe deck is unexpectedly empty during setup
+     */
     public void gameStart() throws IncorrectMethodCallException, InsufficientPlayersNumberException, EmptyDeckException {
         
         if(currentRoundPhase != RoundPhasesEnum.GAME_STARTING) throw new IncorrectMethodCallException("gameStart", "Game already started");
@@ -193,6 +221,10 @@ public class Game implements GameObservable {
 
 //why private?
     //private void resolveEvents(){
+    /**
+     * Resolves all event cards in the lower line. On the final round, also resolves
+     * event cards in the upper line. The sustain event is always resolved last.
+     */
         public void resolveEvents(){
 
         EventQueueBuilderVisitor eventVisitor = new EventQueueBuilderVisitor();
@@ -264,6 +296,17 @@ public class Game implements GameObservable {
     //se non fattibile, lancia eccezione o del player o tessera già presa
     //se finito, turnorder lancia exception, catchata da controller
     //(controller)in tal caso fa setup della TurnDrawManager e assegna cibo della tessera (caso tessera n1).
+
+    /**
+     * Places the player's totem on the chosen offer tile during the totem-placing phase.
+     *
+     * @param player the player placing the totem
+     * @param offerCard the offer tile chosen by the player
+     * @throws WrongRoundPhaseException if not in the totem-placing phase
+     * @throws WrongPlayerTurnException if it is not this player's turn
+     * @throws OfferTrackTileAlreadyTakenException if the chosen tile is already occupied
+     * @throws IncorrectMethodCallException if the method is called in an invalid state
+     */
     public void totemChoiceAction(Player player, OfferCard offerCard) throws WrongPlayerTurnException, IncorrectMethodCallException, OfferTrackTileAlreadyTakenException, WrongRoundPhaseException {
         if(currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) {
             throw new WrongRoundPhaseException();
@@ -278,6 +321,17 @@ public class Game implements GameObservable {
         turnOrder.goToNextPlayer();
     }
 
+    /**
+     * Draws a card from the upper line for the acting player.
+     *
+     * @param player the player drawing the card
+     * @param card the card to draw
+     * @throws WrongRoundPhaseException if not in action or bonus-draw phase
+     * @throws WrongPlayerTurnException if it is not this player's turn
+     * @throws InvalidDrawException if the player has no upper draws remaining
+     * @throws InvalidPickException if the player cannot afford the card
+     * @throws CardNotFoundException if the card is not in the upper line
+     */
     public void playerDrawFromUpper(Player player, IPickable card) throws WrongPlayerTurnException, CardNotFoundException, InvalidPickException, InvalidDrawException, WrongRoundPhaseException{
 
         //Check if the phase is correct
@@ -302,6 +356,17 @@ public class Game implements GameObservable {
 
     }
 
+    /**
+     * Draws a card from the lower line for the acting player.
+     *
+     * @param player the player drawing the card
+     * @param card the card to draw
+     * @throws WrongRoundPhaseException if not in action or bonus-draw phase
+     * @throws WrongPlayerTurnException if it is not this player's turn
+     * @throws InvalidDrawException if the player has no lower draws remaining
+     * @throws InvalidPickException if the player cannot afford the card
+     * @throws CardNotFoundException if the card is not in the lower line
+     */
     public void playerDrawFromLower(Player player, IPickable card) throws WrongPlayerTurnException, CardNotFoundException, InvalidPickException, InvalidDrawException, WrongRoundPhaseException{
 
         if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) {throw new WrongRoundPhaseException();}
@@ -350,6 +415,12 @@ public class Game implements GameObservable {
     public boolean isGameInStartingPhase(){return currentRoundPhase == RoundPhasesEnum.GAME_STARTING;}
 
 
+    /**
+     * Returns whether the bonus-draw phase is over.
+     * Returns {@code true} immediately if no player owns the bonus-draw building.
+     *
+     * @throws IncorrectMethodCallException if not in the bonus-draw phase
+     */
     public boolean isBonusDrawPhaseFinished() throws IncorrectMethodCallException{
         if (this.currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) {throw new IncorrectMethodCallException("isBonusDrawFinished", "WrongPhase");}
         if(players.stream().noneMatch(player -> player.hasBonusDraw())) return true;
@@ -386,6 +457,14 @@ public class Game implements GameObservable {
     //---Setters---
     //Sets up the next player and how many cards should it draw
 
+    /**
+     * Sets the acting player and configures the draw manager according to the chosen
+     * offer tile. Also grants any food bonus indicated on the tile.
+     *
+     * @param nextPlayerActing the player who will act next
+     * @param offerCardChosen the offer tile chosen by that player
+     * @throws IncorrectMethodCallException if not in action or bonus-draw phase
+     */
     public void setUpPlayerActing(Player nextPlayerActing, OfferCard offerCardChosen) throws IncorrectMethodCallException{
         if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE) throw new IncorrectMethodCallException("setUpPlayerActing", "Wrong phase");
         this.playerActing = nextPlayerActing;
@@ -428,6 +507,13 @@ public class Game implements GameObservable {
         observers.onGameRoundStatusUpdate(this);
     }
 
+    /**
+     * Frees the current player's offer tile, returns their totem to the turn-order tile,
+     * and sets the next player in line as the acting player.
+     * Must only be called after the current player has finished drawing.
+     *
+     * @throws IncorrectMethodCallException if not in action phase or the current player has not finished drawing
+     */
     public void setNextPlayerDrawing() throws IncorrectMethodCallException{
 
         if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new IncorrectMethodCallException("setNextPlayerDrawing", "Wrong phase");

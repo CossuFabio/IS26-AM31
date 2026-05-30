@@ -41,7 +41,7 @@ public class EffectsCatalog {
         //Era 2 effects
         effects.put(EffectIdsConstants.DOUBLE_WIN_RITUAL, player -> player.addRitualWinEffect(DoubleWinRitualStrategy::new));
 
-        effects.put(EffectIdsConstants.INCREASE_STARS_3, player -> player.increaseStars(3)); // ⚠️ non decorator
+        effects.put(EffectIdsConstants.INCREASE_STARS_3, player -> player.increaseRitualStars(3)); 
 
         effects.put(EffectIdsConstants.INVENTOR_DISCOUNT_BONUS, player -> player.addSustainBonus(InventorDiscountBonus::new));
 
