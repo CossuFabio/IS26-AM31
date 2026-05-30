@@ -199,6 +199,7 @@ public class Game implements GameObservable {
         roundNumber = 1;
         currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
         observers.onGameRoundStatusUpdate(this);
+
     }
 
     /**
@@ -602,7 +603,7 @@ public class Game implements GameObservable {
         //Frees the offerCard
         turnOrder.setPlayer(previousPlayerOfferCard.get().getPlayer());
         previousPlayerOfferCard.get().free();
-        //OfferTrackUpdate?
+
         observers.onOfferTrackUpdate(board);
 
         Optional<OfferCard> nextOfferCard = board.getOfferCards().stream().filter(card -> !card.isFree()).findFirst();
@@ -617,7 +618,7 @@ public class Game implements GameObservable {
 
 
         setUpPlayerActing(nextPlayer, offerCard);
-        //update?
+
 
 
     }

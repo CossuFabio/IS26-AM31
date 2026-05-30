@@ -41,17 +41,19 @@ public class StateErrorUpdater implements ErrorHandler {
                 break;
             }
             //game errors
-            case CARD_NOT_FOUND: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
-            case INSUFFICIENT_FOOD: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
-            case INVALID_DRAW: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
-            case INVALID_RESOURCE: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
-            case OFFER_CARD_NOT_FOUND: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
-            case OFFER_TRACK_TILE_ALREADY_TAKEN: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
-            case WRONG_PLAYER_TURN: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
-            case WRONG_ROUND_PHASE: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
-            case CANNOT_SKIP_DRAW: eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
+            case CARD_NOT_FOUND:
+            case INSUFFICIENT_FOOD:
+            case INVALID_DRAW:
+            case INVALID_RESOURCE:
+            case OFFER_CARD_NOT_FOUND:
+            case OFFER_TRACK_TILE_ALREADY_TAKEN:
+            case WRONG_PLAYER_TURN:
+            case WRONG_ROUND_PHASE:
+            case CANNOT_SKIP_DRAW:
+                eventBus.post(new InGameErrorEvent(errorMessage.getMessage()));
+                break;
 
-            //network errors
+            //Network errors
             case ErrorCode.CONNECTION_LOST:{
                 eventBus.post(new ConnectionLostEvent());
                 break;

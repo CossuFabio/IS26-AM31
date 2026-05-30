@@ -7,4 +7,7 @@ public class InvalidDrawException extends IllegalActionException {
     public InvalidDrawException() {
         super("Not enough drawing remaining!", ErrorCode.INVALID_DRAW);
     }
+    public InvalidDrawException(String message) {
+        super(message, ErrorCode.INVALID_DRAW);
+    }
 }

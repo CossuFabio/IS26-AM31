@@ -138,6 +138,11 @@ public class TUIGamePhase implements TUIPhase {
                     System.out.print(c.getDrawFromUnder()>0? c.getDrawFromUnder()+" Cards from the UnderLine\n" : "" );
                 }
             }
+        else if (gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
+            LocalPlayerState bonusPlayer = gameState.getPlayerActing();
+            if (bonusPlayer != null && bonusPlayer.getNickname().equals(controller.getLocalPlayerUsername()))
+                System.out.println("[OPTIONAL] Draw 1 from UpperLine");
+        }
         //prints choices
         System.out.println("\nPress:\n1- for detailed CardLines" +
                 "\n2- for detailed offerTrack" +
@@ -238,7 +243,7 @@ public class TUIGamePhase implements TUIPhase {
                 break;
             }
             case PLAYER_DETAIL:
-                if (Integer.parseInt(input) == 1) currentstep = TuiGameStep.MAIN;
+                if (input.equals("1")) currentstep = TuiGameStep.MAIN;
                 break;
             case CARDLINE_DETAIL: {
                 switch (choosingCard) {
@@ -279,7 +284,7 @@ public class TUIGamePhase implements TUIPhase {
                     }
                     //break;
                     case 2: {//card or skip choice
-                        if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)||gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
+                        if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE) && !gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
                             System.out.println("Not the time for this");
                             choosingCard = 0;
                             break;

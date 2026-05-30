@@ -58,7 +58,7 @@ public class DebugObserver implements GameObserver {
         logGameEndUpdate = false;
         logGameEventResolveUpdate = true;
         logGameCrashUpdate = false;
-        logPlayerBonusDraw = false;
+        logPlayerBonusDraw = true;
     }
 
 

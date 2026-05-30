@@ -108,8 +108,12 @@ public class TUIResults implements TUIPhase {
             case GLOBAL_LEADERBOARD: {
                 if(input.equals("1"))
                     currentStep = TuiResultsStep.SHOW_RESULTS;
-                else if(input.equals("2"))
+                else if(input.equals("2")){
+
                     currentStep = TuiResultsStep.BACK_TO_LOBBY;
+                    controller.getEventBus().post(new ReturnToLobbyEvent());
+                }
+
                 else
                     System.out.println("Invalid input!");
                 TUI.printScreen();

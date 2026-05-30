@@ -102,9 +102,8 @@ public class GameController {
         Player player = resourceFinder.getPlayerFromNickname(playerId);
         Card card = resourceFinder.getCardFromId(cardId);
 
-        if(card == null || !card.canBePicked()){
-            throw new InvalidDrawException();
-        }
+        if(card == null) throw new InvalidDrawException("Requested card does not exist!");
+        if(!card.canBePicked()) throw new InvalidDrawException("Card is not pickable!");
 
         if(row == BoardRows.UPPER){
             game.playerDrawFromUpper(player, ((IPickable)card));
