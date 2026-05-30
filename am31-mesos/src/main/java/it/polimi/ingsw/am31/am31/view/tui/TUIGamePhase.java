@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.controller.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.InGameErrorEvent;
 import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.localState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
@@ -353,6 +354,11 @@ public class TUIGamePhase implements TUIPhase {
         System.out.println("A game event has been resolved: " + e.getCard().getCardId()+ "\n");
         currentstep = TuiGameStep.EVENTS_SOLVED;
         TUI.printScreen();
+    }
+
+    @Subscribe
+    public void handleErroMessage(InGameErrorEvent e){
+        System.out.println(e.getErrorMessage());
     }
 
 
