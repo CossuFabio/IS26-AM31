@@ -32,7 +32,7 @@ public class TUIResults implements TUIPhase {
 
     private enum TuiResultsStep {SHOW_RESULTS, SHOW_TRIBES, GLOBAL_LEADERBOARD, BACK_TO_LOBBY}
 
-    private TuiResultsStep currentStep;
+    private volatile TuiResultsStep currentStep;
     private final LocalGameState gameState;
     private final ClientController controller;
     private final TextUserInterface TUI;
@@ -108,7 +108,7 @@ public class TUIResults implements TUIPhase {
             case GLOBAL_LEADERBOARD: {
                 if(input.equals("1"))
                     currentStep = TuiResultsStep.SHOW_RESULTS;
-                if(input.equals("2"))
+                else if(input.equals("2"))
                     currentStep = TuiResultsStep.BACK_TO_LOBBY;
                 else
                     System.out.println("Invalid input!");

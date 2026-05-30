@@ -39,8 +39,7 @@ public class LocalGameState{
         players = new ArrayList<LocalPlayerState>();
         board = new LocalBoardState();
         turnOrder = new ArrayList<>();
-        int roundNumber = 0;
-        eventsSolved = new ArrayList<Card>();
+        eventsSolved = new ArrayList<>();
         //DUMMY
         playerActing = new LocalPlayerState("dummy", RED);
         currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
@@ -55,9 +54,6 @@ public class LocalGameState{
 
 
     //setter methods, called by the connection when it receives updates.
-    public void setPlayerActing() {
-
-    }
     public void setCurrentRoundPhase(RoundPhasesEnum newPhase) {
         this.currentRoundPhase=newPhase;
     }
@@ -129,15 +125,15 @@ public class LocalGameState{
     }
 
     public void reset(){
-
         isValidState = false;
-
-        players = new ArrayList<LocalPlayerState>();
+        players = new ArrayList<>();
         board.reset();
         turnOrder = new ArrayList<>();
-        int roundNumber = 0;
-
-        //DUMMY
+        this.roundNumber = 0;
+        this.era = 0;
+        this.eventsSolved = new ArrayList<>();
+        this.leaderboard = new ArrayList<>();
+        this.globalRanking = new ArrayList<>();
         playerActing = new LocalPlayerState("dummy", RED);
         currentRoundPhase = RoundPhasesEnum.GAME_STARTING;
     }

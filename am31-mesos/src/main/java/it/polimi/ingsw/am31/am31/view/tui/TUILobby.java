@@ -16,9 +16,9 @@ public class TUILobby implements TUIPhase {
 
     private final TextUserInterface TUI;
     private final ClientController controller;
-    private boolean creatingGame;
-    private Color color;
-    private int gameId;
+    private volatile boolean creatingGame;
+    private volatile Color color;
+    private volatile int gameId;
 
 
     private enum TuiLobbyStep {
@@ -32,7 +32,7 @@ public class TUILobby implements TUIPhase {
 
     private volatile TuiLobbyStep currentStep;
 
-    private int nPlayers;
+    private volatile int nPlayers;
 
     public TUILobby(TextUserInterface TUI, ClientController controller) {
         this.TUI = TUI;
