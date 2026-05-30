@@ -38,6 +38,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     private final MessageDispatcher messageDispatcher;
     private final ExecutorService requestSender;
     private AtomicBoolean stillConnected = new AtomicBoolean(false);
+    private final AtomicBoolean disconnected = new AtomicBoolean(false);
     private boolean usernameSet = false;
 
     public RmiClient(String ip, int port, MessageDispatcher messageDispatcher) throws RemoteException, NotBoundException {
@@ -76,7 +77,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
                 if (stillConnected.compareAndSet(true, false)) {
                     messageDispatcher.submit(ErrorMessageFactory.createErrorMessage(new ConnectionLostException()));
                 }
-                System.err.println("Connection to server lost: " + e.getMessage());
                 try { disconnect(); } catch (Exception ignored) {}
             }
         });
@@ -100,14 +100,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
 
     @Override
     public void disconnect() throws RemoteException{
+        if (!disconnected.compareAndSet(false, true)) return;
         try {
             serverStub.disconnect(this.identifier);
             messageDispatcher.shutdown();
             requestSender.shutdown();
             UnicastRemoteObject.unexportObject(this, true);
-        } catch (Exception e) {
-            System.err.println("Disconnection failed: " + e.getMessage());
-        }
+        } catch (Exception ignored) {}
     }
 
     @Override

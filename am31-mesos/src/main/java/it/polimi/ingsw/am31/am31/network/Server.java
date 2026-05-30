@@ -75,7 +75,7 @@ public class Server {
             //Received new connection
             if (request.getType().equals(NewServerConnectionRequest.METHOD)) {
                 //This method will handle success or failure
-                String newId = ((NewServerConnectionRequest) request).getRequestedUsername();
+                String newId = ((NewServerConnectionRequest) request).getRequestedUsername().trim();
                 addClient(newId, view);
                 return;
             }

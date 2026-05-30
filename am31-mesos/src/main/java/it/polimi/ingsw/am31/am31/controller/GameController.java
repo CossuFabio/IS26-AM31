@@ -186,8 +186,8 @@ public class GameController {
             DataBaseConnectionFactory.closeConnection(connection);
 
 
-        }catch(SQLException e){
-            System.out.println("Unable to query database!");
+        }catch(Exception e){
+            System.err.println("Unable to query database: " + e.getMessage());
         }
         observerHandler.onGameEndUpdate(game, dbLeaderBoardEntries);
         isGameStillActive = false;

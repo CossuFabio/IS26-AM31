@@ -46,9 +46,8 @@ public class ClientController {
                     System.out.println("Server Error");
                     try {
                         disconnect();
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    } catch (Exception ignored) {}
+                    eventBus.post(new ConnectionLostEvent());
                     break;
                 }
             }

@@ -75,7 +75,6 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
             if (stillConnected.compareAndSet(true, false)) {
                 messageDispatcher.submit(ErrorMessageFactory.createErrorMessage(new ConnectionLostException()));
             }
-            System.err.println("Connection to server lost: " + e.getMessage());
             try { disconnect(); } catch (Exception ignored) {}
         }
     }

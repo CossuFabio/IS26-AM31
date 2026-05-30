@@ -19,8 +19,9 @@ public class NewServerConnectionRequest extends NetworkRequest {
 
     @Override
     protected boolean checkSpecificRequestValidity(){
-        //Nothing to verify
-        return requestedUsername != null && !requestedUsername.equals(ClientConfig.UNREGISTERED_CLIENT_ID);
+        return requestedUsername != null
+                && !requestedUsername.isBlank()
+                && !requestedUsername.equals(ClientConfig.UNREGISTERED_CLIENT_ID);
     }
 
     public String getRequestedUsername(){return requestedUsername;}
