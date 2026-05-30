@@ -6,18 +6,12 @@ import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
+import it.polimi.ingsw.am31.am31.view.localState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEventResolveEvent;
 import org.fusesource.jansi.Ansi;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -27,7 +21,7 @@ public class TUIGamePhase implements TUIPhase {
 
     private enum TuiGameStep {MAIN, PLAYER_DETAIL, CARDLINE_DETAIL, OFFER_DETAIL, TOTEM_PLACE, EVENTS_SOLVED}
 
-    private TuiGameStep currentstep;
+    private volatile TuiGameStep currentstep;
     private LocalGameState gameState;
     private ClientController controller;
     private TextUserInterface TUI;
@@ -109,10 +103,7 @@ public class TUIGamePhase implements TUIPhase {
         //prints lowerline
         print(Ansi.Color.DEFAULT, "\n     LOWER LINE:\n");
         printCardLine(gameState.getBoard().getUnderLine());
-        //prints who's in turn now
-        if (gameState.getPlayerActing() != null)
-            System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "\n▶ it's your turn" : "\n▶ it's " + gameState.getPlayerActing().getNickname() + " [" + gameState.getPlayerActing().getColor() + "] " + "'s turn");
-        //prints your own tribe or stats?
+        //prints your own tribe and stats
         System.out.println("\n     YOUR STATS AND TRIBE:");
         for (LocalPlayerState p : gameState.getPlayers())
             if (p.getNickname().equals(controller.getLocalPlayerUsername())) {
@@ -121,6 +112,30 @@ public class TUIGamePhase implements TUIPhase {
                     printCard(c);
                 for (Card c : p.getBuildings())
                     printCard(c);
+            }
+        //prints who's in turn now. if bonus phase, search for the player with the building bd20
+        if(!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE))
+        {
+            if (gameState.getPlayerActing() != null)
+                System.out.println(gameState.getPlayerActing().getNickname().equals(controller.getLocalPlayerUsername()) ? "\n▶ it's your turn" : "\n▶ it's " + getColor(gameState.getPlayerActing())+gameState.getPlayerActing().getNickname() + " [" + gameState.getPlayerActing().getColor() + "] "+ansi().reset()+"'s turn");
+        }
+        else {
+            for (LocalPlayerState p : gameState.getPlayers())
+                if(p.getBuildings().stream().anyMatch(b -> b.getCardId().equals("bd20")) )
+                    System.out.println(p.getNickname().equals(controller.getLocalPlayerUsername()) ? "\n▶ You have a bonus draw" : "\n▶ Player " + getColor(p)+p.getNickname()+ " [" + p.getColor() + "] "+ansi().reset()+ " has a bonus draw");
+
+        }
+
+        //if action_phase, tells you what to draw.
+        if(gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
+            for(LocalOfferCard c : gameState.getBoard().getOfferTrack()) {
+                if(!c.isFree() && c.getPlayer().equals(controller.getLocalPlayerUsername())) {
+                    if(c.getFood()>0){
+                        System.out.println("This turn you got "+c.getFood()+FOOD); break;}
+                    System.out.println("This turn you chose to draw: ");
+                    System.out.print(c.getDrawFromUpper()>0? c.getDrawFromUpper()+" Cards from the UpperLine\n " : "" );
+                    System.out.print(c.getDrawFromUnder()>0? c.getDrawFromUnder()+" Cards from the UnderLine\n" : "" );
+                }
             }
         //prints choices
         System.out.println("\nPress:\n1- for detailed CardLines" +
@@ -183,8 +198,6 @@ public class TUIGamePhase implements TUIPhase {
                     currentstep = TuiGameStep.MAIN;
             } break;
             case MAIN: {
-                if (Integer.parseInt(input) > 4 || Integer.parseInt(input) < 1)
-                    break; //ignores invalid input
                 switch (input) {
                     case "1":
                         currentstep = TuiGameStep.CARDLINE_DETAIL;
@@ -195,16 +208,17 @@ public class TUIGamePhase implements TUIPhase {
                     case "3":
                         currentstep = TuiGameStep.PLAYER_DETAIL;
                         break;
+                    default: break; //ignores other inputs
                 }
                 break;
             }
             case OFFER_DETAIL: {
-                switch (Integer.parseInt(input)) {
-                    case 1: {
+                switch (input) {
+                    case "1": {
                         currentstep = TuiGameStep.MAIN;
                         break;
                     }
-                    case 2: {
+                    case "2": {
                         if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.TOTEM_PLACING)) {
                             System.out.println(ansi().a("\nNot the time for this\n"));
                             break;
@@ -214,7 +228,7 @@ public class TUIGamePhase implements TUIPhase {
                         choosingTotem = 1;
                         break;
                     }
-                    case 3: {
+                    case "3": {
                         currentstep = TuiGameStep.CARDLINE_DETAIL;
                         choosingCard = 1;
                         break;
@@ -249,7 +263,7 @@ public class TUIGamePhase implements TUIPhase {
                         break;
                     }
                     case 1: {//row choice
-                        if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)||gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
+                        if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE) && !gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
                             System.out.println("Not the time for this");
                             choosingCard = 0;
                             break;
@@ -277,8 +291,8 @@ public class TUIGamePhase implements TUIPhase {
                                 } catch (Exception e) {
                                     System.out.println("Failed to send request");
                                 }
-                            } else
-                                try {
+                            }
+                            else try {
                                     controller.requestSkip(BoardRows.UPPER);
 
                                 } catch (Exception e) {
@@ -294,7 +308,7 @@ public class TUIGamePhase implements TUIPhase {
                                     System.out.println("Failed to send request");
                                 }
                             }
-                            try {
+                            else try {
                                 controller.requestSkip(BoardRows.LOWER);
 
                             } catch (Exception e) {
@@ -313,7 +327,7 @@ public class TUIGamePhase implements TUIPhase {
                 //input should be an offer card Id (letter A to G)
                 try {
                     controller.requestTotemPlacement(input.toUpperCase());
-                    System.out.println("Successfully requested totem"); //for testing
+                  //  System.out.println("Successfully requested totem"); //for testing
                     choosingTotem = 0;
                 } catch (Exception e) {
                     System.out.println("Failed to send request");
