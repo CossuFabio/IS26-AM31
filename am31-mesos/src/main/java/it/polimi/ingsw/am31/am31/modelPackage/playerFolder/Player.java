@@ -137,12 +137,18 @@ public class Player implements GameObservable {
         ritualStars += starsToAdd;
     }
 
-    /** Returns a defensive copy of the player's character card list. */
+    /** Returns a defensive copy of the player's character card list.
+     *
+     * @return Immutable list that copies the tribe
+     * */
     public ArrayList<CharacterCard> getTribe() {
         return new ArrayList<CharacterCard>(personalTribeCards);
     }
 
-    /** Returns a defensive copy of the player's building card list. */
+    /** Returns a defensive copy of the player's building card list.
+     *
+     * @return Immutable list that copies the buildings
+     * */
     public ArrayList<BuildingCard> getBuildings() {
         return new ArrayList<BuildingCard>(personalBuildingCards);
     }
@@ -176,30 +182,62 @@ public class Player implements GameObservable {
         return this.personalTribeCards.stream().mapToInt(card -> card.getBuildingDiscount()).sum();
     }
 
+    /**
+     * Resolve winning a ritual
+     * @param prestigePoints points awarded by the event card
+     */
     public void winRitual(int prestigePoints) {
         ritualWinHandler.handleRitualWin(this, prestigePoints);
     }
 
+    /**
+     * Resolve losing a ritual
+     * @param prestigePoints points awarded by the event card
+     */
     public void loseRitual(int prestigePoints) {
         ritualLoseHandler.handleLose(this, prestigePoints);
     }
 
+    /**
+     * Resolve hunt event
+     * @param food food awarded by the hunt event card
+     * @param prestigePoints prestige point awarded by the hunt event card
+     */
     public void resolveHunt(int food, int prestigePoints) {
         huntHandler.handleHunt(this, food, prestigePoints);
     }
 
+    /**
+     *  Resolve sustain event
+     * @param malus prestige points removed for each unit of food the player is not able to pay
+     */
     public void resolveSustain(int malus) {
         sustainHandler.handleSustain(this, malus);
     }
 
+    /**
+     * Resolve paint event
+     * @param threshold minimum number of artist to gain points. If the number of artists in tribe is equal to the
+     *                  threshold, it is considered a win
+     * @param malusPrestigePoints prestige points removed when the player has not enough artists
+     * @param bonusPrestigePoints prestige points gained when the player has enough artist
+     */
     public void resolvePainters(int threshold, int malusPrestigePoints, int bonusPrestigePoints) {
         paintHandler.handlePaint(this, threshold, bonusPrestigePoints, malusPrestigePoints);
     }
 
+    /**
+     * Handles the end of the ACTION_PHASE for the specific player
+     * @param turnOrder place on the turn order tile
+     * @param nPlayers number of players in game that may influence the effect of this handling
+     */
     public void resolveEndTurn(int turnOrder, int nPlayers) {
         endTurnHandler.handleEndTurn(this, turnOrder, nPlayers);
     }
 
+    /**
+     * Resolve the endgame for the player
+     */
     public void resolveEndGame() {
         endGameHandler.handleEndGame(this);
     }
@@ -297,6 +335,9 @@ public class Player implements GameObservable {
     }
 
     @Override
+    /**
+     * Comparison based on the players nickname
+     */
     public boolean equals(Object player){
         if(player == null || player.getClass() != Player.class) return false;
         return this == player || this.nickname.equals(((Player) player).getNickname());

@@ -34,8 +34,8 @@ import java.util.*;
  * state-mutating operations that enforce phase pre-conditions, throwing checked
  * exceptions on violation.
  *
- * <p>Observers registered via {@link #setObserverHandler} are notified of every
- * state change.</p>
+ * Observers registered via {@link #setObserverHandler} are notified of every
+ * state change.
  */
 public class Game implements GameObservable {
 
@@ -127,6 +127,11 @@ public class Game implements GameObservable {
         }
         else throw new TooManyPlayersException();
     }
+
+    /**
+     * Removes a player from the game and notifies observers if removed correctly.
+     * @param player player that must be removed
+     */
     public void removePlayer(Player player){
         if(players.remove(player))
             observers.onPlayersListUpdate(this);
@@ -196,6 +201,10 @@ public class Game implements GameObservable {
         observers.onGameRoundStatusUpdate(this);
     }
 
+    /**
+     * Handles the end game for all players and notifies observers that the game is over
+     * @throws IncorrectMethodCallException When called when the game is not actually finished
+     */
     public void gameEnd() throws IncorrectMethodCallException{
 
         if(!isGameFinished()) throw new IncorrectMethodCallException("gameEnd", "Game not finished!");
@@ -207,11 +216,11 @@ public class Game implements GameObservable {
 
     }
 
-    //You can get the leaderboard at any moment
 
+    //You can get the leaderboard at any moment
     /**
-     * Return the leaderboard ad the end of the game
-     * @return List of players in order according by the rules of Mesos
+     * Returns the leaderboard at the end of the game.
+     * @return list of players sorted according to the rules of Mesos
      */
     public List<Player> getLeaderBoard(){
 
@@ -223,6 +232,12 @@ public class Game implements GameObservable {
                 .toList();
     }
 
+    /**
+     * Returns true if the player has the same prestige points and food as the top player.
+     * Handles ties: multiple players can be winners simultaneously.
+     *
+     * @param p the player to check
+     */
     public boolean isPlayerWinner(Player p){
         if(p == null || !players.contains(p)) return false;
 
@@ -256,6 +271,11 @@ public class Game implements GameObservable {
 
     }
 
+
+    /**
+     * Resolves the end round moving in the lower line cards in upper line
+     * @throws IncorrectMethodCallException when called when the last phase is not actually finished
+     */
     public void endRound() throws IncorrectMethodCallException{
 
         if(!(this.currentRoundPhase == RoundPhasesEnum.BONUS_DRAWING_PHASE && isBonusDrawPhaseFinished())) throw new IncorrectMethodCallException("endRound");
@@ -287,7 +307,9 @@ public class Game implements GameObservable {
         return temp;
     }
 
-
+    /**
+     * Called when a card of a new era is drawn from the deck
+     */
     public void changeEra(){
         board.moveLowerBuildings();
         //we increase the era, then check if the next card in building deck is the new era -> add it to upperbline.
@@ -305,10 +327,6 @@ public class Game implements GameObservable {
 
 
 
-    //prende la scelta, controlla se fattibile, la fa, rimette il player in ordine.
-    //se non fattibile, lancia eccezione o del player o tessera già presa
-    //se finito, turnorder lancia exception, catchata da controller
-    //(controller)in tal caso fa setup della TurnDrawManager e assegna cibo della tessera (caso tessera n1).
 
     /**
      * Places the player's totem on the chosen offer tile during the totem-placing phase.
@@ -405,15 +423,29 @@ public class Game implements GameObservable {
     }
 
 
-
-    //Flags for controller
+    /**
+     * Method used for the handling of the game flow
+     * @return if the game is finished according to Mesos rules
+     */
     public boolean isGameFinished(){
         return (roundNumber == GameConstants.ROUNDS_NUMBER && currentRoundPhase == RoundPhasesEnum.END_TURN);
     }
+
+    /**
+     * Method used for the handling of the game flow
+     * @return the totem phase is finished
+     * @throws IncorrectMethodCallException when called outside TOTEM_PHASE
+     */
     public boolean isTotemPlacingPhaseFinished() throws IncorrectMethodCallException{
         if(currentRoundPhase != RoundPhasesEnum.TOTEM_PLACING) {throw new IncorrectMethodCallException("isTotemPlacingPhaseFinished", "Wrong phase");}
         return turnOrder.everybodyPlayed();
     }
+
+    /**
+     * Method used for the handling of the game flow
+     * @return if the ACTION_PHASE is finished
+     * @throws IncorrectMethodCallException when caleld outside ACTION_PHASE
+     */
     public boolean isDrawPhaseFinished() throws IncorrectMethodCallException{
 
         //Phase must be ACTION_PHASE
@@ -425,10 +457,16 @@ public class Game implements GameObservable {
         return board.getOfferCards().stream()
                 .noneMatch(offerCard -> !offerCard.isFree());
     }
+
+    /**
+     * Method used for the handling of the game flow
+     * @return if the game has not started yet
+     */
     public boolean isGameInStartingPhase(){return currentRoundPhase == RoundPhasesEnum.GAME_STARTING;}
 
 
     /**
+     * Method used for the handling of the game flow
      * Returns whether the bonus-draw phase is over.
      * Returns true immediately if no player owns the bonus-draw building.
      *
@@ -448,16 +486,27 @@ public class Game implements GameObservable {
     }
     public Board getBoard(){return board;}
     public GameResources getGameResources(){return this.gameResources; }
+
+    /**
+     * @return Immutable list of players
+     */
     public List<Player> getPlayersList(){return players.stream().toList();}
     public int getRoundNumber(){return this.roundNumber;}
     public int getEra(){ return this.era;}
-    //May differ from players.size() in case of disconnections!
+    /** Returns the expected number of players. May differ from {@link #getPlayersList()}.size() after disconnections. */
     public int getNumPlayers(){return this.nPlayers;}
 
-
+    /**
+     * The internal handling of the player acting is different from phases.
+     * @return the player acting in ACTION_PHASE or BONUS_DRAWING_PHASE. Outside these phases, the value is not consistent
+     */
     public Player getPlayerActingDrawPhase(){
         return this.playerActing;
     }
+    /**
+     * The internal handling of the player acting is different from phases.
+     * @return the player acting in TOTEM_PHASE. Outside this phase, the value is not consistent
+     */
     public Player getPlayerActingTotemPhase(){
         return turnOrder.getPlayerActing();
     }
@@ -488,11 +537,19 @@ public class Game implements GameObservable {
 
     }
 
+    /**
+     * Should be used for testing only
+     * @param round
+     */
     protected void setRound(int round)
         {
         this.roundNumber = round;
         }
 
+    /**
+     * Method called from the controller of the game flow. Starts the ACTION_PHASE
+     * @throws IncorrectMethodCallException if called when the game is in a different state from the end of the TOTEM_PHASE
+     */
     public void setUpDrawingPhase() throws IncorrectMethodCallException{
 
         //Must check if still in TOTEM_PLACING_PHASE
@@ -515,6 +572,10 @@ public class Game implements GameObservable {
 
     }
 
+    /**
+     * Should be used for testing only
+     * @param currentRoundPhase
+     */
     protected void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){
         this.currentRoundPhase = currentRoundPhase;
         observers.onGameRoundStatusUpdate(this);
@@ -561,6 +622,12 @@ public class Game implements GameObservable {
 
     }
 
+    /**
+     * Method called from the controller of the game flow. Starts the BONUS_DRAWING_PHASE
+     * Must only be called after the current player has finished drawing.
+     *
+     * @throws IncorrectMethodCallException if action phase is not finished yet
+     */
     public void setUpBonusDrawingPhase() throws IncorrectMethodCallException{
 
         if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE) throw new IncorrectMethodCallException("setUpBonusDrawingPhase", "Wrong phase");
@@ -581,6 +648,12 @@ public class Game implements GameObservable {
 
     }
 
+    /**
+     * Method called from the controller of the game flow. Starts TOTEM_PHASE
+     * Called at the start of the round
+     *
+     * @throws IncorrectMethodCallException if curren round phase is not END_TURN
+     */
     public void setUpTotemPlacingPhase() throws IncorrectMethodCallException {
         if(currentRoundPhase != RoundPhasesEnum.END_TURN) throw new IncorrectMethodCallException("setUpTotemPlacingPhase" , "Wrong phase");
         this.currentRoundPhase = RoundPhasesEnum.TOTEM_PLACING;
@@ -588,7 +661,15 @@ public class Game implements GameObservable {
         observers.onGameRoundStatusUpdate(this);
     }
 
-
+    /**
+     * Allows a player to skip a draw from the upper line.
+     * A draw skip is valid only if the card line has no pickable cards, if the card line contains only buildings and in
+     * BONUS_DRAWING_PHASE since the bonus draw is optional
+     * @param player the player requesting to skip draw
+     * @throws WrongPlayerTurnException if it is not that playerìs turn
+     * @throws WrongRoundPhaseException if it is not ACTION_PHASE or BONUS_DRAW_PHASE
+     * @throws IllegalSkipException if the skip request is not valid
+     */
     public void playerSkipUpper(Player player) throws WrongPlayerTurnException, WrongRoundPhaseException,
             IllegalSkipException {
         if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE)
@@ -599,6 +680,14 @@ public class Game implements GameObservable {
         drawManager.skipUpper();
     }
 
+    /**
+     * Allows a player to skip a draw from the lower line.
+     * A draw skip is valid only if the card line has no pickable cards, if the card line contains only buildings.
+     * @param player the player requesting to skip draw
+     * @throws WrongPlayerTurnException if it is not that playerìs turn
+     * @throws WrongRoundPhaseException if it is not ACTION_PHASE or BONUS_DRAW_PHASE
+     * @throws IllegalSkipException if the skip request is not valid
+     */
     public void playerSkipLower(Player player) throws WrongPlayerTurnException, WrongRoundPhaseException,
             IllegalSkipException {
         if(currentRoundPhase != RoundPhasesEnum.ACTION_PHASE && currentRoundPhase != RoundPhasesEnum.BONUS_DRAWING_PHASE)

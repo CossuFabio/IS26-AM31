@@ -9,6 +9,7 @@ public interface ISustainDiscountCharacter {
      * Returns the food discount this specific bonus contributes for the given player.
      *
      * @param player the player being evaluated
+     * @return the bonus discount to apply
      */
     int getBonus(Player player);
 
