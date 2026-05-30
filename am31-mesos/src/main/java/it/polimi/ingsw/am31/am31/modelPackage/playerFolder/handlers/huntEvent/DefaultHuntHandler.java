@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.huntEvent;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
+/** Base hunt handler. Awards food and prestige points based on the number of hunters in the tribe. */
 public class DefaultHuntHandler implements IHuntHandler{
 
     public DefaultHuntHandler(){}

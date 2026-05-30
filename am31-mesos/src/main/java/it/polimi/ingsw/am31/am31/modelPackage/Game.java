@@ -208,6 +208,11 @@ public class Game implements GameObservable {
     }
 
     //You can get the leaderboard at any moment
+
+    /**
+     * Return the leaderboard ad the end of the game
+     * @return List of players in order according by the rules of Mesos
+     */
     public List<Player> getLeaderBoard(){
 
         return players.stream()
@@ -228,8 +233,7 @@ public class Game implements GameObservable {
                 && p.getFood() == top.getFood();
     }
 
-//why private?
-    //private void resolveEvents(){
+
     /**
      * Resolves all event cards in the lower line. On the final round, also resolves
      * event cards in the upper line. The sustain event is always resolved last.

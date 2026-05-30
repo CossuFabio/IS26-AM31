@@ -9,6 +9,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Builds the ordered event queue from a player's event cards.
+ * Sustain events are placed last; all other event types are resolved first.
+ * Within each group, events are sorted by era.
+ */
 public class EventQueueBuilderVisitor implements TribeVisitor{
 
     private final List<EventCard> lowPriorityQueue;
@@ -75,6 +80,10 @@ public class EventQueueBuilderVisitor implements TribeVisitor{
         highPriorityQueue.add(event);
     }
 
+    /**
+     * Returns the complete ordered event queue: non-sustain events by era first,
+     * sustain events by era last.
+     */
     public List<EventCard> getCompleteQueue(){
 
         List<EventCard> sortedHighPriority = highPriorityQueue

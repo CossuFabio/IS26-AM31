@@ -17,7 +17,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-//Used to load resources from JSON
+/**
+ * Maps effect IDs contained in the JSON building cards catalog to the
+ * corresponding onPick effect applied to the player.
+ */
 public class EffectsCatalog {
 
     private final Map<String, Consumer<Player>> effects;
@@ -72,6 +75,12 @@ public class EffectsCatalog {
         effects.put(EffectIdsConstants.FLAT_PRESTIGE_POINTS, player -> player.addEndGameEffect(FlatPrestigePointsDecorator::new));
     }
 
+    /**
+     * Returns the effect associated with the given ID.
+     *
+     * @param id the effect identifier as defined in {@link EffectIdsConstants}
+     * @throws IllegalArgumentException if the ID does not match any known effect
+     */
     public Consumer<Player> getEffect(String id) {
         //Requested effect
         Consumer<Player> effect = effects.get(id);

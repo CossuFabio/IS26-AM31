@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.paintEvent;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
+/** Awards bonus food per artist in the tribe during the painting event. */
 public class BonusPaintHandlerDecorator extends PaintHandlerDecorator{
 
     public BonusPaintHandlerDecorator(IPaintHandler wrappedHandler){super(wrappedHandler); }

@@ -19,9 +19,16 @@ public class    Hunter extends CharacterCard {
         this.mark = mark;
     }
 
+    /** Returns true if this hunter is marked. */
     @Override
     public boolean getMark() { return mark; }
 
+    /**
+     * If this hunter is marked, awards food equal to the number of hunters
+     * already in the player's tribe, not counting this card.
+     *
+     * @param player the player drawing this card
+     */
     @Override
     public void onPick(Player player) {
         if(!this.mark) return;

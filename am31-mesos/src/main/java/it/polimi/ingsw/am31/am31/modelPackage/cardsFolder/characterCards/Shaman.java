@@ -18,9 +18,15 @@ public class Shaman extends CharacterCard {
         this.stars = stars;
     }
 
+    /** Returns the ritual stars this shaman gives on pick. */
     @Override
     public int getStars() {return stars;}
 
+    /**
+     * Increases the player's ritual stars by the number of stars this shaman provides.
+     *
+     * @param player the player drawing this card
+     */
     @Override
     public void onPick(Player player){
         player.increaseRitualStars(this.stars);

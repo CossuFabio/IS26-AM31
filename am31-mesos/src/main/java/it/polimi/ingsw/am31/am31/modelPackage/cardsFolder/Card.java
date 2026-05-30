@@ -23,6 +23,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
         @JsonSubTypes.Type(value = SustainEventCard.class,  name = "SustainEventCard")
 })
 
+/**
+ * Abstract base class for all cards in the game (character, building, event).
+ * Type-specific getters return 0 or false unless overridden by a concrete subclass.
+ */
 public abstract class Card {
 
    @JsonIgnore
@@ -37,25 +41,40 @@ public abstract class Card {
         return era;
     }
 
+    /**
+     * Classic method of the Visitor design pattern.
+     * @param visitor {@link TribeVisitor} that will visit the card
+     */
     public abstract void acceptVisit(TribeVisitor visitor);
 
 
+    /** Minimum number of players required to include this card in the game. Returns 2 by default. */
     public int getMinPlayers() {
         return 2;
     }
     public String getCardId(){return this.cardId; }
 
+    /**
+     * card Id-based comparison
+     * @param card
+     * @return
+     */
     public boolean equals(Card card){return this.cardId.equals(card.cardId); }
 
 
     public abstract String toString();
 
+    /**
+     * Returns false by default. Overridden to true by cards that implement {@link IPickable},
+     * avoiding the need for an instanceof check.
+     */
     public boolean canBePicked(){return false; }
 
+    /** Food discount applied when purchasing a building. Returns 0 by default. */
     public int getBuildingDiscount() { return 0; }
 
+    /** Returns true if food + discount covers this card's cost. Returns true by default; overridden by {@link BuildingCard}. */
     public boolean canAffordWithFood(int food, int discount) { return true; }
 
-    public boolean isCharacter () { return true;}
 
 }

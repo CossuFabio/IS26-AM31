@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endGame;
 
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
+/** Doubles the prestige points bonus earned from builders at end of game. */
 public class DoubleBuilderEndGameDecorator extends EndGameHandlerDecorator {
 
     public DoubleBuilderEndGameDecorator(IEndGameHandler handler) {

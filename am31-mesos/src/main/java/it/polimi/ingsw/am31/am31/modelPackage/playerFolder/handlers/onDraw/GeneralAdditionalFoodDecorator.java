@@ -5,6 +5,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
+/**
+ * Awards food each time the player completes a set of all 6 different character types.
+ * Only counts sets completed after acquiring this building; previously completed sets are ignored.
+ */
 public class GeneralAdditionalFoodDecorator extends CardDrawHandlerDecorator{
 
     private int farmersSet;

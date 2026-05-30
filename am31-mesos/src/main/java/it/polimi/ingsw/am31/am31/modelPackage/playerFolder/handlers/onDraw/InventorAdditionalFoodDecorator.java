@@ -10,6 +10,10 @@ import java.util.HashSet;
 
 
 
+/**
+ * Awards food each time the player completes a pair of inventors sharing the same invention icon.
+ * Only counts pairs completed after acquiring this building; previously owned pairs are ignored.
+ */
 public class InventorAdditionalFoodDecorator extends CardDrawHandlerDecorator{
 
     private final HashSet<IconEnum> icons;

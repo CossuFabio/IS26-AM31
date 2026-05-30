@@ -19,11 +19,13 @@ public class Builder extends CharacterCard {
         this.discount = discount;
     }
 
+    /** Food discount this builder provides on building purchases. */
     @Override
     public int getBuildingDiscount() {
         return discount;
     }
 
+    /** Prestige points this builder gives at end of game. */
     @Override
     public int getPrestigePoints() {
         return prestigePoints;

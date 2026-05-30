@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.huntEvent;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
+/** Awards bonus food and prestige points per hunter in the tribe during the hunt event. */
 public class BonusHunterHandleDecorator extends HuntHandlerDecorator{
 
     public BonusHunterHandleDecorator(IHuntHandler wrappedHandler){super(wrappedHandler);}

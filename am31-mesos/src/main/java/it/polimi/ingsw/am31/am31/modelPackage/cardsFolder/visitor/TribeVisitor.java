@@ -3,6 +3,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.Building
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.*;
 
+/**
+ * Visitor interface that implements the visitor pattern for all classes in the card hierarchy.
+ * Each overload dispatches to the correct card type.
+ */
 public interface TribeVisitor {
 
     void visit (Hunter hunter);

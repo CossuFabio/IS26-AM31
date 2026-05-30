@@ -18,6 +18,7 @@ public class Farmer extends CharacterCard {
         this.discount = discount;
     }
 
+    /** Food discount this farmer gives during the sustain event. */
     @Override
     public int getSustainDiscount() {
         return discount;

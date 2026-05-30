@@ -2,14 +2,16 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endTurn;
 
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
+/**
+ * Base end-of-turn handler. Changes player food and prestige based on the tile
+ * the player is placed on and the number of players.
+ */
 public class DefaultEndTurnHandler implements IEndTurnHandler {
 
 
     public DefaultEndTurnHandler() {}
 
     @Override
-    //By default, at the end of the turn the player gains/loses food based on which tile he is placed
-    //All bonuses change based on number of players
     //We prefer to put here this logic, leaving these magic numbers, rather than creating a more complex logic that
     //implements it
     public void handleEndTurn(Player player, int playerOrder, int nPlayers) {

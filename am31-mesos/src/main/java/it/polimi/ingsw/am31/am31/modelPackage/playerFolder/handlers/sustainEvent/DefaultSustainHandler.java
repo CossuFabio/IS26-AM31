@@ -5,6 +5,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.Charact
 
 import java.util.ArrayList;
 
+/** Base sustain event handler. Applies the food cost to the player according to the rules and computes any bonus discount effects the player owns. */
 public class DefaultSustainHandler{
 
 

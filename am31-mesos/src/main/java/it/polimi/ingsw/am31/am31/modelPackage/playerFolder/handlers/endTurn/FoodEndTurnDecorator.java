@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.endTurn;
 
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
+/** Awards additional food when placing the totem on a food-bonus space of the turn order tile. Has no effect on the last space. */
 public class FoodEndTurnDecorator extends EndTurnHandlerDecorator{
 
     public FoodEndTurnDecorator(IEndTurnHandler wrappedHandler){super(wrappedHandler);}

@@ -2,6 +2,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.ritualWin;
 
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
+/** Base handler for the ritual win event. */
 public class RitualWinHandler{
 
     private IRitualWinStrategy handleWinStrategy;
@@ -10,6 +11,7 @@ public class RitualWinHandler{
         this.handleWinStrategy = new DefaultWinRitualStrategy();
     }
 
+    /** Changes the behaviour of the player on winning the ritual event. */
     public void setStrategy(IRitualWinStrategy newStrategy){
         this.handleWinStrategy = newStrategy;
     }

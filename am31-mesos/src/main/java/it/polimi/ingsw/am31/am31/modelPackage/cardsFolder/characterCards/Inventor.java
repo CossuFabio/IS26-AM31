@@ -15,6 +15,7 @@ public class Inventor extends CharacterCard {
         super(cardId, era, minPlayers);
         this.icon = icon;
     }
+    /** Returns this inventor's icon. */
     @Override
     public IconEnum getIcon() {
         return icon;

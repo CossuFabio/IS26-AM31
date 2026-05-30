@@ -4,6 +4,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.Building
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.*;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.*;
 
+/** Counts how many cards of each type appear in a card collection. */
 public class CountVisitor implements TribeVisitor{
 
     private int huntersCount;
@@ -88,10 +89,12 @@ public class CountVisitor implements TribeVisitor{
     public int getEvent(){return eventsCount;}
 
 
+    /** Returns the total number of character cards, excluding events and buildings. */
     public int getTotalCharacters(){
         return huntersCount + builderCount + shamanCount + farmersCount + inventorsCount + artistsCount;
     }
 
+    /** Resets all counters to zero, allowing this visitor to be reused. */
     public void reset(){
         huntersCount = 0;
         farmersCount =0;

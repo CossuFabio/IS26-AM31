@@ -6,6 +6,11 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
 import java.util.HashSet;
 
+/**
+ * Base end-game handler. Awards prestige points from tribe cards and buildings,
+ * plus an inventors bonus (inventors × distinct icon count in the tribe)
+ * and an artists bonus (10 pts per pair of artists).
+ */
 public class DefaultEndGameHandler implements IEndGameHandler {
 
     public static final int PRESTIGE_POINTS_ARTISTS_PAIR = 10;

@@ -21,6 +21,12 @@ public class RitualEventCard extends EventCard {
     }
 
 
+    /**
+     * Players with the fewest ritual stars lose prestige points;
+     * players with the most ritual stars gain prestige points.
+     *
+     * @param players the list of all players in the game
+     */
     public void resolve(List<Player> players) {
         int minStars = players.getFirst().getRitualStars();
         int maxStars = minStars;

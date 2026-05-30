@@ -3,6 +3,7 @@ package it.polimi.ingsw.am31.am31.modelPackage.playerFolder.handlers.paintEvent;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 
+/** Base paint event handler. Awards bonus prestige points per artist if the minimum is met; otherwise applies a malus to prestige points. */
 public class DefaultPaintHandler implements IPaintHandler{
 
     public DefaultPaintHandler(){}

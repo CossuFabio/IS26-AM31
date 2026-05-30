@@ -9,6 +9,11 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
 
 import java.util.function.Consumer;
 
+/**
+ * A building card that can be purchased during the action phase.
+ * The food cost is reduced by the player's builder discount; the effect
+ * is applied immediately on pick.
+ */
 public class BuildingCard extends Card implements IPickable {
 
     private final int cost;
@@ -17,6 +22,14 @@ public class BuildingCard extends Card implements IPickable {
     private final String description;
 
 
+    /**
+     * @param cardId               unique identifier
+     * @param era                  era this card belongs to
+     * @param cost                 food cost to purchase
+     * @param prestigePointsGained prestige points awarded at the end of the game
+     * @param description          textual description of the effect
+     * @param effect               behaviour applied to the player on pick, set at construction time
+     */
     public BuildingCard (String cardId, int era, int cost, int prestigePointsGained,
             String description, Consumer<Player> effect){
         super(cardId, era);
@@ -37,6 +50,11 @@ public class BuildingCard extends Card implements IPickable {
 
     public String getDescription(){return description;}
 
+    /**
+     * Subtracts the discounted food cost and applies this card's effect to the player.
+     *
+     * @param player the player purchasing the card
+     */
     public void onPick(Player player){
 
         //If player.getDiscount() is greater than this.cost then the players pays zero
@@ -46,6 +64,7 @@ public class BuildingCard extends Card implements IPickable {
         effect.accept(player);
     }
 
+    @Override
     public void addToPlayer(Player player){
         player.addCard(this);
     }
@@ -56,6 +75,12 @@ public class BuildingCard extends Card implements IPickable {
         return "BuildingCard - Era: " + era + " - Prestige points: " + prestigePointsGained + " - Cost: " + cost ;
     }
 
+    /**
+     * Validates that the player can afford this card (food + builder discount >= cost).
+     *
+     * @param player the player attempting to pick
+     * @throws InsufficientFoodException if the player cannot afford the card
+     */
     @Override
     public void canPick(Player player) throws InsufficientFoodException {
         if(! (player.getFood() + player.getBuildersDiscount() >= this.cost)) throw new InsufficientFoodException(player.getFood(), player.getBuildersDiscount(), this.cost);
@@ -65,6 +90,7 @@ public class BuildingCard extends Card implements IPickable {
     public void acceptVisit(TribeVisitor visitor){
         visitor.visit(this);
     }
+
 
 
     @Override
