@@ -9,15 +9,36 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.*;
  */
 public interface TribeVisitor {
 
-    void visit (Hunter hunter);
-    void visit (Shaman shaman);
-    void visit (Farmer farmer);
-    void visit (Inventor inventor);
-    void visit (Builder builder);
-    void visit (Artist artist);
-    void visit (BuildingCard building);
-    void visit (HuntEventCard huntEventCard);
-    void visit (SustainEventCard sustainEventCard);
-    void visit (RitualEventCard ritualEventCard);
-    void visit (PaintingEventCard paintingEventCard);
+    /** @param hunter the Hunter card being visited */
+    void visit(Hunter hunter);
+
+    /** @param shaman the Shaman card being visited */
+    void visit(Shaman shaman);
+
+    /** @param farmer the Farmer card being visited */
+    void visit(Farmer farmer);
+
+    /** @param inventor the Inventor card being visited */
+    void visit(Inventor inventor);
+
+    /** @param builder the Builder card being visited */
+    void visit(Builder builder);
+
+    /** @param artist the Artist card being visited */
+    void visit(Artist artist);
+
+    /** @param building the BuildingCard being visited */
+    void visit(BuildingCard building);
+
+    /** @param huntEventCard the HuntEventCard being visited */
+    void visit(HuntEventCard huntEventCard);
+
+    /** @param sustainEventCard the SustainEventCard being visited */
+    void visit(SustainEventCard sustainEventCard);
+
+    /** @param ritualEventCard the RitualEventCard being visited */
+    void visit(RitualEventCard ritualEventCard);
+
+    /** @param paintingEventCard the PaintingEventCard being visited */
+    void visit(PaintingEventCard paintingEventCard);
 }

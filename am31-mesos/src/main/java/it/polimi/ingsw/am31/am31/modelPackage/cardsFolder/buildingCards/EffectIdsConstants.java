@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards;
 
+/**
+ * Used to map the effect id on the JSON file to the corresponding function effect
+ */
 public class EffectIdsConstants {
     // ERA 1
     public static final String GENERAL_ADDITIONAL_FOOD = "GENERAL_ADDITIONAL_FOOD";

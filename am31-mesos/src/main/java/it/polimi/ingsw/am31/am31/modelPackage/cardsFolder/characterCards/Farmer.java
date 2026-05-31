@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
+
+/**
+ * Represents an instance of a Farmer card
+ */
 public class Farmer extends CharacterCard {
 
     private final int discount;
@@ -18,7 +22,7 @@ public class Farmer extends CharacterCard {
         this.discount = discount;
     }
 
-    /** Food discount this farmer gives during the sustain event. */
+    /** @return food discount this farmer gives during the sustain event. */
     @Override
     public int getSustainDiscount() {
         return discount;

@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Loads the building cards catalog from a JSON file and shuffles the result.
+ * Each card's effect is resolved via {@link EffectsCatalog}.
+ */
 public class JsonBuildingCardsSupplier implements IResourceSupplier<List<BuildingCard>> {
 
 
@@ -21,8 +25,9 @@ public class JsonBuildingCardsSupplier implements IResourceSupplier<List<Buildin
 
     private final EffectsCatalog effectsCatalog;
 
-
-
+    /**
+     * @throws IOException if the building cards catalog JSON file cannot be found or parsed
+     */
     public JsonBuildingCardsSupplier() throws IOException {
         effectsCatalog = new EffectsCatalog();
 
@@ -46,6 +51,7 @@ public class JsonBuildingCardsSupplier implements IResourceSupplier<List<Buildin
         Collections.shuffle(this.resources);
     }
 
+    /** @return an immutable shuffled list of all building cards */
     @Override
     public List<BuildingCard> getResources(){
         return resources.stream().toList();

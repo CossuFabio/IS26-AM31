@@ -16,10 +16,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Loads the tribe cards catalog from a JSON file. The deck is shuffled, with the two
+ * final-era event cards (Sustain and Ritual) appended at the end in random order. The JSON file used must not contain
+ * final-era event cards, otherwise they will be duplicated.
+ */
 public class JsonTribeCardsSupplier implements IResourceSupplier<List<Card>> {
 
     private final List<Card> resources;
 
+    /**
+     * @throws IOException if the tribe cards catalog JSON file cannot be found or parsed
+     */
     public JsonTribeCardsSupplier() throws IOException{
         ObjectMapper mapper = new ObjectMapper().configure(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS, false);
         InputStream input = getClass().getResourceAsStream(ResourcesPaths.TRIBE_CATALOG_JSON_PATH);
@@ -43,6 +51,7 @@ public class JsonTribeCardsSupplier implements IResourceSupplier<List<Card>> {
     }
 
 
+    /** @return an immutable shuffled list of all tribe and event cards */
     @Override
     public List<Card> getResources(){
         return resources.stream().toList();

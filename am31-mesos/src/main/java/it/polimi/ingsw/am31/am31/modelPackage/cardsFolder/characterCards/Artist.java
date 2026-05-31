@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
+/**
+ * Represents an instance of an Artist card
+ */
 public class Artist extends CharacterCard {
 
     @JsonCreator

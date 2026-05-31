@@ -7,16 +7,20 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-//Like the TribeDeck, we do not shuffle here, but we just take out the requested buildings from the rules.
-//This class allows injection for test cases
-
+/**
+ * Class that represents the deck of building cards
+ */
 public class BuildingDeck extends Deck {
 
-
-
     // Exceptions are silently caught.
-    // This allows us to use this for testing, but we need to be sure that the injected catalogue is consistent for
-    // the game.
+    // This allows us to use this for testing.
+
+    /**
+     * Creates a BuildingDeck using a number of cards according to the rules
+     * @param nPlayers the number of players that defines the number of buildings per era
+     * @param catalog resource injection of the building cards that compose the deck.<br> They must be already shuffled.
+     *          If the catalog does not contain enough cards for a given era, the remaining slots are silently ignored
+     */
     public BuildingDeck(int nPlayers, List<BuildingCard> catalog){
         super();
 

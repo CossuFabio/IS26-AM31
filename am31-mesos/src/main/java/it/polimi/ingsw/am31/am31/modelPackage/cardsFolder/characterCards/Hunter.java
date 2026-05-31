@@ -6,7 +6,11 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
-public class    Hunter extends CharacterCard {
+
+/**
+ * Represents an instance of a Hunter card
+ */
+public class Hunter extends CharacterCard {
     private final boolean mark;
 
     @JsonCreator
@@ -19,7 +23,7 @@ public class    Hunter extends CharacterCard {
         this.mark = mark;
     }
 
-    /** Returns true if this hunter is marked. */
+    /** @return true if this hunter is marked */
     @Override
     public boolean getMark() { return mark; }
 
@@ -36,6 +40,7 @@ public class    Hunter extends CharacterCard {
         player.getTribe().forEach(card -> card.acceptVisit(visitor));
         player.editFood(visitor.getHunters());
     }
+
     @Override
     public void acceptVisit(TribeVisitor visitor) {
         visitor.visit(this);

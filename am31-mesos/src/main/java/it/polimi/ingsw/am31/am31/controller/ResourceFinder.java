@@ -25,6 +25,9 @@ public class ResourceFinder {
     private final Map<String, OfferCard> offerCardsRegistry;
     private final Map<String, Card> cardsRegistry;
 
+    /**
+     * @param game the game instance that owns the resources this object will handle
+     */
     public ResourceFinder(Game game){
         this.game = game;
         this.offerCardsRegistry = new HashMap<String, OfferCard>();

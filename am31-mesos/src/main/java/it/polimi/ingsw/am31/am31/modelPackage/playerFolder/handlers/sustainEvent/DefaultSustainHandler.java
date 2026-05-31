@@ -16,11 +16,21 @@ public class DefaultSustainHandler{
         bonusDiscountEffects = new ArrayList<ISustainDiscountCharacter>();
     }
 
+    /**
+     * Registers an additional food discount effect to be applied during the sustain event.
+     * @param newEffect the {@link ISustainDiscountCharacter} discount effect to add
+     */
     public void addSustainDiscountEffect(ISustainDiscountCharacter newEffect){
         bonusDiscountEffects.add(newEffect);
     }
 
 
+    /**
+     * Resolves the sustain event for the given player. Deducts food equal to the tribe size minus any discounts.
+     * If the player cannot pay, food is set to zero and prestige points are lost instead.
+     * @param player the player owning this handler
+     * @param malus prestige points lost per food the player cannot pay
+     */
     public void handleSustain(Player player, int malus) {
         int food = player.getFood();
 

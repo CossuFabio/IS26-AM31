@@ -7,6 +7,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 import java.util.List;
 
+/**
+ * Represents an instance of a Shamanic Ritual card
+ */
+
 public class RitualEventCard extends EventCard {
 
     @JsonCreator
@@ -22,9 +26,9 @@ public class RitualEventCard extends EventCard {
 
 
     /**
-     * Players with the fewest ritual stars lose prestige points;
-     * players with the most ritual stars gain prestige points.
-     *
+     * Players with the fewest ritual stars lose prestige points; in case of draw, more than one player lose points.
+     * Players with the most ritual stars gain prestige points; in case of draw, more than one player gain points.
+     * In the case all players have the same amount of ritual stars, they all lose and win the ritual at the same time.
      * @param players the list of all players in the game
      */
     public void resolve(List<Player> players) {

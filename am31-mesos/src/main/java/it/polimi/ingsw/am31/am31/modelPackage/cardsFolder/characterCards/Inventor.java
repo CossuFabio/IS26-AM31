@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
+
+/**
+ * Represents an instance of an Inventor card
+ */
 public class Inventor extends CharacterCard {
     private final IconEnum icon;
     @JsonCreator
@@ -15,7 +19,7 @@ public class Inventor extends CharacterCard {
         super(cardId, era, minPlayers);
         this.icon = icon;
     }
-    /** Returns this inventor's icon. */
+    /** @return this inventor's icon */
     @Override
     public IconEnum getIcon() {
         return icon;

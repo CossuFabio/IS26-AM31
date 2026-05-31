@@ -14,6 +14,9 @@ public class LeaderBoardDAO {
 
     private final Connection connection;
 
+    /**
+     * @param connection the connection used for querying the database
+     */
     public LeaderBoardDAO(Connection connection){
         this.connection = connection;
     }

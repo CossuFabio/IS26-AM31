@@ -57,6 +57,7 @@ public class GameController {
     public Integer getGameID(){return this.gameID; }
 
     //-----External commands handling-----
+
     /**
      * Adds a player to the lobby. Starts the game automatically when the lobby is full.
      *
@@ -233,10 +234,19 @@ public class GameController {
         isGameStillActive = false;
     }
 
+    /**
+     * @return the number of player in lobby. May differ for the number of players expected for that game.
+     * @throws GameInvariantException if the game is not active anymore
+     */
     public synchronized int getNumActivePlayers() throws GameInvariantException{
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         return game.getPlayersList().size();
     }
+
+    /**
+     * @return the number of players the game needs to start. It is decided by the creator of the lobby
+     * @throws GameInvariantException if the game is not active anymore
+     */
     public synchronized int getNumPlayers() throws GameInvariantException{
         if(!isGameStillActive) throw new GameNoLongerActiveException();
         return game.getNumPlayers();
@@ -247,9 +257,8 @@ public class GameController {
     /**
      * Handles a player disconnection. If the game has not started, removes the player from the lobby.
      * If the game is running, crashes it for all remaining players.
-     * Returns true if the game is still active, false if it was terminated.
-     *
      * @param playerID nickname of the disconnected player
+     * @return true if the game is still active, false if it was terminated.
      */
     public synchronized boolean handleDisconnection(String playerID){
 
@@ -280,16 +289,25 @@ public class GameController {
 
     }
 
+    /**
+     * @return The list of totem color that a player can choose when joining the game
+     */
     public synchronized List<Color> getAvailableColors(){
         List<Color> availableColors = new ArrayList<>(Arrays.asList(Color.values()));
         game.getPlayersList().forEach(p -> availableColors.remove(p.getColor()));
         return availableColors;
     }
 
+    /**
+     * @return true if the game is finished
+     */
     public synchronized boolean isGameFinished(){
         return game.isGameFinished();
     }
 
+    /**
+     * @return An immutable list of the nicknames of the players in the game
+     */
     public synchronized List<String> getPlayersId(){
         return game.getPlayersList().stream().map(Player::getNickname).toList();
     }

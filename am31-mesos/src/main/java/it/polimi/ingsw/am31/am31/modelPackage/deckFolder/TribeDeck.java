@@ -8,10 +8,16 @@ import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//This class does not care about shuffling the deck, it just filters for minPlayers.
-//This allows us to inject non-shuffled decks for testing
+/**
+ * Class that represents the deck of tribe cards (Characters and Events)
+ */
 public class TribeDeck extends Deck {
 
+    /**
+     * Creates the main deck, filtering out cards that require more players than the current game has
+     * @param nPlayers the number of players, used to filter out cards with a higher minPlayers requirement
+     * @param catalog resource injection of the tribe cards that compose the deck.<br> They must be already shuffled
+     */
     public TribeDeck(int nPlayers, List<Card> catalog){
 
     super();

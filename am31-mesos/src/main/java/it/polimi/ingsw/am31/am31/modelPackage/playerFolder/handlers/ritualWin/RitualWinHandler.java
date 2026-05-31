@@ -16,6 +16,11 @@ public class RitualWinHandler{
         this.handleWinStrategy = newStrategy;
     }
 
+    /**
+     * Resolves the ritual win effect for the given player using the current strategy.
+     * @param player the player owning this handler
+     * @param bonus prestige points bonus to award
+     */
     public void handleRitualWin(Player player, int bonus){
         handleWinStrategy.handleWinRitual(player, bonus);
     }

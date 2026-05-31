@@ -653,7 +653,7 @@ public class Game implements GameObservable {
      * Method called from the controller of the game flow. Starts TOTEM_PHASE
      * Called at the start of the round
      *
-     * @throws IncorrectMethodCallException if curren round phase is not END_TURN
+     * @throws IncorrectMethodCallException if current round phase is not END_TURN
      */
     public void setUpTotemPlacingPhase() throws IncorrectMethodCallException {
         if(currentRoundPhase != RoundPhasesEnum.END_TURN) throw new IncorrectMethodCallException("setUpTotemPlacingPhase" , "Wrong phase");

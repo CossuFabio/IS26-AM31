@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
+
+/**
+ * Represents an instance of a Shaman card
+ */
 public class Shaman extends CharacterCard {
     private final int stars;
 
@@ -18,7 +22,7 @@ public class Shaman extends CharacterCard {
         this.stars = stars;
     }
 
-    /** Returns the ritual stars this shaman gives on pick. */
+    /** @return the ritual stars this shaman gives on pick. */
     @Override
     public int getStars() {return stars;}
 

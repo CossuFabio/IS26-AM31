@@ -12,10 +12,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Loads the offer cards catalog from a JSON file into {@link LocalOfferCard} instances for client-side use.
+ */
 public class JsonLocalOfferSupplier implements IResourceSupplier<List<LocalOfferCard>> {
 
     private final List<LocalOfferCard> resources;
 
+    /**
+     * @throws IOException if the offer cards catalog JSON file cannot be found or parsed
+     */
     public JsonLocalOfferSupplier() throws IOException {
         ObjectMapper mapper = new ObjectMapper()
                 .configure(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS, false);
@@ -37,6 +43,7 @@ public class JsonLocalOfferSupplier implements IResourceSupplier<List<LocalOffer
         }
     }
 
+    /** @return an immutable list of all offer cards as {@link LocalOfferCard} instances */
     @Override
     public List<LocalOfferCard> getResources() {
         return resources.stream().toList();

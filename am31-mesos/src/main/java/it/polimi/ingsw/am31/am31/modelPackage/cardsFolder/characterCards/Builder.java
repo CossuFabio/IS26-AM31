@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
+/**
+ * Represents an instance of a Builder card
+ */
 public class Builder extends CharacterCard {
     private final int prestigePoints;
     private final int discount;
@@ -19,13 +22,13 @@ public class Builder extends CharacterCard {
         this.discount = discount;
     }
 
-    /** Food discount this builder provides on building purchases. */
+    /** @return food discount this builder provides on building purchases */
     @Override
     public int getBuildingDiscount() {
         return discount;
     }
 
-    /** Prestige points this builder gives at end of game. */
+    /** @return prestige points this builder gives at end of game */
     @Override
     public int getPrestigePoints() {
         return prestigePoints;

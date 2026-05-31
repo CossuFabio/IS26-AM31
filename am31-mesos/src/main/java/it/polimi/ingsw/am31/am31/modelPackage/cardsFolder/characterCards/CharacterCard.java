@@ -26,25 +26,30 @@ public abstract class CharacterCard extends Card implements IPickable {
     @Override
     public int getMinPlayers(){return this.minPlayers; }
 
-    /** Food discount applied when purchasing a building. Returns 0 by default. */
+    /** @return food discount applied when purchasing a building. Returns 0 by default. */
     public int getBuildingDiscount () {
     return 0;
     }
-    /** Prestige points this card gives at end of game. Returns 0 by default. */
+
+    /** @return prestige points this card gives at end of game. Returns 0 by default. */
     public int getPrestigePoints () {
         return 0;
     }
-    /** Invention icon used for inventor pair matching. Returns {@link IconEnum#EMPTY} by default. */
+
+    /** @return icon of this card. Returns {@link IconEnum#EMPTY} by default for non-Inventor cards. */
     public IconEnum getIcon () {
         return IconEnum.EMPTY;
     }
-    /** Food discount applied during the sustain event. Returns 0 by default. */
+
+    /** @return food discount applied during the sustain event. Returns 0 by default. */
     public int getSustainDiscount (){
         return 0;
     }
-    /** Whether this hunter triggers the food bonus on pick. Returns false by default. */
+
+    /** @return true if this card is a marked hunter that triggers the food bonus on pick. Returns false by default. */
     public boolean getMark() { return false; }
-    /** Ritual stars given to the player on pick. Returns 0 by default. */
+
+    /** @return ritual stars given to the player on pick. Returns 0 by default. */
     public int getStars() { return 0; }
 
     /**

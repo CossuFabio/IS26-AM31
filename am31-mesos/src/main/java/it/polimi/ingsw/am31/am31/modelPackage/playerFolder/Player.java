@@ -319,6 +319,12 @@ public class Player implements GameObservable {
         this.ritualLoseHandler.setStrategy(newStrategy.get());
     }
 
+
+    /**
+     * Since there is only one building that awards a bonus draw, and it is always a bonus draw from upper line,
+     * the only information needed is if the player has the bonus draw. Only one player can have this bonus at the same time.
+     * @return true if the player has a bonus draw for the BONUS_DRAWING_PHASE
+     */
     public boolean hasBonusDraw(){
         return bonusDraw;
     }
@@ -334,10 +340,10 @@ public class Player implements GameObservable {
         observers.onPlayerBonusDrawUpdate(this);
     }
 
-    @Override
     /**
      * Comparison based on the players nickname
      */
+    @Override
     public boolean equals(Object player){
         if(player == null || player.getClass() != Player.class) return false;
         return this == player || this.nickname.equals(((Player) player).getNickname());

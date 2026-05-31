@@ -9,6 +9,11 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.RitualEvent
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.SustainEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
 
+/**
+ * Abstract base class for all cards in the game (character, building, event).
+ * Type-specific getters return 0 or false unless overridden by a concrete subclass.
+ */
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Builder.class,           name = "Builder"),
@@ -23,10 +28,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.TribeVisitor;
         @JsonSubTypes.Type(value = SustainEventCard.class,  name = "SustainEventCard")
 })
 
-/**
- * Abstract base class for all cards in the game (character, building, event).
- * Type-specific getters return 0 or false unless overridden by a concrete subclass.
- */
+
 public abstract class Card {
 
    @JsonIgnore
@@ -56,8 +58,8 @@ public abstract class Card {
 
     /**
      * card Id-based comparison
-     * @param card
-     * @return
+     * @param card card to compare
+     * @return true if the cards have the same id
      */
     public boolean equals(Card card){return this.cardId.equals(card.cardId); }
 
@@ -73,7 +75,7 @@ public abstract class Card {
     /** Food discount applied when purchasing a building. Returns 0 by default. */
     public int getBuildingDiscount() { return 0; }
 
-    /** Returns true if food + discount covers this card's cost. Returns true by default; overridden by {@link BuildingCard}. */
+    /** Returns true if food + discount covers this card's cost. Returns true by default; overridden by BuildingCard */
     public boolean canAffordWithFood(int food, int discount) { return true; }
 
 

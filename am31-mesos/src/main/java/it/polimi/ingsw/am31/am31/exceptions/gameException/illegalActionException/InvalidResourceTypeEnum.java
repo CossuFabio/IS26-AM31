@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException;
 
+/**
+ * Resources that can be requested across the network and whose retrieval may fail
+ */
 public enum InvalidResourceTypeEnum {
 
 

@@ -79,6 +79,7 @@ public class EffectsCatalog {
      * Returns the effect associated with the given ID.
      *
      * @param id the effect identifier as defined in {@link EffectIdsConstants}
+     * @return the function that adds the effect to the player
      * @throws IllegalArgumentException if the ID does not match any known effect
      */
     public Consumer<Player> getEffect(String id) {

@@ -16,6 +16,11 @@ public class RitualLoseHandler {
         this.handleLoseStrategy = handleLoseStrategy;
     }
 
+    /**
+     * Resolves the ritual lose effect for the given player using the current strategy.
+     * @param player the player owning this handler
+     * @param malus prestige points malus to apply
+     */
     public void handleLose(Player player, int malus){
         handleLoseStrategy.handleLose(player, malus);
     }

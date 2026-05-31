@@ -26,55 +26,74 @@ public class EventQueueBuilderVisitor implements TribeVisitor{
 
     /*NO OP FOR ALL OTHER TYPES*/
 
+    /** Ignored */
     @Override
     public void visit(Hunter hunter) {
 
     }
 
+    /** Ignored */
     @Override
     public void visit(Shaman shaman) {
 
     }
 
+    /** Ignored */
     @Override
     public void visit(Farmer farmer) {
 
     }
 
+    /** Ignored */
     @Override
     public void visit(Inventor inventor) {
     }
 
+    /** Ignored */
     @Override
     public void visit(Builder builder) {
 
     }
 
+    /** Ignored */
     @Override
     public void visit(Artist artist) {
 
     }
 
+    /** Ignored */
     @Override
     public void visit(BuildingCard building) {
 
     }
 
+    /**
+     * @param event Adds the hunt event card to the queue with high priority
+     */
     @Override
     public void visit(HuntEventCard event) {
         highPriorityQueue.add(event);
     }
 
+    /**
+     * @param event Adds the sustain event card to the queue with low priority
+     */
     @Override
     public void visit(SustainEventCard event) {
         lowPriorityQueue.add(event);
     }
 
+    /**
+     * @param event Adds the ritual event card to the queue with high priority
+     */
     @Override
     public void visit(RitualEventCard event) {
         highPriorityQueue.add(event);
     }
 
+    /**
+     * @param event Adds the painting event card to the queue with high priority
+     */
     @Override
     public void visit(PaintingEventCard event) {
         highPriorityQueue.add(event);

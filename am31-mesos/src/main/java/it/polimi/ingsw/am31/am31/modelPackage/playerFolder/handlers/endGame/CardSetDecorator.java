@@ -6,6 +6,9 @@ import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Awards prestige points at end of game for each completed set of all 6 character types in the tribe.
+ */
 public class CardSetDecorator extends EndGameHandlerDecorator {
 
     public final static int PRESTIGE_POINTS_BONUS = 6;

@@ -11,6 +11,9 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMess
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Data structure that handles reference for all the observers of a game and forward them the updates
+ */
 public class GameObserversSet implements ObserverHandler{
 
     private final List<GameObserver> observers;
@@ -19,7 +22,7 @@ public class GameObserversSet implements ObserverHandler{
         this.observers = new CopyOnWriteArrayList<>();
     }
 
-
+    @Override
     public void addObserver(GameObserver observer) {
         //Username duplicate is impossible because GameController filters it first
         if(observer != null && !this.observers.contains(observer) && observer != this &&
@@ -27,11 +30,13 @@ public class GameObserversSet implements ObserverHandler{
             this.observers.add(observer);
     }
 
+    @Override
     public void removeObserver(GameObserver o ){
         observers.remove(o);
         o.notifyRemoveMe();
     }
 
+    @Override
     public void removeObserver(String identifier) {
         observers.stream()
                 .filter(obs -> obs.getIdentifier().equals(identifier))

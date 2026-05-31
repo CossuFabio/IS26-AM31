@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am31.am31.modelPackage.modelUtilities;
 
+/**
+ * Class that contains useful contents for the game
+ */
 public class GameConstants {
 
     public static final int MIN_PLAYERS = 2;
@@ -24,7 +27,10 @@ public class GameConstants {
     public static final String FINAL_SUSTAIN_ID = "se3";
     public static final String FINAL_RITUAL_ID = "re3";
 
-
+    /**
+     * @param nPlayers number of players in the game
+     * @return how many era 1 buildings are needed in the game
+     */
     public static int getEraOneBuildings(int nPlayers){
         if(nPlayers == 2)
             return 1;
@@ -32,6 +38,10 @@ public class GameConstants {
             return 2;
     }
 
+    /**
+     * @param nPlayers number of players in the game
+     * @return how many era 2 buildings are needed in the game
+     */
     public static int getEraTwoBuildings(int nPlayers){
         if(nPlayers == 2 || nPlayers == 3)
             return 2;
@@ -39,6 +49,10 @@ public class GameConstants {
             return 3;
     }
 
+    /**
+     * @param nPlayers number of players in the game
+     * @return how many era 3 buildings are needed in the game
+     */
     public static int getEraThreeBuildings(int nPlayers){
         if(nPlayers == 2)
             return 3;

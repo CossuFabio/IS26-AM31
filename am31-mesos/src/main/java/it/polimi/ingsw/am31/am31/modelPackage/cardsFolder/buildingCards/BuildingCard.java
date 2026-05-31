@@ -40,13 +40,20 @@ public class BuildingCard extends Card implements IPickable {
     }
 
 
+    /**
+     * @return prestige points awarded by this card at the end of the game to the player who owns it
+     */
     public int getPrestigePointsGained(){
         return prestigePointsGained;
     }
 
+    /**
+     * @return food cost for acquiring this card
+     */
     public int getCost() {
         return cost;
     }
+
 
     public String getDescription(){return description;}
 

@@ -11,11 +11,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+/**
+ * Loads the offer cards catalog from a JSON file.
+ */
 public class JsonOfferSupplier implements IResourceSupplier<List<OfferCard>> {
 
     private final List<OfferCard> resources;
 
-
+    /**
+     * @throws IOException if the offer cards catalog JSON file cannot be found or parsed
+     */
     public JsonOfferSupplier() throws IOException{
 
         ObjectMapper mapper = new ObjectMapper().configure(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS, false);
@@ -25,6 +30,7 @@ public class JsonOfferSupplier implements IResourceSupplier<List<OfferCard>> {
         this.resources = mapper.readValue(input, new TypeReference<List<OfferCard>>() {});
     }
 
+    /** @return an immutable list of all offer cards */
     @Override
     public List<OfferCard> getResources(){
         return resources.stream().toList();
