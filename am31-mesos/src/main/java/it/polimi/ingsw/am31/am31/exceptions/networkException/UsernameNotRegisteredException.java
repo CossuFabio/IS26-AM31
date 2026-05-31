@@ -3,6 +3,9 @@ package it.polimi.ingsw.am31.am31.exceptions.networkException;
 import it.polimi.ingsw.am31.am31.exceptions.NetworkException;
 import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCode;
 
+/**
+ * Exception thrown when an unidentified client tries to send a request before completing registration.
+ */
 public class UsernameNotRegisteredException extends NetworkException {
     public UsernameNotRegisteredException() {
         super("You must be registered to server before sending requests!", ErrorCode.USERNAME_NOT_REGISTERED);

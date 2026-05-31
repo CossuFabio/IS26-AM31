@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/** Static factory that provides JDBC connections to the historical leaderboard database. */
 public class DataBaseConnectionFactory {
 
     private static String dbUrl;
@@ -18,7 +19,12 @@ public class DataBaseConnectionFactory {
     private DataBaseConnectionFactory() {}
 
 
-    //Overload: init with default values or init with custom
+
+    /**
+     * Initializes the factory with default settings loaded from the properties file.
+     * @throws IOException if it is not possible to access the properties file
+     * @throws ClassNotFoundException if the JDBC driver class cannot be loaded
+     */
     public static void initialize() throws IOException, ClassNotFoundException {
 
         Properties properties = new Properties();
@@ -41,6 +47,14 @@ public class DataBaseConnectionFactory {
 
     }
 
+    /**
+     * Initializes the factory with custom connection settings.
+     * @param dbUrl JDBC URL of the database
+     * @param dbUsername database username
+     * @param dbPassword database password
+     * @param dbDriver JDBC driver class name
+     * @throws ClassNotFoundException if the JDBC driver class cannot be loaded
+     */
     public static void initialize(String dbUrl, String dbUsername, String dbPassword, String dbDriver) throws ClassNotFoundException {
 
         //Static initialization
@@ -53,18 +67,30 @@ public class DataBaseConnectionFactory {
 
     }
 
-
+    /**
+     * Factory method that returns a new connection to the database
+     * @return the requested connection
+     * @throws SQLException if unable to get a new connection
+     * @throws IllegalStateException if the factory is not initialized
+     */
     public static Connection getNewConnection() throws SQLException {
         if (!isInitialized) throw new IllegalStateException("Factory must be initialized before connecting");
         return DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
     }
 
+    /**
+     * Closes the given database connection, ignoring any errors.
+     * @param connection the connection to close
+     */
     public static void closeConnection(Connection connection) {
         try {
             connection.close();
         } catch (SQLException ignored) {}
     }
 
+    /**
+     * @return the initialization status of the factory
+     */
     public static boolean isInitialized() {
         return isInitialized;
     }

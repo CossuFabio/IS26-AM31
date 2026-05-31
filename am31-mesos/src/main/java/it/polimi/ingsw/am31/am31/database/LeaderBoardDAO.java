@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Data Access Object used to access the Mesos database
  */
 public class LeaderBoardDAO {
 
@@ -76,6 +76,12 @@ public class LeaderBoardDAO {
 
     }
 
+    /**
+     * Stores the scores of a list of players in the database.
+     * Also stores the player count and the date the game took place.
+     * Rolls back the transaction in case of failure.
+     * @param players list of players that played the match
+     */
     public void insertScores(List<Player> players){
 
         try{
@@ -99,54 +105,13 @@ public class LeaderBoardDAO {
 
     }
 
-    public List<GlobalRankingEntry> getLeaderBoardPosition(List<Player> players) throws SQLException {
 
-        if(players.isEmpty()) return new ArrayList<>();
-
-        StringBuilder questionMarks = new StringBuilder();
-        for(Player player : players){
-            questionMarks.append("?,");
-        }
-        questionMarks.deleteCharAt(questionMarks.length()-1); // Remove last comma
-
-        List<GlobalRankingEntry> leaderBoard = new ArrayList<>();
-        String getLeaderBoardQueryString = """
-                
-                SELECT player_username, total_prestige_points, total_food, games_played, player_rank
-                FROM leaderboard 
-                WHERE num_players = ? 
-                AND player_username IN (%s)
-                                
-                """.formatted(questionMarks);
-
-        try(PreparedStatement statement = connection.prepareStatement(getLeaderBoardQueryString)){
-
-            statement.setInt(1, players.size());
-            for(int i = 0; i < players.size(); i++){
-                statement.setString(2 + i, players.get(i).getNickname());
-            }
-
-            ResultSet rs = statement.executeQuery();
-            while(rs.next()){
-                leaderBoard.add(new GlobalRankingEntry(
-                        rs.getString("player_username"),
-                        rs.getInt("total_prestige_points"),
-                        rs.getInt("total_food"),
-                        rs.getInt("games_played"),
-                        rs.getInt("player_rank")
-                ));
-
-            }
-
-        }
-
-        return leaderBoard;
-
-
-    }
-
-
-    //this board show all the players on the db, not just those currently in the game
+    /**
+     * Returns the global leaderboard filtered by the given player count.
+     * @param numPlayers number of players per game to filter by
+     * @return a mutable list of {@link GlobalRankingEntry} sorted by rank ascending
+     * @throws SQLException if the query fails; no rollback needed since this is a read-only operation
+     */
     public List<GlobalRankingEntry> getFullLeaderBoard(int numPlayers) throws SQLException {
 
         List<GlobalRankingEntry> leaderBoard = new ArrayList<>();

@@ -3,6 +3,9 @@ package it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionExceptio
 import it.polimi.ingsw.am31.am31.exceptions.IllegalActionException;
 import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCode;
 
+/**
+ * Thrown when a player tries to draw a card with an unidentified id
+ */
 public class CardNotFoundException extends IllegalActionException {
     public CardNotFoundException() {
         super("Card not found!", ErrorCode.CARD_NOT_FOUND);

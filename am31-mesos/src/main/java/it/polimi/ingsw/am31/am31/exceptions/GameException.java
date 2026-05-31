@@ -4,7 +4,10 @@ package it.polimi.ingsw.am31.am31.exceptions;
 import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCategory;
 import it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCode;
 
-//Generic type used by catcher. GameException are caused by wrong request, to they must be sent to the requesting client
+
+/**
+ * Base class for game-related exceptions that must be reported back to the requesting client.
+ */
 public abstract class GameException extends Exception {
 
     private final ErrorCode errorCode;
@@ -16,10 +19,16 @@ public abstract class GameException extends Exception {
 
     //Client should know which category the exception is from
 
+    /**
+     * @return the associated error code
+     */
     public ErrorCode getErrorCode() {
         return errorCode;
     }
 
+    /**
+     * @return the associated error category
+     */
     public ErrorCategory getErrorCategory(){
         return errorCode.getCategory();
     }
