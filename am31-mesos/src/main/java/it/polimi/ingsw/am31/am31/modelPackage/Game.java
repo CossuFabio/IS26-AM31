@@ -139,7 +139,7 @@ public class Game implements GameObservable {
 
 
     /**
-     * Starts the game: randomises the first-round turn order, distributes starting food,
+     * Starts the game: randomizes the first-round turn order, distributes starting food,
      * fills the board lines, and transitions to {@link RoundPhasesEnum#TOTEM_PLACING}.
      * Requires all expected players to be in the lobby.
      *
@@ -445,7 +445,7 @@ public class Game implements GameObservable {
     /**
      * Method used for the handling of the game flow
      * @return if the ACTION_PHASE is finished
-     * @throws IncorrectMethodCallException when caleld outside ACTION_PHASE
+     * @throws IncorrectMethodCallException when called outside ACTION_PHASE
      */
     public boolean isDrawPhaseFinished() throws IncorrectMethodCallException{
 
@@ -454,7 +454,7 @@ public class Game implements GameObservable {
             throw new IncorrectMethodCallException("isDrawPhaseFinished", "Wrong phase");
         }
 
-        //If no offer card is occupied, everybody has drawed
+        //If no offer card is occupied, everybody has drawn
         return board.getOfferCards().stream()
                 .noneMatch(offerCard -> !offerCard.isFree());
     }
@@ -540,7 +540,7 @@ public class Game implements GameObservable {
 
     /**
      * Should be used for testing only
-     * @param round
+     * @param round new round number
      */
     protected void setRound(int round)
         {
@@ -575,7 +575,7 @@ public class Game implements GameObservable {
 
     /**
      * Should be used for testing only
-     * @param currentRoundPhase
+     * @param currentRoundPhase the new round phase
      */
     protected void setCurrentRoundPhase(RoundPhasesEnum currentRoundPhase){
         this.currentRoundPhase = currentRoundPhase;
@@ -597,7 +597,7 @@ public class Game implements GameObservable {
         //Must free the Offer Card of the previous player
         Optional<OfferCard> previousPlayerOfferCard = board.getOfferCards().stream().filter(card -> !card.isFree()).findFirst();
 
-        //This check should never fail but it is better to check
+        //This check should never fail but, it is better to check
         if(!previousPlayerOfferCard.isPresent()) throw new IllegalStateException("Something went wrong in setNextPlayerDrawing()");
 
         //Frees the offerCard
@@ -667,7 +667,7 @@ public class Game implements GameObservable {
      * A draw skip is valid only if the card line has no pickable cards, if the card line contains only buildings and in
      * BONUS_DRAWING_PHASE since the bonus draw is optional
      * @param player the player requesting to skip draw
-     * @throws WrongPlayerTurnException if it is not that playerìs turn
+     * @throws WrongPlayerTurnException if it is not that player's turn
      * @throws WrongRoundPhaseException if it is not ACTION_PHASE or BONUS_DRAW_PHASE
      * @throws IllegalSkipException if the skip request is not valid
      */
@@ -685,7 +685,7 @@ public class Game implements GameObservable {
      * Allows a player to skip a draw from the lower line.
      * A draw skip is valid only if the card line has no pickable cards, if the card line contains only buildings.
      * @param player the player requesting to skip draw
-     * @throws WrongPlayerTurnException if it is not that playerìs turn
+     * @throws WrongPlayerTurnException if it is not that player's turn
      * @throws WrongRoundPhaseException if it is not ACTION_PHASE or BONUS_DRAW_PHASE
      * @throws IllegalSkipException if the skip request is not valid
      */

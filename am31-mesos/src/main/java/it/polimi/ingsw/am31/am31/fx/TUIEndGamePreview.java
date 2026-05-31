@@ -1,30 +1,24 @@
 package it.polimi.ingsw.am31.am31.fx;
 
-import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.ClientController;
 import it.polimi.ingsw.am31.am31.network.VirtualServer;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameStartingEvent;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.localState.LocalLeaderBoard;
 import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
-import it.polimi.ingsw.am31.am31.view.gui.SceneManager;
-import it.polimi.ingsw.am31.am31.view.gui.scene.GameController;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import it.polimi.ingsw.am31.am31.view.tui.TextUserInterface;
 
 import java.util.List;
 
-public class EndGamePreview extends Application {
+public class TUIEndGamePreview {
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    public static void main(String[] args) throws Exception {
         ViewEventBus eventBus = new ViewEventBus();
 
         VirtualServer fakeServer = new VirtualServer() {
@@ -39,38 +33,29 @@ public class EndGamePreview extends Application {
         LocalPlayerState me    = new LocalPlayerState("test",  Color.RED);
         LocalPlayerState fabio = new LocalPlayerState("Fabio", Color.BLUE);
         LocalPlayerState mario = new LocalPlayerState("Mario", Color.YELLOW);
-        me.setPrestigePoints(120);
-        fabio.setPrestigePoints(95);
-        mario.setPrestigePoints(80);
-        me.setFood(500);
-        fabio.setFood(1000);
-        mario.setFood(20);
+        me.setPrestigePoints(120);    me.setFood(500);
+        fabio.setPrestigePoints(95);  fabio.setFood(1000);
+        mario.setPrestigePoints(80);  mario.setFood(20);
 
         LocalGameState fakeState = new LocalGameState();
+        TextUserInterface tui = new TextUserInterface(fakeController, fakeState, eventBus);
+
+        // REGISTER → MAIN_MENU: successRegistration() calls gameState.reset() internally,
+        // so the fake state must be populated AFTER this event.
+        eventBus.post(new SuccessRegistrationEvent("test"));
+        // MAIN_MENU → GAME
+        eventBus.post(new GameStartingEvent());
+
+        // populate after the reset
         fakeState.setPlayers(List.of(me, fabio, mario));
         fakeState.setTurnOrder(List.of(me, fabio, mario));
         fakeState.setRoundNumber(9);
         fakeState.setEra(3);
-        fakeState.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
         fakeState.setLeaderboard(List.of(
                 new LocalLeaderBoard(me,    true),
                 new LocalLeaderBoard(fabio, false),
                 new LocalLeaderBoard(mario, false)
         ));
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "/it/polimi/ingsw/am31/am31/view/gui/scene/game.fxml"));
-        Parent root = loader.load();
-
-        GameController gameController = loader.getController();
-        SceneManager sceneManager = new SceneManager(stage, fakeController, fakeState, eventBus);
-
-        gameController.setController(fakeController);
-        gameController.setLocalGameState(fakeState);
-        gameController.setSceneManager(sceneManager);
-        gameController.setEventBus(eventBus);
-        eventBus.register(gameController);
-
         fakeState.setGlobalRanking(List.of(
                 new GlobalRankingEntry("test",       800, 3000, 7,  1),
                 new GlobalRankingEntry("Fabio",      750, 2000, 5,  2),
@@ -104,20 +89,10 @@ public class EndGamePreview extends Application {
                 new GlobalRankingEntry("Andrea",     160,  250, 1,  30)
         ));
 
-        stage.setScene(new Scene(root, 1920, 1080));
-        stage.setTitle("EndGame Preview – Round 9");
-        stage.show();
+        // GAME → RESULTS
+        eventBus.post(new GameEndedEvent());
 
-        // fire GameEndedEvent after 3 seconds to test the transition
-        new Thread(() -> {
-            try {
-                Thread.sleep(3000);
-                eventBus.post(new GameEndedEvent());
-            } catch (InterruptedException ignored) {}
-        }).start();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
+        // already in TUIResults phase — enter the interactive loop
+        tui.startView();
     }
 }

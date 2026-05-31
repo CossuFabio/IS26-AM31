@@ -191,21 +191,16 @@ public class TUIResults implements TUIPhase {
         System.out.println(mid);
         for(int i=0;i<ranking.size();i++){
             GlobalRankingEntry e = ranking.get(i);
-            //to avoid visualization problems
             String nick = e.getPlayerNickname();
-            if (e.getPlayerNickname().length() > colsize)
-                nick =  e.getPlayerNickname().substring(0, colsize);
-            int food = min(999,e.getTotalFood());
-            int pts = min(5000,e.getTotalPrestigePoints());
-            int games = min(100000,e.getGamesPlayed());
-            int rank = min(999999,e.getRank());
+            if (nick.length() > colsize)
+                nick = nick.substring(0, colsize);
             //Prints the inside of a line
            System.out.println("│"+
-                   StringUtils.center(Integer.toString(rank),colsize) +"│"+
+                   StringUtils.center(Integer.toString(e.getRank()),colsize) +"│"+
                    StringUtils.center(nick,colsize)+"│"+
-                   StringUtils.center(Integer.toString(food),colsize)+"│"+
-                   StringUtils.center(Integer.toString(pts),colsize) +"│"+
-                   StringUtils.center(Integer.toString(games),colsize)+"│");
+                   StringUtils.center(Integer.toString(e.getTotalFood()),colsize)+"│"+
+                   StringUtils.center(Integer.toString(e.getTotalPrestigePoints()),colsize) +"│"+
+                   StringUtils.center(Integer.toString(e.getGamesPlayed()),colsize)+"│");
            if(i+1<ranking.size())
                    System.out.println(mid);
            else break;

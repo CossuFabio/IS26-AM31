@@ -12,7 +12,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-//This class is used to recover the reference to the object from the message received from the network
+/** Resolves string identifiers from network requests to domain-level game objects for a single game of Mesos. */
 public class ResourceFinder {
 
     //To optimize searching time, this class uses HashMaps for O(1) search.
@@ -45,6 +45,12 @@ public class ResourceFinder {
 
     }
 
+    /**
+     * Resolves a String nickname to a domain-level Player object.
+     * @param nickname nickname of the requested player
+     * @return the player with the matching nickname
+     * @throws PlayerNotFoundException if no player with the given nickname exists in this game
+     */
     public Player getPlayerFromNickname(String nickname) throws PlayerNotFoundException {
 
         for(Player p : game.getPlayersList()){
@@ -54,6 +60,13 @@ public class ResourceFinder {
         throw new PlayerNotFoundException(nickname);
     }
 
+    /**
+     * Resolves a String cardId to a domain-level Card object
+     * @param cardId the id of the requested card
+     * @return the card with the matching id
+     * @throws CardNotFoundException if the card does not exist in the game resources
+     * @throws InvalidResourceException if the requested card exists but the card's minimum player requirement exceeds the current player count
+     */
     public Card getCardFromId(String cardId) throws CardNotFoundException, InvalidResourceException {
 
         Card card = cardsRegistry.get(cardId);
@@ -67,7 +80,14 @@ public class ResourceFinder {
 
     }
 
-    public OfferCard getOfferCard(String offerCardId) throws OfferCardNotFoundException, InvalidPickException, InvalidResourceException {
+    /**
+     * Resolves a String offerCardId to a domain-level OfferCard object
+     * @param offerCardId the id of the requested OfferCard
+     * @return the OfferCard with the matching id
+     * @throws OfferCardNotFoundException if the offer card does not exist in the game resources
+     * @throws InvalidResourceException if the requested offer card exists but the card's minimum player requirement exceeds the current player count
+     */
+    public OfferCard getOfferCard(String offerCardId) throws OfferCardNotFoundException, InvalidResourceException {
 
         OfferCard offerCard = offerCardsRegistry.get(offerCardId);
 

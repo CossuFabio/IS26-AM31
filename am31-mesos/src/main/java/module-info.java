@@ -69,5 +69,10 @@ module it.polimi.ingsw.am31.am31 {
     exports it.polimi.ingsw.am31.am31.view.gui.scene;
     opens it.polimi.ingsw.am31.am31.view.gui.scene to javafx.fxml;
     exports it.polimi.ingsw.am31.am31.resources.resourceSuppliers;
+    exports it.polimi.ingsw.am31.am31.exceptions;
+    exports it.polimi.ingsw.am31.am31.exceptions.gameInvariantException;
+    exports it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException;
+    exports it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException;
+    exports it.polimi.ingsw.am31.am31.exceptions.networkException;
 
 }
