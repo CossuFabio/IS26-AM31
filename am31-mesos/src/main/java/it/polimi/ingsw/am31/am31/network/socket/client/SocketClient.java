@@ -83,6 +83,7 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
     public void disconnect(){
         try{
             sendRequest(new DisconnectNetworkRequest());
+            stillConnected.set(false);
             messageDispatcher.shutdown();
             output.close();
             input.close();

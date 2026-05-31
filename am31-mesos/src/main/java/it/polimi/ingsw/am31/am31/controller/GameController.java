@@ -13,6 +13,7 @@ import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.GameNoLongerA
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.PlayerNotFoundException;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.IPickable;
@@ -24,7 +25,6 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMessage.GlobalRankingEntry;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

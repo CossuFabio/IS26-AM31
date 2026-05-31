@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.modelPackage;
 
-import it.polimi.ingsw.am31.am31.controller.BoardRows;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.BoardRows;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException.*;
 import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.EmptyDeckException;

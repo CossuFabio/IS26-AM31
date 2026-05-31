@@ -1,7 +1,7 @@
 package it.polimi.ingsw.am31.am31.network;
 
 
-import it.polimi.ingsw.am31.am31.controller.BoardRows;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.gameRequest.DrawNetworkRequest;

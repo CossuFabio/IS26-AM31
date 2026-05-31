@@ -1,5 +1,5 @@
 package it.polimi.ingsw.am31.am31.modelPackage.observerPattern;
-import it.polimi.ingsw.am31.am31.controller.BoardRows;
+import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.Game;
 import it.polimi.ingsw.am31.am31.modelPackage.TurnOrder;
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.Board;
