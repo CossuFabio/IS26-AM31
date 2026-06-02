@@ -14,12 +14,20 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * {@link GameObserver} class that wraps a {@link VirtualView} and forwards model updates to the client
+ * as network messages. Sends asynchronously to avoid blocking the game thread, especially on RMI.
+ */
 public class NetworkObserver implements GameObserver {
 
     private final VirtualView virtualView;
     private final String identifier;
     private final ExecutorService executors;
 
+    /**
+     * @param virtualView the client-side view to forward updates to
+     * @param identifier the player's username, used to identify this observer
+     */
     public NetworkObserver(VirtualView virtualView, String identifier){
         this.identifier = identifier == null ? "" : identifier;
         this.virtualView = virtualView;

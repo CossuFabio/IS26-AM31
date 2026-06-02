@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am31.am31.network;
 
+/**
+ * Useful constants for the server
+ */
 public class ServerConfig {
     
     public static final int SERVER_PORT_RMI = 1100;

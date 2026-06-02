@@ -30,6 +30,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
+/**
+ * Manages multiple concurrent Mesos game instances on the server.
+ * Routes incoming {@link NetworkRequest}s to the correct {@link GameController} by resolving
+ * the requesting player's username. Handles game lifecycle (creation, join, termination)
+ * and player disconnections. All internal data structures are thread-safe.
+ */
 public class GamesManager {
 
     //Associates GameID with controller
@@ -44,7 +50,7 @@ public class GamesManager {
     //Used for requests routing
     private final Map<String, BiConsumer<NetworkRequest, VirtualView>> commands;
 
-    public  GamesManager() {
+    public GamesManager() {
         this.games = new ConcurrentHashMap<>();
         this.playerToGame =  new ConcurrentHashMap<>();
         this.nextGameID = new AtomicInteger(1);
@@ -60,6 +66,12 @@ public class GamesManager {
     }
 
     //Integrity is already checked by the server
+
+    /**
+     * Handle a {@link NetworkRequest} to the corresponding internal method
+     * @param request the DTO that transports request data
+     * @param virtualView the sender of the request. It is used to send responses and errors
+     */
     public void handleRequest(NetworkRequest request, VirtualView virtualView) {
         if(!commands.containsKey(request.getType())){
             virtualView.receiveErrorMessage(ErrorMessageFactory.createErrorMessage(new BadNetworkRequestException("Unknown type")));
@@ -77,6 +89,11 @@ public class GamesManager {
         throw new BadNetworkRequestException("Game not found");
     }
 
+
+    /**
+     * Retrieves the games that are still active
+     * @return A set of key-value entries, the keys are games' ids and the values are the corresponding game instances
+     */
     public Set<Map.Entry<Integer, GameController>> getActiveGames() {
         return games.entrySet();
     }
@@ -267,6 +284,11 @@ public class GamesManager {
         }
     }
 
+    /**
+     * Handles the disconnection of a player. If the game becomes inactive as a result,
+     * removes it and all remaining player entries from the internal maps.
+     * @param playerID the identifier of the player that has been disconnected
+     */
     public void handleDisconnect(String playerID){
 
         //Doesn't use findGameFromPlayerUsername because throws different exception than what is needed here

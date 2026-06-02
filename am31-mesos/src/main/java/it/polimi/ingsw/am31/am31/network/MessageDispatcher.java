@@ -11,6 +11,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Receives incoming {@link Message} and dispatches them asynchronously to the appropriate
+ * handler ({@link UpdateHandler} or {@link ErrorHandler}) using the visitor pattern. The internal executor works as
+ * a buffer that immediately frees the connection thread.
+ * Ordered processing is guaranteed by the single-threaded executor.
+ */
 public class MessageDispatcher implements IMessageVisitor{
 
     private final ExecutorService executor;
@@ -23,6 +29,10 @@ public class MessageDispatcher implements IMessageVisitor{
         this.errorHandler = errorHandler;
     }
 
+    /**
+     * Enqueues a message for asynchronous dispatch.
+     * @param message the message to dispatch; ignored invalid
+     */
     public void submit(Message message) {
         if (message == null || !message.checkValidity()) return;
         executor.submit(() -> {
@@ -31,6 +41,9 @@ public class MessageDispatcher implements IMessageVisitor{
         });
     }
 
+    /**
+     * Shuts down the executor, waiting up to 2 seconds for pending messages to complete.
+     */
     public void shutdown() {
         executor.shutdown();
         try {
@@ -42,11 +55,15 @@ public class MessageDispatcher implements IMessageVisitor{
     }
 
 
+    /** Forwards to the {@link ErrorHandler}.
+     * @param message error object to dispatch */
     @Override
     public void visitError(ErrorMessage message) {
         errorHandler.handleErrorMessage(message);
     }
 
+    /** Forwards  to the {@link UpdateHandler}.
+     * @param update update object to dispatch */
     @Override
     public void visitUpdate(UpdateMessage update){
         updateHandler.handleUpdate(update);

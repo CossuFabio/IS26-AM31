@@ -17,6 +17,11 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ConnectionLostEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 
+/**
+ * Client-side controller that handles the heartbeat to the server.
+ * It acts as a server stub for the view and redirects the requests to the server via a {@link VirtualServer} sending DTO.
+ * It also handles disconnections and sends heartbeat packages to the servers
+ */
 public class ClientController {
 
     private final VirtualServer connection;

@@ -14,6 +14,7 @@ import it.polimi.ingsw.am31.am31.network.rmi.server.RmiServer;
 import it.polimi.ingsw.am31.am31.network.socket.server.SocketServer;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
@@ -23,6 +24,12 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+/**
+ * Central server component. Starts the RMI and Socket server threads and a heartbeat thread
+ * that disconnects inactive clients and unregistered connections (waiting room).
+ * Acts as the single entry point for all incoming requests: handles connection and disconnection
+ * directly, forwards game-related requests to {@link GamesManager}.
+ */
 public class Server {
 
     //map of all connected players with their id
@@ -43,6 +50,12 @@ public class Server {
 
     //Routing the request and verify the validity. Since this is the only entry point to the server, passing this validty
     //Test means that we do not need to always check the validities!
+    /**
+     * Single entry point for all incoming {@link NetworkRequest}s.
+     * Validates the request, handles ping/connection/disconnection internally,
+     * and forwards game-domain requests to the {@link GamesManager}.
+     * Requests from unregistered clients are rejected unless they are a registration request.
+     */
     public void handleNetworkRequest (NetworkRequest request, VirtualView view){
         try{//Server cannot do anything
 
@@ -98,14 +111,34 @@ public class Server {
 
 
 
+    /**
+     * Starts the RMI server, Socket server, and the heartbeat thread.
+     */
     public void start() {
         final String serverName = ServerConfig.SERVER_NAME;
 
-        try{
-            System.out.println("Server starting on ip: " + InetAddress.getLocalHost().getHostAddress());
-        }catch(Exception e){
-            System.out.println("Unable to setup server");
+        // Discover the correct IP once at startup.
+        // Same datagram trick used in Client.java: connect a dummy UDP socket to discover
+        // which of the multiple network interfaces will be chosen.
+
+        String resolvedIp;
+        try (DatagramSocket ds = new DatagramSocket()) {
+
+            // 8.8.8.8 is Google's DNS. It is just a dummy external ip to discover this machine interfaces.
+            // Any external ip is ok.
+
+            ds.connect(InetAddress.getByName("8.8.8.8"), 53);
+            resolvedIp = ds.getLocalAddress().getHostAddress();
+        } catch (Exception e) {
+            try {
+                resolvedIp = InetAddress.getLocalHost().getHostAddress();
+            }
+            catch (Exception ex) {
+                resolvedIp = "127.0.0.1";
+            }
         }
+        final String localIp = resolvedIp;
+        System.out.println("Server starting on ip: " + localIp);
 
         // Database factory initialization
         try{
@@ -119,12 +152,13 @@ public class Server {
         //Rmi server  launch
         Thread rmiThread = new Thread(() -> {
             try {
+                // java.rmi.server.hostname must be set BEFORE new RmiServer() because super(port)
+                // captures the IP at export time
+                System.setProperty("java.rmi.server.hostname", localIp);
                 new RmiServer(serverName, ServerConfig.SERVER_PORT_RMI, this).start();
                 System.out.println("RmiServer on");
             } catch (RemoteException e) {
                 System.out.println("RmiServer Fail" + e.getMessage());
-            } catch (UnknownHostException e) {
-                System.out.println("Failed to start RMI server!");
             }catch (Exception e) {
                 System.out.println("Failed to start socket server!");
             }
@@ -173,6 +207,10 @@ public class Server {
         pingThread.start();
     }
 
+    /**
+     * Disconnects a registered client and notifies the {@link GamesManager}.
+     * @param id the username of the client to disconnect
+     */
     public void disconnect(String id){
         try {
             //Stop the thread in SocketClientHandler or removes from the adapters map in RMIServer
@@ -215,6 +253,11 @@ public class Server {
 
     }
 
+    /**
+     * Adds a new unregistered connection to the waiting room.
+     * Connections that do not register within the timeout are disconnected.
+     * @param view the view representing the new connection
+     */
     public void registerWaitingRoom(VirtualView view){
         try{
             if(view != null) waitingRoom.add(view);

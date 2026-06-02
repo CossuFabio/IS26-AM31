@@ -8,8 +8,6 @@ import it.polimi.ingsw.am31.am31.network.Server;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestsMapper;
 import it.polimi.ingsw.am31.am31.network.rmi.client.VirtualServerRmi;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,18 +15,31 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * RMI server exposed to clients; deserializes incoming JSON strings into DTO objects so the core
+ * {@link Server} can process them. Keeps a registry of {@link RmiClientAdapter} instances that wrap
+ * each {@link VirtualViewRmi} stub into a {@code VirtualView} capable of receiving DTOs
+ */
 public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
+    /** RMI registry port */
     private final int port;
+    /** Core game server */
     private final Server mainServer;
+    /** Registry binding name */
     private final String serverName;
-
+    /** Maps each client stub to its server-side VirtualView adapter */
     private final Map<VirtualViewRmi, VirtualView> adaptersMap;
 
-
-
-
+    /**
+     * Creates an RMI server stub exported on the given port.
+     * WARNING: java.rmi.server.hostname must be set before calling this method.
+     * @param serverName the registry binding name
+     * @param port       the RMI registry port; also used to export this object
+     * @param mainServer the core server to delegate requests to
+     * @throws RemoteException if the RMI runtime fails to export this object
+     */
     public RmiServer(String serverName,int port, Server mainServer) throws RemoteException {
-        super(port); //RMI usa una porta dinamica per l'oggetto remoto --> problema con i firewall
+        super(port);
         this.port=port;
         this.serverName=serverName;
         this.mainServer=mainServer;
@@ -53,7 +64,6 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
                 return;
             }
             NetworkRequest req = RequestsMapper.deserialize(request);
-            //System.out.println("Received: " + request);
             mainServer.handleNetworkRequest(req, requestor);
         } catch (Exception e) {
             System.err.println(e);
@@ -62,12 +72,10 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
 
     @Override
     public void connect(String identifier ,VirtualViewRmi client) throws RemoteException {
-        //more clients could invoke this
-        //we create a rmiadapter and add him to rmi server clients
             if(client == null || identifier == null) {
                 System.out.println("Received null skeleton");
                 return;
-            } //Impossible to send response to null client
+            }
             VirtualView rmiClient = new RmiClientAdapter(client, this);
 
             adaptersMap.put(client, rmiClient);
@@ -76,15 +84,25 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
     }
 
 
-    public void start () throws RemoteException, UnknownHostException {
-        //java uses local hostname by default, not reachable by other machines
-        //added UnknownHostException
-        System.setProperty("java.rmi.server.hostname", InetAddress.getLocalHost().getHostAddress());
-
+    /**
+     * Starts the RMI registry and binds this server on server name.
+     * WARNING: java.rmi.server.hostname must be set before calling this method
+     * (and before constructing this object), as the IP is captured at export time
+     *
+     * @throws RemoteException if binding or export fails
+     */
+    public void start() throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(port);
-        registry.rebind(serverName,this);
+        registry.rebind(serverName, this);
     }
 
+
+    /**
+     * Removes the adapter associated with the given client stub from the registry.
+     * Called when an RMI client disconnects.
+     *
+     * @param adapter the client stub whose adapter should be removed
+     */
     public void removeAdapter(VirtualViewRmi adapter){this.adaptersMap.remove(adapter);}
 
 

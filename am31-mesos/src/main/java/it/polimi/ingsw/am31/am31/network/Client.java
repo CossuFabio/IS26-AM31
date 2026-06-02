@@ -16,6 +16,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Scanner;
 
+
 public class Client {
     //main client class
     public static void main(String[] args){
@@ -89,12 +90,11 @@ public class Client {
 
                         //Sets the RMI hostname correctly in the System Properties
                         System.setProperty("java.rmi.server.hostname",
-                                InetAddress.getLocalHost().getHostAddress()); //ds.getLocalAddress().getHostAddress());
-                        System.out.println("IP USED: " + System.getProperty("java.rmi.server.hostname"));
+                                ds.getLocalAddress().getHostAddress());
                     }
                     connection = new RmiClient(ServerConfig.SERVER_IP_ADDRESS, ClientConfig.CLIENT_PORT, messageDispatcher);
                     break;
-                case "2": connection = new SocketClient(ServerConfig.SERVER_IP_ADDRESS, ServerConfig.SERVER_PORT_SOCKET, messageDispatcher); //temporary
+                case "2": connection = new SocketClient(ServerConfig.SERVER_IP_ADDRESS, ServerConfig.SERVER_PORT_SOCKET, messageDispatcher);
                     break;
                 default:
                     break;
@@ -124,7 +124,7 @@ public class Client {
             default:
                 break;
         }
-        //move to view?
+
         try{
             view.startView();//after this, the clients acts through the view
         }catch(Exception e){
