@@ -4,6 +4,10 @@ package it.polimi.ingsw.am31.am31.network.messages;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Base class for all server-to-client messages; uses the visitor pattern via {@link IMessageVisitor}
+ * to route the message to the correct handler without knowing its concrete type
+ */
 public abstract class Message {
 
     @JsonIgnore
@@ -21,6 +25,9 @@ public abstract class Message {
         return messageType;
     }
 
+    /**
+     * @return true if the integrity check is passed
+     */
     public abstract boolean checkValidity();
 
 }

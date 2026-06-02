@@ -23,6 +23,10 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.serverMessages.
 
 import java.util.*;
 
+/**
+ * Centralizes the construction of all {@link UpdateMessage} DTOs.
+ * Takes data directly from model objects and extracts only what the client needs
+ */
 public class UpdateFactory {
  //PLAYER RELATED UPDATES
     public static PlayerScoresUpdate createPlayerScoresUpdate(Player player){

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.am31.am31.network.messages.errorMessage;
 
-//Used for low-granularity filtering
+/** High-level granularity separation of {@link ErrorCode}*/
 public enum ErrorCategory {
     IN_GAME_ERROR,
     LOBBY_ERROR,

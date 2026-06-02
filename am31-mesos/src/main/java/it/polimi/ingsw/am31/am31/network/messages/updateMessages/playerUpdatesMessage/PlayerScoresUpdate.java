@@ -6,6 +6,9 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
+/**
+ * Updates the client with a player's current prestige points and food
+ */
 public class PlayerScoresUpdate extends UpdateMessage {
 
     private final String playerId;

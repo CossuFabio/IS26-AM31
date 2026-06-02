@@ -6,6 +6,10 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
+/**
+ * Notifies the client with the ID of the event card that has just been resolved.
+ * The actual card object is resolved client-side from the ID
+ */
 public class GameEventResolveUpdate extends UpdateMessage {
     private final String cardId;
 

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am31.am31.network.requests;
 
+/**
+ * Collections of all NetworkRequest connections String-methods
+ */
 public class RequestMethodsConstants {
 
     public static final String METHOD_DRAW = "DRAW";

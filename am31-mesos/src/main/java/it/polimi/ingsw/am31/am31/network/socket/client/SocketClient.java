@@ -17,7 +17,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SocketClient implements VirtualServer, VirtualViewSocket {
+/**
+ * Socket client; connects to the server via TCP and implements {@link VirtualServer} so
+ * the local application layer can remain tranpsort-agnostic.
+ * A background thread reads incoming messages and submits them to the {@link MessageDispatcher} to early free the connection
+ * thread that receives messages.
+ */
+public class SocketClient implements VirtualServer {
 
     private String identifier = ClientConfig.UNREGISTERED_CLIENT_ID;
     private final Socket socket;
@@ -27,6 +33,14 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
     private boolean usernameSet = false;
     private final AtomicBoolean stillConnected = new AtomicBoolean(false);
 
+    /**
+     * Opens a TCP connection to the server and starts the associated thread
+     *
+     * @param ip         the server's IP address
+     * @param port       the server's socket port
+     * @param dispatcher the dispatcher for incoming messages
+     * @throws Exception if the TCP connection cannot be established
+     */
     public SocketClient(String ip, int port,  MessageDispatcher dispatcher) throws Exception{
 
         this.socket = new Socket(ip, port);
@@ -36,7 +50,7 @@ public class SocketClient implements VirtualServer, VirtualViewSocket {
 
         startClientSocket();
         stillConnected.set(true);
-        System.out.println("Connesso al server");
+        System.out.println("Connected to the server");
 
     }
 

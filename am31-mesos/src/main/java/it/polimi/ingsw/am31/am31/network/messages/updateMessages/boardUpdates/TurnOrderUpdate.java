@@ -9,7 +9,10 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMess
 
 import java.util.List;
 
-//Encapsulates the turnorder as an ordered list of players nicknames. The view will handle how to display it
+/**
+ * Updates the client with the current turn order as an ordered list of players.
+ * WARNING: the list may contain null values for empty tiles on the turn order card.
+ */
 public class TurnOrderUpdate extends UpdateMessage {
 
     private final List<PlayerMessage> turnOrder;

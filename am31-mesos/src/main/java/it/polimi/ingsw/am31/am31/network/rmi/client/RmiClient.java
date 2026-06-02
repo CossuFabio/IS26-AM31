@@ -25,7 +25,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
+/**
+ * Implements both the {@link VirtualServer} interface so the client is able to create an instance of this class to send
+ * requests but implements also {@link VirtualViewRmi} so the RMI server is able to send response messages to this callback stub.
+ * <br> Requests are sent on a single daemon thread so server communication is not blocking for the server and for the client
+ * main threads.
+ * It is important to set the java.rmi.server.hostname system variable before creating and starting this object. Otherwise,
+ * super(port) could export a wrong ip interface to the server, making impossible for it to send responses.
+ */
 public class RmiClient extends UnicastRemoteObject implements VirtualServer, VirtualViewRmi {
     //extends both, to allow callback from server
 
@@ -41,6 +48,15 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
     private final AtomicBoolean disconnected = new AtomicBoolean(false);
     private boolean usernameSet = false;
 
+    /**
+     * Creates an instance of RMIClient.
+     * WARNING: It is important to set the java.rmi.server.hostname system variable before creating and starting this object.
+     * @param ip the server ip
+     * @param port the RMIServer port
+     * @param messageDispatcher the object that will route the messages
+     * @throws RemoteException if the export fails
+     * @throws NotBoundException if the registry binding fails
+     */
     public RmiClient(String ip, int port, MessageDispatcher messageDispatcher) throws RemoteException, NotBoundException {
 
         super(port);

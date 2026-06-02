@@ -1,5 +1,6 @@
 package it.polimi.ingsw.am31.am31.network.messages.updateMessages;
 
+/** Collections of all UpdateMessage String-type identifiers */
 public class UpdateMethodsConstants {
 
     //Game methods

@@ -2,7 +2,9 @@ package it.polimi.ingsw.am31.am31.network.messages.errorMessage;
 
 import static it.polimi.ingsw.am31.am31.network.messages.errorMessage.ErrorCategory.*;
 
-//Used for  higher granularity filtering
+/** Low-level granularity for ErrorCode. Each one is associated with an Exception that occurred and must be notified
+ * to the clients.
+ * Each ErrorCode is associated with an {@link ErrorCategory}.*/
 public enum ErrorCode {
 
     //Lobby Errors

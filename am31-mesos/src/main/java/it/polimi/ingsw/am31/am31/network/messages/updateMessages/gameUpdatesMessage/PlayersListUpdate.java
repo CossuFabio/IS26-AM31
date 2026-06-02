@@ -8,6 +8,10 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsCo
 
 import java.util.List;
 
+/**
+ * Updates the client with the full list of players in the lobby. Sent when a player joins or leave the lobby before
+ * the game starts.
+ */
 public class PlayersListUpdate extends UpdateMessage {
 
     private final List<PlayerMessage> playersList;

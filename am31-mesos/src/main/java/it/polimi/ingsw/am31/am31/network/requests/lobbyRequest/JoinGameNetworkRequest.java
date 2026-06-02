@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
+/** Request to join an existing game with a chosen color */
 public class JoinGameNetworkRequest extends NetworkRequest {
 
 

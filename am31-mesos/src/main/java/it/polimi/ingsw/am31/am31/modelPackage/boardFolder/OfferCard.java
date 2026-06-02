@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Player;
 
 /**
- * Represents an offer card on the offer track, defining the draws and food bonus awarded to the player that places their totem on it
+ * Represents an offer card on the offer track, defining the draws and food bonus awarded to the player that places their totem on it.
+ * WARNING: may contain null values. Check with the isFree method before trying to access the player.
  */
-public class OfferCard {
+public class OfferCard{
 
     private final int food;
     private final int drawFromUpper;

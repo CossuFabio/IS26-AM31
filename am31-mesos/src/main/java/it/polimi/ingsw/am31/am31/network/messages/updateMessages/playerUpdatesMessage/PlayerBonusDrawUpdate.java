@@ -6,6 +6,9 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
+/**
+ * Updates the client with whether a player has a bonus draw available
+ */
 public class PlayerBonusDrawUpdate extends UpdateMessage {
 
     private final String playerNickname;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
+/** Request to get the list of open lobbies */
 public class ShowLobbyNetworkRequest extends NetworkRequest {
 
     public static final String METHOD = RequestMethodsConstants.METHOD_SHOW_LOBBIES;

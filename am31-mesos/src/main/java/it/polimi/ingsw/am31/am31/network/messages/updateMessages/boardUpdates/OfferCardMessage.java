@@ -4,7 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-//The only purpose of this class is encapsulating the state of an offerTrack before sending to the client
+/**
+ * DTO that describes the state of a single offer track slot: the card ID,
+ * the nickname of the player whose totem is on it, and whether the slot is free.
+ * Not an UpdateMessage; used as a nested element inside {@link OfferTrackUpdate}.
+ * The actual card object is resolved client-side from the ID.
+ * WARNING: may contain null values. Check with the isFree method before trying to access the player.
+ */
 public class OfferCardMessage {
 
 

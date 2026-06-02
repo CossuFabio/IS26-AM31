@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.network.ClientConfig;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
+/** Request to register with the server using a username */
 public class NewServerConnectionRequest extends NetworkRequest {
 
     private final String requestedUsername;

@@ -6,6 +6,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
+/** Request to create a new game with a given number of players and a chosen color */
 public class NewGameNetworkRequest extends NetworkRequest {
     private final Integer numPlayers;
     private final Color color;

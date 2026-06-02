@@ -12,6 +12,11 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 import java.io.*;
 import java.net.Socket;
 
+
+/**
+ * Server-side handler for a single socket client; implements {@link VirtualView} so the server
+ * can push updates and errors over the TCP stream
+ */
 public class SocketClientHandler implements VirtualView {
 
     private final Server mainServer;
@@ -20,8 +25,11 @@ public class SocketClientHandler implements VirtualView {
     private final PrintWriter output;
     private volatile long lastTimeSeen;
 
-
-
+    /**
+     * @param mainServer the core server to delegate requests to
+     * @param socket     the accepted TCP connection
+     * @throws IOException if the socket streams cannot be opened
+     */
     public SocketClientHandler(Server mainServer, Socket socket) throws IOException {
         this.mainServer = mainServer;
         this.socket = socket;
@@ -30,7 +38,10 @@ public class SocketClientHandler implements VirtualView {
         this.lastTimeSeen = System.currentTimeMillis();
     }
 
-
+    /**
+     * Reads JSON requests in a loop and dispatches them to the main server;
+     * always closes the connection when the loop exits
+     */
     public void runVirtualView(){
         String jsonReq;
         try{

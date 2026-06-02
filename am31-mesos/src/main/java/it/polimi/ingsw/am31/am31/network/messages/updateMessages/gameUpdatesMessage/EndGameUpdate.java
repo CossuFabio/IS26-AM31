@@ -8,7 +8,9 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsCo
 
 import java.util.List;
 
-//Notifies the players that the game has ended and sends the leaderboard
+/**
+ * Notifies the client that the game has ended with the final leaderboard and the all-time global ranking
+ */
 public class EndGameUpdate extends UpdateMessage {
 
     private final List<LeaderBoardEntryUpdate> playersLeaderBoard;

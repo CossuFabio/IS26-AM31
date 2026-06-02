@@ -6,7 +6,9 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
 
-//Thrown when a player is disconnected
+/**
+ * Notifies the client that the game has been interrupted due to a player disconnection
+ */
 public class GameCrashUpdate extends UpdateMessage {
 
     @JsonCreator

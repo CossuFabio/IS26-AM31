@@ -9,6 +9,10 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsCo
 
 import java.util.List;
 
+/**
+ * Updates the client with the full list of card IDs in a board row (upper or lower).
+ * The actual card objects are resolved client-side from the IDs
+ */
 public class CardLineUpdate extends UpdateMessage {
 
     private final List<String> cardIds;

@@ -8,19 +8,24 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 
 import java.rmi.RemoteException;
 
+/**
+ * Wraps a remote {@link VirtualViewRmi} callback stub as a local {@code VirtualView}.
+ * The server always works with {@code VirtualView}. This wrapper allows the server to send the client response messages.
+ */
 public class RmiClientAdapter implements VirtualView {
     private final VirtualViewRmi clientStub;
     private volatile long lastTimeSeen;
     private final RmiServer owner;
 
-
+    /**
+     * @param client the client's remote callback stub
+     * @param owner  the {@link RmiServer} that owns this adapter
+     */
     public RmiClientAdapter (VirtualViewRmi client, RmiServer owner) {
         this.clientStub = client;
         lastTimeSeen = System.currentTimeMillis();
         this.owner = owner;
     }
-    //adapter contains the clients callback in clientStub, calls methods on the stub.
-    //adapter implements ClintConnection methods, callable by server on its clients
 
     @Override
     public void receiveUpdate(UpdateMessage updateMessage){

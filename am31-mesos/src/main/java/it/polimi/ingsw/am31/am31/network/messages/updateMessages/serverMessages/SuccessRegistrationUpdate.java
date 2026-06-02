@@ -6,10 +6,10 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
+/**
+ * Notifies the client that username registration was successful and sends back the accepted username
+ */
 public class SuccessRegistrationUpdate extends UpdateMessage {
-
-    //Acknowledges the client that now he is registered into the server via the username provided and send it back to
-    // confirm
 
     private final String username;
 

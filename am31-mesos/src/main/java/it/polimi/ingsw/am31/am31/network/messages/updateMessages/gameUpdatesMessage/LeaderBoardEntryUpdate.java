@@ -3,6 +3,9 @@ package it.polimi.ingsw.am31.am31.network.messages.updateMessages.gameUpdatesMes
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * DTO representing a single entry in the end-of-game leaderboard; used inside {@link EndGameUpdate}
+ */
 public class LeaderBoardEntryUpdate {
 
     private final String playerNickname;

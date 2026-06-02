@@ -1,14 +1,19 @@
 package it.polimi.ingsw.am31.am31.network.messages.errorMessage;
 
-//No hierarchy for messages since the clients only displays them, unlike updates and network request that operates on them
+
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.network.messages.IMessageVisitor;
 import it.polimi.ingsw.am31.am31.network.messages.Message;
-import it.polimi.ingsw.am31.am31.network.messages.updateMessages.ErrorHandler;
 
+
+/**
+ * Server-to-client error notification. Carries an {@link ErrorCode} and a string message.
+ * Since the client-side handling of the messages is typically a prompt on the screen and does not interfere with local state,
+ * there is not a hierarchy of ErrorMessage, but the handling is based on the ErrorCode.
+ */
 public class ErrorMessage extends Message {
 
     @JsonIgnore
@@ -36,6 +41,10 @@ public class ErrorMessage extends Message {
     @JsonIgnore
     public ErrorCategory getErrorCategory(){return errorCode.getCategory(); }
 
+
+    /**
+    * Accept the message visitor to dispatch this object to the handler for error messages
+     */
     @Override
     public void acceptVisit(IMessageVisitor visitor) {
        visitor.visitError(this);
@@ -46,8 +55,5 @@ public class ErrorMessage extends Message {
         return message!=null && errorCode != null;
     }
 
-    public void acceptVisit(ErrorHandler visitor){
-        
-    }
 
 }

@@ -14,8 +14,13 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMe
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
+/**
+ * Base class for all server-to-client state update messages.
+ * Each update carries the full state of what it describes rather than just the delta
+ * (e.g. the entire player tribe, not just the card that was drawn).
+ * Uses {@link IUpdateVisitor} to dispatch each subtype to the correct handler
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "updateType")
-
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ShowLobbyUpdate.class,       name = UpdateMethodsConstants.GAME_SHOW_LOBBY_UPDATE_METHOD),
         @JsonSubTypes.Type(value = PlayersListUpdate.class,     name = UpdateMethodsConstants.GAME_PLAYERS_LIST_UPDATE_METHOD),
@@ -27,14 +32,12 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.serverMessages.
         @JsonSubTypes.Type(value = CardLineUpdate.class,        name = UpdateMethodsConstants.BOARD_CARDLINE_UPDATE_METHOD),
         @JsonSubTypes.Type(value = TurnOrderUpdate.class,       name = UpdateMethodsConstants.BOARD_TURNORDER_UPDATE_METHOD),
         @JsonSubTypes.Type(value = GameCrashUpdate.class,       name = UpdateMethodsConstants.GAME_CRASHED_METHOD),
-        @JsonSubTypes.Type(value = SuccessRegistrationUpdate.class,       name = UpdateMethodsConstants.USERNAME_ACCEPTED_METHOD),
+        @JsonSubTypes.Type(value = SuccessRegistrationUpdate.class, name = UpdateMethodsConstants.USERNAME_ACCEPTED_METHOD),
         @JsonSubTypes.Type(value = GameStartUpdate.class,       name = UpdateMethodsConstants.GAME_START_UPDATE),
-        @JsonSubTypes.Type(value = GameEventResolveUpdate.class,   name = UpdateMethodsConstants.GAME_EVENT_RESOLVE_UPDATE),
-        @JsonSubTypes.Type(value = EndGameUpdate.class,   name = UpdateMethodsConstants.GAME_END_UPDATE),
-        @JsonSubTypes.Type(value = PlayerBonusDrawUpdate.class,   name = UpdateMethodsConstants.PLAYER_BONUS_DRAW_METHOD)
+        @JsonSubTypes.Type(value = GameEventResolveUpdate.class,name = UpdateMethodsConstants.GAME_EVENT_RESOLVE_UPDATE),
+        @JsonSubTypes.Type(value = EndGameUpdate.class,         name = UpdateMethodsConstants.GAME_END_UPDATE),
+        @JsonSubTypes.Type(value = PlayerBonusDrawUpdate.class, name = UpdateMethodsConstants.PLAYER_BONUS_DRAW_METHOD)
 })
-
-
 public abstract class UpdateMessage extends Message {
 
     public static final String messageType = "UPDATE";

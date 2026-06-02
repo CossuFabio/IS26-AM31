@@ -8,6 +8,9 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsCo
 
 import java.util.List;
 
+/**
+ * Updates the client with the full state of all the slots of the offer track
+ */
 public class OfferTrackUpdate extends UpdateMessage {
 
     private final List<it.polimi.ingsw.am31.am31.network.messages.updateMessages.boardUpdates.OfferCardMessage> offerTrack;

@@ -10,9 +10,20 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMapper;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 
 
+/**
+ * Exposes static methods to serialize and deserialize {@link Message} objects to/from JSON.
+ * It is able to handle bot {@link UpdateMessage} and {@link ErrorMessage} by reading the "type" field in the JSON.
+ * May return null in case of errors
+ */
 public class MessageMapper {
     private static final ObjectMapper mapper = new ObjectMapper().configure(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS,false);
 
+    /**
+     * Converts a {@link Message} to a JSON string.
+     * May return null in case of serialization errors
+     * @param request the message DTO
+     * @return the JSON representation of the message
+     */
     public static String serialize(Message request){
         try{
             String result = mapper.writeValueAsString(request);
@@ -27,7 +38,13 @@ public class MessageMapper {
     }
 
 
-public static Message deserialize(String jsonString){
+    /**
+     * Converts a JSON string to a {@link Message}.
+     * May return null in case of deserialization errors
+     * @param jsonString the JSON representation of the message
+     * @return the deserialized message DTO
+     */
+    public static Message deserialize(String jsonString){
         try{
         //Must know if the message is an UpdateType or ErrorMessage
         JsonNode rootNode = mapper.readTree(jsonString);

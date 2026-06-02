@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 
-//Encapsulates a player in lobby
+/**
+ * Minimal player representation (nickname + color) used as a nested element in other updates
+ */
 public class PlayerMessage {
 
 

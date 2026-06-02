@@ -5,6 +5,9 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.IUpdateVisitor;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMessage;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsConstants;
 
+/**
+ * Notifies the client that the game has started
+ */
 public class GameStartUpdate extends UpdateMessage {
 
     @JsonCreator

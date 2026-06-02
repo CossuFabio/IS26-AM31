@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
+/** Request to disconnect from the server */
 public class DisconnectNetworkRequest extends NetworkRequest {
 
     public static final String METHOD = RequestMethodsConstants.METHOD_DISCONNECT;

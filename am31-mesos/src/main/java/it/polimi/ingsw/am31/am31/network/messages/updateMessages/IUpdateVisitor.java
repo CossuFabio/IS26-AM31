@@ -10,6 +10,10 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMe
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.playerUpdatesMessage.PlayerTribeUpdate;
 import it.polimi.ingsw.am31.am31.network.messages.updateMessages.serverMessages.SuccessRegistrationUpdate;
 
+/**
+ * Visitor interface for all {@link UpdateMessage} subtypes.
+ * Each method handles a specific update type; implemented by the client-side state updater
+ */
 public interface IUpdateVisitor {
 
     //Board

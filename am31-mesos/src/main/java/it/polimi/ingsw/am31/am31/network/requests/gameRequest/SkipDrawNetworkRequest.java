@@ -7,6 +7,7 @@ import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.BoardRows;
 import it.polimi.ingsw.am31.am31.network.requests.NetworkRequest;
 import it.polimi.ingsw.am31.am31.network.requests.RequestMethodsConstants;
 
+/** Request to skip the draw phase for a board row */
 public class SkipDrawNetworkRequest extends NetworkRequest {
 
     public static final String METHOD = RequestMethodsConstants.METHOD_SKIP_DRAW;

@@ -8,6 +8,10 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.UpdateMethodsCo
 
 import java.util.List;
 
+/**
+ * Updates the client with the full list of tribe card IDs owned by a player.
+ * The actual card objects are resolved client-side from the IDs
+ */
 public class PlayerTribeUpdate extends UpdateMessage {
 
     private final List<String> tribeCardsIds;

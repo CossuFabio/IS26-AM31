@@ -6,6 +6,10 @@ import it.polimi.ingsw.am31.am31.modelPackage.playerFolder.Color;
 
 import java.util.List;
 
+/**
+ * DTO describing an available lobby: game ID, total player slots, free slots, and available colors.
+ * Used inside {@link ShowLobbyUpdate}
+ */
 public class LobbyDescriptor {
 
     private final Integer id;
