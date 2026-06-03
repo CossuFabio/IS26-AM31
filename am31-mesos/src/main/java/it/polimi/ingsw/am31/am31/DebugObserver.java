@@ -14,15 +14,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class can be used to act as a spy for testing or debugging.<br>
+ * It receives notifications from the model and can be used to get snapshots<br>
+ * of the model in particolar situations. You can attach this observer at the start of the game from the controller.<br>
+ * If you need to change some existing methods, consider creating another TestObserver class. <br>
+ * If a method here is empty, and you need it, you can write it.<br>
+ * Add local variables and getters/setters if needed.<br>
+ * By default every update is logged. <br>
+ * This is a naive version of the LogObserver you can find in the test utilities, that uses a Fluent Builder
+ * for creating the observer.
+ */
 
-//This class can be used to act as a spy for testing.
-//It receives notifications from the model and can be used to get snapshots
-//of the model in particolar situations.
-//If you need to change some existing methods, consider creating another TestObserver class
-//If a method here is empty, and you need it, you can write it.
-//Add local variables and getters/setters if needed.
-//By default every update is logged.
-//You can pass a LogObserverBuilder to set only desired updates.
 
 public class DebugObserver implements GameObserver {
 

@@ -19,22 +19,34 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * View-side handler for {@link UpdateMessage}s received from the network.
+ * <p>
+ * Uses the visitor pattern ({@link IUpdateVisitor}) to dispatch each message to the correct
+ * overload, resolves String-based ids received from DTOs via {@link LocalResourceTranslator},
+ * so it is a component that works across the network and the application layer.
+ * If it the translation of resources fails, the update is silently ignored.
+ * It writes updates into {@link LocalGameState}, and posts events on the {@link IEventBus} so that View
+ * components can react. This class is view-agnostic: it holds no reference to TUI or GUI
+ * components. All methods run synchronously on the MessageDispatcher thread.
+ * </p>
+ */
 public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     private final LocalGameState gameState;
     private final LocalResourceTranslator translator;
-
-    //When a change occur, this bus is used to notify all interested objects
     private final IEventBus eventBus;
 
-    //this class maps the update messages on rmiclient/socketclient to localGameState updates
-    //counterpart of the UpdateMessages on model side,
-    //this is View agnostic, it only changes the state and posts events on EventBus
-
+    /**
+     * Constructs StateUpdater bound to the given state and event bus.
+     * A {@link LocalResourceTranslator} is created internally to resolve card and offer-card IDs.
+     *
+     * @param gameState the local game state to update on each incoming message
+     * @param eventBus  the event bus used to notify listeners after each state change
+     * @throws RuntimeException if the translator fails to load card data
+     */
     public StateUpdater(LocalGameState gameState, IEventBus eventBus) {
         this.gameState = gameState;
         this.eventBus = eventBus;
-        //creates a translator, which contains every possible card and a method to
-        //get them through their id
         try {
             translator = new LocalResourceTranslator();
         } catch (IOException e) {
@@ -42,21 +54,24 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
         }
     }
 
-
-
+    /**
+     * Entry point for incoming messages; delegates to the correct overload via visitor dispatch.
+     *
+     * @param m the update message to process
+     */
     @Override
     public void handleUpdate(UpdateMessage m){
         m.acceptVisit(this);
     }
 
-
     //board
+
+    /**
+     * Updates the card line for the row in the message, then posts a {@link BoardUpdateEvent}.
+     * Silently skipped if any card ID cannot be resolved.
+     */
     @Override
     public void handleUpdateMessage(CardLineUpdate msg){
-        //msg contains a list of cards and the row they are in
-        //both building and other cards
-
-        //we translate the cardIds, then update the state.
         try {
             List<Card> cardLine = msg.getCardIds()
                             .stream().map(translator::retrieveCard)
@@ -68,6 +83,10 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
     }
 
+    /**
+     * Replaces the offer track, then posts a {@link BoardUpdateEvent}.
+     * Silently skipped if any card ID cannot be resolved.
+     */
     @Override
     public void handleUpdateMessage(OfferTrackUpdate msg){
         try {
@@ -79,6 +98,9 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
         } catch (IllegalStateException ignored) {}
     }
 
+    /**
+     * Replaces the turn order, preserving null slots, then posts a {@link BoardUpdateEvent}.
+     */
     @Override
     public void handleUpdateMessage(TurnOrderUpdate msg){
         List<LocalPlayerState> newPlayers = msg.getTurnOrder().stream()
@@ -89,21 +111,29 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     }
 
     //game
+
+    /**
+     * Updates round phase, round number, and era, then posts a {@link BoardUpdateEvent}.
+     */
     @Override
     public void handleUpdateMessage(GameRoundStatusUpdate msg){
-        //contains a round number and phase, sent when it changes
         gameState.setCurrentRoundPhase(msg.getPhase());
         gameState.setRoundNumber(msg.getRoundNumber());
         gameState.setEra(msg.getEra());
         eventBus.post(new BoardUpdateEvent());
-        //
     }
 
+    /**
+     * Posts a {@link GameStartingEvent}.
+     */
     @Override
     public void handleUpdateMessage(GameStartUpdate msg){
         eventBus.post(new GameStartingEvent());
     }
 
+    /**
+     * Replaces the player list, then posts a {@link PlayersInLobbyChangedEvent}.
+     */
     @Override
     public void handleUpdateMessage(PlayersListUpdate msg){
         List<LocalPlayerState> newPlayers = msg.getPlayersList().stream().
@@ -114,12 +144,19 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
         eventBus.post(new PlayersInLobbyChangedEvent(newPlayers));
     }
 
+    /**
+     * Posts a {@link ShowLobbyEvent} with the available lobbies. Does not modify the state.
+     */
     @Override
     public void handleUpdateMessage(ShowLobbyUpdate msg){
         List<LobbyDescriptor> lobbies = msg.getLobbies();
         eventBus.post(new ShowLobbyEvent(lobbies));
     }
 
+    /**
+     * Records the resolved event card in the state and posts a {@link GameEventResolveEvent}.
+     * Silently skipped if the card ID cannot be resolved.
+     */
     @Override
     public void handleUpdateMessage(GameEventResolveUpdate msg) {
         try{
@@ -129,6 +166,9 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
 
     }
 
+    /**
+     * Sets leaderboard and global ranking in the state, then posts a {@link GameEndedEvent}.
+     */
     @Override
     public void handleUpdateMessage(EndGameUpdate msg) {
         List<LocalLeaderBoard> leaderboard = msg.getPlayersLeaderBoard().stream()
@@ -142,34 +182,36 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
     }
 
     //player
+
+    /**
+     * Updates the player's building card list, then posts a {@link BoardUpdateEvent}.
+     */
     @Override
     public void handleUpdateMessage(PlayerBuildingsUpdate msg){
-        //msg contains list of buildingcards and nickname, sent when it changes
-
         List<Card> newBuildings = msg.getBuildingCardsIds()
                 .stream()
                 .map(translator::retrieveCard)
                 .toList();
 
-
         gameState.updatePlayerBuildings(msg.getPlayerId(), newBuildings);
         eventBus.post(new BoardUpdateEvent());
-
     }
 
+    /**
+     * Updates the player's food and prestige points, then posts a {@link BoardUpdateEvent}.
+     */
     @Override
     public void handleUpdateMessage(PlayerScoresUpdate msg){
-
-        //msg contains a nickanme, pp, food for a single player, sent when changed
         gameState.updatePlayerScore(msg.getPlayerId(),msg.getNewFood(),msg.getNewPrestigePoints());
         eventBus.post(new BoardUpdateEvent());
-
     }
 
+    /**
+     * Updates the player's tribe card list, then posts a {@link BoardUpdateEvent}.
+     * Silently skipped if any card ID cannot be resolved.
+     */
     @Override
     public void handleUpdateMessage(PlayerTribeUpdate msg){
-        //msg contains the list of tribecards and a nickname, sent when cards change
-        //cardIds mapped to List of cards, set to the player
         try {
             List<Card> newTribe = msg.getTribeCardsIds()
                             .stream()
@@ -179,19 +221,27 @@ public class StateUpdater implements IUpdateVisitor, UpdateHandler{
             gameState.updatePlayerTribe(msg.getPlayerId(), newTribe);
             eventBus.post(new BoardUpdateEvent());
         } catch (IllegalStateException ignored) {}
-
     }
 
+    /**
+     * Posts a {@link GameCrashedEvent}.
+     */
     @Override
     public void handleUpdateMessage(GameCrashUpdate msg){
         eventBus.post(new GameCrashedEvent());
     }
 
+    /**
+     * Posts a {@link SuccessRegistrationEvent} with the registered username.
+     */
     @Override
     public void handleUpdateMessage(SuccessRegistrationUpdate msg) {
         eventBus.post(new SuccessRegistrationEvent(msg.getUsername()));
     }
 
+    /**
+     * Updates the player's bonus-draw flag. Does not post any event.
+     */
     @Override
     public void handleUpdateMessage(PlayerBonusDrawUpdate msg) {
         String playerNickname = msg.getPlayerNickname();

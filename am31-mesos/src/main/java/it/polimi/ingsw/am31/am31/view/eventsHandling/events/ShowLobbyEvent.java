@@ -5,6 +5,9 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEvent;
 
 import java.util.List;
 
+/**
+ * Posted when the server sends the list of available lobbies to display
+ */
 public class ShowLobbyEvent extends ViewEvent {
     private final List<LobbyDescriptor> lobbies;
 

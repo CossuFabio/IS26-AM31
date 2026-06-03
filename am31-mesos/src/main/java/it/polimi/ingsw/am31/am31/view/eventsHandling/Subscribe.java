@@ -6,6 +6,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Marks a public method as a subscriber on the {@link IEventBus}.
+ * The method must declare exactly one parameter of the {@link ViewEvent} subtype it handles.
+ */
 //Retention policy forces Java to keep the annotation even during RUNTIME and not discard
 //it at compile time
 @Retention(RetentionPolicy.RUNTIME)

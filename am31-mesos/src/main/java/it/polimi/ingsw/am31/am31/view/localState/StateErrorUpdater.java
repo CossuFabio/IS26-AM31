@@ -6,11 +6,22 @@ import it.polimi.ingsw.am31.am31.network.messages.updateMessages.ErrorHandler;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.IEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 
+/**
+ * View-side handler for {@link ErrorMessage}s received from the network.
+ * <p>
+ * Maps each {@link ErrorCode} to the corresponding view event and posts it on the
+ * {@link IEventBus} so that View components can react.
+ * </p>
+ */
 public class StateErrorUpdater implements ErrorHandler {
 
     private final LocalGameState localState;
     private final IEventBus eventBus;
 
+    /**
+     * @param localState the local game state instance
+     * @param eventBus   the event bus used to dispatch error events
+     */
     public StateErrorUpdater(LocalGameState localState, IEventBus eventBus){
 
         this.localState = localState;
@@ -18,8 +29,11 @@ public class StateErrorUpdater implements ErrorHandler {
 
     }
 
-
-    //There are ErrorCode values not handled because they come from exception already handled by the ClientController
+    /**
+     * Maps the error code of the given message to the corresponding view event and posts it.
+     *
+     * @param errorMessage the error message received from the server
+     */
     @Override
     public void handleErrorMessage(ErrorMessage errorMessage){
 
