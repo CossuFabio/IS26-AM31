@@ -836,7 +836,7 @@ public class GameController extends BaseController {
 
         Label nameLabel = new Label(player.getNickname());
         nameLabel.setFont(Font.font("Inknut Antiqua Regular", 16));
-        nameLabel.setMaxWidth(screenWidth * 0.08);
+        nameLabel.setMaxWidth(screenWidth * 0.12); //old 0.08
         nameLabel.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
         if (isActing) nameLabel.setStyle("-fx-font-weight: bold");
         row.getChildren().add(nameLabel);
