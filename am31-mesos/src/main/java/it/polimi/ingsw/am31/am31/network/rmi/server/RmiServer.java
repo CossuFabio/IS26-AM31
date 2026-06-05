@@ -39,7 +39,7 @@ public class RmiServer extends UnicastRemoteObject implements VirtualServerRmi {
      * @throws RemoteException if the RMI runtime fails to export this object
      */
     public RmiServer(String serverName,int port, Server mainServer) throws RemoteException {
-        super(port);
+        super(0);
         this.port=port;
         this.serverName=serverName;
         this.mainServer=mainServer;

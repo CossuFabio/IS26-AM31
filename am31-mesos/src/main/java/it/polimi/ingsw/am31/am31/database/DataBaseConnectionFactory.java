@@ -69,6 +69,14 @@ public class DataBaseConnectionFactory {
 
         Class.forName(dbDriver);
         isInitialized = true;
+        try (Connection connection = getNewConnection()) {
+            if (!connection.isValid(3))
+                throw new RuntimeException("Unable to access database!");
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to access database!");
+        }
 
     }
 
