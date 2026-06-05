@@ -50,7 +50,6 @@ public class EndGameController extends BaseController {
         backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
         rankingBox.setPrefWidth(screenWidth * (double) 600 /1920);
         backButton.setPrefWidth(screenWidth * (double) 300 /1920);
-        backButton.setStyle("-fx-border-color: black; -fx-border-width: 0 1 0 0");
         globalPosition.setPrefWidth(screenWidth * (double) 600 /1920);
         globalRanking.setPrefWidth(screenWidth * (double) 300 /1920);
         tableTitle.setPrefWidth(screenWidth * (double) 1000 / 1920);

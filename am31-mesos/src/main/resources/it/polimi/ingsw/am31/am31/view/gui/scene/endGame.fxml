@@ -48,7 +48,7 @@
             </Label>
             <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity">
                <children>
-                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#returnToLobby" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand;" text="Back to menu">
+                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#returnToLobby" style="-fx-background-color: rgba(255,243,211,1); -fx-cursor: hand; -fx-border-color: black; -fx-border-width: 0 1 0 0;" text="Back to menu">
                      <font>
                         <Font name="Inknut Antiqua Regular" size="20.0" />
                      </font>
