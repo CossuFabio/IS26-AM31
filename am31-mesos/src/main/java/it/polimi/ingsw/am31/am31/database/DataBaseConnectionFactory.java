@@ -1,5 +1,7 @@
 package it.polimi.ingsw.am31.am31.database;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -29,7 +31,10 @@ public class DataBaseConnectionFactory {
 
         Properties properties = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        InputStream stream = loader.getResourceAsStream("database.properties");
+        File externalFile = new File("database.properties");
+        InputStream stream = externalFile.exists()
+                ? new FileInputStream(externalFile)
+                : loader.getResourceAsStream("database.properties");
         if (stream == null) throw new IOException("database.properties not found in classpath");
 
         try (stream) {
