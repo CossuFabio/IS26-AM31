@@ -25,7 +25,12 @@ class TUIConfigTest {
         Card h = createHunter().era(3).mark(true).minPlayers(2).build();
         Card h1 = createHunter().era(2).mark(false).minPlayers(2).build();
         ArrayList<Card> cards = new ArrayList<>();
-        cards.add(h); cards.add(h1);
+        cards.add(h); cards.add(h1); cards.add(h1);
+        cards.add(h); cards.add(h1); cards.add(h1);
+        cards.add(h); cards.add(h1); cards.add(h1);
+        cards.add(h); cards.add(h1); cards.add(h1);
+        //12 total cards
+        // 9 is the maximum before new line
         printDetailedCardLine(cards);
     }
 

@@ -75,7 +75,7 @@ public class DataBaseConnectionFactory {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Unable to access database!");
+            throw new RuntimeException("Unable to access database!"+e.getMessage());
         }
 
     }

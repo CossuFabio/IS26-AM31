@@ -39,6 +39,9 @@ public class TextUserInterface implements View{
 
     //class for visualization via CLI
     @Override
+    /**
+     * Prints the current screen, sets up input scanner to receive and handle player input
+     */
     public void startView() throws Exception {
         printScreen();
         Scanner scanner = new Scanner(System.in);
@@ -59,11 +62,18 @@ public class TextUserInterface implements View{
         }
     }
 
+    /**
+     * Prints the current GamePhase. called everytime there's an update
+     */
     public void printScreen() {
         System.out.println("--------------------------------------------------");
         currentPhase.draw();
     }
 
+    /**
+     * Changes the phase of the TUI screen, registers it to the eventBus
+     * @param newPhase New Phase to be set
+     */
     private void changePhase(TUIPhase newPhase){
         eventBus.unregister(currentPhase);
         currentPhase = newPhase;
@@ -72,6 +82,9 @@ public class TextUserInterface implements View{
     }
 
     @Subscribe
+    /**
+     * TUI subscribes to the GameStartingEvent, when it happens the game switches into the main GamePhase
+     */
     public void gameStarting(GameStartingEvent e){
         if(currentScene == Scene.MAIN_MENU){
             this.currentScene = Scene.GAME;
@@ -80,6 +93,9 @@ public class TextUserInterface implements View{
     }
 
     @Subscribe
+    /**
+     * TUI subscribes to The GameEndedEvent, when it happens the game switches into Results screen.
+     */
     public void gameEnded(GameEndedEvent e) {
         if(currentScene == Scene.GAME) {
             this.currentScene = Scene.RESULTS;
@@ -92,6 +108,10 @@ public class TextUserInterface implements View{
 
 
     @Subscribe
+    /**
+     * TUI subscribes to SuccessRegistration, when it happens the player is registered on the server
+     * and switches to the Lobby Screen
+     */
     public void successRegistration(SuccessRegistrationEvent e){
         if(currentScene == Scene.REGISTER){
             System.out.println("\nRegistered successfully with username " + ansi().fg(Ansi.Color.GREEN).a(e.getIdentifier()).reset()+ "\n");
@@ -102,6 +122,9 @@ public class TextUserInterface implements View{
     }
 
     @Subscribe
+    /**
+     * When a player leaves, server sends a GameCrashedEvent, when it happens the User is sent back to Lobby
+     */
     public void gameCrashed(GameCrashedEvent e){
         if(currentScene == Scene.GAME){
             System.out.println("\nGame crashed! Returning to main menu");
@@ -112,6 +135,10 @@ public class TextUserInterface implements View{
     }
 
     @Subscribe
+    /**
+     * TUI subscribes to ReturnLobbyEvent, posted by the tui itself when looking at results.
+     * allows to go back to lobby after a game.
+     */
     public void returnToLobby(ReturnToLobbyEvent e){
         if(currentScene == Scene.RESULTS){
             this.currentScene = Scene.MAIN_MENU;
@@ -121,6 +148,10 @@ public class TextUserInterface implements View{
     }
 
     @Subscribe
+    /**
+     * TUI subscribes to ConnectionLostEvent, sent by server when its closed / the connection is severed
+     * closes the program.
+     */
     public void connectionLost(ConnectionLostEvent e){
         System.out.println("Lost connection with server!");
         System.exit(0);

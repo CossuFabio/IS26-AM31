@@ -12,11 +12,17 @@ public class TuiCardPrintVisitor implements TribeVisitor
 {
     private int layer = 1;
 
+    /**
+     * increases the layer value by 1.
+     */
     public void nextLayer(){this.layer++;}
 
     //prints the details inside a card, for the tui
 
     @Override
+    /**
+     * Visit a Hunter card prints the current layer with its info in their formatting
+     */
     public void visit(Hunter c) {
         switch (layer) {
             case 1:
@@ -34,6 +40,9 @@ public class TuiCardPrintVisitor implements TribeVisitor
     }
 
     @Override
+    /**
+     * Visit a Shaman card prints the current layer with its info in their formatting
+     */
     public void visit(Shaman c) {
         switch(layer){
             case 1: print(c, centeredInsideBorder(" "+c.getCardId()+" "+"SHAMAN ",CARD_SIZE));
@@ -53,6 +62,9 @@ public class TuiCardPrintVisitor implements TribeVisitor
     }
 
     @Override
+    /**
+     * Visit a Farmer card prints the current layer with its info in their formatting
+     */
     public void visit(Farmer c) {
         switch(layer) {
             case 1:print(c, centeredInsideBorder(" "+c.getCardId()+" "+"FARMER  ", CARD_SIZE));break;
@@ -64,7 +76,10 @@ public class TuiCardPrintVisitor implements TribeVisitor
             case 4: print(c, centeredInsideBorder("era " + c.getEra() + "  " + c.getMinPlayers() + "+", CARD_SIZE));break;
         }
     }
-
+    @Override
+    /**
+     * Visit a HuntEvent card prints the current layer with its info in their formatting
+     */
     public void visit(HuntEventCard c) {
         switch(layer) {
             case 1: print(c, centeredInsideBorder("HUNT EVENT", CARD_SIZE));break;
@@ -76,6 +91,10 @@ public class TuiCardPrintVisitor implements TribeVisitor
             case 4:print(c, centeredInsideBorder("era " + c.getEra() + "  " + c.getMinPlayers() + "+", CARD_SIZE));break;
         }
     }
+    @Override
+    /**
+     * Visit a SustainEvent card prints the current layer with its info in their formatting
+     */
     public void visit(SustainEventCard c) {
         switch(layer) {
             case 1:print(c, centeredInsideBorder("SUSTAIN EVENT", CARD_SIZE));break;
@@ -87,6 +106,10 @@ public class TuiCardPrintVisitor implements TribeVisitor
             case 4:    print(c, centeredInsideBorder("era " + c.getEra() + "  " + c.getMinPlayers() + "+", CARD_SIZE));break;
         }
     }
+    /**
+     * Visit a PaintingEvent card prints the current layer with its info in their formatting
+     */
+    @Override
     public void visit(PaintingEventCard c) {
         switch(layer) {
             case 1:print(c, centeredInsideBorder("PAINTING EVENT", CARD_SIZE));break;
@@ -98,6 +121,10 @@ public class TuiCardPrintVisitor implements TribeVisitor
             case 4:  print(c, centeredInsideBorder("era " + c.getEra() + "  " + c.getMinPlayers() + "+", CARD_SIZE));break;
         }
     }
+    @Override
+    /**
+     * Visit a RitualEvent card prints the current layer with its info in their formatting
+     */
     public void visit(RitualEventCard c) {
         switch(layer) {
             case 1:  print(c, centeredInsideBorder("SHAMAN RITUAL", CARD_SIZE));break;
@@ -113,6 +140,9 @@ public class TuiCardPrintVisitor implements TribeVisitor
     }
 
     @Override
+    /**
+     * Visit a Inventor card prints the current layer with its info in their formatting
+     */
     public void visit(Inventor c) {
         switch(layer) {
             case 1:print(c, centeredInsideBorder(" "+c.getCardId()+" "+"INVENTOR ", CARD_SIZE)); break;
@@ -126,6 +156,9 @@ public class TuiCardPrintVisitor implements TribeVisitor
     }
 
     @Override
+    /**
+     * Visit a Builder card prints the current layer with its info in their formatting
+     */
     public void visit(Builder c) {
         switch(layer) {
             case 1:  print(c, centeredInsideBorder(" "+c.getCardId()+" "+"BUILDER ", CARD_SIZE));break;
@@ -140,6 +173,9 @@ public class TuiCardPrintVisitor implements TribeVisitor
     }
 
     @Override
+    /**
+     * Visit a Aritst card prints the current layer with its info in their formatting
+     */
     public void visit(Artist c) {
         switch(layer) {
             case 1: print(c, centeredInsideBorder(" "+c.getCardId()+" "+"ARTIST ", CARD_SIZE));break;
@@ -153,15 +189,27 @@ public class TuiCardPrintVisitor implements TribeVisitor
     }
 
     @Override
+    /**
+     * Visiting a building card prints the layers in black in a blue bg, and their description, on 2 lines if too long
+     */
     public void visit(BuildingCard c) {
         switch(layer) {
             case 1:  print(c, centeredInsideBorder(" "+c.getCardId()+" "+"BUILDING ", CARD_SIZE));break;
+            //if descprition too long, divides in 2
 
-            case 2:  print(c, centeredInsideBorder("Cost:"+c.getCost()+"♣", CARD_SIZE) + StringUtils.trim(c.getDescription()));break;
-        //long descriptions won't be visualized correctly
-            case 3:  print(c, centeredInsideBorder("Gives:"+c.getPrestigePointsGained()+"♦", CARD_SIZE));break;
-
+            case 2: String desc = c.getDescription();
+                    if (desc.length()>MAX_LENGTH)
+                        desc = StringUtils.truncate(desc,MAX_LENGTH);
+                    print(c, centeredInsideBorder("Cost:"+c.getCost()+"♣", CARD_SIZE)+desc);break;
+            case 3:
+                    desc = c.getDescription();
+                if (desc.length()>MAX_LENGTH)
+                    desc = StringUtils.right(desc,MAX_LENGTH);
+                else desc = "";
+                print(c, centeredInsideBorder("Gives:"+c.getPrestigePointsGained()+"♦", CARD_SIZE)+desc);break;
             case 4:  print(c, centeredInsideBorder("era " + c.getEra() + "  " + c.getMinPlayers() + "+", CARD_SIZE));break;
+            default:break;
         }
+
     }
 }

@@ -40,21 +40,23 @@ public class TUIGamephaseTest {
                 .build();
 
 
-        BuildingCard bd = createBuilding().cardId("bd1").era(1).cost(2).prestigePointsGained(3).effect(effects.getEffect(EffectIdsConstants.DOUBLE_BUILDER_ENDGAME)).build();
+        BuildingCard bd = createBuilding().cardId("bd1").era(1).cost(2).prestigePointsGained(3).description("40VOLTE S"+"S".repeat(40)).effect(effects.getEffect(EffectIdsConstants.DOUBLE_BUILDER_ENDGAME)).build();
 
         ArrayList<LocalOfferCard> track = new ArrayList<>();
 
         LocalPlayerState test1 = new LocalPlayerState("test", Color.BLACK);
         LocalPlayerState test = new LocalPlayerState("achillefrigeri2",Color.WHITE);
+        LocalPlayerState rosso = new LocalPlayerState("rossini",Color.RED);
 
         LocalOfferCard a = new LocalOfferCard("A", "test", false, 1, 0, 0);
         LocalOfferCard b = new LocalOfferCard("B", null, true, 0, 2, 1);
         LocalOfferCard c = new LocalOfferCard("C", "achillefrigeri2", false, 0, 0, 2);
+        LocalOfferCard d = new LocalOfferCard("D", "rossini", false, 0, 0, 2);
 
         track.add(a);
         track.add(b);
         track.add(c);
-        track.add(a);
+        track.add(d);
 
         cards.add(i);cards.add(h);cards.add(f);
         test1.setTribe(cards);test.setTribe(cards);
@@ -68,7 +70,7 @@ public class TUIGamephaseTest {
         state.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
         state.setRoundNumber(1);state.setOfferTrack(track);
         state.addSolvedEvent(createHuntEvent().build()); state.addSolvedEvent(createSustainEvent().build());
-        state.addPlayer(test);state.addPlayer(test1);
+        state.addPlayer(test);state.addPlayer(test1); state.addPlayer(rosso);
         state.setTurnOrder(state.getPlayers());state.setPlayerActing(test1);
         ClientController cont = new ClientController(null, eventBus);
         cont.setLocalNameTest();

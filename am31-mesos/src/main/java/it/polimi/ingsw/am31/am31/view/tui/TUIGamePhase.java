@@ -41,10 +41,24 @@ public class TUIGamePhase implements TUIPhase {
 
 
     @Override
+    /**
+     * Prints gamescreen, based on the players choice.
+     */
     public void draw() {
         //erases screen and resets font
-        System.out.println(ansi().eraseScreen());
-        System.out.println(ansi().reset());
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                // Fallback per Linux/Mac
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+        }
+        reset();
         switch (currentstep) {
             case MAIN: {
                 drawMain();
@@ -77,12 +91,19 @@ public class TUIGamePhase implements TUIPhase {
         }
     }
 
+    /**
+     * Prints the EventSolvedScreen, displays all the latest events solved
+     */
     protected void drawEventsSolved() {
 
     printDetailedCardLine(gameState.getEventsSolved());
     System.out.print("      \nLAST EVENTS SOLVED, type any key - to go back  \n>");
     }
 
+    /**
+     * Prints the main game Screen, displaying non-detailed info on the game, and prompts the player
+     * to choose to see tribes, the offertrack or the cardlines
+     */
     protected void drawMain() {
         //prints the round, phase, and era
         System.out.println(ansi().fg(Ansi.Color.DEFAULT).a("ROUND " + gameState.getRoundNumber() +
@@ -149,7 +170,10 @@ public class TUIGamePhase implements TUIPhase {
                 "\n3- to look at all tribes\n");
     }
 
-
+    /**
+     * Prints the detailed offerTrack, showing occupied spaces and details on cards
+     * prompts the player to place its totem on card or to go draw a card
+     */
     protected void drawOfferTrack() {
         printTurnOrder(gameState, controller.getLocalPlayerUsername());
         printDetailedOfferTrack(gameState);
@@ -162,11 +186,17 @@ public class TUIGamePhase implements TUIPhase {
 
     }
 
+    /**
+     * Prints the detailed tribes and scores of every player.
+     */
     protected void drawPlayers() {
        printOrderdTribe(gameState);
         System.out.println("\nPress 1- go back to MAIN\n");
     }
 
+    /**
+     * Draws the upper and lower CardLines, prompts the player to choose to draw
+     */
     protected void drawCardLines() {
         if(boardRowRequest.equals("1")||boardRowRequest.equals("0")) {
             System.out.println(ansi().a("UPPER LINE:"));
@@ -196,6 +226,10 @@ public class TUIGamePhase implements TUIPhase {
     }
 
     @Override
+    /**
+     * Handles the player's standard input, based on the current phase handles it differently.
+     * the input is usually checked, and can lead to sending requests to the server.
+     */
     public void handleInput(String input) throws Exception {
         //to handle the input we use both the model phase and the currentstep.
         switch (currentstep) {
@@ -350,11 +384,17 @@ public class TUIGamePhase implements TUIPhase {
 
 
     @Subscribe
+    /**
+     * TUI subscribes to updates to the Board, responds reprinting the current scereen witrh updated data
+     */
     public void handleBoardUpdate(BoardUpdateEvent e) {
         TUI.printScreen();
     }
 
     @Subscribe
+    /**
+     * TUI subscribes to events solved on the board, responds printing the events solved screen
+     */
     public void handleEventUpdate(GameEventResolveEvent e) {
         System.out.println("A game event has been resolved: " + e.getCard().getCardId()+ "\n");
         currentstep = TuiGameStep.EVENTS_SOLVED;
@@ -362,6 +402,10 @@ public class TUIGamePhase implements TUIPhase {
     }
 
     @Subscribe
+    /**
+     * TUI subribes to error messages sent by the server. InGameError are sent when the player sends invalid input.
+     * error are printed out
+     */
     public void handleErroMessage(InGameErrorEvent e){
         System.out.println(e.getErrorMessage());
     }

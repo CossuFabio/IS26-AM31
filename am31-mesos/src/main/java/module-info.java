@@ -6,8 +6,9 @@ module it.polimi.ingsw.am31.am31 {
     requires java.rmi;
     requires java.desktop;
     requires org.fusesource.jansi;
-    requires commons.lang3;
+    //requires commons.lang3;
     requires java.sql;
+    requires org.apache.commons.lang3;
     // requires it.polimi.ingsw.am31.am31;
 
 

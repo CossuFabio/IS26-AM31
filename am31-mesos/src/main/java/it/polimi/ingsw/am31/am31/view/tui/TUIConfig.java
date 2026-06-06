@@ -48,6 +48,8 @@ public class TUIConfig {
     public static final int TURNORDER_SIZE = 25; //can't be under 24
     public static final int RESULT_TITLE_SIZE = 18;
     public static final int RANKING_COL_SIZE = 18;
+    public static final int MAX_LENGTH = 40;
+    private static final int MAX_CARDS_PER_ROW = 9;
 
     //prints the style of a card
     public static void printColor(Card c) {
@@ -80,7 +82,7 @@ public class TUIConfig {
     /**
      * <p>Returns the hansi code for the player p color</p>
      * @param p Player whose "color" filed is used to determine the formatting string. if invalid color, resets formatting
-     * @return
+     * @return A String with the ansi code for a color, or the default color
      */
     public static String getColor(LocalPlayerState p) {
         if (p == null ) return null;
@@ -95,6 +97,28 @@ public class TUIConfig {
                 return (ansi().fg(Ansi.Color.WHITE).bg(Ansi.Color.BLACK).toString());
             case WHITE:
                 return (ansi().fg(Ansi.Color.BLACK).bg(Ansi.Color.WHITE).toString());
+            default:  return ansi().reset().toString();
+        }
+    }
+
+    /**
+     * <p>Returns the hansi code for the player p Box color</p>
+     * @param p Player whose "color" filed is used to determine the formatting string. if invalid color, resets formatting
+     * @return A String with the ansi code for a color, or the default color
+     */
+    public static String getBoxColor(LocalPlayerState p) {
+        if (p == null ) return null;
+        switch(p.getColor()) {
+            case RED:
+                return (ansi().fg(Ansi.Color.RED).bgRed().toString());
+            case YELLOW:
+                return (ansi().fg(Ansi.Color.YELLOW).bgYellow().toString());
+            case BLUE:
+                return (ansi().fg(Ansi.Color.BLUE).bgCyan().toString());
+            case BLACK:
+                return (ansi().fg(Ansi.Color.BLACK).bgBright(Ansi.Color.BLACK).toString());
+            case WHITE:
+                return (ansi().fg(Ansi.Color.BLACK).bgBright(Ansi.Color.WHITE).toString());
             default:  return ansi().reset().toString();
         }
     }
@@ -201,7 +225,7 @@ public class TUIConfig {
             if (c.isFree())
                 box = ansi().bg(Ansi.Color.DEFAULT).a(SMALL_FREE_OFFER_CARD_BOX).reset().toString();
             else    //if not free, prints box in the players color
-                box = getColor(gamestate.findPlayer(c.getPlayer()))+SMALL_OFFER_CARD_BOX+ansi().reset().toString();
+                box = getBoxColor(gamestate.findPlayer(c.getPlayer()))+SMALL_OFFER_CARD_BOX+ansi().reset().toString();
             //to be aligned, the sum of Box + fixedId + border-space is equal to the small card size
             System.out.print("┃"+ SMALL_OFFER_CARD_BORDER +fixedId+ SMALL_OFFER_CARD_SPACING +box+ SMALL_OFFER_CARD_BORDER +"┃");
         }
@@ -213,6 +237,11 @@ public class TUIConfig {
         System.out.println();
     }
     //prints a big version of a card
+
+    /**
+     * Prints the detailed version of a single given Card. with 4 layers inside, all in the cards color, than goes new line
+     * @param c the Card to print
+     */
     public static void printDetailedCard (Card c) {
         TuiCardPrintVisitor visitor = new TuiCardPrintVisitor();
 
@@ -228,6 +257,11 @@ public class TUIConfig {
         print(c, lowerBorder(CARD_SIZE));
         System.out.println();
     }
+
+    /**
+     * Prints the tribe screen during a game. Tribes are ordered based on card type
+     * * @param gameState The current state of the game, contains the players tribes and scores
+     */
     public static void printOrderdTribe(LocalGameState gameState) {
         //names + scores
         for (LocalPlayerState p : gameState.getPlayers()) {
@@ -256,43 +290,76 @@ public class TUIConfig {
 
 
     //prints a big version of a card line
-    public static void printDetailedCardLine (List<Card> cards) {
-        TuiCardPrintVisitor visitor = new TuiCardPrintVisitor();
-        for(Card c : cards) {
-            reset();
-            print(c, upperBorder(CARD_SIZE));System.out.print(" ");
-        }System.out.println();
-        //4 layers inside
-        for(Card c:cards) {
-            c.acceptVisit(visitor); //draws the current layer
-            System.out.print(" ");
-        }
-        visitor.nextLayer();
-        System.out.println();
-        for(Card c:cards) {
-            c.acceptVisit(visitor);
-            System.out.print(" ");
-        }
-        visitor.nextLayer();
-        System.out.println();
-        for(Card c:cards) {
-            c.acceptVisit(visitor);
-            System.out.print(" ");
-        }
-        visitor.nextLayer();
-        System.out.println();
-        for(Card c:cards) {
-            c.acceptVisit(visitor);
-            System.out.print(" ");
-        }
-        System.out.println();
-        for(Card c : cards){
-        print(c, lowerBorder(CARD_SIZE));
-            System.out.print(" ");
-        }
 
+    /**
+     * Prints the detailed version of each card in the given list, 9 x line
+     * @param cards List of cards to print
+     */
+    public static void printDetailedCardLine (List<Card> cards) {
+        //Cycle for each line drawn
+        for (int i = 0; i < cards.size(); i += MAX_CARDS_PER_ROW) {
+            //current sublist
+            List<Card> sublist = cards.subList(i, Math.min(i + MAX_CARDS_PER_ROW, cards.size()));
+
+            //new visitor for each line
+            TuiCardPrintVisitor visitor = new TuiCardPrintVisitor();
+            // upper border
+            for(Card c : sublist) {
+                reset();
+                print(c, upperBorder(CARD_SIZE));
+                System.out.print(" ");
+            }
+            System.out.println();
+
+            // Layer 1
+            for(Card c : sublist) {
+                c.acceptVisit(visitor);
+                System.out.print(" ");
+            }
+            visitor.nextLayer();
+            System.out.println();
+
+            // Layer 2
+            for(Card c : sublist) {
+                c.acceptVisit(visitor);
+                System.out.print(" ");
+            }
+            visitor.nextLayer();
+            System.out.println();
+
+            // Layer 3
+            for(Card c : sublist) {
+                c.acceptVisit(visitor);
+                System.out.print(" ");
+            }
+            visitor.nextLayer();
+            System.out.println();
+
+            // Layer 4
+            for(Card c : sublist) {
+                c.acceptVisit(visitor);
+                System.out.print(" ");
+            }
+            System.out.println();
+
+            // lower border
+            for(Card c : sublist) {
+                print(c, lowerBorder(CARD_SIZE));
+                System.out.print(" ");
+            }
+            System.out.println("\n");
+            //new line
+        }
     }
+
     //returns the correct bonus for the specified position with n players
+
+    /**
+     * Chooses the correct turnOrderBonus to display, based on the number of players and the position
+     * @param nplayers Number of players in game
+     * @param pos Position in turnorder needed
+     * @return the String for the bonus, either food / pts / nothing
+     */
     public static String turnOrderBonus (int nplayers, int pos) {
         switch (nplayers) {
             case 2:             switch(pos){
@@ -324,6 +391,12 @@ public class TUIConfig {
 
 
     //prints the turn order Card, called in the detailed offertrack screen
+
+    /**
+     * Prints the TurnOrder Card, with the players occupying their places
+     * @param gameState State of the game when called.
+     * @param local Name of the local Player, used to add indicator.
+     */
     public static void printTurnOrder(LocalGameState gameState, String local){
     System.out.print(upperBorder(TURNORDER_SIZE));
     System.out.println();
@@ -359,6 +432,10 @@ public class TUIConfig {
 
     }
 
+    /**
+     * Prints the detailed OfferTrack, with players occupying their place
+     * @param gameState State of the Game when called
+     */
     public static void printDetailedOfferTrack (LocalGameState gameState) {
         List<LocalOfferCard> cards = gameState.getBoard().getOfferTrack();
         System.out.println(ansi().reset());
@@ -383,7 +460,7 @@ public class TUIConfig {
         for (LocalOfferCard c : cards) {
             String box = "";
             if (c.isFree()) box = ansi().bg(Ansi.Color.DEFAULT).a(FREE_OFFER_CARD_BOX).reset().toString();
-            else box = getColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
+            else box = getBoxColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
             System.out.print("┃" + OFFER_CARD_BORDER + OFFER_CARD_SPACING + box + OFFER_CARD_BORDER + OFFER_CARD_SPACING + SMALL_OFFER_CARD_BORDER + "┃");
 
         }
@@ -392,7 +469,7 @@ public class TUIConfig {
         for (LocalOfferCard c : cards) {
             String box = "";
             if (c.isFree()) box = ansi().bg(Ansi.Color.DEFAULT).a(FREE_OFFER_CARD_BOX).reset().toString();
-            else box = getColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
+            else box = getBoxColor(gameState.findPlayer(c.getPlayer())) + OFFER_CARD_BOX + ansi().reset().toString();
             System.out.print("┃" + OFFER_CARD_BORDER + OFFER_CARD_SPACING + box + OFFER_CARD_BORDER + OFFER_CARD_SPACING + SMALL_OFFER_CARD_BORDER + "┃");
         }
         System.out.println();
@@ -403,12 +480,24 @@ public class TUIConfig {
 
 
     //prints the upper side of a card, in the specified size
+
+    /**
+     * Makes a string with a card's upper piece, with left and right corners
+     * @param size Size of the card
+     * @return The String, made with 2 corners pointing downwards and size middle pieces
+     */
     public static String upperBorder(int size){
         String midPiece = StringUtils.repeat("━", size);
         return "┏"+ midPiece + "┓";
     }
 
     //prints the lower side of a card, in the specified size
+
+    /**
+     * Makes a string with a card's lower piece, with left and right corners and middle piece
+     * @param size Size of the card
+     * @return The String with 2 corners pointing upwards, and size middle pieces
+     */
     public static String lowerBorder(int size){
 
         String midPiece = StringUtils.repeat("━", size);
@@ -416,6 +505,14 @@ public class TUIConfig {
     }
 
     //prints a string with the right spacing from the borders, in the middle of a card
+
+    /**
+     * Makes a String, that cases the c string centered inside two card border pieces.
+     * The c string should be smaller than size, or jt gets truncated
+     * @param c String cased inside
+     * @param size Size of the returned string. used to center the c string.
+     * @return a String made with 2 border pieces on the side, the contec c inside, centered
+     */
     public static String centeredInsideBorder(String c, int size){
         if(c.length()>size)
             c=c.substring(0,size); //if too long, truncate
