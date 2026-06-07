@@ -11,7 +11,11 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ShowLobbyEvent;
 import org.fusesource.jansi.Ansi;
 
 import static org.fusesource.jansi.Ansi.ansi;
-
+/**
+ * This class manages the Lobby phase of the Text User Interface.
+ * It handles the user interactions for creating a game, joining an existing game,
+ * viewing available lobbies, and reading the game rules.
+ */
 public class TUILobby implements TUIPhase {
 
     private final TextUserInterface TUI;
@@ -20,7 +24,9 @@ public class TUILobby implements TUIPhase {
     private volatile Color color;
     private volatile int gameId;
 
-
+    /**
+     * Internal enumeration representing the sub-states of the lobby phase.
+     */
     private enum TuiLobbyStep {
         START,
         RULES_EXPLANATION,
@@ -33,7 +39,12 @@ public class TUILobby implements TUIPhase {
     private volatile TuiLobbyStep currentStep;
 
     private volatile int nPlayers;
-
+    /**
+     * Constructs a new TUILobby phase.
+     *
+     * @param TUI        The main TUI controller.
+     * @param controller The network controller used to send requests to the server.
+     */
     public TUILobby(TextUserInterface TUI, ClientController controller) {
         this.TUI = TUI;
         this.controller = controller;
@@ -41,6 +52,10 @@ public class TUILobby implements TUIPhase {
     }
 
     @Override
+    /**
+     * Renders the current state of the lobby to the terminal.
+     * The output changes based on the {@code currentStep}.
+     */
     public void draw() {
         switch (currentStep) {
             case START: {
@@ -113,6 +128,12 @@ public class TUILobby implements TUIPhase {
     }
 
     @Override
+    /**
+     * Handles user input based on the current step of the lobby process.
+     *
+     * @param input The raw string input from the user.
+     * @throws Exception If there is an error during input processing or network requests.
+     */
     public void handleInput(String input) throws Exception {
         if (input == null || input.isBlank())
             return;
@@ -240,6 +261,11 @@ public class TUILobby implements TUIPhase {
 
 
     @Subscribe
+    /**
+     * Event subscriber that displays the list of available lobbies received from the server.
+     *
+     * @param e The event containing the list of available lobbies.
+     */
     public void printLobbies(ShowLobbyEvent e) {
         if(e.getLobbies().isEmpty()){
             System.out.println("\nNo lobbies available!\n");
@@ -261,6 +287,11 @@ public class TUILobby implements TUIPhase {
     }
 
     @Subscribe
+    /**
+     * Event subscriber that handles the case where the user selected an unavailable color.
+     *
+     * @param e The event indicating an invalid color selection.
+     */
     public void invalidColorSelected(InvalidColorPickEvent e) {
         if (currentStep == TuiLobbyStep.WAITING_GAMESTART) {
             currentStep = TuiLobbyStep.SELECT_COLOR;
@@ -271,6 +302,11 @@ public class TUILobby implements TUIPhase {
     }
 
     @Subscribe
+    /**
+     * Event subscriber that updates the UI when players join or leave the current lobby.
+     *
+     * @param e The event containing the updated list of players in the lobby.
+     */
     public void playersChanged(PlayersInLobbyChangedEvent e) {
         if (currentStep == TuiLobbyStep.WAITING_GAMESTART) {
             System.out.println("Players in lobby changed. New list:\n");
@@ -280,6 +316,11 @@ public class TUILobby implements TUIPhase {
     }
 
     @Subscribe
+    /**
+     * Event subscriber that handles failures when attempting to join a lobby.
+     *
+     * @param e The event containing the failure message.
+     */
     public void unableToJoin(FailedJoinLobby e) {
         if (currentStep == TuiLobbyStep.WAITING_GAMESTART) {
             System.out.println("Unable to enter Lobby. " + e.getMessage());

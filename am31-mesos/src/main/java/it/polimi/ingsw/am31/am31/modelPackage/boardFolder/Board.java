@@ -167,6 +167,8 @@ public class Board implements GameObservable {
     }
 
 
+
+
     @Override
     public void setObserverHandler(ObserverHandler obs){
 

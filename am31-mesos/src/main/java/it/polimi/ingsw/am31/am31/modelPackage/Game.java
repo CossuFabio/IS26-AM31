@@ -539,6 +539,23 @@ public class Game implements GameObservable {
     }
 
     /**
+     * Fort testing only, returns the player acting
+     * @return playerActing
+     */
+    protected Player getPlayerActing (){
+        return playerActing;
+    }
+
+    /**
+     * For testing only.
+     * @param up
+     * @param low
+     */
+    protected void setUpDrawManager(int up, int low){
+        drawManager.setUp(up,low);
+    }
+
+    /**
      * Should be used for testing only
      * @param round new round number
      */
@@ -598,7 +615,7 @@ public class Game implements GameObservable {
         Optional<OfferCard> previousPlayerOfferCard = board.getOfferCards().stream().filter(card -> !card.isFree()).findFirst();
 
         //This check should never fail but, it is better to check
-        if(!previousPlayerOfferCard.isPresent()) throw new IllegalStateException("Something went wrong in setNextPlayerDrawing()");
+        if(previousPlayerOfferCard.isPresent()) throw new IllegalStateException("Something went wrong in setNextPlayerDrawing()");
 
         //Frees the offerCard
         turnOrder.setPlayer(previousPlayerOfferCard.get().getPlayer());
@@ -645,9 +662,8 @@ public class Game implements GameObservable {
             //effects says that draws only 1 from top.
             drawManager.setUp(1, 0);
         }
-
-
     }
+
 
     /**
      * Method called from the controller of the game flow. Starts TOTEM_PHASE

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.truncate;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUIConfig {
@@ -140,7 +141,7 @@ public class TUIConfig {
      */
     public static void print(Card c, String s) {
         printColor(c);
-        System.out.print(s);
+        System.out.print(truncate(s,8000)); //max number of char in a cmd line
         reset();
     }
 
@@ -151,7 +152,7 @@ public class TUIConfig {
      */
     public static void print(LocalPlayerState p, String s) {
         printColor(p);
-        System.out.print(s);
+        System.out.print(truncate(s, 8000));
         reset();
     }
 

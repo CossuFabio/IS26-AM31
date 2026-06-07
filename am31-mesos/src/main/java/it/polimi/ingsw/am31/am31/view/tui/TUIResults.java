@@ -46,6 +46,9 @@ public class TUIResults implements TUIPhase {
 
 
     @Override
+    /**
+     * Prints out the current state of the results screen
+     */
     public void draw() {
         switch (currentStep) {
             case SHOW_RESULTS: {
@@ -68,6 +71,10 @@ public class TUIResults implements TUIPhase {
 
 
     @Override
+    /**
+     * User input handled based on the current step to navigate the results screen
+     * @param input The text entered by the user
+     */
     public void handleInput(String input) {
         if (input == null || input.isBlank())
             return;
@@ -210,6 +217,9 @@ public class TUIResults implements TUIPhase {
         System.out.println("\nType:\n1 - Go back to Results\n2 - Go back to Lobby");
     }
     @Subscribe
+    /**
+     * TUI subscribes to the BoardUpdate event, when the board changes, the leaderboard is re-printed
+     */
     public void handleBoardUpdate(BoardUpdateEvent e) {
         TUI.printScreen();
     }

@@ -7,6 +7,8 @@ import it.polimi.ingsw.am31.am31.exceptions.gameInvariantException.InsufficientP
 import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.OfferCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.BuildingCard;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectIdsConstants;
+import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.buildingCards.EffectsCatalog;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.characterCards.CharacterCard;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.eventCards.RitualEventCard;
 import it.polimi.ingsw.am31.am31.modelPackage.modelUtilities.GameConstants;
@@ -273,14 +275,6 @@ class GameTest {
     }
 
     @Test
-    void TestplayerDrawFromUpper() {
-    }
-
-    @Test
-    void TestplayerDrawFromLower() {
-    }
-
-    @Test
     void TestisGameFinished() {
         game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
         assertFalse(game.isGameFinished());
@@ -292,54 +286,144 @@ class GameTest {
     }
 
     @Test
-    void TestisTotemPlacingPhaseFinished() {
+    void TestisBonusDrawPhaseFinished() throws Exception{
+     //if not in bonus draw, throws exception
+        EffectsCatalog cat = new EffectsCatalog();
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        assertThrows(IncorrectMethodCallException.class,() -> game.isBonusDrawPhaseFinished());
+        player.addCard(createBuilding().effect(cat.getEffect(EffectIdsConstants.ONE_MORE_CARD)).build());
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        game.setUpBonusDrawingPhase();
+        //player has to do bonus draw
+        assertFalse(game.isBonusDrawPhaseFinished());
+        game.playerDrawFromUpper(player,h);
+        //player has drawn a card, now its over
+        assertTrue(game.isBonusDrawPhaseFinished());
+
     }
 
     @Test
-    void TestisDrawPhaseFinished() {
+    void TestisGameInStartingPhase() throws Exception {
+        assertTrue(game.isGameInStartingPhase());
+        game.addPlayer(player1);
+        game.gameStart();
+        assertFalse(game.isGameInStartingPhase());
     }
 
     @Test
-    void TestisGameInStartingPhase() {
+    void TesthasCurrentPlayerFinishedDrawing() throws Exception {
+        game.addPlayer(player1);
+        game.gameStart();
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        
+        // Setup player with 1 draw required
+        OfferCard drawRequired = createOfferCard().drawFromUpper(1).build();
+        game.setUpPlayerActing(player, drawRequired);
+        
+        assertFalse(game.hasCurrentPlayerFinishedDrawing());
+        game.playerDrawFromUpper(player, h);
+        assertTrue(game.hasCurrentPlayerFinishedDrawing());
     }
 
     @Test
-    void TestisBonusDrawPhaseFinished() {
+    void TestSetUpDrawingPhase() throws Exception{
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        assertThrows(IncorrectMethodCallException.class,()-> game.setUpDrawingPhase());
+        game.setCurrentRoundPhase(RoundPhasesEnum.GAME_STARTING);
+        game.addPlayer(player1);
+        game.gameStart();
+        //players still have to place totem
+        game.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
+        assertThrows(IncorrectMethodCallException.class,()->game.setUpDrawingPhase());
+        game.totemChoiceAction(game.getPlayerActingTotemPhase(),game.getBoard().getOfferCards().get(0));
+        game.totemChoiceAction(game.getPlayerActingTotemPhase(),game.getBoard().getOfferCards().get(1));
+        game.setUpDrawingPhase();
+        //should be set to action
+        assertEquals(RoundPhasesEnum.ACTION_PHASE, game.getCurrentRoundPhase());
+        //player acting should be someone
+        assertNotNull(game.getPlayerActing());
     }
 
     @Test
-    void TesthasCurrentPlayerFinishedDrawing() {
-    }
+    void TestSetNextPlayerDrawing() throws Exception{
+        //incorrect phase
+        game.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
+        assertThrows(IncorrectMethodCallException.class,()->game.setNextPlayerDrawing());
 
-    @Test
-    void TestsetUpPlayerActing() {
-    }
+        //no one should still be drawing
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        game.setUpDrawManager(1,1);
+        assertThrows(IncorrectMethodCallException.class,()->game.setNextPlayerDrawing());
+        game.setUpDrawManager(0,0);
+        //game.setNextPlayerDrawing();
+        assertEquals(game.getPlayerActing(),null);
 
-    @Test
-    void TestsetUpDrawingPhase() {
-    }
-
-    @Test
-    void TestsetCurrentRoundPhase() {
-    }
-
-    @Test
-    void TestsetNextPlayerDrawing() {
     }
 
     @Test
     void TestsetUpBonusDrawingPhase() {
+        EffectsCatalog cat = new EffectsCatalog();
+        game.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
+        assertThrows(IncorrectMethodCallException.class, () -> game.setUpBonusDrawingPhase());
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        game.setUpBonusDrawingPhase();
+        //nobody has the building for bonus draw
+        assertEquals(game.getPlayerActing(),null);
+        //phase is set to bonus
+        assertEquals(game.getCurrentRoundPhase(),RoundPhasesEnum.BONUS_DRAWING_PHASE);
+        player.addCard(createBuilding().effect(cat.getEffect(EffectIdsConstants.ONE_MORE_CARD)).build());
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        game.setUpBonusDrawingPhase();
+        // now player should have the bonus draw
+        assertEquals(game.getPlayerActing(),player);
+
     }
 
     @Test
     void TestsetUpTotemPlacingPhase() {
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        assertThrows(IncorrectMethodCallException.class,()->game.setUpTotemPlacingPhase());
+        game.setCurrentRoundPhase(RoundPhasesEnum.END_TURN);
+        int i = game.getRoundNumber();
+        game.setUpTotemPlacingPhase();
+        //round has increased, method went through
+        assertEquals(i+1,game.getRoundNumber());
     }
 
     @Test
-    void TestplayerSkipUpper() {
+    void TestplayerSkipUpper() throws Exception {
+        game.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
+        assertThrows(WrongRoundPhaseException.class, () -> game.playerSkipUpper(player));
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+       //its not players turn
+        assertThrows(WrongPlayerTurnException.class, () -> game.playerSkipUpper(player));
+        //now its players turn
+        //upper line has char cards
+        game.setUpPlayerActing(player,createOfferCard().build());
+        assertThrows(IllegalSkipException.class,() ->game.playerSkipUpper(player));
+        game.getBoard().moveLowerTribes();
+        //now upper line has no tribe characters, player can skip
+        assertDoesNotThrow(() ->game.playerSkipUpper(player));
     }
 
     @Test
-    void TestplayerSkipLower() {
+    void TestplayerSkipLower() throws Exception {
+        game.addPlayer(player1);
+        game.setCurrentRoundPhase(RoundPhasesEnum.TOTEM_PLACING);
+        assertThrows(WrongRoundPhaseException.class, () -> game.playerSkipLower(player));
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        //its not players turn
+        assertThrows(WrongPlayerTurnException.class, () -> game.playerSkipLower(player));
+        //now its players turn
+        //lower line has char cards
+        game.setUpPlayerActing(player,createOfferCard().build());
+        assertThrows(IllegalSkipException.class,() ->game.playerSkipLower(player));
+
+    //make a new game to empty lower line, so player can skip
+        game = createGame(2);
+        game.addPlayer(player);
+        game.setCurrentRoundPhase(RoundPhasesEnum.ACTION_PHASE);
+        game.setUpPlayerActing(player,createOfferCard().build());
+        assertDoesNotThrow(() ->game.playerSkipLower(player));
     }
 }

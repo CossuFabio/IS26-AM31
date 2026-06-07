@@ -8,20 +8,38 @@ import org.fusesource.jansi.Ansi;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * This class manages the registration phase of the Text User Interface.
+ * It handles the initial welcome message and the process of registering a player's nickname.
+ */
 public class TUIRegistration implements TUIPhase {
 
     private final TextUserInterface TUI;
     private final ClientController controller;
 
+    /**
+     * Internal enumeration representing the sub-states of the registration phase.
+     */
     private enum TuiRegistrationStep {REGISTRATION, WAIT_REGISTRATION_RESULT}
     private volatile TuiRegistrationStep currentStep;
 
+    /**
+     * Constructs a new TUIRegistration phase.
+     *
+     * @param TUI        The main TUI controller.
+     * @param controller The network controller used to send registration requests.
+     */
     public TUIRegistration(TextUserInterface TUI, ClientController controller){
         this.TUI = TUI;
         this.controller = controller;
         this.currentStep= TuiRegistrationStep.REGISTRATION;
     }
 
+    /**
+     * Renders the registration screen to the terminal.
+     * Displays a welcome message and a prompt for the nickname during the REGISTRATION step,
+     * or a waiting message during the WAIT_REGISTRATION_RESULT step.
+     */
     @Override
     public void draw() {
         switch (currentStep){
@@ -45,6 +63,12 @@ public class TUIRegistration implements TUIPhase {
         }
     }
 
+    /**
+     * Handles the user's nickname input.
+     * Sends a connection request to the server and transitions the state to wait for a response.
+     *
+     * @param input The nickname entered by the user.
+     */
     @Override
     public void handleInput(String input) {
         if (input == null || input.isBlank())
@@ -68,6 +92,11 @@ public class TUIRegistration implements TUIPhase {
     }
 
 
+    /**
+     * Event subscriber that handles a failed registration attempt (e.g., username already taken).
+     *
+     * @param e The event containing details about the failed registration.
+     */
     @Subscribe
     public void failedRegistration(FailedRegistrationEvent e){
         if(currentStep == TuiRegistrationStep.WAIT_REGISTRATION_RESULT){
