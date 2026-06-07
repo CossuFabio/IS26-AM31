@@ -17,8 +17,8 @@ import static org.fusesource.jansi.Ansi.ansi;
 public class TUIConfig {
 
     //symbols
-    public static final String FOOD = "♣";
-    public static final String POINTS = "♦";
+    public static final String FOOD = "[F]";
+    public static final String POINTS = "[PP]";
 
     //Useful constants used in TUI
     public static final String GO_BACK_VALUE = "back";
@@ -29,7 +29,7 @@ public class TUIConfig {
     public static final int SMALL_OFFER_CARD_PADDING = 2;
     public static final String SMALL_OFFER_CARD_SPACING = "  ";
     public static final String SMALL_OFFER_CARD_BORDER = " ";
-    public static final String SMALL_OFFER_CARD_BOX = "ooo";
+    public static final String SMALL_OFFER_CARD_BOX = "   ";
     public static final String SMALL_FREE_OFFER_CARD_BOX = "   ";
 
     public static final int SMALL_OFFER_CARD_SIZE = SMALL_OFFER_CARD_PADDING + SMALL_OFFER_CARD_BOX.length()+ SMALL_OFFER_CARD_BORDER.length()*2+ SMALL_OFFER_CARD_SPACING.length();
@@ -37,7 +37,7 @@ public class TUIConfig {
     //full off.track sizes
     public static final int OFFER_CARD_PADDING = 3;
     public static final int OFFER_CARD_BOX_SPACES = 5;
-    public static final String OFFER_CARD_BOX = "o".repeat(OFFER_CARD_BOX_SPACES);
+    public static final String OFFER_CARD_BOX = " ".repeat(OFFER_CARD_BOX_SPACES);
     public static final String FREE_OFFER_CARD_BOX = " ".repeat(OFFER_CARD_BOX_SPACES);
 
 
@@ -45,7 +45,7 @@ public class TUIConfig {
     public static final String OFFER_CARD_SPACING = "  ";
     public static final int OFFER_CARD_SIZE = OFFER_CARD_PADDING + OFFER_CARD_BOX.length()+ OFFER_CARD_BORDER.length()*2 + OFFER_CARD_SPACING.length();
     public static final int CARD_SIZE = 15;
-    public static final int TURNORDER_SIZE = 25; //can't be under 24
+    public static final int TURNORDER_SIZE = 35;
     public static final int RESULT_TITLE_SIZE = 18;
     public static final int RANKING_COL_SIZE = 18;
     public static final int MAX_LENGTH = 40;
@@ -256,6 +256,8 @@ public class TUIConfig {
         }
         print(c, lowerBorder(CARD_SIZE));
         System.out.println();
+        if (visitor.getDescription() != null)
+            System.out.println(visitor.getDescription());
     }
 
     /**
@@ -283,7 +285,7 @@ public class TUIConfig {
             printDetailedCardLine(p.getBuildings());
             System.out.println();
         }
-        ansi().reset();
+        reset();
     }
 
 
@@ -363,26 +365,26 @@ public class TUIConfig {
     public static String turnOrderBonus (int nplayers, int pos) {
         switch (nplayers) {
             case 2:             switch(pos){
-                case 1: return "1♣";
-                case 2: return "-1♣/-2♦";
+                case 1: return "1[F]";
+                case 2: return "-1[F]/-2[PP]";
             } break;
             case 3:                switch(pos){
-                case 1:return "2♣";
+                case 1:return "2[F]";
                 case 2:return "";
-                case 3:return "-1♣/-2♦";
+                case 3:return "-1[F]/-2[PP]";
             }break;
             case 4:                 switch(pos){
-                case 1:return "2♣";
-                case 2:return "1♣";
+                case 1:return "2[F]";
+                case 2:return "1[F]";
                 case 3:return "";
-                case 4:return "-1♣/-2♦";
+                case 4:return "-1[F]/-2[PP]";
             }break;
                 case 5:                switch(pos){
-                    case 1:return"3♣";
-                    case 2:return"1♣";
+                    case 1:return"3[F]";
+                    case 2:return"1[F]";
                     case 3:return "";
                     case 4:return "";
-                    case 5:return "-1♣/-2♦";
+                    case 5:return "-1[F]/-2[PP]";
                 }break;
         }
         return "";
@@ -452,9 +454,13 @@ public class TUIConfig {
         //inside 2
         for (LocalOfferCard c : cards)
             if (c.getFood() > 0)
-                System.out.print(centeredInsideBorder("Gives " + c.getFood() + "♣", OFFER_CARD_SIZE));
+                System.out.print(centeredInsideBorder("Gives " + c.getFood() + "[F]", OFFER_CARD_SIZE));
             else
                 System.out.print(centeredInsideBorder((StringUtils.repeat("↓", c.getDrawFromUnder()) + StringUtils.repeat("↑", c.getDrawFromUpper())), OFFER_CARD_SIZE));
+        System.out.println();
+        //empty row between arrows and boxes
+        for (LocalOfferCard c : cards)
+            System.out.print(centeredInsideBorder("", OFFER_CARD_SIZE));
         System.out.println();
         //inside 3 to draw box
         for (LocalOfferCard c : cards) {

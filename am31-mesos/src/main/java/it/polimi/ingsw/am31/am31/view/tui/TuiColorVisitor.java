@@ -57,31 +57,31 @@ public class TuiColorVisitor implements TribeVisitor {
     @Override
     public void visit(BuildingCard card){ //Buildings with descriptions
         isBuilding = true;
-        System.out.print(ansi().bg(Ansi.Color.BLUE).fg(Ansi.Color.BLACK));
+        System.out.print(ansi().fg(Ansi.Color.CYAN));
 
     }
     public void visit(EventCard eventCard) {
-        System.out.print(ansi().bgBright(Ansi.Color.WHITE).fgBlack());        isBuilding = false;
+        System.out.print(ansi().fgBright(Ansi.Color.WHITE));        isBuilding = false;
     }
     @Override
     public void visit(HuntEventCard huntEventCard) {
-        System.out.print(ansi().bgBright(Ansi.Color.WHITE).fgBlack());        isBuilding = false;
+        System.out.print(ansi().fgBright(Ansi.Color.WHITE));        isBuilding = false;
     }
 
     @Override
     public void visit(SustainEventCard sustainEventCard) {
-        System.out.print(ansi().bgBright(Ansi.Color.WHITE).fgBlack());        isBuilding = false;
+        System.out.print(ansi().fgBright(Ansi.Color.WHITE));        isBuilding = false;
     }
 
 
     @Override
     public void visit(RitualEventCard ritualEventCard) {
-        System.out.print(ansi().bgBright(Ansi.Color.WHITE).fgBlack());        isBuilding = false;
+        System.out.print(ansi().fgBright(Ansi.Color.WHITE));        isBuilding = false;
     }
 
     @Override
     public void visit(PaintingEventCard paintingEventCard) {
-        System.out.print(ansi().bgBright(Ansi.Color.WHITE).fgBlack());        isBuilding = false;
+        System.out.print(ansi().fgBright(Ansi.Color.WHITE));        isBuilding = false;
     }
 
     public boolean isBuilding (){return this.isBuilding;}

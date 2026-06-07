@@ -29,6 +29,7 @@ public class TUIGamePhase implements TUIPhase {
     private int choosingTotem;
     private int choosingCard;
     private String boardRowRequest = "0";
+    private String lastError = null;
 
     public TUIGamePhase(TextUserInterface TUI, ClientController controller, LocalGameState gameState) {
         this.TUI = TUI;
@@ -89,6 +90,9 @@ public class TUIGamePhase implements TUIPhase {
                 break;
             }
         }
+        if (lastError != null) {
+            System.out.println(ansi().fg(Ansi.Color.RED).a("ERROR: " + lastError).reset());
+        }
     }
 
     /**
@@ -111,9 +115,11 @@ public class TUIGamePhase implements TUIPhase {
         //prints players in turn order
         System.out.println("\nPLAYERS, in order of action");
         int i = 1;
-        for (LocalPlayerState p : gameState.getTurnOrder())
+        for (LocalPlayerState p : gameState.getTurnOrder()) {
             if (p != null)
-                print(p, i++ + "- " + p.getNickname() + " " + p.getColor() + " " + ansi().reset() + "\n");
+                print(p, i + "- " + p.getNickname() + " " + p.getColor() + " " + ansi().reset() + "\n");
+            i++;
+        }
         //prints upperline, but only ids
         print(Ansi.Color.DEFAULT, "\n     UPPER LINE:\n");
         printCardLine(gameState.getBoard().getUpperLine());
@@ -216,6 +222,21 @@ public class TUIGamePhase implements TUIPhase {
             for (Card c : gameState.getBoard().getUnderLineB())
                 printDetailedCard(c);
         }
+        reset();
+        if(gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE))
+            for(LocalOfferCard c : gameState.getBoard().getOfferTrack()) {
+                if(!c.isFree() && c.getPlayer().equals(controller.getLocalPlayerUsername())) {
+                    if(c.getFood()>0) break;
+                    System.out.print(c.getDrawFromUpper()>0? "[ Draw "+c.getDrawFromUpper()+" from UpperLine ]  " : "" );
+                    System.out.print(c.getDrawFromUnder()>0? "[ Draw "+c.getDrawFromUnder()+" from LowerLine ]" : "" );
+                    System.out.println();
+                }
+            }
+        else if (gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
+            LocalPlayerState bonusPlayer = gameState.getPlayerActing();
+            if (bonusPlayer != null && bonusPlayer.getNickname().equals(controller.getLocalPlayerUsername()))
+                System.out.println("[ OPTIONAL: Draw 1 from UpperLine ]");
+        }
         if (choosingCard == 0)
             System.out.println("\nPress: \n1- Go back to Main" +
                     "\n2- to draw a card");
@@ -231,6 +252,7 @@ public class TUIGamePhase implements TUIPhase {
      * the input is usually checked, and can lead to sending requests to the server.
      */
     public void handleInput(String input) throws Exception {
+        lastError = null;
         //to handle the input we use both the model phase and the currentstep.
         switch (currentstep) {
             case EVENTS_SOLVED: {
@@ -260,7 +282,7 @@ public class TUIGamePhase implements TUIPhase {
                     }
                     case "2": {
                         if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.TOTEM_PLACING)) {
-                            System.out.println(ansi().a("\nNot the time for this\n"));
+                            lastError = "Not the time for this";
                             break;
                         }
                         //if right time, handle choice
@@ -291,25 +313,25 @@ public class TUIGamePhase implements TUIPhase {
                                 if (gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE)||gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE))
                                     choosingCard = 1;
                                 else {
-                                    System.out.println("Not the time for this");
+                                    lastError = "Not the time for this";
                                     choosingCard = 0;
                                 }
                                 boardRowRequest = "0";
                                 break;
                             default:
-                                System.out.println("Invalid input");
+                                lastError = "Invalid input";
                                 break;
                         }
                         break;
                     }
                     case 1: {//row choice
                         if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE) && !gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
-                            System.out.println("Not the time for this");
+                            lastError = "Not the time for this";
                             choosingCard = 0;
                             break;
                         }
                         if (!(input.equals("1") || input.equals("2"))) {
-                            System.out.println("\nInvalid input\n");
+                            lastError = "Invalid input";
                         } else {
                             boardRowRequest = input;
                            choosingCard = 2;
@@ -319,7 +341,7 @@ public class TUIGamePhase implements TUIPhase {
                     //break;
                     case 2: {//card or skip choice
                         if (!gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.ACTION_PHASE) && !gameState.getCurrentRoundPhase().equals(RoundPhasesEnum.BONUS_DRAWING_PHASE)) {
-                            System.out.println("Not the time for this");
+                            lastError = "Not the time for this";
                             choosingCard = 0;
                             break;
                         }
@@ -329,14 +351,14 @@ public class TUIGamePhase implements TUIPhase {
                                     controller.requestDraw(input.toLowerCase(), BoardRows.UPPER);
 
                                 } catch (Exception e) {
-                                    System.out.println("Failed to send request");
+                                    lastError = "Failed to send request";
                                 }
                             }
                             else try {
                                     controller.requestSkip(BoardRows.UPPER);
 
                                 } catch (Exception e) {
-                                    System.out.println("Failed to send request");
+                                    lastError = "Failed to send request";
                                 }
                         }
                         else if (boardRowRequest.equals("2")) {
@@ -345,14 +367,14 @@ public class TUIGamePhase implements TUIPhase {
                                     controller.requestDraw(input.toLowerCase(), BoardRows.LOWER);
 
                                 } catch (Exception e) {
-                                    System.out.println("Failed to send request");
+                                    lastError = "Failed to send request";
                                 }
                             }
                             else try {
                                 controller.requestSkip(BoardRows.LOWER);
 
                             } catch (Exception e) {
-                                System.out.println("Failed to send request");
+                                lastError = "Failed to send request";
                             }
                         }
                         boardRowRequest = "0";
@@ -370,13 +392,13 @@ public class TUIGamePhase implements TUIPhase {
                   //  System.out.println("Successfully requested totem"); //for testing
                     choosingTotem = 0;
                 } catch (Exception e) {
-                    System.out.println("Failed to send request");
+                    lastError = "Failed to send request";
                 }
                 currentstep = TuiGameStep.MAIN;
                 break;
             }
             default:
-                System.out.println("\nInvalid input\n");
+                lastError = "Invalid input";
                 break;
         }
         TUI.printScreen();
@@ -407,7 +429,8 @@ public class TUIGamePhase implements TUIPhase {
      * error are printed out
      */
     public void handleErroMessage(InGameErrorEvent e){
-        System.out.println(e.getErrorMessage());
+        lastError = e.getErrorMessage();
+        TUI.printScreen();
     }
 
 

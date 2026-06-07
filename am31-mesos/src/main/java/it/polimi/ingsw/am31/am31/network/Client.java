@@ -32,18 +32,24 @@ public class Client {
         ServerConfig.SERVER_IP_ADDRESS = serverIp;
 
         // 2. Tipo di connessione
-        System.out.println("Select connection type:");
-        System.out.println("1 - RMI");
-        System.out.println("2 - Socket");
-        System.out.print("> ");
-        String connectionType = scanner.nextLine().trim();
+        String connectionType;
+        while (true) {
+            System.out.println("Select connection type:\n1 - RMI\n2 - Socket");
+            System.out.print("> ");
+            connectionType = scanner.nextLine().trim();
+            if (connectionType.equals("1") || connectionType.equals("2")) break;
+            System.out.println("Invalid input, enter 1 or 2.");
+        }
 
         // 3. Tipo di view
-        System.out.println("Select view type:");
-        System.out.println("1 - TUI");
-        System.out.println("2 - GUI");
-        System.out.print("> ");
-        String viewType = scanner.nextLine().trim();
+        String viewType;
+        while (true) {
+            System.out.println("Select view type:\n1 - TUI\n2 - GUI");
+            System.out.print("> ");
+            viewType = scanner.nextLine().trim();
+            if (viewType.equals("1") || viewType.equals("2")) break;
+            System.out.println("Invalid input, enter 1 or 2.");
+        }
 
         //Uncomment this when submitting project
 

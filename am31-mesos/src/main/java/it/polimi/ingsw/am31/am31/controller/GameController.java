@@ -50,7 +50,8 @@ public class GameController {
         this.resourceFinder = new ResourceFinder(game);
         observerHandler = new GameObserversSet();
         game.setObserverHandler(observerHandler);
-        observerHandler.addObserver(new DebugObserver());
+        //Uncomment this in case you need debugging
+        //observerHandler.addObserver(new DebugObserver());
         this.gameID = gameID;
     }
 

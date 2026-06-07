@@ -65,7 +65,7 @@ public class TextUserInterface implements View{
     /**
      * Prints the current GamePhase. called everytime there's an update
      */
-    public void printScreen() {
+    public synchronized void printScreen() {
         System.out.println("--------------------------------------------------");
         currentPhase.draw();
     }

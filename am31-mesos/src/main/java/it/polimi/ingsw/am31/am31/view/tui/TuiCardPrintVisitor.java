@@ -11,11 +11,14 @@ import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
 public class TuiCardPrintVisitor implements TribeVisitor
 {
     private int layer = 1;
+    private String description = null;
 
     /**
      * increases the layer value by 1.
      */
     public void nextLayer(){this.layer++;}
+
+    public String getDescription() { return description; }
 
     //prints the details inside a card, for the tui
 
@@ -27,7 +30,7 @@ public class TuiCardPrintVisitor implements TribeVisitor
         switch (layer) {
             case 1:
                 if (c.getMark())
-                    print(c, centeredInsideBorder(" "+c.getCardId()+" "+"HUNTER ♦ ", CARD_SIZE));
+                    print(c, centeredInsideBorder(" "+c.getCardId()+" "+"HUNTER [M] ", CARD_SIZE));
                 else print(c, centeredInsideBorder(" "+c.getCardId()+" "+"HUNTER ", CARD_SIZE));
                  break;
             case 2: print(c, centeredInsideBorder("", CARD_SIZE));
@@ -50,9 +53,7 @@ public class TuiCardPrintVisitor implements TribeVisitor
 
             case 2:
                 switch (c.getStars()) { //hardcoded correction because of visual issue
-                    case 2:print(c, centeredInsideBorder(StringUtils.repeat("★", c.getStars()), CARD_SIZE-1));break;
-                    case 3:print(c, centeredInsideBorder(StringUtils.repeat("★", c.getStars()), CARD_SIZE-1));break;
-                    default:print(c, centeredInsideBorder(StringUtils.repeat("★", c.getStars()), CARD_SIZE));break;
+                    default:print(c, centeredInsideBorder(StringUtils.repeat("[*]", c.getStars()), CARD_SIZE));break;
                 }break;
 
             case 3:print(c, centeredInsideBorder("",CARD_SIZE));break;
@@ -69,7 +70,7 @@ public class TuiCardPrintVisitor implements TribeVisitor
         switch(layer) {
             case 1:print(c, centeredInsideBorder(" "+c.getCardId()+" "+"FARMER  ", CARD_SIZE));break;
 
-            case 2:print(c, centeredInsideBorder("-" + c.getSustainDiscount() + "♣      ", CARD_SIZE));break;
+            case 2:print(c, centeredInsideBorder("-" + c.getSustainDiscount() + "[F]      ", CARD_SIZE));break;
 
             case 3:print(c, centeredInsideBorder("", CARD_SIZE));break;
 
@@ -84,7 +85,7 @@ public class TuiCardPrintVisitor implements TribeVisitor
         switch(layer) {
             case 1: print(c, centeredInsideBorder("HUNT EVENT", CARD_SIZE));break;
 
-            case 2:print(c, centeredInsideBorder(c.getFoodBonus() + "♣+" + c.getPrestigePointsBonus() + " x hunter", CARD_SIZE));break;
+            case 2:print(c, centeredInsideBorder(c.getFoodBonus() + "[F]+" + c.getPrestigePointsBonus() + " x hunter", CARD_SIZE));break;
 
             case 3:print(c, centeredInsideBorder("", CARD_SIZE));break;
 
@@ -99,7 +100,7 @@ public class TuiCardPrintVisitor implements TribeVisitor
         switch(layer) {
             case 1:print(c, centeredInsideBorder("SUSTAIN EVENT", CARD_SIZE));break;
 
-            case 2:print(c, centeredInsideBorder("-1♣/" + c.getPrestigePointsMalus(), CARD_SIZE));break;
+            case 2:print(c, centeredInsideBorder("-1[F]/" + c.getPrestigePointsMalus(), CARD_SIZE));break;
 
             case 3:    print(c, centeredInsideBorder("  x charCard", CARD_SIZE));break;
 
@@ -129,9 +130,9 @@ public class TuiCardPrintVisitor implements TribeVisitor
         switch(layer) {
             case 1:  print(c, centeredInsideBorder("SHAMAN RITUAL", CARD_SIZE));break;
 
-            case 2:print(c, centeredInsideBorder("★>:  " + c.getPrestigePointsBonus(), CARD_SIZE));break;
+            case 2:print(c, centeredInsideBorder("[*]>:  " + c.getPrestigePointsBonus(), CARD_SIZE));break;
 
-            case 3: print(c, centeredInsideBorder("★<: -" + c.getPrestigePointsMalus(), CARD_SIZE));break;
+            case 3: print(c, centeredInsideBorder("[*]<: -" + c.getPrestigePointsMalus(), CARD_SIZE));break;
 
             case 4:  print(c, centeredInsideBorder("era " + c.getEra() + "  " + c.getMinPlayers() + "+", CARD_SIZE));break;
         }
@@ -163,9 +164,9 @@ public class TuiCardPrintVisitor implements TribeVisitor
         switch(layer) {
             case 1:  print(c, centeredInsideBorder(" "+c.getCardId()+" "+"BUILDER ", CARD_SIZE));break;
 
-            case 2:   print(c, centeredInsideBorder("    -" + c.getBuildingDiscount() + "♣", CARD_SIZE));break;
+            case 2:   print(c, centeredInsideBorder("    -" + c.getBuildingDiscount() + "[F]", CARD_SIZE));break;
 
-            case 3:   print(c, centeredInsideBorder(c.getPrestigePoints() + "♦     ", CARD_SIZE));break;
+            case 3:   print(c, centeredInsideBorder(c.getPrestigePoints() + "[PP]     ", CARD_SIZE));break;
 
             case 4: print(c, centeredInsideBorder("era " + c.getEra() + "  " + c.getMinPlayers() + "+", CARD_SIZE));break;
 
@@ -193,23 +194,13 @@ public class TuiCardPrintVisitor implements TribeVisitor
      * Visiting a building card prints the layers in black in a blue bg, and their description, on 2 lines if too long
      */
     public void visit(BuildingCard c) {
+        this.description = c.getDescription();
         switch(layer) {
             case 1:  print(c, centeredInsideBorder(" "+c.getCardId()+" "+"BUILDING ", CARD_SIZE));break;
-            //if descprition too long, divides in 2
-
-            case 2: String desc = c.getDescription();
-                    if (desc.length()>MAX_LENGTH)
-                        desc = StringUtils.truncate(desc,MAX_LENGTH);
-                    print(c, centeredInsideBorder("Cost:"+c.getCost()+"♣", CARD_SIZE)+desc);break;
-            case 3:
-                    desc = c.getDescription();
-                if (desc.length()>MAX_LENGTH)
-                    desc = StringUtils.right(desc,MAX_LENGTH);
-                else desc = "";
-                print(c, centeredInsideBorder("Gives:"+c.getPrestigePointsGained()+"♦", CARD_SIZE)+desc);break;
+            case 2:  print(c, centeredInsideBorder("Cost:"+c.getCost()+"[F]", CARD_SIZE));break;
+            case 3:  print(c, centeredInsideBorder("Gives:"+c.getPrestigePointsGained()+"[PP]", CARD_SIZE));break;
             case 4:  print(c, centeredInsideBorder("era " + c.getEra() + "  " + c.getMinPlayers() + "+", CARD_SIZE));break;
             default:break;
         }
-
     }
 }
