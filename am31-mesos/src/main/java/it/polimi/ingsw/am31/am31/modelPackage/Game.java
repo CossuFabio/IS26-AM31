@@ -615,7 +615,7 @@ public class Game implements GameObservable {
         Optional<OfferCard> previousPlayerOfferCard = board.getOfferCards().stream().filter(card -> !card.isFree()).findFirst();
 
         //This check should never fail but, it is better to check
-        if(previousPlayerOfferCard.isPresent()) throw new IllegalStateException("Something went wrong in setNextPlayerDrawing()");
+        if(!previousPlayerOfferCard.isPresent()) throw new IllegalStateException("Something went wrong in setNextPlayerDrawing()");
 
         //Frees the offerCard
         turnOrder.setPlayer(previousPlayerOfferCard.get().getPlayer());
