@@ -38,10 +38,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualServer, Vir
 
     private final VirtualServerRmi serverStub;
     private String identifier = ClientConfig.UNREGISTERED_CLIENT_ID;
-    private VirtualViewRmi clientStub;
-    private LocalGameState gameState;
-    private StateUpdater updater;
-    private ErrorHandler errorVisitor;
     private final MessageDispatcher messageDispatcher;
     private final ExecutorService requestSender;
     private AtomicBoolean stillConnected = new AtomicBoolean(false);
