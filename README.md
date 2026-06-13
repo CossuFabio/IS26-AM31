@@ -65,6 +65,6 @@ I componenti del gioco sono stati testati singolarmente con JUnit
 
 ### Avanzate
 - Gestione partite multiple
-- Salvataggio partite su DB
+- Salvataggio risultati e classifica globale su DB
 # 
 Grafici UML class e sequence diagram disponibili nella cartella [Deliveries](DELIVERIES)
