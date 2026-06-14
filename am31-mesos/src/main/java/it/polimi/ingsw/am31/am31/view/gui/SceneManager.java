@@ -12,7 +12,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-//classe per gestire la navigazione delle scene.
+/**
+ * Class to manage scene navigation.
+ */
 public class SceneManager {
     private final Stage stage;
     private final ClientController controller;
@@ -20,6 +22,13 @@ public class SceneManager {
     private final IEventBus eventBus;
     private BaseController currentController = null;
 
+    /**
+     * Creates a new SceneManager.
+     * @param stage the primary JavaFX stage
+     * @param controller the client controller for server communication
+     * @param localGameState the shared local game state
+     * @param eventBus the event bus for inter-component communication
+     */
     public SceneManager (Stage stage, ClientController controller, LocalGameState localGameState, IEventBus eventBus) {
         this.stage = stage;
         this.controller = controller;
@@ -27,14 +36,33 @@ public class SceneManager {
         this.eventBus = eventBus;
     }
 
-    //methods to switch the scene
+    /**
+     * Shows the login scene.
+     */
     public void showLogin() {
         switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/login.fxml", "Login");
     }
+
+    /**
+     * Shows the game scene.
+     */
     public void showGame() { switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/game.fxml", "Game"); }
+
+    /**
+     * Shows the waiting room scene.
+     */
     public void showWaitingRoom() {switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/waitingRoom.fxml", "WaitingRoom");}
+
+    /**
+     * Shows the end game scene.
+     */
     public void showEndGame() { switchTo("/it/polimi/ingsw/am31/am31/view/gui/scene/endGame.fxml", "EndGame");}
 
+    /**
+     * Changes the scene to the one indicated by the path.
+     * @param path the FXML resource path of the scene to load
+     * @param title the title to display on the window
+     */
     public void switchTo(String path, String title) {
         Platform.runLater( () -> {
             try {

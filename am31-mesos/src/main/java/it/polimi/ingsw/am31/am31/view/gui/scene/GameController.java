@@ -4,14 +4,11 @@ import it.polimi.ingsw.am31.am31.modelPackage.boardFolder.BoardRows;
 import it.polimi.ingsw.am31.am31.modelPackage.RoundPhasesEnum;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.Card;
 import it.polimi.ingsw.am31.am31.modelPackage.cardsFolder.visitor.CountVisitor;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.*;
 import it.polimi.ingsw.am31.am31.view.localState.LocalGameState;
 import it.polimi.ingsw.am31.am31.view.localState.LocalOfferCard;
 import it.polimi.ingsw.am31.am31.view.localState.LocalPlayerState;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.BoardUpdateEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameCrashedEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
-import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEventResolveEvent;
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
 import javafx.animation.*;
 import javafx.application.Platform;
@@ -46,7 +43,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
+/**
+ * Controller of the game FXML file.
+ */
 public class GameController extends BaseController {
     @FXML private VBox centerHBox;
     @FXML private StackPane rootStackPane;
@@ -54,16 +53,12 @@ public class GameController extends BaseController {
     @FXML private Label eraLabel;
     @FXML private Label turnLabel;
     @FXML private Label phaseLabel;
-
     @FXML private ImageView deckImage;
-
     @FXML private HBox upperRowContainer;
     @FXML private HBox middleRowContainer;
     @FXML private HBox offerTrackContainer;
     @FXML private HBox lowerRowContainer;
-
     @FXML private VBox playersContainer;
-
     @FXML private HBox myNickname;
     @FXML private Label myFoodLabel;
     @FXML private Label myPPLabel;
@@ -73,33 +68,25 @@ public class GameController extends BaseController {
     @FXML private ScrollPane buildingsScrollPane;
     @FXML private ImageView foodIcon;
     @FXML private ImageView PPIcon;
-
     @FXML private StackPane deckOverlay;
     @FXML private Label ownerName;
     @FXML private ScrollPane tribePlayerScrollPane;
     @FXML private ScrollPane buildingsPlayerScrollPane;
     @FXML private HBox tribePlayerContainer;
     @FXML private HBox buildingsPlayerContainer;
-
     @FXML private StackPane cardTypeOverlay;
     @FXML private Label cardTypeLabel;
     @FXML private ScrollPane cardTypeScrollPane;
     @FXML private HBox cardTypeCardsContainer;
-
     @FXML private StackPane rulesOverlay;
-
     @FXML private ImageView backgroundImage;
-
     @FXML private HBox topBar;
-
     @FXML private Button skipButton1;
     @FXML private Button skipButton2;
     @FXML private Button playersButton;
     @FXML private Button rulesButton;
     @FXML private Button summaryButton;
-
     @FXML private StackPane playerOverlay;
-
     @FXML private VBox playersPanel;
 
     private int currentSlide = 1;
@@ -132,14 +119,13 @@ public class GameController extends BaseController {
     private VBox currentEventVbox = null;
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
         Image foodImg = loadImage(PathConstants.ASSETS_PATH + "food.png");
         Image ppImg = loadImage(PathConstants.ASSETS_PATH + "pp.png");
         if (foodImg != null) foodIcon.setImage(foodImg);
         if (ppImg != null) PPIcon.setImage(ppImg);
-
 
         rulesButton.prefWidthProperty().bind(summaryButton.widthProperty());
         backgroundImage.fitWidthProperty().bind(rootStackPane.widthProperty());
@@ -156,23 +142,14 @@ public class GameController extends BaseController {
         turnLabel.setPrefWidth(screenWidth*((double) 200 /1920));
         phaseLabel.setPrefWidth(screenWidth*((double) 200 /1920));
         topBar.setPrefHeight(screenHeight*((double) 2 /42));
-
         skipButton1.setPrefHeight(screenHeight*((double) 2 /42));
         skipButton1.setPrefWidth(screenWidth*0.10);
-//        skipButton1.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
-
         skipButton2.setPrefHeight(screenHeight*((double) 2 /42));
         skipButton2.setPrefWidth(screenWidth*0.10);
-//        skipButton2.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
-
         playersButton.setPrefHeight(screenHeight*((double) 2 /42));
         playersButton.setPrefWidth(screenWidth*0.10);
-//        playersButton.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
-
         rulesButton.setPrefHeight(screenHeight*((double) 2 /42));
         summaryButton.setPrefHeight(screenHeight*((double) 2 /42));
-//        rulesButton.setStyle(rulesButton.getStyle() + " -fx-padding: 0 15 0 15;");
-//        summaryButton.setStyle(summaryButton.getStyle() + " -fx-padding: 0 15 0 15;");
         myNickname.setMaxWidth(screenWidth*((double)250/1920));
         playersPanel.setPrefWidth(screenWidth*0.4);
 
@@ -195,6 +172,11 @@ public class GameController extends BaseController {
         sp.getStyleClass().add("transparent-scroll");
     }
 
+    /**
+     * Handles a {@link BoardUpdateEvent} by refreshing the UI.
+     *
+     * @param event the board update event
+     */
     @Subscribe
     public void onBoardUpdate(BoardUpdateEvent event) {
         //compareAndSet check if uiRefreshPending is false, if so sets it to true and return true, if not return false
@@ -208,6 +190,11 @@ public class GameController extends BaseController {
         }
     }
 
+    /**
+     * Handles a {@link GameEndedEvent} by showing a prompt and then switching to end game scene.
+     *
+     * @param event the game ended event
+     */
     @Subscribe
     public void onGameEnded(GameEndedEvent event) {
         Platform.runLater(() -> {
@@ -222,7 +209,6 @@ public class GameController extends BaseController {
             endLabel.setFont(Font.font("Inknut Antiqua Regular", 20));
             endLabel.setStyle("-fx-background-color: rgba(255,243,211,1); -fx-border-color: black; -fx-padding: 15;");
             StackPane.setAlignment(endLabel, Pos.CENTER);
-//            StackPane.setMargin(endLabel, new Insets(0, 0, screenHeight*((double) 25 /108), 0));
 
             endLabel.setOpacity(0.0);
             rulesOverlay.getChildren().addAll(darkBg, endLabel);
@@ -241,6 +227,11 @@ public class GameController extends BaseController {
         });
     }
 
+    /**
+     * Handles a {@link GameCrashedEvent} by showing an alert and switching to waiting room scene.
+     *
+     * @param event the game crashed event
+     */
     @Subscribe
     public void onGameCrashed(GameCrashedEvent event) {
         localGameState.reset();
@@ -254,6 +245,11 @@ public class GameController extends BaseController {
         });
     }
 
+    /**
+     * Sets the local game state shared across all scene controllers.
+     *
+     * @param localGameState the LocalGameState instance
+     */
     @Override
     public void setLocalGameState(LocalGameState localGameState) {
         super.setLocalGameState(localGameState);
@@ -264,7 +260,13 @@ public class GameController extends BaseController {
         });
     }
 
-    //method to refresh the UI calling every method to refresh each part of the screen
+    /**
+     * Refreshes the UI calling every method to refresh each part of the screen.
+     *
+     * @param phase current phase of the game
+     * @param acting current player acting
+     * @param gameState local game state
+     */
     private void refreshUI(RoundPhasesEnum phase, LocalPlayerState acting, LocalGameState gameState) {
         String myNick = controller.getLocalPlayerUsername();
         boolean isMyDrawTurn = acting != null && acting.getNickname().equals(myNick)
@@ -281,6 +283,12 @@ public class GameController extends BaseController {
         refreshSkip(phase, acting);
     }
 
+    /**
+     * Refreshes the skip buttons using the phase and the player acting.
+     *
+     * @param phase current phase of the game
+     * @param acting current player acting
+     */
     private void refreshSkip(RoundPhasesEnum phase, LocalPlayerState acting) {
         String myNick = controller.getLocalPlayerUsername();
         boolean isMyTurn = acting != null && acting.getNickname().equals(myNick);
@@ -296,8 +304,7 @@ public class GameController extends BaseController {
         int remainingFromLower = allowedDrawsFromRow(BoardRows.LOWER) - pendingDraws.getOrDefault(BoardRows.LOWER, 0);
 
         CountVisitor countVisitor = new CountVisitor();
-        //localGameState.getBoard().getUpperLine().stream()
-        //                .filter(Card::isCharacter).count();
+
         localGameState.getBoard().getUpperLine()
                 .forEach(card -> card.acceptVisit(countVisitor));
         int charactersUpperLine = countVisitor.getTotalCharacters();
@@ -305,8 +312,6 @@ public class GameController extends BaseController {
         countVisitor.reset();
         localGameState.getBoard().getUnderLine()
                 .forEach(card -> card.acceptVisit(countVisitor));
-//        int charactersLowerLine = (int) localGameState.getBoard().getUnderLine().stream()
-//                .filter(Card::isCharacter).count();
 
         int charactersLowerLine = countVisitor.getTotalCharacters();
 
@@ -340,7 +345,6 @@ public class GameController extends BaseController {
         }).start();
     }
 
-    //method to refresh the deck
     private void refreshDeck() {
         int era = localGameState.getEra();
         String backName = "card_back_" + era + ".png";
@@ -351,7 +355,6 @@ public class GameController extends BaseController {
         if (localGameState.getRoundNumber() == 10) deckImage.setVisible(false);
     }
 
-    //method to load an image from a path
     private Image loadImage(String path) {
         if (imageCache.containsKey(path)) return imageCache.get(path);
         InputStream stream = getClass().getResourceAsStream(path);
@@ -360,7 +363,6 @@ public class GameController extends BaseController {
         return img;
     }
 
-    //method to refresh the top bar
     private void refreshTopBar(RoundPhasesEnum phase, LocalPlayerState acting) {
         roundLabel.setText("Round: " + localGameState.getRoundNumber());
         eraLabel.setText("Era: " + localGameState.getEra());
@@ -382,7 +384,6 @@ public class GameController extends BaseController {
         };
     }
 
-    //method to refresh the upper lane
     private void refreshUpperRow(RoundPhasesEnum phase, LocalPlayerState acting) {
         upperRowContainer.getChildren().clear();
         for (Card card : localGameState.getBoard().getUpperLine()) {
@@ -390,7 +391,6 @@ public class GameController extends BaseController {
         }
     }
 
-    //method to refresh the offer track
     private void refreshOfferTrack(RoundPhasesEnum phase, LocalPlayerState acting, LocalGameState gameState) {
         offerTrackContainer.getChildren().clear();
         offerTrackContainer.getChildren().add(buildTurnOrderTile(gameState));
@@ -399,7 +399,6 @@ public class GameController extends BaseController {
         }
     }
 
-    //method to refresh the lower lane
     private void refreshLowerRow(RoundPhasesEnum phase, LocalPlayerState acting) {
         lowerRowContainer.getChildren().clear();
         for (Card card : localGameState.getBoard().getUnderLine()) {
@@ -407,7 +406,6 @@ public class GameController extends BaseController {
         }
     }
 
-    //method to refresh the player panel on the right
     private void refreshPlayerPanel(LocalPlayerState acting) {
         playersContainer.getChildren().clear();
         String myNick = controller.getLocalPlayerUsername();
@@ -416,7 +414,6 @@ public class GameController extends BaseController {
         }
     }
 
-    //method to refresh all my info (food, pp and deck)
     private void refreshMyInfo() {
         String myNick = controller.getLocalPlayerUsername();
         LocalPlayerState me = localGameState.getPlayers().stream()
@@ -470,7 +467,6 @@ public class GameController extends BaseController {
         }
     }
 
-    //method for constructing the single node of a set of character cards of the same type
     private Node buildCardStackNode(String typeName, List<Card> cards) {
         int n = cards.size();
         int visualLayers = Math.min(n, 3); //max 3 visible cards
@@ -549,7 +545,6 @@ public class GameController extends BaseController {
         cardTypeOverlay.setVisible(false);
     }
 
-    //method to build the single node of card
     private StackPane buildCardNode(Card card, BoardRows row, RoundPhasesEnum phase, LocalPlayerState acting) {
         Image img = loadCardImage(card.getCardId());
         ImageView iv = new ImageView(img);
@@ -1127,6 +1122,11 @@ public class GameController extends BaseController {
         currentSlide = 1;
     }
 
+    /**
+     * Handles a {@link GameEventResolveEvent} by adding the event to the pending events and showing the next event.
+     *
+     * @param event the game event resolve event
+     */
     @Subscribe
     public void onGameEventResolved(GameEventResolveEvent event) {
         Platform.runLater(() -> {
@@ -1162,9 +1162,6 @@ public class GameController extends BaseController {
         shadowCard.setOffsetY(3);
         shadowCard.setColor(Color.rgb(0, 0, 0, 0.5));
         iv.setEffect(shadowCard);
-
-//        Label description = new Label(card.toString());
-//        description.setFont(Font.font("Inknut Antiqua Regular", 16));
 
         DropShadow shadow = new DropShadow();
         shadow.setRadius(10);

@@ -24,6 +24,9 @@ import javafx.util.Duration;
 import java.io.InputStream;
 import java.util.List;
 
+/**
+ * Controller of the end game FXML file.
+ */
 public class EndGameController extends BaseController {
     @FXML VBox rankingBox;
     @FXML ImageView backgroundImage;
@@ -43,7 +46,7 @@ public class EndGameController extends BaseController {
     double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
     double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
 
-    @FXML public void initialize() {
+    @FXML private void initialize() {
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
         backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
@@ -87,11 +90,9 @@ public class EndGameController extends BaseController {
             position.setFont(Font.font("Inknut Antiqua Regular", 16));
 
             position.setPadding(new Insets(0,10,0,0));
-            //position.setPrefWidth(150);
             if (player.isWinner()) position.setStyle("-fx-font-weight: bold;");
 
             HBox name = new HBox(10);
-            //name.setPrefWidth(150);
             name.setAlignment(Pos.CENTER_LEFT);
             Image totemImg = loadImage(PathConstants.TOTEM_PATH + player.playerState().getColor().name().toLowerCase() + ".png");
             if (totemImg != null) {
@@ -163,20 +164,17 @@ public class EndGameController extends BaseController {
         }
     }
 
-    //method to load an image from a path
     private Image loadImage(String path) {
         InputStream stream = getClass().getResourceAsStream(path);
         return stream != null ? new Image(stream) : null;
     }
 
     private void animateRowEntry(HBox row, int index, Label ppLabel, int targetPP, Label foodLabel, int targetFood) {
-        //parte invisibile e sotto di 30px
         row.setOpacity(0);
         row.setTranslateY(30);
 
         Duration delay = Duration.millis(index * 1000);
 
-        //gestisce la trasparenza: parte invisibile e diventa completamente visibile
         FadeTransition fade = new FadeTransition(Duration.millis(500), row);
         fade.setFromValue(0);
         fade.setToValue(1);
@@ -212,6 +210,11 @@ public class EndGameController extends BaseController {
         timeline.play();
     }
 
+    /**
+     * Sets the local game state shared across all scene controllers.
+     *
+     * @param localGameState the LocalGameState instance
+     */
     @Override
     public void setLocalGameState(LocalGameState localGameState) {
         super.setLocalGameState(localGameState);
@@ -241,17 +244,8 @@ public class EndGameController extends BaseController {
 
     @FXML
     private void showGlobalRanking() {
-//        globalRankingOverlay.getChildren().clear();
-//        Region darkBg = new Region();
-//        darkBg.setStyle("-fx-background-color: rgba(0,0,0,0.6);");
-//        darkBg.setMaxWidth(Double.MAX_VALUE);
-//        darkBg.setMaxHeight(Double.MAX_VALUE);
-//        darkBg.setOnMouseClicked(e -> closeGlobalRanking());
-
         ObservableList<GlobalRankingEntry> rankingData = FXCollections.observableArrayList(localGameState.getGlobalRanking());
         rankingTable.setItems(rankingData);
-//        globalRankingOverlay.getChildren().addAll(darkBg);
-
         globalRankingOverlay.setVisible(true);
     }
 

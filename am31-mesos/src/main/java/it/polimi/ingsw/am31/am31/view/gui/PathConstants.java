@@ -1,5 +1,8 @@
 package it.polimi.ingsw.am31.am31.view.gui;
 
+/**
+ * Contains the paths to the graphic elements folders.
+ */
 public class PathConstants {
     public static final String CARDS_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/cards/";
     public static final String ASSETS_PATH = "/it/polimi/ingsw/am31/am31/view/gui/assets/";

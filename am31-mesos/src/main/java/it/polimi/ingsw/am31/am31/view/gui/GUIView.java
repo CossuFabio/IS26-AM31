@@ -11,24 +11,50 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-//classe che fa il setup iniziale e mostra la prima schermata, non gestisce eventi, non modifica la UI
+/**
+ * Class for the initial setup of the GUI.
+ * Shows the first scene.
+ */
 public class GUIView extends Application {
     private static ClientController controller;
     private static LocalGameState localGameState;
     private static IEventBus eventBus;
 
+    /**
+     * Sets the client controller used to send actions to the server.
+     * Must be called before launching the application.
+     *
+     * @param c the ClientController instance
+     */
     public static void setController (ClientController c) {
         controller = c;
     }
 
+    /**
+     * Sets the local game state shared across all scene controllers.
+     * Must be called before launching the application.
+     *
+     * @param ls the LocalGameState instance
+     */
     public static void setLocalGameState (LocalGameState ls) {
         localGameState = ls;
     }
 
+    /**
+     * Sets the event bus used to communicate events between components.
+     * Must be called before launching the application.
+     *
+     * @param e the IEventBus instance
+     */
     public static void setEventBus (IEventBus e) {
         eventBus = e;
     }
 
+    /**
+     * Starts the GUI showing the login scene.
+     * @param stage the primary JavaFX stage
+     * @throws Exception if the login scene cannot be loaded
+     */
     @Override
     public void start(Stage stage) throws Exception {
         SceneManager sceneManager = new SceneManager(stage, controller, localGameState, eventBus);
@@ -54,6 +80,4 @@ public class GUIView extends Application {
 
         sceneManager.showLogin();
     }
-
-
 }

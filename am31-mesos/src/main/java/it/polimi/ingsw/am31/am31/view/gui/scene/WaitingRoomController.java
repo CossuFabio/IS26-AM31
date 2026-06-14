@@ -26,7 +26,9 @@ import java.util.Map;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-
+/**
+ * Controller of the waiting room FXML file.
+ */
 public class WaitingRoomController extends BaseController {
     // Images
     @FXML private ImageView backgroundImage;
@@ -69,11 +71,13 @@ public class WaitingRoomController extends BaseController {
     private final Map<String, Image> imageCache = new HashMap<>();
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
         backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
+
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Regular.ttf"), 16);
         Font.loadFont(getClass().getResourceAsStream(PathConstants.ASSETS_PATH + "InknutAntiqua-Bold.ttf"), 16);
+
         //add options to combobox
         playersBox.getItems().addAll(2,3,4,5);
         colorBox.getItems().addAll("Red","Blue","Yellow","White","Black");
@@ -115,7 +119,7 @@ public class WaitingRoomController extends BaseController {
                         .or(joinColorBox.valueProperty().isNull())
         );
 
-        //disable create button until both comboboxes are selected
+        //disable create button until both combo boxes are selected
         createButton.disableProperty().bind(
                 playersBox.valueProperty().isNull()
                         .or(colorBox.valueProperty().isNull())
@@ -168,14 +172,12 @@ public class WaitingRoomController extends BaseController {
                         cell.setEffect(null);
                     }
 
-                    // aggiorna joinColorBox solo quando l'utente sceglie il colore
                     colorBox.valueProperty().addListener((obs, oldVal, newVal) -> {
                         if (newVal != null) {
                             joinColorBox.setValue(newVal);
                         }
                     });
 
-                    // click sulla cella seleziona la lobby e resetta il colore
                     cell.setOnMouseClicked(e -> {
                         lobbyList.getSelectionModel().select(lobby);
                         joinColorBox.setValue(null);
@@ -195,7 +197,6 @@ public class WaitingRoomController extends BaseController {
             }
         });
 
-// ridisegna le celle quando cambia la selezione
         lobbyList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             lobbyList.refresh();
         });
@@ -206,7 +207,6 @@ public class WaitingRoomController extends BaseController {
             }
         }).start();
     }
-
 
     @FXML
     private void handleCreateGame() {
@@ -281,11 +281,6 @@ public class WaitingRoomController extends BaseController {
                 e.printStackTrace();
             }
         }).start();
-    }
-
-    @Subscribe
-    public void playersChanged(PlayersInLobbyChangedEvent e) {
-
     }
 
     @FXML
@@ -367,7 +362,6 @@ public class WaitingRoomController extends BaseController {
         currentSlide = 1;
     }
 
-    //method to load an image from a path
     private Image loadImage(String path) {
         if (imageCache.containsKey(path)) return imageCache.get(path);
         InputStream stream = getClass().getResourceAsStream(path);
@@ -376,6 +370,11 @@ public class WaitingRoomController extends BaseController {
         return img;
     }
 
+    /**
+     * Handles a {@link ShowLobbyEvent} by updating the lobby list.
+     *
+     * @param e the show lobby event
+     */
     @Subscribe
     public void onShowLobbyUpdate(ShowLobbyEvent e) {
         List<LobbyDescriptor> lobbies = e.getLobbies();
@@ -386,16 +385,21 @@ public class WaitingRoomController extends BaseController {
         });
     }
 
+    /**
+     * Handles a {@link GameStartingEvent} by switching to game scene.
+     *
+     * @param e the game starting event
+     */
     @Subscribe
     public void onGameStartUpdate(GameStartingEvent e) {
         sceneManager.showGame();
     }
 
-    @Subscribe
-    public void onSuccessRegistration(SuccessRegistrationEvent e) {
-        
-    }
-
+    /**
+     * Handles a {@link PlayersInLobbyChangedEvent} by updating the lobby information.
+     *
+     * @param e the players in lobby changed event
+     */
     @Subscribe
     public void onPlayerListUpdate(PlayersInLobbyChangedEvent e) {
         Platform.runLater(() -> {
@@ -417,12 +421,15 @@ public class WaitingRoomController extends BaseController {
                 Separator separator = new Separator();
                 lobbyWaitingList.getChildren().addAll(row, separator);
             }
-
-            // aggiorna anche il contatore
             waitingLabel.setText("Waiting for other players: " + e.getPlayers().size() + "/" + totalPlayers);
         });
     }
 
+    /**
+     * Handles a {@link FailedJoinLobby} by navigating back and displaying an error message.
+     *
+     * @param e the failed join lobby event
+     */
     @Subscribe
     public void unableToJoin(FailedJoinLobby e) {
         Platform.runLater(() -> {
@@ -437,6 +444,11 @@ public class WaitingRoomController extends BaseController {
         });
     }
 
+    /**
+     * Handles a {@link InvalidColorPickEvent} by navigating back and displaying an error message.
+     *
+     * @param e the invalid color pick event
+     */
     @Subscribe
     public void invalidColorSelected(InvalidColorPickEvent e) {
         Platform.runLater(() -> {

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.am31.am31.view.gui.scene;
 
 import it.polimi.ingsw.am31.am31.view.eventsHandling.Subscribe;
+import it.polimi.ingsw.am31.am31.view.eventsHandling.events.ConnectionLostEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.FailedRegistrationEvent;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.SuccessRegistrationEvent;
 import it.polimi.ingsw.am31.am31.view.gui.PathConstants;
@@ -17,7 +18,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
-
+/**
+ * Controller of the login FXML file.
+ */
 public class LoginController extends BaseController{
     @FXML private TextField nicknameField;
     @FXML private Button connectButton;
@@ -47,6 +50,7 @@ public class LoginController extends BaseController{
                         nicknameField.textProperty()
                 )
         );
+
         //bind image to window size
         backgroundImage.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
@@ -75,7 +79,6 @@ public class LoginController extends BaseController{
 
         new Thread( () -> {
             try {
-//                controller.setLocalPlayerUsername(nickname);
                 controller.requestServerConnection(nickname);
             } catch (Exception e) {
                 Platform.runLater( () -> {
@@ -86,12 +89,22 @@ public class LoginController extends BaseController{
         }).start();
     }
 
+    /**
+     * Handles a {@link SuccessRegistrationEvent} by switching to waiting room scene.
+     *
+     * @param e the successful registration event
+     */
     @Subscribe
     public void onSuccessRegistration(SuccessRegistrationEvent e) {
         // Nickname accepted by server, move to waiting room
         sceneManager.showWaitingRoom();
     }
 
+    /**
+     * Handles a {@link FailedRegistrationEvent} by showing the error label.
+     *
+     * @param e the failed registration event
+     */
     @Subscribe
     public void onLobbyError(FailedRegistrationEvent e) {
         // Show error message on screen (e.g. username already taken)
@@ -100,6 +113,4 @@ public class LoginController extends BaseController{
             errorLabel.setVisible(true);
         });
     }
-
-
 }
