@@ -16,7 +16,7 @@ public class GameConstants {
     public static final int LOWER_LINE_EXTRA_CARDS = 1;
 
     //Round number
-    public static final int ROUNDS_NUMBER = 3;
+    public static final int ROUNDS_NUMBER = 10;
 
     //Final events stats
     public static final int FINAL_EVENTS_ERA = 3;
