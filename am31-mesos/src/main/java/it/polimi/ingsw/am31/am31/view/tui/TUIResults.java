@@ -183,18 +183,18 @@ public class TUIResults implements TUIPhase {
         int col = 5; //number of GlobalRankingEntry attributes
         int colsize = RANKING_COL_SIZE; //arbitrary
 
-        String top = "┌" + ("─".repeat(colsize) +"┬").repeat(col-1) + "─".repeat(colsize)+ "┐";
-        String mid = "├" + ("─".repeat(colsize) +"┼").repeat(col-1) + "─".repeat(colsize)+ "┤";
-        String bot = "└" + ("─".repeat(colsize) +"┴").repeat(col-1) + "─".repeat(colsize)+ "┘";
+        String top = "┏" + ("━".repeat(colsize) +"┳").repeat(col-1) + "━".repeat(colsize)+ "┓";
+        String mid = "┣" + ("━".repeat(colsize) +"╋").repeat(col-1) + "━".repeat(colsize)+ "┫";
+        String bot = "┗" + ("━".repeat(colsize) +"┻").repeat(col-1) + "━".repeat(colsize)+ "┛";
         List<GlobalRankingEntry> ranking = gameState.getGlobalRanking();
        System.out.println(top);
        //table head
-        System.out.println("│"+
-                StringUtils.center("RANK",colsize) +"│"+
-                StringUtils.center("NICKNAME",colsize)+"│"+
-                StringUtils.center("FOOD",colsize)+"│"+
-                StringUtils.center("POINTS",colsize) +"│"+
-                StringUtils.center("N. OF GAMES",colsize)+"│");
+        System.out.println("┃"+
+                StringUtils.center("RANK",colsize) +"┃"+
+                StringUtils.center("NICKNAME",colsize)+"┃"+
+                StringUtils.center("FOOD",colsize)+"┃"+
+                StringUtils.center("POINTS",colsize) +"┃"+
+                StringUtils.center("N. OF GAMES",colsize)+"┃");
         System.out.println(mid);
         for(int i=0;i<ranking.size();i++){
             GlobalRankingEntry e = ranking.get(i);
@@ -202,12 +202,12 @@ public class TUIResults implements TUIPhase {
             if (nick.length() > colsize)
                 nick = nick.substring(0, colsize);
             //Prints the inside of a line
-           System.out.println("│"+
-                   StringUtils.center(Integer.toString(e.getRank()),colsize) +"│"+
-                   StringUtils.center(nick,colsize)+"│"+
-                   StringUtils.center(Integer.toString(e.getTotalFood()),colsize)+"│"+
-                   StringUtils.center(Integer.toString(e.getTotalPrestigePoints()),colsize) +"│"+
-                   StringUtils.center(Integer.toString(e.getGamesPlayed()),colsize)+"│");
+           System.out.println("┃"+
+                   StringUtils.center(Integer.toString(e.getRank()),colsize) +"┃"+
+                   StringUtils.center(nick,colsize)+"┃"+
+                   StringUtils.center(Integer.toString(e.getTotalFood()),colsize)+"┃"+
+                   StringUtils.center(Integer.toString(e.getTotalPrestigePoints()),colsize) +"┃"+
+                   StringUtils.center(Integer.toString(e.getGamesPlayed()),colsize)+"┃");
            if(i+1<ranking.size())
                    System.out.println(mid);
            else break;

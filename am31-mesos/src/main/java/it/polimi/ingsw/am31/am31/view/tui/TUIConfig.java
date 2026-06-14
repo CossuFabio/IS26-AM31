@@ -55,7 +55,9 @@ public class TUIConfig {
     //prints the style of a card
     public static void printColor(Card c) {
         if (c == null || c.getCardId() == null) return;
-        c.acceptVisit(new TuiColorVisitor());
+        TuiColorVisitor v = new TuiColorVisitor();
+        c.acceptVisit(v);
+        System.out.print(v.getColorString());
     }
 
     /**
@@ -86,7 +88,7 @@ public class TUIConfig {
      * @return A String with the ansi code for a color, or the default color
      */
     public static String getColor(LocalPlayerState p) {
-        if (p == null ) return null;
+        if (p == null) return ansi().reset().toString();
         switch(p.getColor()) {
             case RED:
                 return (ansi().fg(Ansi.Color.RED).toString());
@@ -108,7 +110,7 @@ public class TUIConfig {
      * @return A String with the ansi code for a color, or the default color
      */
     public static String getBoxColor(LocalPlayerState p) {
-        if (p == null ) return null;
+        if (p == null) return ansi().reset().toString();
         switch(p.getColor()) {
             case RED:
                 return (ansi().fg(Ansi.Color.RED).bgRed().toString());
@@ -140,9 +142,9 @@ public class TUIConfig {
      * @param s Printed in the selected card's format
      */
     public static void print(Card c, String s) {
-        printColor(c);
-        System.out.print(truncate(s,8000)); //max number of char in a cmd line
-        reset();
+        TuiColorVisitor v = new TuiColorVisitor();
+        c.acceptVisit(v);
+        System.out.print(v.getColorString() + truncate(s, 8000) + ansi().reset().toString());
     }
 
     /**
@@ -151,9 +153,7 @@ public class TUIConfig {
      * @param s Printed String
      */
     public static void print(LocalPlayerState p, String s) {
-        printColor(p);
-        System.out.print(truncate(s, 8000));
-        reset();
+        System.out.print(getColor(p) + truncate(s, 8000) + ansi().reset().toString());
     }
 
     /**
@@ -162,8 +162,7 @@ public class TUIConfig {
      * @param s Printed String
      */
     public static void print(Ansi.Color c, String s) {
-        System.out.print(ansi().fg(c).a(s));
-        reset();
+        System.out.print(ansi().fg(c).a(s).reset().toString());
     }
 
     /**
@@ -174,15 +173,11 @@ public class TUIConfig {
         if (c == null || c.getCardId() == null) return;
         TuiColorVisitor visitor = new TuiColorVisitor();
         c.acceptVisit(visitor);
-        System.out.print(c.getCardId() + ":- " + c);
-        reset();
-        System.out.print("\n");
+        String colorStr = visitor.getColorString();
+        System.out.print(colorStr + c.getCardId() + ":- " + c + ansi().reset().toString() + "\n");
         if (visitor.isBuilding()) {
-            c.acceptVisit(visitor);
             BuildingCard c1 = (BuildingCard) c;
-            System.out.print("Brief Description: " + c1.getDescription());
-            reset();
-            System.out.print("\n");
+            System.out.print(colorStr + "Brief Description: " + c1.getDescription() + ansi().reset().toString() + "\n");
         }
     }
 
