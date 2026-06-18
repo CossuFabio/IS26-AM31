@@ -13,6 +13,9 @@ import java.util.Scanner;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * Orchestrator for TUI scenes.
+ */
 public class TextUserInterface implements View{
 
     private final ClientController controller;

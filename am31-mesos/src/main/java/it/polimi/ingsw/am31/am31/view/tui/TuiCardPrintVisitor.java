@@ -8,6 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
 
+/**
+ * Prints the details inside a card, for the tui
+ */
 public class TuiCardPrintVisitor implements TribeVisitor
 {
     private int layer = 1;

@@ -19,7 +19,6 @@ public interface VirtualView {
     /**
      * Allows the server to send ErrorMessage across the network caused by the receiver of this message.
      * @param error the DTO carrying information about the error
-     * @throws Exception if an error occurs while sending the message
      */
     void receiveErrorMessage(ErrorMessage error);
 

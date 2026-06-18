@@ -11,6 +11,9 @@ import static org.fusesource.jansi.Ansi.Color.BLUE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * Matches each card type to a color.
+ */
 public class TuiColorVisitor implements TribeVisitor {
 
     private boolean isBuilding = false;

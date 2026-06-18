@@ -1,5 +1,12 @@
 package it.polimi.ingsw.am31.am31.view;
 
-public interface View {
+/**
+ * Interface for generic View
+ */
+public interface View{
+    /**
+     * Starts the specific view
+     * @throws Exception
+     */
     public void startView() throws Exception;
 }

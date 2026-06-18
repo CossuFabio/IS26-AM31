@@ -7,8 +7,14 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-//Source for this implementation: https://medium.com/@sadegh.dehghani1992/how-it-works-eventbus-cef03ac2a12f
-
+/**
+ * Implementation of the {@link IEventBus} interface.
+ * This implementation registers subscribers in a thread safe data structure. When an event is posted, this class uses reflection
+ * to scan for methods with the {@link Subscribe} annotation and the corresponding {@link ViewEvent} as parameter. It calls method only if their unique parameter
+ * is the matching ViewEvent type.
+ * Warning: this class is not thread safe: since the subscribers may register or remove other subscribers, this pattern cannot guarantee thread safety. This task must be
+ * performed listener-side.
+ */
 public class ViewEventBus implements IEventBus {
 
     private final Set<Object> subscribers;
@@ -33,10 +39,7 @@ public class ViewEventBus implements IEventBus {
     public void post(ViewEvent event) {
         for(Object subscriber : subscribers){
 
-            //getDeclaredMethods cerca solo i metodi dichiarati fisicamente nella classe concreta che stai ispezionando, senza guardare le sue superclassi.
-            //noi usiamo il metodo onConnectionLost(ConnectionLostEvent event) nella classe BaseController (astratta) cosi che in ogni
-            //scena del gioco se crasha il server arriva l'allert. getMethods risale la gerarchia e restituisce tutti i metodi pubblici
-            //anche delle superclassi
+
             for(Method method : subscriber.getClass().getMethods()){
 
                 Annotation annot =  method.getAnnotation(Subscribe.class);

@@ -17,6 +17,9 @@ import java.net.InetAddress;
 import java.util.Scanner;
 
 
+/**
+ * Entry point for Client. Here they can choose the connection protocol between RMI and Socket and the view type between tui and gui via CMD.
+ */
 public class Client {
     //main client class
     public static void main(String[] args){

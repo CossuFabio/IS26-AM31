@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.truncate;
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * Utility method for TUI.
+ */
 public class TUIConfig {
 
     //symbols

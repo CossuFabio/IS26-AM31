@@ -16,7 +16,9 @@ import org.fusesource.jansi.Ansi;
 import static it.polimi.ingsw.am31.am31.view.tui.TUIConfig.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
-
+/**
+ * TUI GamePhase scene.
+ */
 public class TUIGamePhase implements TUIPhase {
 
 
