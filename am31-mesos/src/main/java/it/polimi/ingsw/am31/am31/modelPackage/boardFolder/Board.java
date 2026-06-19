@@ -171,10 +171,7 @@ public class Board implements GameObservable {
 
     @Override
     public void setObserverHandler(ObserverHandler obs){
-
         this.observers = obs;
-
-        //observers = new GameObserversSet();
     }
 
     private boolean hasCharacters(List<Card> cards){

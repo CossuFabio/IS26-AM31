@@ -17,11 +17,6 @@ class EventCardTest {
         this.eventCard = createSustainEvent().era(1).prestigePointsMalus(2).build();
     }
 
-    @Test
-    void resolve() {
-        //no sense in testing generic resolve (?)
-    }
-
 
     @Test
     void TestShouldgetPrestigePointsBonus() {

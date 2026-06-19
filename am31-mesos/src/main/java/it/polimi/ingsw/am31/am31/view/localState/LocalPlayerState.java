@@ -37,8 +37,6 @@ public class LocalPlayerState {
         buildings = new ArrayList<>();
         hasBonusDraw = false;
     }
-   //useless public void setColor(){}
-   //useless public void setNickname(){}
 
     /**
      * Sets the player's current food count.

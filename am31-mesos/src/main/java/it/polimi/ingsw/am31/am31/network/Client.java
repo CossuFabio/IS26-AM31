@@ -26,15 +26,15 @@ public class Client {
         //System.setOut(new java.io.PrintStream(System.out, true, java.nio.charset.StandardCharsets.UTF_8));
         // may help avoid tui visualization problems
         // [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-        // may want to add this as first command in bat filel
+        // may want to add this as first command in bat file
         Scanner scanner = new Scanner(System.in);
 
-        // 1. IP del server
+        // 1. Server IP
         System.out.print("Enter server IP address: ");
         String serverIp = scanner.nextLine().trim();
         ServerConfig.SERVER_IP_ADDRESS = serverIp;
 
-        // 2. Tipo di connessione
+        // 2. Connection protocol
         String connectionType;
         while (true) {
             System.out.println("Select connection type:\n1 - RMI\n2 - Socket");
@@ -44,7 +44,7 @@ public class Client {
             System.out.println("Invalid input, enter 1 or 2.");
         }
 
-        // 3. Tipo di view
+        // 3. View type
         String viewType;
         while (true) {
             System.out.println("Select view type:\n1 - TUI\n2 - GUI");
@@ -54,28 +54,9 @@ public class Client {
             System.out.println("Invalid input, enter 1 or 2.");
         }
 
-        //Uncomment this when submitting project
-
-        /*final String RMI_STRING = "RMI";
-        final String SOCKET_STRING = "SOCKET";
-
-        final String TUI_STRING = "TUI";
-        final String GUI_STRING = "GUI";
-
-        if(args.length != 2 ){
-            System.out.println("Invalid arguments!");
-            System.out.println("First argument: connection type. Type " + RMI_STRING + " or " + SOCKET_STRING);
-            System.out.println("Second argument: view type. Type " + TUI_STRING + " or " + GUI_STRING);
-            return;
-        }*/
 
 
-        //Remove when project is finished and remember to change switch cases values to parametric strings
-//        String connectionType = "2"; //args[0];
-//        String viewType = "1"; //args[1];
-
-
-        //library to display colors idk if this goes here
+        //library to display colors
         AnsiConsole.systemInstall();
 
         //Wiring all necessary objects

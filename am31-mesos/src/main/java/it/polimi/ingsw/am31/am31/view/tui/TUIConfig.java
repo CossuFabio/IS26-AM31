@@ -218,7 +218,7 @@ public class TUIConfig {
         for (LocalOfferCard c : cards) {
             //id in 4 chars
             String fixedId = StringUtils.rightPad(c.getOfferCardId(), SMALL_OFFER_CARD_PADDING);
-            //if free prints white box, or green?
+            //if free prints white box
             String box;
 
             if (c.isFree())
@@ -273,7 +273,7 @@ public class TUIConfig {
             System.out.println("\n");
             print(p,p.getNickname());
             System.out.println();
-            //sorted using their id (require by the rules?)
+            //sorted using their id
             Map<Character, List<Card>> orderedTribe = p.getTribe().stream().collect(Collectors.groupingBy(c -> c.getCardId().charAt(0)));
             for (Map.Entry<Character, List<Card>> entry : orderedTribe.entrySet())
             {
@@ -528,7 +528,7 @@ public class TUIConfig {
 
     }
 
-//my first attempt at a javadoc annotation
+
     /**
      * <p>Prints the String c, centered inside a border of size "size",The string is in the color "color"
      * while the border is the default color</p>

@@ -58,10 +58,5 @@ class HunterTest {
 
 
     }
-//    @Test
-//    void TestShouldSetMark () {
-//        assertFalse(hunterNoMark.getMark());
-//        hunterNoMark.setMark(true);
-//        assertTrue(hunterNoMark.getMark());
-//    }
+
 }

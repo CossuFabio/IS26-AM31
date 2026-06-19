@@ -145,7 +145,7 @@ public class NetworkObserver implements GameObserver {
             for(Player p : game.getPlayersList()){
                 onPlayerTribeUpdate(p);
                 onPlayerScoresUpdate(p);
-                //onPlayerNewBuildingEvent(p); idk about this one
+
             }
             //game status update
             onGameRoundStatusUpdate(game);
