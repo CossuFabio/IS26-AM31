@@ -7,7 +7,6 @@ it.polimi.ingsw.am31.am31.exceptions.gameException.illegalActionException
 it.polimi.ingsw.am31.am31.exceptions.gameException.lobbyException
 it.polimi.ingsw.am31.am31.exceptions.gameInvariantException
 it.polimi.ingsw.am31.am31.exceptions.networkException
-it.polimi.ingsw.am31.am31.fx
 it.polimi.ingsw.am31.am31.modelPackage
 it.polimi.ingsw.am31.am31.modelPackage.boardFolder
 it.polimi.ingsw.am31.am31.modelPackage.cardsFolder
