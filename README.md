@@ -34,7 +34,7 @@ Per il client (questo script forza l'esecuzione in powershell):
 ```bash
   chcp 65001
   @echo off 
-  powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; & 'PERCORSO FINO ALLA TUA JAVA 25\java.exe' '-Dfile.encoding=UTF-8' -jar 'client.jar'"
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; & 'PERCORSO FINO ALLA TUA JAVA 25\java.exe' '--enable-native-access=ALL-UNNAMED' '-Dfile.encoding=UTF-8' -jar 'client.jar'"
 ```
 Per le funzionalità di database, bisogna avere scaricato una versione di MYSQL  
  dalla 8.0 in poi , e creare il db con lo script incluso nel file ["mesos_db_schema.sql"](mesos_db_schema.sql).  
