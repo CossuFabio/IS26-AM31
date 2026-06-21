@@ -13,7 +13,7 @@ import it.polimi.ingsw.am31.am31.view.eventsHandling.ViewEventBus;
 import it.polimi.ingsw.am31.am31.view.eventsHandling.events.GameEndedEvent;
 import it.polimi.ingsw.am31.am31.view.gui.SceneManager;
 import it.polimi.ingsw.am31.am31.view.gui.scene.GameController;
-import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,9 +21,8 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class EndGamePreview extends Application {
+public class EndGamePreview {
 
-    @Override
     public void start(Stage stage) throws Exception {
         ViewEventBus eventBus = new ViewEventBus();
 
@@ -117,7 +116,17 @@ public class EndGamePreview extends Application {
         }).start();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static void main(String[] args) throws Exception {
+        Platform.startup(() -> {});
+        Platform.runLater(() -> {
+            try {
+                Stage stage = new Stage();
+                new EndGamePreview().start(stage);
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        Thread.currentThread().join();
     }
 }
