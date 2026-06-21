@@ -29,7 +29,7 @@ Crea i bat per aprire i jar, per il server (serve una versione di Java 25 per us
   java -jar server.jar 127.0.0.1 1101 1201 pause
 ```
 
-Per il client :
+Per il client (questo script forza l'esecuzione in powershell):
 
 ```bash
   chcp 65001
