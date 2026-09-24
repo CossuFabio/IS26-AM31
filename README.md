@@ -2,7 +2,9 @@
 # Prova Finale di Ingegneria del Software
 ## A.S. 2025/26, Gruppo AM31
 
-Il progetto consiste nello sviluppo di una versione software del gioco da tavolo Mesos
+Il progetto consiste nello sviluppo di una versione software del gioco da tavolo Mesos.
+
+<mark>***Il Gioco da tavolo Mesos e tutto il relativo materiale grafico è di esclusiva proprietà di Cranio Creations.***</mark>
 
 
 ## Autori
